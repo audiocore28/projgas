@@ -37,7 +37,7 @@
         <div class="md:flex md:flex-grow md:overflow-hidden">
           <main-menu :url="url()" class="hidden md:block bg-blue-800 flex-shrink-0 w-56 p-12 overflow-y-auto" />
           <div class="md:flex-1 px-4 py-8 md:p-12 md:overflow-y-auto" scroll-region>
-            <!-- <flash-messages /> -->
+            <flash-messages />
             <slot />
           </div>
         </div>
@@ -48,7 +48,7 @@
 
 <script>
 import Dropdown from '@/Shared/Dropdown'
-// import FlashMessages from '@/Shared/FlashMessages'
+import FlashMessages from '@/Shared/FlashMessages'
 import Icon from '@/Shared/Icon'
 import Logo from '@/Shared/Logo'
 import MainMenu from '@/Shared/MainMenu'
@@ -56,7 +56,7 @@ import MainMenu from '@/Shared/MainMenu'
 export default {
   components: {
     Dropdown,
-    // FlashMessages,
+    FlashMessages,
     Icon,
     Logo,
     MainMenu,
