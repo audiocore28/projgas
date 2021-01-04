@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1 class="mb-8 font-bold text-3xl">
-      <inertia-link class="text-blue-600 hover:text-blue-800" :href="route('drivers.index')">Drivers</inertia-link>
+      <inertia-link class="text-blue-600 hover:text-blue-800" :href="route('helpers.index')">Helpers</inertia-link>
       <span class="text-blue-600 font-medium">/</span> Create
     </h1>
     <div class="bg-white rounded shadow overflow-hidden max-w-3xl">
@@ -10,7 +10,6 @@
           <text-input v-model="form.name" :error="errors.name" class="pr-6 pb-8 w-full lg:w-1/2" label="Full Name" />
           <text-input v-model="form.nickname" :error="errors.nickname" class="pr-6 pb-8 w-full lg:w-1/2" label="Nickname" />
           <text-input v-model="form.address" :error="errors.address" class="pr-6 pb-8 w-full lg:w-1/2" label="Address" />
-          <text-input v-model="form.license_no" :error="errors.license_no" class="pr-6 pb-8 w-full lg:w-1/2" label="License No." />
           <text-input v-model="form.dob" :error="errors.dob" class="pr-6 pb-8 w-full lg:w-1/2" label="Date of Birth" />
           <text-input v-model="form.date_hired" :error="errors.date_hired" class="pr-6 pb-8 w-full lg:w-1/2" label="Date Hired" />
           <select-input v-model="form.status" :error="errors.status" class="pr-6 pb-8 w-full lg:w-1/2" label="Status">
@@ -52,7 +51,6 @@ export default {
         name: null,
         nickname: null,
         address: null,
-        license_no: null,
         dob: null,
         date_hired: null,
         status: null,
@@ -62,7 +60,7 @@ export default {
   },
   methods: {
     submit() {
-      this.$inertia.post(this.route('drivers.store'), this.form, {
+      this.$inertia.post(this.route('helpers.store'), this.form, {
         onStart: () => this.sending = true,
         onFinish: () => this.sending = false,
       })

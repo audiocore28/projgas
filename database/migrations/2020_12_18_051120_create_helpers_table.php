@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDriversTable extends Migration
+class CreateHelpersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,11 @@ class CreateDriversTable extends Migration
      */
     public function up()
     {
-        Schema::create('drivers', function (Blueprint $table) {
+        Schema::create('helpers', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('nickname')->nullable();
             $table->string('address')->nullable();
-            $table->string('license_no')->nullable();
             $table->date('dob')->nullable();
             $table->date('date_hired')->nullable();
             $table->boolean('status');
@@ -34,6 +33,6 @@ class CreateDriversTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('drivers');
+        Schema::dropIfExists('helpers');
     }
 }

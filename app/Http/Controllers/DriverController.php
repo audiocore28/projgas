@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreDriverRequest;
 use App\Models\Driver;
-use Illuminate\Http\Request;
+// use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 
 class DriverController extends Controller
@@ -15,7 +19,12 @@ class DriverController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Drivers/Index');
+        return Inertia::render('Drivers/Index', [
+            'filters' => Request::all('search'),
+            'drivers' => Driver::filter(Request::only('search'))
+                // ->orderByName()
+                ->paginate(5)
+        ]);
     }
 
     /**
@@ -34,9 +43,11 @@ class DriverController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreDriverRequest $request)
     {
-        //
+        $driver = Driver::create($request->all());
+
+        return redirect()->route('drivers.index')->with('success', 'Driver was successfully added.');
     }
 
     /**
@@ -58,7 +69,21 @@ class DriverController extends Controller
      */
     public function edit(Driver $driver)
     {
-        //
+        return Inertia::render('Drivers/Edit', [
+           'driver' => [
+                'id' => $driver->id,
+                'name' => $driver->name,
+                'nickname' => $driver->nickname,
+                'address' => $driver->address,
+                'license_no' => $driver->license_no,
+                'dob' => $driver->dob,
+                'gender' => $driver->gender,
+                'date_hired' => $driver->date_hired,
+                'status' => $driver->status,
+                'contact_no' => $driver->contact_no,
+           ],
+           'tankers' => $driver->tankers,
+        ]);
     }
 
     /**
@@ -68,9 +93,11 @@ class DriverController extends Controller
      * @param  \App\Models\Driver  $driver
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Driver $driver)
+    public function update(StoreDriverRequest $request, Driver $driver)
     {
-        //
+        $driver->update($request->all());
+
+        return redirect()->route('drivers.index')->with('success', 'Driver updated.');
     }
 
     /**
@@ -81,6 +108,16 @@ class DriverController extends Controller
      */
     public function destroy(Driver $driver)
     {
-        //
+        $driver->delete();
+
+        return redirect()->route('drivers.index')->with('success', 'Driver deleted.');
+    }
+
+
+    public function restore(Driver $driver)
+    {
+        $driver->restore();
+
+        return redirect()->route('drivers.index')->with('success', 'Driver restored.');
     }
 }
