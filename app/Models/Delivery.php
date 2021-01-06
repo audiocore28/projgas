@@ -42,7 +42,9 @@ class Delivery extends Model
     {
         $query->when($filters['search'] ?? null, function ($query, $search) {
             $query->where(function ($query) use ($search) {
-                $query->where('id', 'like', '%'.$search.'%');
+                $query->WhereHas('client', function ($query) use ($search) {
+	                        $query->where('name', 'like', '%'.$search.'%');
+	                    });
             });
         });
     }

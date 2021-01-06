@@ -23,7 +23,7 @@
           <th class="px-6 pt-6 pb-4">Purchase No.</th>
           <th class="px-6 pt-6 pb-4">Supplier</th>
         </tr>
-         <tr v-for="purchase in purchases.data" :key="purchase.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
+         <tr v-for="purchase in purchases" :key="purchase.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
           <!-- table columns -->
           <td class="border-t">
             <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('purchases.edit', purchase.id)">
@@ -42,7 +42,9 @@
           </td>
           <td class="border-t">
             <inertia-link class="px-6 py-4 flex items-center" :href="route('purchases.edit', purchase.id)" tabindex="-1">
-              {{ purchase.supplier_id }}
+              <div v-if="purchase.supplier">
+                {{ purchase.supplier.name }}
+              </div>
             </inertia-link>
           </td>
           <td class="border-t w-px">
@@ -51,7 +53,7 @@
             </inertia-link>
           </td>
         </tr>
-         <tr v-if="purchases.data.length === 0">
+         <tr v-if="purchases.length === 0">
           <td class="border-t px-6 py-4" colspan="4">No purchases found.</td>
         </tr>
     </table>
@@ -78,7 +80,7 @@ export default {
     SearchFilter,
   },
   props: {
-    purchases: Object,
+    purchases: Array,
     filters: Object,
   },
   data() {

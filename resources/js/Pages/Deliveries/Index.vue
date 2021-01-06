@@ -22,7 +22,7 @@
           <th class="px-6 pt-6 pb-4">Date</th>
           <th class="px-6 pt-6 pb-4">Client</th>
         </tr>
-         <tr v-for="delivery in deliveries.data" :key="delivery.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
+         <tr v-for="delivery in deliveries" :key="delivery.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
           <!-- table columns -->
           <td class="border-t">
             <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('deliveries.edit', delivery.id)">
@@ -36,7 +36,9 @@
           </td>
           <td class="border-t">
             <inertia-link class="px-6 py-4 flex items-center" :href="route('deliveries.edit', delivery.id)" tabindex="-1">
-              {{ delivery.client_id }}
+              <div v-if="delivery.client">
+                {{ delivery.client.name }}
+              </div>
             </inertia-link>
           </td>
           <td class="border-t w-px">
@@ -45,7 +47,7 @@
             </inertia-link>
           </td>
         </tr>
-         <tr v-if="deliveries.data.length === 0">
+         <tr v-if="deliveries.length === 0">
           <td class="border-t px-6 py-4" colspan="4">No deliveries found.</td>
         </tr>
     </table>
@@ -72,7 +74,7 @@ export default {
     SearchFilter,
   },
   props: {
-    deliveries: Object,
+    deliveries: Array,
     filters: Object,
   },
   data() {

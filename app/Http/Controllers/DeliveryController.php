@@ -24,11 +24,22 @@ class DeliveryController extends Controller
      */
     public function index()
     {
+        $deliveries = Delivery::filter(Request::only('search'))
+            // ->orderByName()
+            ->paginate(5)
+            ->transform(function ($delivery) {
+                return [
+                    'id' => $delivery->id,
+                    'date' => $delivery->date,
+                    'client' => $delivery->client ? $delivery->client->only('name') : null,
+                    // 'purchase' => $delivery->purchase ? $delivery->purchase->only('purchase_no') : null,
+                    // 'tanker_load_id' => $delivery->tanker_load_id,
+                ];
+            });
+
         return Inertia::render('Deliveries/Index', [
             'filters' => Request::all('search'),
-            'deliveries' => Delivery::filter(Request::only('search'))
-                // ->orderByName()
-                ->paginate(5)
+            'deliveries' => $deliveries,
         ]);
     }
 

@@ -22,11 +22,22 @@ class PurchaseController extends Controller
      */
     public function index()
     {
+        $purchases = Purchase::filter(Request::only('search'))
+                // ->orderByName()
+                // ->orderBy('purchase_no')
+                ->paginate(5)
+                ->transform(function ($purchase) {
+                    return [
+                        'id' => $purchase->id,
+                        'date' => $purchase->date,
+                        'purchase_no' => $purchase->purchase_no,
+                        'supplier' => $purchase->supplier ? $purchase->supplier->only('name') : null,
+                    ];
+                });
+
         return Inertia::render('Purchases/Index', [
             'filters' => Request::all('search'),
-            'purchases' => Purchase::filter(Request::only('search'))
-                // ->orderByName()
-                ->paginate(5)
+            'purchases' => $purchases,
         ]);
     }
 

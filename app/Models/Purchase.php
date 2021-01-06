@@ -36,7 +36,10 @@ class Purchase extends Model
     {
         $query->when($filters['search'] ?? null, function ($query, $search) {
             $query->where(function ($query) use ($search) {
-                $query->where('purchase_no', 'like', '%'.$search.'%');
+                $query->where('purchase_no', 'like', '%'.$search.'%')
+                		->orWhereHas('supplier', function ($query) use ($search) {
+	                        $query->where('name', 'like', '%'.$search.'%');
+	                    });
             });
         });
     }
