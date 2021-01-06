@@ -1,0 +1,38 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateTankerLoadsTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('tanker_loads', function (Blueprint $table) {
+            $table->id();
+            $table->date('date')->nullable();
+            $table->bigInteger('tanker_id')->nullable();
+            $table->bigInteger('driver_id')->nullable();
+            $table->bigInteger('helper_id')->nullable();
+            $table->bigInteger('purchase_id')->nullable();
+            $table->string('status')->nullable();
+            $table->string('remarks')->nullable();
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('tanker_loads');
+    }
+}

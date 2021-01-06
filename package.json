@@ -25,5 +25,9 @@
         "tailwindcss": "^1.8.0",
         "vue": "^2.5.17",
         "vue-template-compiler": "^2.6.10"
+    },
+    "dependencies": {
+        "popper.js": "^1.16.1",
+        "vue-multiselect": "^2.1.6"
     }
 }
