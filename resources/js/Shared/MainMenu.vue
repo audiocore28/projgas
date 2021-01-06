@@ -24,7 +24,7 @@ export default {
       links: [
         { route: 'dashboard', icon: 'office', isUrl: 'dashboard', name: 'Dashboard'},
         { route: 'purchases.index', icon: 'office', isUrl: 'purchases', name: 'Purchases'},
-        { route: 'tanker-loads.index', icon: 'dashboard', isUrl: 'loads', name: 'Loads'},
+        { route: 'tanker-loads.index', icon: 'dashboard', isUrl: 'tanker-loads', name: 'Loads'},
         { route: 'deliveries.index', icon: 'dashboard', isUrl: 'deliveries', name: 'Deliveries'},
         { route: 'suppliers.index', icon: 'office', isUrl: 'suppliers', name: 'Suppliers'},
         { route: 'clients.index', icon: 'users', isUrl: 'clients', name: 'Clients'},
