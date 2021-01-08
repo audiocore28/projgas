@@ -1,9 +1,9 @@
 <template>
   <div>
-      <h1 class="mb-8 font-bold text-3xl">
-        <inertia-link class="text-blue-600 hover:text-blue-800" :href="route('tankers.index')">Tankers</inertia-link>
-        <span class="text-blue-600 font-medium">/</span> {{ form.plate_no }}
-      </h1>
+    <h1 class="mb-8 font-bold text-3xl">
+      <inertia-link class="text-blue-600 hover:text-blue-800" :href="route('tankers.index')">Tankers</inertia-link>
+      <span class="text-blue-600 font-medium">/</span> {{ form.plate_no }}
+    </h1>
 
     <div class="p-1">
       <ul class="flex border-b">
@@ -24,7 +24,7 @@
       <!-- Tab 1 -->
       <div class="w-full pt-4">
         <div v-show="openTab === 1">
-          <div class="bg-white rounded shadow overflow-hidden max-w-3xl">
+          <div class="bg-white rounded shadow overflow-hidden max-w-3xl -mt-4">
             <form @submit.prevent="submit">
               <div class="p-8 -mr-6 -mb-8 flex flex-wrap">
                 <text-input v-model="form.plate_no" :error="errors.plate_no" class="pr-6 pb-8 w-full lg:w-1/2" label="Plate No" />
@@ -104,12 +104,12 @@
 
         <!-- Tab 3 -->
         <div v-show="openTab === 3">
-          Tab 3
+          Loads
         </div>
 
         <!-- Tab 4 -->
         <div v-show="openTab === 4">
-          Tab 4
+          Deliveries
         </div>
       </div>
     </div>

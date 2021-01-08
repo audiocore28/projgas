@@ -22,7 +22,7 @@ class HelperController extends Controller
         return Inertia::render('Helpers/Index', [
             'filters' => Request::all('search'),
             'helpers' => Helper::filter(Request::only('search'))
-                // ->orderByName()
+                ->orderBy('id', 'desc')
                 ->paginate(5)
         ]);
     }

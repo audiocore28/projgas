@@ -22,7 +22,7 @@ class ClientController extends Controller
         return Inertia::render('Clients/Index', [
             'filters' => Request::all('search'),
             'clients' => Client::filter(Request::only('search'))
-                // ->orderByName()
+                ->orderBy('id', 'desc')
                 ->paginate(5)
         ]);
     }

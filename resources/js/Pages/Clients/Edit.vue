@@ -4,20 +4,40 @@
       <inertia-link class="text-blue-600 hover:text-blue-800" :href="route('clients.index')">Clients</inertia-link>
       <span class="text-blue-600 font-medium">/</span> {{ form.name }}
     </h1>
-    <div class="bg-white rounded shadow overflow-hidden max-w-3xl">
-      <form @submit.prevent="submit">
-        <div class="p-8 -mr-6 -mb-8 flex flex-wrap">
-          <text-input v-model="form.name" :error="errors.name" class="pr-6 pb-8 w-full lg:w-1/2" label="Company Name" />
-          <text-input v-model="form.office" :error="errors.office" class="pr-6 pb-8 w-full lg:w-1/2" label="Office" />
-          <text-input v-model="form.contact_person" :error="errors.contact_person" class="pr-6 pb-8 w-full lg:w-1/2" label="Contact Person" />
-          <text-input v-model="form.contact_no" :error="errors.contact_no" class="pr-6 pb-8 w-full lg:w-1/2" label="Contact No" />
-          <text-input v-model="form.email_address" :error="errors.email_address" class="pr-6 pb-8 w-full lg:w-1/2" label="Email Address" />
+    <div class="p-1">
+      <ul class="flex border-b">
+        <li @click="openTab = 1" :class="{ '-mb-px': openTab === 1 }" class="-mb-px mr-1">
+          <a :class="openTab === 1 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold" href="#">Information</a>
+        </li>
+        <li @click="openTab = 2" :class="{ '-mb-px': openTab === 2 }" class="mr-1">
+          <a :class="openTab === 2 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold" href="#">Received Products</a>
+        </li>
+      </ul>
+
+      <!-- Tab 1 -->
+      <div class="w-full pt-4">
+        <div v-show="openTab === 1">
+          <div class="bg-white rounded shadow overflow-hidden max-w-3xl -mt-4">
+            <form @submit.prevent="submit">
+              <div class="p-8 -mr-6 -mb-8 flex flex-wrap">
+                <text-input v-model="form.name" :error="errors.name" class="pr-6 pb-8 w-full lg:w-1/2" label="Company Name" />
+                <text-input v-model="form.office" :error="errors.office" class="pr-6 pb-8 w-full lg:w-1/2" label="Office" />
+                <text-input v-model="form.contact_person" :error="errors.contact_person" class="pr-6 pb-8 w-full lg:w-1/2" label="Contact Person" />
+                <text-input v-model="form.contact_no" :error="errors.contact_no" class="pr-6 pb-8 w-full lg:w-1/2" label="Contact No" />
+                <text-input v-model="form.email_address" :error="errors.email_address" class="pr-6 pb-8 w-full lg:w-1/2" label="Email Address" />
+              </div>
+              <div class="px-8 py-4 bg-gray-100 border-t border-gray-200 flex justify-end items-center">
+                <button v-if="!client.deleted_at" class="text-red-600 hover:underline" tabindex="-1" type="button" @click="destroy">Delete Client</button>
+                <loading-button :loading="sending" class="btn-indigo ml-auto" type="submit">Update Client</loading-button>
+              </div>
+            </form>
+          </div>
         </div>
-        <div class="px-8 py-4 bg-gray-100 border-t border-gray-200 flex justify-end items-center">
-          <button v-if="!client.deleted_at" class="text-red-600 hover:underline" tabindex="-1" type="button" @click="destroy">Delete Client</button>
-          <loading-button :loading="sending" class="btn-indigo ml-auto" type="submit">Update Client</loading-button>
+        <!-- Tab 2 -->
+        <div v-show="openTab === 2">
+          Received Products
         </div>
-      </form>
+      </div>
     </div>
   </div>
 </template>
@@ -57,6 +77,10 @@ export default {
         contact_no: this.client.contact_no,
         email_address: this.client.email_address,
       },
+      // Tabs
+      openTab: 1,
+      activeClasses: 'border-l border-t border-r rounded-t text-blue-600',
+      inactiveClasses: 'text-blue-500 hover:text-blue-800',
     }
   },
   methods: {

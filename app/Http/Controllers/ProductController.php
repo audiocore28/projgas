@@ -22,7 +22,7 @@ class ProductController extends Controller
         return Inertia::render('Products/Index', [
             'filters' => Request::all('search'),
             'products' => product::filter(Request::only('search'))
-                // ->orderByName()
+                ->orderBy('id', 'desc')
                 ->paginate(5)
         ]);
     }

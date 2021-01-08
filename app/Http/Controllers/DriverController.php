@@ -22,7 +22,7 @@ class DriverController extends Controller
         return Inertia::render('Drivers/Index', [
             'filters' => Request::all('search'),
             'drivers' => Driver::filter(Request::only('search'))
-                // ->orderByName()
+                ->orderBy('id', 'desc')
                 ->paginate(5)
         ]);
     }

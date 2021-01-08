@@ -25,7 +25,7 @@ class DeliveryController extends Controller
     public function index()
     {
         $deliveries = Delivery::filter(Request::only('search'))
-            // ->orderByName()
+            ->orderBy('id', 'desc')
             ->paginate(5)
             ->transform(function ($delivery) {
                 return [

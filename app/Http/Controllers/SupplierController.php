@@ -22,7 +22,7 @@ class SupplierController extends Controller
         return Inertia::render('Suppliers/Index', [
             'filters' => Request::all('search'),
             'suppliers' => Supplier::filter(Request::only('search'))
-                // ->orderByName()
+                ->orderBy('id', 'desc')
                 ->paginate(5)
         ]);
     }

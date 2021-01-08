@@ -23,8 +23,7 @@ class PurchaseController extends Controller
     public function index()
     {
         $purchases = Purchase::filter(Request::only('search'))
-                // ->orderByName()
-                // ->orderBy('purchase_no')
+                ->orderBy('id', 'desc')
                 ->paginate(5)
                 ->transform(function ($purchase) {
                     return [

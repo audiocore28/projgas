@@ -26,8 +26,8 @@ class TankerLoadController extends Controller
     public function index()
     {
         $tankerLoad = TankerLoad::filter(Request::only('search'))
-            // ->orderByName()
             // ->select('id', 'date', 'purchase_id', 'tanker_id', 'driver_id', 'helper_id')
+            ->orderBy('id', 'desc')
             ->paginate(5)
             ->transform(function ($tankerLoad) {
                 return [

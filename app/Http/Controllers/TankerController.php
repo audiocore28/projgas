@@ -24,7 +24,7 @@ class TankerController extends Controller
         return Inertia::render('Tankers/Index', [
             'filters' => Request::all('search'),
             'tankers' => Tanker::filter(Request::only('search'))
-                // ->orderByName()
+                ->orderBy('id', 'desc')
                 ->paginate(5)
         ]);
     }
