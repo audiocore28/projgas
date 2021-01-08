@@ -10,6 +10,7 @@ use App\Models\Tanker;
 use App\Models\Driver;
 use App\Models\Helper;
 use App\Models\TankerLoadDetail;
+use Carbon\Carbon;
 
 class TankerLoad extends Model
 {
@@ -64,5 +65,10 @@ class TankerLoad extends Model
 	                    });
             });
         });
+    }
+
+    public function getDateAttribute($value)
+    {
+        return Carbon::parse($value)->format('M d, Y');
     }
 }

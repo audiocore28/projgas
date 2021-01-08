@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Supplier;
 use App\Models\PurchaseDetail;
+use Carbon\Carbon;
 
 class Purchase extends Model
 {
@@ -42,5 +43,15 @@ class Purchase extends Model
 	                    });
             });
         });
+    }
+
+    // public function setDateAttribute($value)
+    // {
+    //     $this->attributes['date'] = Carbon::createFromFormat('MM-DD-YYYY', $value)->format('Y-m-d');
+    // }
+
+    public function getDateAttribute($value)
+    {
+        return Carbon::parse($value)->format('M d, Y');
     }
 }

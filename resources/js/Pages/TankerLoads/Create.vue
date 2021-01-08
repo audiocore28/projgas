@@ -8,7 +8,11 @@
       <form @submit.prevent="submit">
         <!-- Load -->
         <div class="p-8 -mr-6 -mb-8 flex flex-wrap">
-          <text-input v-model="form.date" :error="errors.date" class="pr-6 pb-8 w-full lg:w-1/2" label="Date" />
+          <!-- <text-input v-model="form.date" :error="errors.date" class="pr-6 pb-8 w-full lg:w-1/2" label="Date" /> -->
+          <label class="form-label block mr-5">Date</label>
+          <div class="pr-6 pb-8 w-full">
+            <date-picker v-model="form.date" lang="en" value-type="format" :formatter="momentFormat"></date-picker>
+          </div>
           <!-- Select inputs -->
           <select-input v-model="form.purchase_id" :error="errors.purchase_id" class="pr-6 pb-8 w-full lg:w-1/2" label="Purchase No.">
             <option :value="null" />
@@ -71,6 +75,8 @@ import LoadingButton from '@/Shared/LoadingButton'
 import SelectInput from '@/Shared/SelectInput'
 import TextInput from '@/Shared/TextInput'
 import Multiselect from 'vue-multiselect'
+import DatePicker from 'vue2-datepicker'
+import moment from 'moment'
 
 export default {
   layout: Layout,
@@ -79,6 +85,7 @@ export default {
     SelectInput,
     TextInput,
     Multiselect,
+    DatePicker,
   },
   props: {
     errors: Object,
@@ -92,6 +99,20 @@ export default {
   data() {
     return {
       sending: false,
+      momentFormat: {
+        //[optional] Date to String
+        stringify: (date) => {
+          return date ? moment(date).format('ll') : ''
+        },
+        //[optional]  String to Date
+        parse: (value) => {
+          return value ? moment(value, 'll').toDate() : null
+        },
+        // [optional] getWeekNumber
+        getWeek: (date) => {
+          return // a number
+        }
+      },
       form: {
   		  date: null,
         purchase_id: null,
@@ -135,3 +156,4 @@ export default {
 </script>
 
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
+<style src="vue2-datepicker/index.css"></style>

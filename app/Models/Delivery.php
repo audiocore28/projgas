@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Driver;
 use App\Models\Tanker;
 use App\Models\DeliveryDetail;
+use Carbon\Carbon;
 
 class Delivery extends Model
 {
@@ -47,6 +48,11 @@ class Delivery extends Model
 	                    });
             });
         });
+    }
+
+    public function getDateAttribute($value)
+    {
+        return Carbon::parse($value)->format('M d, Y');
     }
 
 }

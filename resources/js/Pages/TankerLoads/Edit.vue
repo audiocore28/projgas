@@ -4,93 +4,125 @@
       <inertia-link class="text-blue-600 hover:text-blue-800" :href="route('tanker-loads.index')">Loads</inertia-link>
       <span class="text-blue-600 font-medium">/</span> {{ updateForm.purchase_id }}
     </h1>
-    <!-- Update Existing Load -->
-    <div class="bg-white rounded shadow overflow-hidden max-w-6xl mb-8">
-      <form @submit.prevent="updateLoad">
-        <!-- Load -->
-        <div class="p-8 -mr-6 -mb-8 flex flex-wrap">
-          <text-input v-model="updateForm.date" :error="errors.date" class="pr-6 pb-8 w-full lg:w-1/2" label="Date" />
-          <!-- Select inputs -->
-          <select-input v-model="updateForm.purchase_id" :error="errors.purchase_id" class="pr-6 pb-8 w-full lg:w-1/2" label="Purchase No.">
-            <option :value="null" />
-            <option v-for="purchase in purchases" :key="purchase.id" :value="purchase.id">{{ purchase.purchase_no }}</option>
-          </select-input>
-          <select-input v-model="updateForm.tanker_id" :error="errors.tanker_id" class="pr-6 pb-8 w-full lg:w-1/2" label="Tanker">
-            <option :value="null" />
-            <option v-for="tanker in tankers" :key="tanker.id" :value="tanker.id">{{ tanker.plate_no }}</option>
-          </select-input>
-          <select-input v-model="updateForm.driver_id" :error="errors.driver_id" class="pr-6 pb-8 w-full lg:w-1/2" label="Driver">
-            <option :value="null" />
-            <option v-for="driver in drivers" :key="driver.id" :value="driver.id">{{ driver.name }}</option>
-          </select-input>
-          <select-input v-model="updateForm.helper_id" :error="errors.helper_id" class="pr-6 pb-8 w-full lg:w-1/2" label="Helper">
-            <option :value="null" />
-            <option v-for="helper in helpers" :key="helper.id" :value="helper.id">{{ helper.name }}</option>
-          </select-input>
-          <select-input v-model="updateForm.status" :error="errors.status" class="pr-6 pb-8 w-full lg:w-1/2" label="Status">
-            <option :value="null" />
-            <option value="loaded">Loaded</option>
-            <option value="delivered">Delivered</option>
-          </select-input>
-          <!-- Text inputs -->
-          <text-input v-model="updateForm.remarks" :error="errors.remarks" class="pr-6 pb-8 w-full lg:w-1/2" label="Remarks" />
+
+    <div class="p-1">
+      <ul class="flex border-b">
+        <li @click="openTab = 1" :class="{ '-mb-px': openTab === 1 }" class="-mb-px mr-1">
+          <a :class="openTab === 1 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold" href="#">Information</a>
+        </li>
+        <li @click="openTab = 2" :class="{ '-mb-px': openTab === 2 }" class="mr-1">
+          <a :class="openTab === 2 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold" href="#">From PO</a>
+        </li>
+        <li @click="openTab = 3" :class="{ '-mb-px': openTab === 3 }" class="mr-1">
+          <a :class="openTab === 3 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold" href="#">Delivered To</a>
+        </li>
+      </ul>
+
+      <!-- Tab 1 -->
+      <div class="w-full pt-4">
+        <div v-show="openTab === 1">
+          <!-- Update Existing Load -->
+          <div class="bg-white rounded shadow overflow-hidden max-w-6xl mb-8 -mt-4">
+            <form @submit.prevent="updateLoad">
+              <!-- Load -->
+              <div class="p-8 -mr-6 -mb-8 flex flex-wrap">
+                <!-- <text-input v-model="updateForm.date" :error="errors.date" class="pr-6 pb-8 w-full lg:w-1/2" label="Date" /> -->
+                <label class="form-label block mr-5">Date</label>
+                <div class="pr-6 pb-8 w-full">
+                  <date-picker v-model="updateForm.date" lang="en" value-type="format" :formatter="momentFormat"></date-picker>
+                </div>
+                <!-- Select inputs -->
+                <select-input v-model="updateForm.purchase_id" :error="errors.purchase_id" class="pr-6 pb-8 w-full lg:w-1/2" label="Purchase No.">
+                  <option :value="null" />
+                  <option v-for="purchase in purchases" :key="purchase.id" :value="purchase.id">{{ purchase.purchase_no }}</option>
+                </select-input>
+                <select-input v-model="updateForm.tanker_id" :error="errors.tanker_id" class="pr-6 pb-8 w-full lg:w-1/2" label="Tanker">
+                  <option :value="null" />
+                  <option v-for="tanker in tankers" :key="tanker.id" :value="tanker.id">{{ tanker.plate_no }}</option>
+                </select-input>
+                <select-input v-model="updateForm.driver_id" :error="errors.driver_id" class="pr-6 pb-8 w-full lg:w-1/2" label="Driver">
+                  <option :value="null" />
+                  <option v-for="driver in drivers" :key="driver.id" :value="driver.id">{{ driver.name }}</option>
+                </select-input>
+                <select-input v-model="updateForm.helper_id" :error="errors.helper_id" class="pr-6 pb-8 w-full lg:w-1/2" label="Helper">
+                  <option :value="null" />
+                  <option v-for="helper in helpers" :key="helper.id" :value="helper.id">{{ helper.name }}</option>
+                </select-input>
+                <select-input v-model="updateForm.status" :error="errors.status" class="pr-6 pb-8 w-full lg:w-1/2" label="Status">
+                  <option :value="null" />
+                  <option value="loaded">Loaded</option>
+                  <option value="delivered">Delivered</option>
+                </select-input>
+                <!-- Text inputs -->
+                <text-input v-model="updateForm.remarks" :error="errors.remarks" class="pr-6 pb-8 w-full lg:w-1/2" label="Remarks" />
+              </div>
+
+              <!-- Details -->
+              <div class="p-8 -mr-6 -mb-8 flex flex-wrap"
+                v-for="(details, index) in updateForm.details">
+                <select-input v-model="details.product_id" :error="errors.product_id" class="pr-6 pb-8 w-full lg:w-1/4" label="Product">
+                  <option :value="null" />
+                  <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
+                </select-input>
+                <text-input v-model="details.quantity" :error="errors.quantity" class="pr-6 pb-8 w-full lg:w-1/4" label="Quantity" />
+                <select-input v-model="details.status" :error="errors.status" class="pr-6 pb-8 w-full lg:w-1/2" label="Status">
+                  <option :value="null" />
+                  <option value="loaded">Loaded</option>
+                  <option value="delivered">Delivered</option>
+                </select-input>
+
+                <!-- Fix Me -->
+                <span style="background-color: red; color: white; cursor: pointer; float: right;" @click.prevent="deleteDetailForm(index, details.id)">X</span>
+              </div>
+              <div class="px-8 py-4 bg-gray-100 border-t border-gray-200 flex justify-end items-center">
+                <button v-if="!tanker_load.deleted_at" class="text-red-600 hover:underline" tabindex="-1" type="button" @click="destroy">Delete Load</button>
+                <loading-button :loading="sending" class="btn-indigo ml-auto" type="submit">Update Load</loading-button>
+              </div>
+            </form>
+          </div>
+
+
+          <!-- Create Form -->
+          <div class="bg-white rounded shadow overflow-hidden max-w-6xl">
+            <form @submit.prevent="saveNewDetails">
+              <!-- Details -->
+              <div class="p-8 -mr-6 -mb-8 flex flex-wrap"
+                v-for="(details, index) in createForm">
+                <select-input v-model="details.product_id" :error="errors.product_id" class="pr-6 pb-8 w-full lg:w-1/4" label="Product">
+                  <option :value="null" />
+                  <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
+                </select-input>
+                <text-input v-model="details.quantity" :error="errors.quantity" class="pr-6 pb-8 w-full lg:w-1/4" label="Quantity" />
+                <select-input v-model="details.status" :error="errors.status" class="pr-6 pb-8 w-full lg:w-1/2" label="Status">
+                  <option :value="null" />
+                  <option value="loaded">Loaded</option>
+                  <option value="delivered">Delivered</option>
+                </select-input>
+
+                <span style="background-color: red; color: white; cursor: pointer; float: right;" @click.prevent="deleteNewDetailForm(index)">X</span>
+              </div>
+
+              <div class="px-8 py-4 flex justify-end items-center">
+                <button class="btn-indigo" @click.prevent="createNewDetailForm">Add Row</button>
+              </div>
+
+              <div class="px-8 py-4 bg-gray-100 border-t border-gray-200 flex justify-end items-center">
+                <loading-button :loading="sending" class="btn-indigo ml-auto" type="submit">Save Details</loading-button>
+              </div>
+            </form>
+          </div>
         </div>
 
-        <!-- Details -->
-        <div class="p-8 -mr-6 -mb-8 flex flex-wrap"
-          v-for="(details, index) in updateForm.details">
-          <select-input v-model="details.product_id" :error="errors.product_id" class="pr-6 pb-8 w-full lg:w-1/4" label="Product">
-            <option :value="null" />
-            <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
-          </select-input>
-          <text-input v-model="details.quantity" :error="errors.quantity" class="pr-6 pb-8 w-full lg:w-1/4" label="Quantity" />
-          <select-input v-model="details.status" :error="errors.status" class="pr-6 pb-8 w-full lg:w-1/2" label="Status">
-            <option :value="null" />
-            <option value="loaded">Loaded</option>
-            <option value="delivered">Delivered</option>
-          </select-input>
-
-          <!-- Fix Me -->
-          <span style="background-color: red; color: white; cursor: pointer; float: right;" @click.prevent="deleteDetailForm(index, details.id)">X</span>
+        <!-- Tab 2 -->
+        <div v-show="openTab === 2">
+          Purchases
         </div>
-        <div class="px-8 py-4 bg-gray-100 border-t border-gray-200 flex justify-end items-center">
-          <button v-if="!tanker_load.deleted_at" class="text-red-600 hover:underline" tabindex="-1" type="button" @click="destroy">Delete Load</button>
-          <loading-button :loading="sending" class="btn-indigo ml-auto" type="submit">Update Load</loading-button>
+        <!-- Tab 3 -->
+        <div v-show="openTab === 3">
+          Deliveries
         </div>
-      </form>
+      </div>
     </div>
-
-
-    <!-- Create Form -->
-    <div class="bg-white rounded shadow overflow-hidden max-w-6xl">
-      <form @submit.prevent="saveNewDetails">
-        <!-- Details -->
-        <div class="p-8 -mr-6 -mb-8 flex flex-wrap"
-          v-for="(details, index) in createForm">
-          <select-input v-model="details.product_id" :error="errors.product_id" class="pr-6 pb-8 w-full lg:w-1/4" label="Product">
-            <option :value="null" />
-            <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
-          </select-input>
-          <text-input v-model="details.quantity" :error="errors.quantity" class="pr-6 pb-8 w-full lg:w-1/4" label="Quantity" />
-          <select-input v-model="details.status" :error="errors.status" class="pr-6 pb-8 w-full lg:w-1/2" label="Status">
-            <option :value="null" />
-            <option value="loaded">Loaded</option>
-            <option value="delivered">Delivered</option>
-          </select-input>
-
-          <span style="background-color: red; color: white; cursor: pointer; float: right;" @click.prevent="deleteNewDetailForm(index)">X</span>
-        </div>
-
-        <div class="px-8 py-4 flex justify-end items-center">
-          <button class="btn-indigo" @click.prevent="createNewDetailForm">Add Row</button>
-        </div>
-
-        <div class="px-8 py-4 bg-gray-100 border-t border-gray-200 flex justify-end items-center">
-          <loading-button :loading="sending" class="btn-indigo ml-auto" type="submit">Save Details</loading-button>
-        </div>
-      </form>
-    </div>
-
   </div>
 </template>
 
@@ -101,6 +133,8 @@ import LoadingButton from '@/Shared/LoadingButton'
 import SelectInput from '@/Shared/SelectInput'
 import TextInput from '@/Shared/TextInput'
 import TrashedMessage from '@/Shared/TrashedMessage'
+import DatePicker from 'vue2-datepicker'
+import moment from 'moment'
 
 export default {
   // metaInfo() {
@@ -113,6 +147,7 @@ export default {
     SelectInput,
     TextInput,
     TrashedMessage,
+    DatePicker,
   },
   props: {
     errors: Object,
@@ -127,6 +162,20 @@ export default {
   data() {
     return {
       sending: false,
+      momentFormat: {
+        //[optional] Date to String
+        stringify: (date) => {
+          return date ? moment(date).format('ll') : ''
+        },
+        //[optional]  String to Date
+        parse: (value) => {
+          return value ? moment(value, 'll').toDate() : null
+        },
+        // [optional] getWeekNumber
+        getWeek: (date) => {
+          return // a number
+        }
+      },
       updateForm: {
         date: this.tanker_load.date,
         purchase_id: this.tanker_load.purchase_id,
@@ -146,6 +195,10 @@ export default {
           status: null,
         },
       ],
+      // Tabs
+      openTab: 1,
+      activeClasses: 'border-l border-t border-r rounded-t text-blue-600',
+      inactiveClasses: 'text-blue-500 hover:text-blue-800',
     }
   },
   methods: {
@@ -200,3 +253,5 @@ export default {
   },
 }
 </script>
+
+<style src="vue2-datepicker/index.css"></style>
