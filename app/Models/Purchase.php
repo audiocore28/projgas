@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Supplier;
 use App\Models\PurchaseDetail;
+use App\Models\TankerLoad;
+use App\Models\Delivery;
 use Carbon\Carbon;
 
 class Purchase extends Model
@@ -27,10 +29,15 @@ class Purchase extends Model
 	 	return $this->hasMany(PurchaseDetail::class);
 	 }
 
-	 public function loads()
+	 public function tankerLoads()
 	 {
-	 	return $this->hasMany(Load::class);
+	 	return $this->hasMany(TankerLoad::class);
 	 }
+
+     public function deliveries()
+     {
+        return $this->hasMany(Delivery::class);
+     }
 
 
     public function scopeFilter($query, array $filters)

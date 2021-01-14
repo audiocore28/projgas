@@ -5,22 +5,573 @@
       <span class="text-blue-600 font-medium">/</span> {{ updateForm.purchase_no }}
     </h1>
 
+    <!-- Overview of Distribution -->
+    <div class="rounded shadow overflow-x-auto mb-8 -mt-4">
+      <table class="w-full whitespace-no-wrap">
+        <thead class="bg-gray-50">
+          <tr>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+              Products
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+              Purchases
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+              Loads
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+              Deliveries
+            </th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <tr class="hover:bg-gray-100 focus-within:bg-gray-100">
+            <td class="px-6 py-4 text-sm text-gray-500">
+              <span class="px-2 py-2 text-sm leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                {{ 'Diesel' }}
+              </span>
+            </td>
+            <td class="px-6 py-4" v-for="purchase in figures.purchases" v-if="purchase.product.id === 3">
+              <div class="text-md text-gray-900">
+                <span class="font-semibold">
+                  {{ purchase.quantity / 1000 }}
+                </span>
+                <span class="font-semibold text-sm ml-2 px-2 inline-flex leading-5 rounded-full bg-yellow-100 text-yellow-800">
+                  {{ purchase.unit_price }}
+                </span>
+              </div>
+            </td>
+<!--             <td>
+              <div class="flex items-center">
+                <span class="font-semibold text-md font-medium text-gray-900">
+                  {{ 'Diesel' }}
+                </span>
+                <div class="px-6 py-4" v-for="load in figures.loads">
+                  <div class="relative w-12 h-12 ml-1" v-for="detail in load.loads" v-if="detail.product_id === 3">
+                    <img class="rounded-full border border-gray-100 shadow-sm" src="https://randomuser.me/api/portraits/women/81.jpg" alt="user image" />
+                    <div class="text-xs font-medium font-semibold absolute top-0 right-0 h-6 w-6 -my-2 -mx-2 border-2 border-white rounded-full bg-yellow-200 z-2 leading-5 text-yellow-800">
+                      {{ detail.quantity / 1000 }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </td>
+ -->
+            <td class="px-6 py-4">
+              <span class="font-semibold text-md font-medium text-gray-900 mr-1">{{ 'D120' }}</span>
+              <span v-for="load in figures.loads">
+                <span class="px-2 py-2 text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800" v-for="detail in load.loads" v-if="detail.product_id === 3">
+                  {{ load.driver.name }}
+                  <span class="p-1 rounded-full text-yellow-800 text-xs ml-2 bg-yellow-400">
+                      {{  detail.quantity / 1000 }}
+                  </span>
+                </span>
+              </span>
+            </td>
+            <td class="px-6 py-4">
+              <span class="font-semibold text-md font-medium text-gray-900 mr-1">{{ 'D120' }}</span>
+              <span v-for="delivery in figures.deliveries">
+                <span class="px-2 py-2 text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800" v-for="detail in delivery.deliveries" v-if="detail.product_id === 3">
+                  {{ delivery.client.name }}
+                  <span class="p-1 rounded-full text-yellow-800 text-xs ml-2 bg-yellow-400">
+                      {{  detail.quantity / 1000 }}
+                  </span>
+                </span>
+              </span>
+            </td>
+          </tr>
+          <tr class="hover:bg-gray-100 focus-within:bg-gray-100">
+            <td class="px-6 py-4 text-sm text-gray-500">
+              <span class="px-2 py-2 text-sm leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                {{ 'Regular' }}
+              </span>
+            </td>
+            <td class="px-6 py-4">
+              <div class="text-md text-gray-900" v-for="purchase in figures.purchases" v-if="purchase.product.id === 2">
+                <span class="font-semibold">
+                  {{ purchase.quantity / 1000 }}
+                </span>
+                <span class="font-semibold text-sm ml-2 px-2 inline-flex leading-5 rounded-full bg-green-100 text-green-800">
+                  {{ purchase.unit_price }}
+                </span>
+              </div>
+            </td>
+<!--             <td>
+              <div class="flex items-center">
+                <span class="font-semibold text-md font-medium text-gray-900">
+                  {{ 'Regular' }}
+                </span>
+                <div class="px-6 py-4" v-for="load in figures.loads">
+                  <div class="relative w-12 h-12 ml-1" v-for="detail in load.loads" v-if="detail.product_id === 2">
+                    <img class="rounded-full border border-gray-100 shadow-sm" src="https://randomuser.me/api/portraits/women/81.jpg" alt="user image" />
+                    <div class="text-xs font-medium font-semibold absolute top-0 right-0 h-6 w-6 -my-2 -mx-2 border-2 border-white rounded-full bg-green-200 z-2 leading-5 text-green-800">
+                      {{ detail.quantity / 1000 }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </td>
+ -->
+            <td class="px-6 py-4">
+              <span class="font-semibold text-md font-medium text-gray-900 mr-1">{{ 'R140' }}</span>
+              <span v-for="load in figures.loads">
+                <span class="px-2 py-2 text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800" v-for="detail in load.loads" v-if="detail.product_id === 2">
+                  {{ load.driver.name }}
+                  <span class="p-1 rounded-full text-green-800 text-xs ml-2 bg-green-400">
+                      {{  detail.quantity / 1000 }}
+                  </span>
+                </span>
+              </span>
+            </td>
+            <td class="px-6 py-4">
+              <span class="font-semibold text-md font-medium text-gray-900 mr-1">{{ 'R140' }}</span>
+              <span v-for="delivery in figures.deliveries">
+                <span class="px-2 py-2 text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800" v-for="detail in delivery.deliveries" v-if="detail.product_id === 2">
+                  {{ delivery.client.name }}
+                  <span class="p-1 rounded-full text-green-800 text-xs ml-2 bg-green-400">
+                      {{  detail.quantity / 1000 }}
+                  </span>
+                </span>
+              </span>
+            </td>
+          </tr>
+          <tr class="hover:bg-gray-100 focus-within:bg-gray-100">
+            <td class="px-6 py-4 text-sm text-gray-500">
+              <span class="px-2 py-2 text-sm leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                {{ 'Premium' }}
+              </span>
+            </td>
+            <td class="px-6 py-4" v-for="purchase in figures.purchases" v-if="purchase.product.id === 1">
+              <div class="text-md text-gray-900">
+                <span class="font-semibold">
+                  {{ purchase.quantity / 1000 }}
+                </span>
+                <span class="font-semibold text-sm ml-2 px-2 inline-flex leading-5 rounded-full bg-red-100 text-red-800">
+                  {{ purchase.unit_price }}
+                </span>
+              </div>
+            </td>
+<!--             <td>
+              <div class="flex items-center">
+                <span class="font-semibold text-md font-medium text-gray-900">
+                  {{ 'Premium' }}
+                </span>
+                <div class="px-6 py-4" v-for="load in figures.loads">
+                  <div class="relative w-12 h-12 ml-1" v-for="detail in load.loads" v-if="detail.product_id === 1">
+                    <img class="rounded-full border border-gray-100 shadow-sm" src="https://randomuser.me/api/portraits/women/81.jpg" alt="user image" />
+                    <div class="text-xs font-medium font-semibold absolute top-0 right-0 h-6 w-6 -my-2 -mx-2 border-2 border-white rounded-full bg-red-200 z-2 leading-5 text-red-800">
+                      {{ detail.quantity / 1000 }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </td>
+ -->
+            <td class="px-6 py-4">
+              <span class="font-semibold text-md font-medium text-gray-900 mr-1">{{ 'P110' }}</span>
+              <span v-for="load in figures.loads">
+                <span class="px-2 py-2 text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800" v-for="detail in load.loads" v-if="detail.product_id === 1">
+                  {{ load.driver.name }}
+                  <span class="p-1 rounded-full text-red-800 text-xs ml-2 bg-red-400">
+                      {{  detail.quantity / 1000 }}
+                  </span>
+                </span>
+              </span>
+            </td>
+            <td class="px-6 py-4">
+              <span class="font-semibold text-md font-medium text-gray-900 mr-1">{{ 'P110' }}</span>
+              <span v-for="delivery in figures.deliveries">
+                <span class="px-2 py-2 text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800" v-for="detail in delivery.deliveries" v-if="detail.product_id === 1">
+                  {{ delivery.client.name }}
+                  <span class="p-1 rounded-full text-red-800 text-xs ml-2 bg-red-400">
+                      {{  detail.quantity / 1000 }}
+                  </span>
+                </span>
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- /Overview of Distribution -->
+
+
+    <!-- Tabs -->
     <div class="p-1">
       <ul class="flex border-b">
-        <li @click="openTab = 1" :class="{ '-mb-px': openTab === 1 }" class="-mb-px mr-1">
-          <a :class="openTab === 1 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold" href="#">Information</a>
+        <li @click="openTab = 1" :class="{ '-mb-px': openTab === 1 }" class="mr-1">
+          <a :class="openTab === 1 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold" href="#">Details</a>
         </li>
-        <li @click="openTab = 2" :class="{ '-mb-px': openTab === 2 }" class="mr-1">
-          <a :class="openTab === 2 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold" href="#">Loaded To</a>
-        </li>
-        <li @click="openTab = 3" :class="{ '-mb-px': openTab === 3 }" class="mr-1">
-          <a :class="openTab === 3 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold" href="#">Delivered To</a>
+        <li @click="openTab = 2" :class="{ '-mb-px': openTab === 2 }" class="-mb-px mr-1">
+          <a :class="openTab === 2 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold" href="#">Edit Purchase</a>
         </li>
       </ul>
 
-      <!-- Tab 1 -->
       <div class="w-full pt-4">
+        <!-- Tab 1 -->
         <div v-show="openTab === 1">
+<!--           <div class="bg-white rounded shadow overflow-hidden max-w-6xl mb-8 -mt-4">
+          </div>
+ -->
+          <div class="bg-white rounded shadow overflow-x-auto mb-8 -mt-4">
+            <ul class="block mt-8 w-full">
+              <!-- Purchase -->
+              <li class="flex align-center flex-col">
+                <h4 @click="selected !== 0 ? selected = 0 : selected = null"
+                class="cursor-pointer px-5 py-3 bg-blue-600 text-white inline-block hover:opacity-75 hover:shadow hover:-mb-3 rounded-t">Purchases</h4>
+                <div v-show="selected == 0" class="border py-4 px-2">
+                  <h1>Supplier: Unioil</h1>
+                  <h2>Date: Oct. 15, 2018</h2>
+                  <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                      <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Product
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Quantity
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Unit Price
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Amount
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                      <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <div class="flex items-center">
+                            <div class="ml-4">
+                              <div class="text-sm font-medium text-gray-900">
+                                Diesel
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <div class="text-sm text-gray-900">22,000</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                            41.7
+                          </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          917,400.00
+                        </td>
+                      </tr>
+
+                      <!-- More rows... -->
+                      <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <div class="flex items-center">
+                            <div class="ml-4">
+                              <div class="text-sm font-medium text-gray-900">
+                                Premium
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <div class="text-sm text-gray-900">22,000</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                            41.7
+                          </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          917,400.00
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <div class="flex items-center">
+                            <div class="ml-4">
+                              <div class="text-sm font-medium text-gray-900">
+                                Regular
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <div class="text-sm text-gray-900">22,000</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                            41.7
+                          </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          917,400.00
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <div class="flex items-center">
+                            <div class="ml-4">
+                              <div class="text-sm font-medium text-gray-900">
+                                Total:
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <div class="text-sm text-gray-900">100,000</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                            <!-- blank  -->
+                          </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          4,369,200.00
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </li>
+              <!-- Loads -->
+              <li class="flex align-center flex-col">
+                <h4 @click="selected !== 1 ? selected = 1 : selected = null"
+                class="cursor-pointer px-5 py-3 bg-blue-600 text-white inline-block hover:opacity-75 hover:shadow hover:-mb-3">Loads</h4>
+                <div v-show="selected == 1" class="border py-4 px-2">
+                  <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                      <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Driver
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Product
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Quantity
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                      <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <div class="flex items-center">
+                            <div class="ml-4">
+                              <div class="text-sm font-medium text-gray-900">
+                                Rodel - Driver
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                            Premium
+                          </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          6,000
+                        </td>
+                      </tr>
+
+                      <!-- More rows... -->
+                      <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <div class="flex items-center">
+                            <div class="ml-4">
+                              <div class="text-sm font-medium text-gray-900">
+                                Rodel - Driver
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                            Premium
+                          </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          6,000
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <div class="flex items-center">
+                            <div class="ml-4">
+                              <div class="text-sm font-medium text-gray-900">
+                                Rodel - Driver
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                            Premium
+                          </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          6,000
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </li>
+             <!-- Deliveries -->
+              <li class="flex align-center flex-col">
+                <h4 @click="selected !== 2 ? selected = 2 : selected = null"
+                :class="{'cursor-pointer px-5 py-3 bg-blue-600 text-white inline-block hover:opacity-75 hover:shadow hover:-mb-3': true, 'rounded-b': selected != 2}">Deliveries</h4>
+                <div v-show="selected == 2" :class="{'border py-4 px-2': true, 'rounded-b': selected == 2}">
+                   <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                      <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Date
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Driver
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Client
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Product
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Amount
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Unit Price
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Amount
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                      <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <div class="flex items-center">
+                            <div class="ml-4">
+                              <div class="text-sm font-medium text-gray-900">
+                                Nov. 9, 2020
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <div class="flex items-center">
+                            <div class="ml-4">
+                              <div class="text-sm font-medium text-gray-900">
+                                Rodel - Driver
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <div class="text-sm text-gray-900">GTEX - Fortune</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                            Premium
+                          </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          6,000
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          37.51
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          225,060.00
+                        </td>
+                      </tr>
+
+                      <!-- More rows... -->
+                      <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <div class="flex items-center">
+                            <div class="ml-4">
+                              <div class="text-sm font-medium text-gray-900">
+                                Nov. 9, 2020
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <div class="flex items-center">
+                            <div class="ml-4">
+                              <div class="text-sm font-medium text-gray-900">
+                                Rodel - Driver
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <div class="text-sm text-gray-900">GTEX - Fortune</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                            Premium
+                          </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          6,000
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          37.51
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          225,060.00
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <div class="flex items-center">
+                            <div class="ml-4">
+                              <div class="text-sm font-medium text-gray-900">
+                                Nov. 9, 2020
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <div class="flex items-center">
+                            <div class="ml-4">
+                              <div class="text-sm font-medium text-gray-900">
+                                Rodel - Driver
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <div class="text-sm text-gray-900">GTEX - Fortune</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                            Premium
+                          </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          6,000
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          37.51
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          225,060.00
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Tab 2 -->
+        <div v-show="openTab === 2">
           <!-- Update Existing Purchase -->
           <div class="bg-white rounded shadow overflow-hidden max-w-6xl mb-8 -mt-4">
             <form @submit.prevent="updatePurchase">
@@ -40,22 +591,22 @@
 
               <!-- Details -->
               <div class="p-8 -mr-6 -mb-8 flex flex-wrap"
-                v-for="(details, index) in updateForm.details">
-                <select-input v-model="details.product_id" :error="errors.product_id" class="pr-6 pb-8 w-full lg:w-1/6" label="Product">
-                  <option :value="null" />
-                  <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
-                </select-input>
-                <text-input v-model="details.quantity" :error="errors.quantity" class="pr-6 pb-8 w-full lg:w-1/6" label="Quantity" />
-                <text-input v-model="details.unit_price" :error="errors.unit_price" class="pr-6 pb-8 w-full lg:w-1/6" label="Unit Price" />
-                <text-input v-model="details.amount" :error="errors.amount" class="pr-6 pb-8 w-full lg:w-1/6" label="Amount" />
-                <text-input v-model="details.remarks" :error="errors.remarks" class="pr-6 pb-8 w-full lg:w-1/6" label="Remarks" />
-                <span style="background-color: red; color: white; cursor: pointer; float: right;" @click.prevent="deleteDetailForm(index, details.id)">X</span>
-              </div>
+              v-for="(details, index) in updateForm.details">
+              <select-input v-model="details.product.id" :error="errors.product_id" class="pr-6 pb-8 w-full lg:w-1/6" label="Product">
+                <option :value="null" />
+                <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
+              </select-input>
+              <text-input v-model="details.quantity" :error="errors.quantity" class="pr-6 pb-8 w-full lg:w-1/6" label="Quantity" />
+              <text-input v-model="details.unit_price" :error="errors.unit_price" class="pr-6 pb-8 w-full lg:w-1/6" label="Unit Price" />
+              <text-input v-model="details.amount" :error="errors.amount" class="pr-6 pb-8 w-full lg:w-1/6" label="Amount" />
+              <text-input v-model="details.remarks" :error="errors.remarks" class="pr-6 pb-8 w-full lg:w-1/6" label="Remarks" />
+              <span style="background-color: red; color: white; cursor: pointer; float: right;" @click.prevent="deleteDetailForm(index, details.id)">X</span>
+            </div>
 
-      <!--         <div class="px-8 py-4 bg-gray-100 border-t border-gray-200 flex justify-end items-center">
-                <button class="btn-indigo" @click.prevent="addNewDetailForm">Add Row</button>
-              </div>
-       -->
+        <!--         <div class="px-8 py-4 bg-gray-100 border-t border-gray-200 flex justify-end items-center">
+                  <button class="btn-indigo" @click.prevent="addNewDetailForm">Add Row</button>
+                </div>
+              -->
               <div class="px-8 py-4 bg-gray-100 border-t border-gray-200 flex justify-end items-center">
                 <button v-if="!purchase.deleted_at" class="text-red-600 hover:underline" tabindex="-1" type="button" @click="destroy">Delete Purchase</button>
                 <loading-button :loading="sending" class="btn-indigo ml-auto" type="submit">Update Purchase</loading-button>
@@ -69,53 +620,46 @@
             <form @submit.prevent="saveNewDetails">
               <!-- Details -->
               <div class="p-8 -mr-6 -mb-8 flex flex-wrap"
-                v-for="(details, index) in createForm">
-                <select-input v-model="details.product_id" :error="errors.product_id" class="pr-6 pb-8 w-full lg:w-1/6" label="Product">
-                  <option :value="null" />
-                  <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
-                </select-input>
-                <text-input v-model="details.quantity" :error="errors.quantity" class="pr-6 pb-8 w-full lg:w-1/6" label="Quantity" />
-                <text-input v-model="details.unit_price" :error="errors.unit_price" class="pr-6 pb-8 w-full lg:w-1/6" label="Unit Price" />
-                <text-input v-model="details.amount" :error="errors.amount" class="pr-6 pb-8 w-full lg:w-1/6" label="Amount" />
-                <text-input v-model="details.remarks" :error="errors.remarks" class="pr-6 pb-8 w-full lg:w-1/6" label="Remarks" />
+              v-for="(details, index) in createForm">
+              <select-input v-model="details.product_id" :error="errors.product_id" class="pr-6 pb-8 w-full lg:w-1/6" label="Product">
+                <option :value="null" />
+                <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
+              </select-input>
+              <text-input v-model="details.quantity" :error="errors.quantity" class="pr-6 pb-8 w-full lg:w-1/6" label="Quantity" />
+              <text-input v-model="details.unit_price" :error="errors.unit_price" class="pr-6 pb-8 w-full lg:w-1/6" label="Unit Price" />
+              <text-input v-model="details.amount" :error="errors.amount" class="pr-6 pb-8 w-full lg:w-1/6" label="Amount" />
+              <text-input v-model="details.remarks" :error="errors.remarks" class="pr-6 pb-8 w-full lg:w-1/6" label="Remarks" />
 
-                <span style="background-color: red; color: white; cursor: pointer; float: right;" @click.prevent="deleteNewDetailForm(index)">X</span>
-              </div>
+              <span style="background-color: red; color: white; cursor: pointer; float: right;" @click.prevent="deleteNewDetailForm(index)">X</span>
+            </div>
 
-              <div class="px-8 py-4 flex justify-end items-center">
-                <button class="btn-indigo" @click.prevent="createNewDetailForm">Add Row</button>
-              </div>
+            <div class="px-8 py-4 flex justify-end items-center">
+              <button class="btn-indigo" @click.prevent="createNewDetailForm">Add Row</button>
+            </div>
 
-              <div class="px-8 py-4 bg-gray-100 border-t border-gray-200 flex justify-end items-center">
-                <loading-button :loading="sending" class="btn-indigo ml-auto" type="submit">Save Details</loading-button>
-              </div>
-            </form>
-          </div>
-        </div>
-        <!-- /Tab 1 -->
-        <!-- Tab 3 -->
-        <div v-show="openTab === 2">
-          <h1>Loads</h1>
-        </div>
-        <div v-show="openTab === 3">
-          <h1>Deliveries</h1>
+            <div class="px-8 py-4 bg-gray-100 border-t border-gray-200 flex justify-end items-center">
+              <loading-button :loading="sending" class="btn-indigo ml-auto" type="submit">Save Details</loading-button>
+            </div>
+          </form>
         </div>
       </div>
+
     </div>
   </div>
+</div>
 </template>
 
 <script>
-import Icon from '@/Shared/Icon'
-import Layout from '@/Shared/Layout'
-import LoadingButton from '@/Shared/LoadingButton'
-import SelectInput from '@/Shared/SelectInput'
-import TextInput from '@/Shared/TextInput'
-import TrashedMessage from '@/Shared/TrashedMessage'
-import DatePicker from 'vue2-datepicker'
-import moment from 'moment'
+  import Icon from '@/Shared/Icon'
+  import Layout from '@/Shared/Layout'
+  import LoadingButton from '@/Shared/LoadingButton'
+  import SelectInput from '@/Shared/SelectInput'
+  import TextInput from '@/Shared/TextInput'
+  import TrashedMessage from '@/Shared/TrashedMessage'
+  import DatePicker from 'vue2-datepicker'
+  import moment from 'moment'
 
-export default {
+  export default {
   // metaInfo() {
   //   return { title: this.form.name }
   // },
@@ -133,6 +677,7 @@ export default {
     purchase: Object,
     suppliers: Array,
     products: Array,
+    figures: Object,
   },
   remember: 'form',
   data() {
@@ -159,20 +704,22 @@ export default {
         details: this.purchase.details,
       },
       createForm: [
-        {
-          id: null,
-          purchase_id: this.purchase.id,
-          product_id: null,
-          quantity: null,
-          unit_price: null,
-          amount: null,
-          remarks: null,
-        },
+      {
+        id: null,
+        purchase_id: this.purchase.id,
+        product_id: null,
+        quantity: null,
+        unit_price: null,
+        amount: null,
+        remarks: null,
+      },
       ],
       // Tabs
       openTab: 1,
       activeClasses: 'border-l border-t border-r rounded-t text-blue-600',
       inactiveClasses: 'text-blue-500 hover:text-blue-800',
+      // Accordion
+      selected: null,
     }
   },
   methods: {
@@ -194,9 +741,9 @@ export default {
       }
     },
     deleteDetailForm(index, productDetailId) {
-        if (confirm('Are you sure you want to delete this row?')) {
-          this.$inertia.delete(this.route('purchase-details.destroy', productDetailId));
-          this.purchase.details.splice(index, 1);
+      if (confirm('Are you sure you want to delete this row?')) {
+        this.$inertia.delete(this.route('purchase-details.destroy', productDetailId));
+        this.purchase.details.splice(index, 1);
       }
     },
 

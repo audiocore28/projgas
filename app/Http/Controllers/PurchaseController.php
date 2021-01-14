@@ -7,6 +7,8 @@ use App\Models\Purchase;
 use App\Models\PurchaseDetail;
 use App\Models\Supplier;
 use App\Models\Product;
+use App\Models\TankerLoad;
+use App\Models\Delivery;
 // use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
@@ -108,6 +110,46 @@ class PurchaseController extends Controller
         $suppliers = Supplier::all();
         $products = Product::all();
 
+        // each, foreach, where, whereHas, get, return, has, filter, with
+
+        $pD = $purchase->purchaseDetails->transform(function ($detail) {
+            return [
+                'quantity' => $detail->quantity,
+                'unit_price' => $detail->unit_price,
+                'amount' => $detail->amount,
+                'remarks' => $detail->remarks,
+                'purchase_id' => $detail->purchase_id,
+                'product' => $detail->product ? $detail->product->only('id', 'name') : null,
+            ];
+        });
+
+        $lD = $purchase->tankerLoads->transform(function ($load) {
+            return [
+                // 'date' => $load->date,
+                // 'status' => $load->status,
+                // 'remarks' => $load->remarks,
+                // 'purchase_id' => $load->purchase_id,
+                // 'tanker_id' => $load->tanker_id,
+                'driver' => $load->driver ? $load->driver->only('name') : null,
+                'loads' => $load->tankerLoadDetails ? $load->tankerLoadDetails : null,
+            ];
+        });
+
+        $dD = $purchase->deliveries->transform(function ($delivery) {
+            return [
+                // 'delivery_id' => $delivery->delivery_id,
+                // 'product_id' => $delivery->product_id,
+                // 'quantity' => $delivery->quantity,
+                // 'unit_price' => $delivery->unit_price,
+                // 'amount' => $delivery->amount,
+                'client' => $delivery->client ? $delivery->client->only('name') : null,
+                'deliveries' => $delivery->deliveryDetails ? $delivery->deliveryDetails : null,
+            ];
+        });
+
+       $keys = collect(['purchases', 'loads', 'deliveries']);
+       $figures = $keys->combine([$pD, $lD, $dD]);
+
         return Inertia::render('Purchases/Edit', [
             'purchase' => [
                 'id' => $purchase->id,
@@ -118,6 +160,7 @@ class PurchaseController extends Controller
             ],
             'suppliers' => $suppliers,
             'products' => $products,
+            'figures' => $figures,
         ]);
 
     }

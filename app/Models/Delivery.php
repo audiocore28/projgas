@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Driver;
 use App\Models\Tanker;
 use App\Models\DeliveryDetail;
+use App\Models\Purchase;
+use App\Models\Client;
 use Carbon\Carbon;
 
 class Delivery extends Model

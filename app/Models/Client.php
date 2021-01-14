@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 // use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Delivery;
 
 class Client extends Model
 {
@@ -12,6 +13,12 @@ class Client extends Model
   //   use SoftDeletes;
 
 	 protected $fillable = ['name', 'office', 'contact_person', 'email_address', 'contact_no'];
+
+
+     public function deliveries()
+     {
+        return $this->hasMany(Delivery::class);
+     }
 
     public function scopeFilter($query, array $filters)
     {

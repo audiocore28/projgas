@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 // use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Purchase;
+use App\Models\Delivery;
 use App\Models\Tanker;
 use App\Models\Driver;
 use App\Models\Helper;
@@ -24,6 +25,11 @@ class TankerLoad extends Model
 	 public function purchase()
 	 {
 	 	return $this->belongsTo(Purchase::class);
+	 }
+
+	 public function deliveries()
+	 {
+	 	return $this->hasMany(Delivery::class);
 	 }
 
 	 public function tanker()
