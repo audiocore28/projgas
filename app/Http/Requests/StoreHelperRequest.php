@@ -27,9 +27,6 @@ class StoreHelperRequest extends FormRequest
             'name' => ['required', 'max:50'],
             'nickname' => ['nullable', 'max:50'],
             'address' => ['nullable', 'max:150'],
-            'dob' => ['nullable', 'max:50'],
-            'date_hired' => ['nullable', 'max:50'],
-            'status' => ['nullable', 'max:20'],
             'contact_no' => ['nullable', 'max:25'],
         ];
     }

@@ -75,9 +75,6 @@ class HelperController extends Controller
                 'name' => $helper->name,
                 'nickname' => $helper->nickname,
                 'address' => $helper->address,
-                'dob' => $helper->dob,
-                'date_hired' => $helper->date_hired,
-                'status' => $helper->status,
                 'contact_no' => $helper->contact_no,
             ]
         ]);

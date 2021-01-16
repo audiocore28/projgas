@@ -20,7 +20,6 @@ class CreateTankerLoadsTable extends Migration
             $table->bigInteger('driver_id')->nullable();
             $table->bigInteger('helper_id')->nullable();
             $table->bigInteger('purchase_id')->nullable();
-            $table->string('status')->nullable();
             $table->string('remarks')->nullable();
             $table->timestamps();
         });

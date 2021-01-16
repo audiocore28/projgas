@@ -47,7 +47,6 @@ class TankerLoadDetailController extends Controller
                 'tanker_load_id' => $detail['tanker_load_id'],
                 'product_id' => $detail['product_id'],
                 'quantity' => $detail['quantity'],
-                'status' => $detail['status'],
             ]);
         }
 

@@ -80,7 +80,6 @@ class TankerLoadController extends Controller
     {
         $tankerLoadId = TankerLoad::create([
             'date' => $request->date,
-            'status' => $request->status,
             'remarks' => $request->remarks,
             'purchase_id' => $request->purchase_id,
             'tanker_id' => $request->tanker_id,
@@ -95,7 +94,6 @@ class TankerLoadController extends Controller
                 'tanker_load_id' => $tankerLoadId,
                 'product_id' => $detail['product_id'],
                 'quantity' => $detail['quantity'],
-                'status' => $detail['status'],
             ]);
         }
 
@@ -127,11 +125,11 @@ class TankerLoadController extends Controller
         $helpers = Helper::all();
         $products = Product::all();
 
+
         return Inertia::render('TankerLoads/Edit', [
             'tanker_load' => [
                 'id' => $tankerLoad->id,
                 'date' => $tankerLoad->date,
-                'status' => $tankerLoad->status,
                 'remarks' => $tankerLoad->remarks,
                 'purchase_id' => $tankerLoad->purchase_id,
                 'tanker_id' => $tankerLoad->tanker_id,
@@ -159,7 +157,6 @@ class TankerLoadController extends Controller
         // TankerLoad
         $tankerLoad->update([
             'date' => $request->date,
-            'status' => $request->status,
             'remarks' => $request->remarks,
             'purchase_id' => $request->purchase_id,
             'tanker_id' => $request->tanker_id,
@@ -178,7 +175,6 @@ class TankerLoadController extends Controller
                 // 'load_id' => $detail['load_id'],
                 'product_id' => $detail['product_id'],
                 'quantity' => $detail['quantity'],
-                'status' => $detail['status'],
             ]);
         }
 

@@ -25,7 +25,6 @@ class StoreTankerLoadRequest extends FormRequest
     {
         return [
             'date' => ['required', 'max:50'],
-            'status' => ['nullable', 'max:100'],
             'remarks' => ['nullable', 'max:250'],
             'purchase_id' => ['nullable', 'max:50'],
             'tanker_id' => ['required', 'max:50'],

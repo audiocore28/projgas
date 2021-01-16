@@ -11,13 +11,6 @@
           <text-input v-model="form.nickname" :error="errors.nickname" class="pr-6 pb-8 w-full lg:w-1/2" label="Nickname" />
           <text-input v-model="form.address" :error="errors.address" class="pr-6 pb-8 w-full lg:w-1/2" label="Address" />
           <text-input v-model="form.license_no" :error="errors.license_no" class="pr-6 pb-8 w-full lg:w-1/2" label="License No." />
-          <text-input v-model="form.dob" :error="errors.dob" class="pr-6 pb-8 w-full lg:w-1/2" label="Date of Birth" />
-          <text-input v-model="form.date_hired" :error="errors.date_hired" class="pr-6 pb-8 w-full lg:w-1/2" label="Date Hired" />
-          <select-input v-model="form.status" :error="errors.status" class="pr-6 pb-8 w-full lg:w-1/2" label="Status">
-            <option :value="null" />
-            <option value="1">Active</option>
-            <option value="0">Inactive</option>
-          </select-input>
           <text-input v-model="form.contact_no" :error="errors.contact_no" class="pr-6 pb-8 w-full lg:w-1/2" label="Contact No" />
         </div>
         <div class="px-8 py-4 bg-gray-100 border-t border-gray-200 flex justify-end items-center">
@@ -53,9 +46,6 @@ export default {
         nickname: null,
         address: null,
         license_no: null,
-        dob: null,
-        date_hired: null,
-        status: null,
         contact_no: null,
       },
     }

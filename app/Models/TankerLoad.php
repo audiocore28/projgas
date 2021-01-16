@@ -19,7 +19,7 @@ class TankerLoad extends Model
   //   use SoftDeletes;
 
 	 protected $dates = ['date'];
-	 protected $fillable = ['date', 'status', 'remarks', 'purchase_id', 'tanker_id', 'driver_id', 'helper_id'];
+	 protected $fillable = ['date', 'remarks', 'purchase_id', 'tanker_id', 'driver_id', 'helper_id'];
 
 
 	 public function purchase()

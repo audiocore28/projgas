@@ -8,18 +8,15 @@
     <div class="p-1">
       <ul class="flex border-b">
         <li @click="openTab = 1" :class="{ '-mb-px': openTab === 1 }" class="-mb-px mr-1">
-          <a :class="openTab === 1 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold" href="#">Information</a>
+          <a :class="openTab === 1 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold" href="#">Info</a>
         </li>
         <li @click="openTab = 2" :class="{ '-mb-px': openTab === 2 }" class="mr-1">
-          <a :class="openTab === 2 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold" href="#">From PO</a>
-        </li>
-        <li @click="openTab = 3" :class="{ '-mb-px': openTab === 3 }" class="mr-1">
-          <a :class="openTab === 3 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold" href="#">Delivered To</a>
+          <a :class="openTab === 2 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold" href="#">Tab 2</a>
         </li>
       </ul>
 
-      <!-- Tab 1 -->
       <div class="w-full pt-4">
+        <!-- Tab 1 -->
         <div v-show="openTab === 1">
           <!-- Update Existing Load -->
           <div class="bg-white rounded shadow overflow-hidden max-w-6xl mb-8 -mt-4">
@@ -48,11 +45,6 @@
                   <option :value="null" />
                   <option v-for="helper in helpers" :key="helper.id" :value="helper.id">{{ helper.name }}</option>
                 </select-input>
-                <select-input v-model="updateForm.status" :error="errors.status" class="pr-6 pb-8 w-full lg:w-1/2" label="Status">
-                  <option :value="null" />
-                  <option value="loaded">Loaded</option>
-                  <option value="delivered">Delivered</option>
-                </select-input>
                 <!-- Text inputs -->
                 <text-input v-model="updateForm.remarks" :error="errors.remarks" class="pr-6 pb-8 w-full lg:w-1/2" label="Remarks" />
               </div>
@@ -65,11 +57,6 @@
                   <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
                 </select-input>
                 <text-input v-model="details.quantity" :error="errors.quantity" class="pr-6 pb-8 w-full lg:w-1/4" label="Quantity" />
-                <select-input v-model="details.status" :error="errors.status" class="pr-6 pb-8 w-full lg:w-1/2" label="Status">
-                  <option :value="null" />
-                  <option value="loaded">Loaded</option>
-                  <option value="delivered">Delivered</option>
-                </select-input>
 
                 <!-- Fix Me -->
                 <span style="background-color: red; color: white; cursor: pointer; float: right;" @click.prevent="deleteDetailForm(index, details.id)">X</span>
@@ -93,11 +80,6 @@
                   <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
                 </select-input>
                 <text-input v-model="details.quantity" :error="errors.quantity" class="pr-6 pb-8 w-full lg:w-1/4" label="Quantity" />
-                <select-input v-model="details.status" :error="errors.status" class="pr-6 pb-8 w-full lg:w-1/2" label="Status">
-                  <option :value="null" />
-                  <option value="loaded">Loaded</option>
-                  <option value="delivered">Delivered</option>
-                </select-input>
 
                 <span style="background-color: red; color: white; cursor: pointer; float: right;" @click.prevent="deleteNewDetailForm(index)">X</span>
               </div>
@@ -115,11 +97,7 @@
 
         <!-- Tab 2 -->
         <div v-show="openTab === 2">
-          Purchases
-        </div>
-        <!-- Tab 3 -->
-        <div v-show="openTab === 3">
-          Deliveries
+          Extra tab
         </div>
       </div>
     </div>
@@ -182,7 +160,6 @@ export default {
         tanker_id: this.tanker_load.tanker_id,
         driver_id: this.tanker_load.driver_id,
         helper_id: this.tanker_load.helper_id,
-        status: this.tanker_load.status,
         remarks: this.tanker_load.remarks,
         details: this.tanker_load.details,
       },
@@ -192,7 +169,6 @@ export default {
           tanker_load_id: this.tanker_load.id,
           product_id: null,
           quantity: null,
-          status: null,
         },
       ],
       // Tabs
@@ -242,7 +218,6 @@ export default {
         tanker_load_id: this.tanker_load.id,
         product_id: null,
         quantity: null,
-        status: null,
       });
     },
     // remove form

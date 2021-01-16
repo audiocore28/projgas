@@ -30,11 +30,6 @@
             <option :value="null" />
             <option v-for="helper in helpers" :key="helper.id" :value="helper.id">{{ helper.name }}</option>
           </select-input>
-          <select-input v-model="form.status" :error="errors.status" class="pr-6 pb-8 w-full lg:w-1/2" label="Status">
-            <option :value="null" />
-            <option value="loaded">Loaded</option>
-            <option value="delivered">Delivered</option>
-          </select-input>
           <!-- Text inputs -->
           <text-input v-model="form.remarks" :error="errors.remarks" class="pr-6 pb-8 w-full lg:w-1/2" label="Remarks" />
         </div>
@@ -47,11 +42,6 @@
             <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
           </select-input>
           <text-input v-model="details.quantity" :error="errors.quantity" class="pr-6 pb-8 w-full lg:w-1/4" label="Quantity" />
-          <select-input v-model="details.status" :error="errors.status" class="pr-6 pb-8 w-full lg:w-1/2" label="Status">
-            <option :value="null" />
-            <option value="loaded">Loaded</option>
-            <option value="delivered">Delivered</option>
-          </select-input>
 
           <span style="background-color: red; color: white; cursor: pointer; float: right;" @click.prevent="deleteDetailForm(index)">X</span>
         </div>
@@ -119,13 +109,11 @@ export default {
         tanker_id: null,
         driver_id: null,
         helper_id: null,
-        status: null,
         remarks: null,
         details: [
           {
             product_id: null,
             quantity: null,
-            status: null,
           }
         ],
       },
@@ -144,7 +132,6 @@ export default {
         // load_id: null,
         product_id: null,
         quantity: null,
-        status: null,
       });
     },
     deleteDetailForm(index) {

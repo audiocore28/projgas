@@ -19,9 +19,6 @@ class CreateDriversTable extends Migration
             $table->string('nickname')->nullable();
             $table->string('address')->nullable();
             $table->string('license_no')->nullable();
-            $table->date('dob')->nullable();
-            $table->date('date_hired')->nullable();
-            $table->boolean('status');
             $table->string('contact_no')->nullable();
             $table->timestamps();
         });

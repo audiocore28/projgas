@@ -13,7 +13,7 @@ class TankerLoadDetail extends Model
     use HasFactory;
   //   use SoftDeletes;
 
-	 protected $fillable = ['quantity', 'status', 'tanker_load_id', 'product_id'];
+	 protected $fillable = ['quantity', 'tanker_load_id', 'product_id'];
 
 
 	 public function tankerLoad()

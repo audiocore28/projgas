@@ -27,7 +27,6 @@ class StoreTankerLoadDetailRequest extends FormRequest
             'tanker_load_id' => ['nullable', 'max:50'],
             'product_id' => ['nullable', 'max:50'],
             'quantity' => ['nullable', 'max:50'],
-            'status' => ['nullable', 'max:50'],
         ];
     }
 }
