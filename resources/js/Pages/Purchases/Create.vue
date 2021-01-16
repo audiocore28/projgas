@@ -30,7 +30,6 @@
           </select-input>
           <text-input v-model="details.quantity" :error="errors.quantity" class="pr-6 pb-8 w-full lg:w-1/6" label="Quantity" />
           <text-input v-model="details.unit_price" :error="errors.unit_price" class="pr-6 pb-8 w-full lg:w-1/6" label="Unit Price" />
-          <text-input v-model="details.amount" :error="errors.amount" class="pr-6 pb-8 w-full lg:w-1/6" label="Amount" />
           <text-input v-model="details.remarks" :error="errors.remarks" class="pr-6 pb-8 w-full lg:w-1/6" label="Remarks" />
 
           <span style="background-color: red; color: white; cursor: pointer; float: right;" @click.prevent="deleteDetailForm(index)">X</span>
@@ -100,7 +99,6 @@ export default {
             product_id: null,
             quantity: null,
             unit_price: null,
-            amount: null,
             remarks: null,
           }
         ],
@@ -121,7 +119,6 @@ export default {
         product_id: null,
         quantity: null,
         unit_price: null,
-        amount: null,
         remarks: null,
       });
     },

@@ -26,7 +26,6 @@ class StorePurchaseDetailRequest extends FormRequest
         return [
             'quantity' => ['nullable', 'max:50'],
             'unit_price' => ['nullable', 'max:50'],
-            'amount' => ['nullable', 'max:50'],
             'remarks' => ['nullable', 'max:100'],
             'purchase_id' => ['nullable', 'max:50'],
             'product_id' => ['nullable', 'max:50'],

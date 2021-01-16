@@ -17,7 +17,6 @@ class CreatePurchaseDetailsTable extends Migration
             $table->id();
             $table->integer('quantity')->nullable();
             $table->integer('unit_price')->nullable();
-            $table->integer('amount')->nullable();
             $table->longText('remarks')->nullable();
             $table->bigInteger('purchase_id');
             $table->bigInteger('product_id')->nullable();

@@ -13,7 +13,7 @@ class PurchaseDetail extends Model
     use HasFactory;
   //   use SoftDeletes;
 
-	 protected $fillable = ['quantity', 'unit_price', 'amount', 'remarks', 'purchase_id', 'product_id'];
+	 protected $fillable = ['quantity', 'unit_price', 'remarks', 'purchase_id', 'product_id'];
 
 
 	 public function purchase()

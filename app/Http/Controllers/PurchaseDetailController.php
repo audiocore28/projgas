@@ -54,7 +54,6 @@ class PurchaseDetailController extends Controller
                 'product_id' => $detail['product_id'],
                 'quantity' => $detail['quantity'],
                 'unit_price' => $detail['unit_price'],
-                'amount' => $detail['amount'],
                 'remarks' => $detail['remarks'],
             ]);
         }

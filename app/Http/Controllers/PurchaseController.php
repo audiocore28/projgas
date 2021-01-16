@@ -80,7 +80,6 @@ class PurchaseController extends Controller
                 'product_id' => $detail['product_id'],
                 'quantity' => $detail['quantity'],
                 'unit_price' => $detail['unit_price'],
-                'amount' => $detail['amount'],
                 'remarks' => $detail['remarks'],
             ]);
         }
@@ -116,10 +115,10 @@ class PurchaseController extends Controller
             return [
                 'quantity' => $detail->quantity,
                 'unit_price' => $detail->unit_price,
-                'amount' => $detail->amount,
                 'remarks' => $detail->remarks,
                 'purchase_id' => $detail->purchase_id,
                 'product' => $detail->product ? $detail->product->only('id', 'name') : null,
+                // 'supplier' => $detail->supplier ? $detail->supplier->only('id', 'name') : null,
             ];
         });
 
@@ -130,8 +129,15 @@ class PurchaseController extends Controller
                 // 'remarks' => $load->remarks,
                 // 'purchase_id' => $load->purchase_id,
                 // 'tanker_id' => $load->tanker_id,
+                'tanker' => $load->tanker ? $load->tanker->only('plate_no') : null,
                 'driver' => $load->driver ? $load->driver->only('name') : null,
-                'loads' => $load->tankerLoadDetails ? $load->tankerLoadDetails : null,
+                'helper' => $load->helper ? $load->helper->only('name') : null,
+                // 'loads' => $load->tankerLoadDetails ? $load->tankerLoadDetails : null,
+                'loads' => [
+                    'load' => $load->tankerLoadDetails->each(function ($detail) {
+                        return $detail->product->name;
+                    })
+                ]
             ];
         });
 
@@ -141,9 +147,15 @@ class PurchaseController extends Controller
                 // 'product_id' => $delivery->product_id,
                 // 'quantity' => $delivery->quantity,
                 // 'unit_price' => $delivery->unit_price,
-                // 'amount' => $delivery->amount,
-                'client' => $delivery->client ? $delivery->client->only('name') : null,
-                'deliveries' => $delivery->deliveryDetails ? $delivery->deliveryDetails : null,
+                'tanker' => $delivery->tanker ? $delivery->tanker->only('plate_no') : null,
+                'driver' => $delivery->driver ? $delivery->driver->only('name') : null,
+                'helper' => $delivery->helper ? $delivery->helper->only('name') : null,
+                // 'deliveries' => $delivery->deliveryDetails ? $delivery->deliveryDetails : null,
+                'deliveries' => [
+                    'delivery' => $delivery->deliveryDetails->each(function ($detail) {
+                        return ['p' => $detail->product->name, 'c' => $detail->client->name];
+                    })
+                ]
             ];
         });
 
@@ -195,7 +207,6 @@ class PurchaseController extends Controller
                 'product_id' => $detail['product_id'],
                 'quantity' => $detail['quantity'],
                 'unit_price' => $detail['unit_price'],
-                'amount' => $detail['amount'],
                 'remarks' => $detail['remarks'],
             ]);
         }
