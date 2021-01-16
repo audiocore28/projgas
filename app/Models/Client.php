@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 // use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Delivery;
+use App\Models\DeliveryDetail;
 
 class Client extends Model
 {
@@ -14,6 +15,11 @@ class Client extends Model
 
 	 protected $fillable = ['name', 'office', 'contact_person', 'email_address', 'contact_no'];
 
+
+     public function deliveryDetails()
+     {
+        return $this->hasMany(DeliveryDetail::class);
+     }
 
      public function deliveries()
      {

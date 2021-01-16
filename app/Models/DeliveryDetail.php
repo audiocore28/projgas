@@ -6,15 +6,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 // use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Delivery;
-use App\Models\Client;
 use App\Models\Product;
+use App\Models\Client;
+use Carbon\Carbon;
 
 class DeliveryDetail extends Model
 {
     use HasFactory;
   //   use SoftDeletes;
 
-	 protected $fillable = ['quantity', 'unit_price', 'amount', 'delivery_id', 'product_id'];
+	 protected $dates = ['date'];
+	 protected $fillable = ['date', 'quantity', 'unit_price', 'delivery_id', 'product_id', 'client_id'];
 
 	 public function delivery()
 	 {
@@ -25,5 +27,15 @@ class DeliveryDetail extends Model
 	 {
 	 	return $this->belongsTo(Product::class);
 	 }
+
+	 public function client()
+	 {
+	 	return $this->belongsTo(Client::class);
+	 }
+
+    public function getDateAttribute($value)
+    {
+        return Carbon::parse($value)->format('M d, Y');
+    }
 
 }

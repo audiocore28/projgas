@@ -27,34 +27,44 @@
               <!-- Delivery -->
               <div class="p-8 -mr-6 -mb-8 flex flex-wrap">
                 <!-- <text-input v-model="updateForm.date" :error="errors.date" class="pr-6 pb-8 w-full lg:w-1/2" label="Date" /> -->
-                <label class="form-label block mr-5">Date</label>
-                <div class="pr-6 pb-8 w-full">
-                  <date-picker v-model="updateForm.date" lang="en" value-type="format" :formatter="momentFormat"></date-picker>
-                </div>
-                <select-input v-model="updateForm.client_id" :error="errors.client_id" class="pr-6 pb-8 w-full lg:w-1/2" label="Client">
+                <select-input v-model="updateForm.tanker_id" :error="errors.tanker_id" class="pr-6 pb-8 w-full lg:w-1/2" label="Tanker">
                   <option :value="null" />
-                  <option v-for="client in clients" :key="client.id" :value="client.id">{{ client.name }}</option>
+                  <option v-for="tanker in tankers" :key="tanker.id" :value="tanker.id">{{ tanker.plate_no }}</option>
+                </select-input>
+                <select-input v-model="updateForm.driver_id" :error="errors.driver_id" class="pr-6 pb-8 w-full lg:w-1/2" label="Driver">
+                  <option :value="null" />
+                  <option v-for="driver in drivers" :key="driver.id" :value="driver.id">{{ driver.name }}</option>
+                </select-input>
+                <select-input v-model="updateForm.helper_id" :error="errors.helper_id" class="pr-6 pb-8 w-full lg:w-1/2" label="Helper">
+                  <option :value="null" />
+                  <option v-for="helper in helpers" :key="helper.id" :value="helper.id">{{ helper.name }}</option>
                 </select-input>
                 <select-input v-model="updateForm.purchase_id" :error="errors.purchase_id" class="pr-6 pb-8 w-full lg:w-1/2" label="Purchase">
                   <option :value="null" />
                   <option v-for="purchase in purchases" :key="purchase.id" :value="purchase.id">{{ purchase.purchase_no }}</option>
-                </select-input>
-                <select-input v-model="updateForm.tanker_load_id" :error="errors.tanker_load_id" class="pr-6 pb-8 w-full lg:w-1/2" label="Tanker Load">
-                  <option :value="null" />
-                  <option v-for="tanker_load in tanker_loads" :key="tanker_load.id" :value="tanker_load.id">{{ tanker_load.tanker_id }}</option>
                 </select-input>
               </div>
 
               <!-- Details -->
               <div class="p-8 -mr-6 -mb-8 flex flex-wrap"
                 v-for="(details, index) in updateForm.details">
+
+                <label class="form-label block ml-1">Date</label>
+                <span class="pr-6 pb-8 mt-8 -ml-10">
+                  <date-picker v-model="details.date" lang="en" value-type="format" :formatter="momentFormat"></date-picker>
+                </span>
+
+                <select-input v-model="details.client_id" :error="errors.client_id" class="pr-6 pb-8 w-full lg:w-1/6" label="Client">
+                  <option :value="null" />
+                  <option v-for="client in clients" :key="client.id" :value="client.id">{{ client.name }}</option>
+                </select-input>
                 <select-input v-model="details.product_id" :error="errors.product_id" class="pr-6 pb-8 w-full lg:w-1/6" label="Product">
                   <option :value="null" />
                   <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
                 </select-input>
                 <text-input v-model="details.quantity" :error="errors.quantity" class="pr-6 pb-8 w-full lg:w-1/6" label="Quantity" />
                 <text-input v-model="details.unit_price" :error="errors.unit_price" class="pr-6 pb-8 w-full lg:w-1/6" label="Unit Price" />
-                <text-input v-model="details.amount" :error="errors.amount" class="pr-6 pb-8 w-full lg:w-1/6" label="Amount" />
+
                 <span style="background-color: red; color: white; cursor: pointer; float: right;" @click.prevent="deleteDetailForm(index, details.id)">X</span>
               </div>
 
@@ -72,13 +82,22 @@
               <!-- Details -->
               <div class="p-8 -mr-6 -mb-8 flex flex-wrap"
                 v-for="(details, index) in createForm">
+
+                <label class="form-label block ml-1">Date</label>
+                <span class="pr-6 pb-8 mt-8 -ml-10">
+                  <date-picker v-model="details.date" lang="en" value-type="format" :formatter="momentFormat"></date-picker>
+                </span>
+
+                <select-input v-model="details.client_id" :error="errors.client_id" class="pr-6 pb-8 w-full lg:w-1/6" label="Client">
+                  <option :value="null" />
+                  <option v-for="client in clients" :key="client.id" :value="client.id">{{ client.name }}</option>
+                </select-input>
                 <select-input v-model="details.product_id" :error="errors.product_id" class="pr-6 pb-8 w-full lg:w-1/6" label="Product">
                   <option :value="null" />
                   <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
                 </select-input>
                 <text-input v-model="details.quantity" :error="errors.quantity" class="pr-6 pb-8 w-full lg:w-1/6" label="Quantity" />
                 <text-input v-model="details.unit_price" :error="errors.unit_price" class="pr-6 pb-8 w-full lg:w-1/6" label="Unit Price" />
-                <text-input v-model="details.amount" :error="errors.amount" class="pr-6 pb-8 w-full lg:w-1/6" label="Amount" />
 
                 <span style="background-color: red; color: white; cursor: pointer; float: right;" @click.prevent="deleteNewDetailForm(index)">X</span>
               </div>
@@ -134,8 +153,10 @@ export default {
     delivery: Object,
     clients: Array,
     purchases: Array,
-    tanker_loads: Array,
     products: Array,
+    tankers: Array,
+    drivers: Array,
+    helpers: Array,
   },
   remember: 'form',
   data() {
@@ -156,20 +177,21 @@ export default {
         }
       },
       updateForm: {
-        date: this.delivery.date,
-        client_id: this.delivery.client_id,
+        tanker_id: this.delivery.tanker_id,
+        driver_id: this.delivery.driver_id,
+        helper_id: this.delivery.helper_id,
         purchase_id: this.delivery.purchase_id,
-        tanker_load_id: this.delivery.tanker_load_id,
         details: this.delivery.details,
       },
       createForm: [
         {
           id: null,
           delivery_id: this.delivery.id,
+          date: null,
+          client_id: null,
           product_id: null,
           quantity: null,
           unit_price: null,
-          amount: null,
         },
       ],
       // Tabs
@@ -217,10 +239,11 @@ export default {
       this.createForm.push({
         id: null,
         delivery_id: this.delivery.id,
+        date: null,
+        client_id: null,
         product_id: null,
         quantity: null,
         unit_price: null,
-        amount: null,
       });
     },
     // remove form

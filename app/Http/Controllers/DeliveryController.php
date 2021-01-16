@@ -9,6 +9,9 @@ use App\Models\Purchase;
 use App\Models\TankerLoad;
 use App\Models\Client;
 use App\Models\Product;
+use App\Models\Tanker;
+use App\Models\Driver;
+use App\Models\Helper;
 // use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
@@ -30,8 +33,9 @@ class DeliveryController extends Controller
             ->transform(function ($delivery) {
                 return [
                     'id' => $delivery->id,
-                    'date' => $delivery->date,
-                    'client' => $delivery->client ? $delivery->client->only('name') : null,
+                    'tanker' => $delivery->tanker ? $delivery->tanker->only('plate_no') : null,
+                    'driver' => $delivery->driver ? $delivery->driver->only('name') : null,
+                    'helper' => $delivery->helper ? $delivery->helper->only('name') : null,
                     // 'purchase' => $delivery->purchase ? $delivery->purchase->only('purchase_no') : null,
                     // 'tanker_load_id' => $delivery->tanker_load_id,
                 ];
@@ -52,14 +56,18 @@ class DeliveryController extends Controller
     {
         $clients = Client::all();
         $purchases = Purchase::all();
-        $tankerLoads = TankerLoad::all();
+        $tankers = Tanker::all();
+        $drivers = Driver::all();
+        $helpers = Helper::all();
         $products = Product::all();
 
         return Inertia::render('Deliveries/Create', [
             'clients' => $clients,
             'purchases' => $purchases,
-            'tanker_loads' => $tankerLoads,
             'products' => $products,
+            'tankers' => $tankers,
+            'drivers' => $drivers,
+            'helpers' => $helpers,
         ]);
     }
 
@@ -72,10 +80,10 @@ class DeliveryController extends Controller
     public function store(StoreDeliveryRequest $request)
     {
         $deliveryId = Delivery::create([
-            'date' => $request->date,
-            'client_id' => $request->client_id,
             'purchase_id' => $request->purchase_id,
-            'tanker_load_id' => $request->tanker_load_id,
+            'tanker_id' => $request->tanker_id,
+            'driver_id' => $request->driver_id,
+            'helper_id' => $request->helper_id,
         ])->id;
 
 
@@ -83,10 +91,11 @@ class DeliveryController extends Controller
         {
             $deliveryDetail = DeliveryDetail::create([
                 'delivery_id' => $deliveryId,
+                'date' => $detail['date'],
+                'client_id' => $detail['client_id'],
                 'product_id' => $detail['product_id'],
                 'quantity' => $detail['quantity'],
                 'unit_price' => $detail['unit_price'],
-                'amount' => $detail['amount'],
             ]);
         }
 
@@ -114,21 +123,25 @@ class DeliveryController extends Controller
     {
         $clients = Client::all();
         $purchases = Purchase::all();
-        $tankerLoads = TankerLoad::all();
+        $tankers = Tanker::all();
+        $drivers = Driver::all();
+        $helpers = Helper::all();
         $products = Product::all();
 
         return Inertia::render('Deliveries/Edit', [
             'delivery' => [
                 'id' => $delivery->id,
-                'date' => $delivery->date,
-                'client_id' => $delivery->client_id,
+                'tanker_id' => $delivery->tanker_id,
+                'driver_id' => $delivery->driver_id,
+                'helper_id' => $delivery->helper_id,
                 'purchase_id' => $delivery->purchase_id,
-                'tanker_load_id' => $delivery->tanker_load_id,
                 'details' => $delivery->deliveryDetails,
             ],
             'clients' => $clients,
             'purchases' => $purchases,
-            'tanker_loads' => $tankerLoads,
+            'tankers' => $tankers,
+            'drivers' => $drivers,
+            'helpers' => $helpers,
             'products' => $products,
         ]);
     }
@@ -144,10 +157,10 @@ class DeliveryController extends Controller
     {
         // Purchase
         $delivery->update([
-            'date' => $request->date,
-            'client_id' => $request->client_id,
+            'tanker_id' => $request->tanker_id,
+            'driver_id' => $request->driver_id,
+            'helper_id' => $request->helper_id,
             'purchase_id' => $request->purchase_id,
-            'tanker_load_id' => $request->tanker_load_id,
         ]);
 
         // PurchaseDetail
@@ -159,10 +172,11 @@ class DeliveryController extends Controller
         {
             $delivery->deliveryDetails()->find($detail['id'])->update([
                 // 'delivery_id' => $detail['delivery_id'],
+                'date' => $detail['date'],
+                'client_id' => $detail['client_id'],
                 'product_id' => $detail['product_id'],
                 'quantity' => $detail['quantity'],
                 'unit_price' => $detail['unit_price'],
-                'amount' => $detail['amount'],
             ]);
         }
 

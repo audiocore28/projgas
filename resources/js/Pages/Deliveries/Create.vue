@@ -9,35 +9,44 @@
         <!-- Delivery -->
         <div class="p-8 -mr-6 -mb-8 flex flex-wrap">
           <!-- <text-input v-model="form.date" :error="errors.date" class="pr-6 pb-8 w-full lg:w-1/2" label="Date" /> -->
-          <label class="form-label block mr-5">Date</label>
-          <div class="pr-6 pb-8 w-full">
-            <date-picker v-model="form.date" lang="en" value-type="format" :formatter="momentFormat"></date-picker>
-          </div>
 
-          <select-input v-model="form.client_id" :error="errors.client_id" class="pr-6 pb-8 w-full lg:w-1/2" label="Client">
+          <select-input v-model="form.tanker_id" :error="errors.tanker_id" class="pr-6 pb-8 w-full lg:w-1/2" label="Tanker">
             <option :value="null" />
-            <option v-for="client in clients" :key="client.id" :value="client.id">{{ client.name }}</option>
+            <option v-for="tanker in tankers" :key="tanker.id" :value="tanker.id">{{ tanker.plate_no }}</option>
+          </select-input>
+          <select-input v-model="form.driver_id" :error="errors.driver_id" class="pr-6 pb-8 w-full lg:w-1/2" label="Driver">
+            <option :value="null" />
+            <option v-for="driver in drivers" :key="driver.id" :value="driver.id">{{ driver.name }}</option>
+          </select-input>
+          <select-input v-model="form.helper_id" :error="errors.helper_id" class="pr-6 pb-8 w-full lg:w-1/2" label="Helper">
+            <option :value="null" />
+            <option v-for="helper in helpers" :key="helper.id" :value="helper.id">{{ helper.name }}</option>
           </select-input>
           <select-input v-model="form.purchase_id" :error="errors.purchase_id" class="pr-6 pb-8 w-full lg:w-1/2" label="Purchase">
             <option :value="null" />
             <option v-for="purchase in purchases" :key="purchase.id" :value="purchase.id">{{ purchase.purchase_no }}</option>
-          </select-input>
-          <select-input v-model="form.tanker_load_id" :error="errors.tanker_load_id" class="pr-6 pb-8 w-full lg:w-1/2" label="Tanker Load">
-            <option :value="null" />
-            <option v-for="tanker_load in tanker_loads" :key="tanker_load.id" :value="tanker_load.id">{{ tanker_load.tanker_id }}</option>
           </select-input>
         </div>
 
         <!-- Details -->
         <div class="p-8 -mr-6 -mb-8 flex flex-wrap"
           v-for="(details, index) in form.details">
+
+          <label class="form-label block ml-1">Date</label>
+          <span class="pr-6 pb-8 mt-8 -ml-10">
+            <date-picker v-model="details.date" lang="en" value-type="format" :formatter="momentFormat"></date-picker>
+          </span>
+
+          <select-input v-model="details.client_id" :error="errors.client_id" class="pr-6 pb-8 w-full lg:w-1/6" label="Client">
+            <option :value="null" />
+            <option v-for="client in clients" :key="client.id" :value="client.id">{{ client.name }}</option>
+          </select-input>
           <select-input v-model="details.product_id" :error="errors.product_id" class="pr-6 pb-8 w-full lg:w-1/6" label="Product">
             <option :value="null" />
             <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
           </select-input>
           <text-input v-model="details.quantity" :error="errors.quantity" class="pr-6 pb-8 w-full lg:w-1/6" label="Quantity" />
           <text-input v-model="details.unit_price" :error="errors.unit_price" class="pr-6 pb-8 w-full lg:w-1/6" label="Unit Price" />
-          <text-input v-model="details.amount" :error="errors.amount" class="pr-6 pb-8 w-full lg:w-1/6" label="Amount" />
 
           <span style="background-color: red; color: white; cursor: pointer; float: right;" @click.prevent="deleteDetailForm(index)">X</span>
         </div>
@@ -77,8 +86,10 @@ export default {
     errors: Object,
     clients: Array,
     purchases: Array,
-    tanker_loads: Array,
     products: Array,
+    tankers: Array,
+    drivers: Array,
+    helpers: Array,
   },
   remember: 'form',
   data() {
@@ -100,15 +111,17 @@ export default {
       },
       form: {
   		  date: null,
-        client_id: null,
+        tanker_id: null,
+        driver_id: null,
+        helper_id: null,
         purchase_id: null,
-        tanker_load_id: null,
         details: [
           {
+            date: null,
+            client_id: null,
             product_id: null,
             quantity: null,
             unit_price: null,
-            amount: null,
           }
         ],
       },
@@ -125,10 +138,11 @@ export default {
     addNewDetailForm() {
       this.form.details.push({
         // delivery_id: null,
+        date: null,
+        client_id: null,
         product_id: null,
         quantity: null,
         unit_price: null,
-        amount: null,
       });
     },
     deleteDetailForm(index) {

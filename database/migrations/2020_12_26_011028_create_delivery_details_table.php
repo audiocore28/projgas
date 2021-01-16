@@ -16,10 +16,11 @@ class CreateDeliveryDetailsTable extends Migration
         Schema::create('delivery_details', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('delivery_id');
+            $table->date('date')->nullable();
+            $table->bigInteger('client_id')->nullable();
             $table->bigInteger('product_id');
             $table->integer('quantity')->nullable();
             $table->integer('unit_price')->nullable();
-            $table->integer('amount')->nullable();
             $table->timestamps();
         });
     }

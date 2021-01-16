@@ -44,10 +44,11 @@ class DeliveryDetailController extends Controller
         {
             $deliveryDetail = DeliveryDetail::create([
                 'delivery_id' => $detail['delivery_id'],
+                'date' => $detail['date'],
+                'client_id' => $detail['client_id'],
                 'product_id' => $detail['product_id'],
                 'quantity' => $detail['quantity'],
                 'unit_price' => $detail['unit_price'],
-                'amount' => $detail['amount'],
             ]);
         }
 

@@ -15,10 +15,10 @@ class CreateDeliveriesTable extends Migration
     {
         Schema::create('deliveries', function (Blueprint $table) {
             $table->id();
-            $table->date('date')->nullable();
-            $table->bigInteger('client_id')->nullable();
+            $table->bigInteger('tanker_id');
+            $table->bigInteger('driver_id');
+            $table->bigInteger('helper_id');
             $table->bigInteger('purchase_id')->nullable();
-            $table->bigInteger('tanker_load_id')->nullable();
             // $table->bigInteger('tanker_id')->nullable();
             // $table->bigInteger('driver_id')->nullable();
             // $table->bigInteger('helper_id')->nullable();

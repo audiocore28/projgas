@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 // use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Driver;
-use App\Models\Tanker;
 use App\Models\DeliveryDetail;
 use App\Models\Purchase;
-use App\Models\Client;
+use App\Models\Tanker;
+use App\Models\Driver;
+use App\Models\Helper;
 use Carbon\Carbon;
 
 class Delivery extends Model
@@ -18,17 +18,26 @@ class Delivery extends Model
   //   use SoftDeletes;
 
 	 public $table = 'deliveries';
-	 protected $dates = ['date'];
-	 protected $fillable = ['date', 'purchase_id', 'tanker_load_id', 'client_id'];
+	 protected $fillable = ['purchase_id', 'tanker_id', 'driver_id', 'helper_id', 'client_id'];
 
 	 public function purchase()
 	 {
 	 	return $this->belongsTo(Purchase::class);
 	 }
 
-	 public function tankerLoad()
+	 public function tanker()
 	 {
-	 	return $this->belongsTo(TankerLoad::class);
+	 	return $this->belongsTo(Tanker::class);
+	 }
+
+	 public function driver()
+	 {
+	 	return $this->belongsTo(Driver::class);
+	 }
+
+	 public function helper()
+	 {
+	 	return $this->belongsTo(Helper::class);
 	 }
 
 	 public function client()

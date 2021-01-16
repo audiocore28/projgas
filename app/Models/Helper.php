@@ -5,15 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 // use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Tanker;
+use App\Models\Driver;
+use App\Models\Delivery;
 
 class Helper extends Model
 {
     use HasFactory;
   //   use SoftDeletes;
 
-	 protected $dates = ['dob', 'date_hired'];
-
-	 protected $fillable = ['name', 'nickname', 'address', 'dob', 'date_hired', 'status', 'contact_no'];
+	 protected $fillable = ['name', 'nickname', 'address', 'contact_no'];
 
     public function scopeFilter($query, array $filters)
     {
@@ -25,6 +26,11 @@ class Helper extends Model
             });
         });
     }
+
+     public function deliveries()
+     {
+        return $this->hasMany(Delivery::class);
+     }
 
     public function drivers()
     {

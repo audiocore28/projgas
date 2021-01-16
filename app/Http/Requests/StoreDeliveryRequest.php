@@ -25,9 +25,10 @@ class StoreDeliveryRequest extends FormRequest
     {
         return [
             'date' => ['nullable', 'max:50'],
-            'client_id' => ['nullable', 'max:50'],
+            'tanker_id' => ['nullable', 'max:50'],
+            'driver_id' => ['nullable', 'max:50'],
+            'helper_id' => ['nullable', 'max:50'],
             'purchase_id' => ['nullable', 'max:50'],
-            'tanker_load_id' => ['nullable', 'max:50'],
         ];
     }
 }
