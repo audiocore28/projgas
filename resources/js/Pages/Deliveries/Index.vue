@@ -23,7 +23,7 @@
           <th class="px-6 pt-6 pb-4">Driver</th>
           <th class="px-6 pt-6 pb-4">Helper</th>
         </tr>
-         <tr v-for="delivery in deliveries" :key="delivery.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
+         <tr v-for="delivery in deliveries.data" :key="delivery.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
           <!-- table columns -->
           <td class="border-t">
             <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('deliveries.edit', delivery.id)">
@@ -84,7 +84,7 @@ export default {
     SearchFilter,
   },
   props: {
-    deliveries: Array,
+    deliveries: Object,
     filters: Object,
   },
   data() {

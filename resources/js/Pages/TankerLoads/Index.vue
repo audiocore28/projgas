@@ -25,7 +25,7 @@
           <th class="px-6 pt-6 pb-4">Driver</th>
           <th class="px-6 pt-6 pb-4">Helper</th>
         </tr>
-         <tr v-for="load in tanker_loads" :key="load.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
+         <tr v-for="load in tanker_loads.data" :key="load.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
           <!-- table columns -->
           <td class="border-t">
             <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('tanker-loads.edit', load.id)">
@@ -98,7 +98,7 @@ export default {
     SearchFilter,
   },
   props: {
-    tanker_loads: Array,
+    tanker_loads: Object,
     filters: Object,
   },
   data() {

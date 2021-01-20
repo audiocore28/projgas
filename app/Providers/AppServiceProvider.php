@@ -5,8 +5,11 @@ namespace App\Providers;
 use Inertia\Inertia;
 
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Collection;
+use Illuminate\Pagination\UrlWindow;
 use Illuminate\Support\ServiceProvider;
-
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Http\Request;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -82,7 +85,7 @@ class AppServiceProvider extends ServiceProvider
 
                 public function links($view = null, $data = [])
                 {
-                    $this->appends(Request::all());
+                    $this->appends(request()->all());
 
                     $window = UrlWindow::make($this);
 
