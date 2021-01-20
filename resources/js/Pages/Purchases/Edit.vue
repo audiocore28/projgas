@@ -20,6 +20,9 @@
               Loads
             </th>
             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+              Hauling
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
               Deliveries
             </th>
           </tr>
@@ -34,10 +37,10 @@
             <td class="px-6 py-4">
               <div class="text-md text-gray-900" v-for="purchase in figures.purchases" v-if="purchase.product.name === 'Diesel'">
                 <span class="font-semibold">
-                  {{ purchase.quantity / 1000 }}{{'K'}}
+                  {{ toFigure(purchase.quantity) }}
                 </span>
                 <span class="font-semibold text-sm ml-2 px-2 inline-flex leading-5 rounded-full bg-yellow-100 text-yellow-800">
-                  {{ purchase.unit_price }}
+                  {{ toPHP(purchase.unit_price) }}
                 </span>
               </div>
             </td>
@@ -50,7 +53,7 @@
                   <div class="relative w-12 h-12 ml-1" v-for="detail in load.loads" v-if="detail.product_id === 3">
                     <img class="rounded-full border border-gray-100 shadow-sm" src="https://randomuser.me/api/portraits/women/81.jpg" alt="user image" />
                     <div class="text-xs font-medium font-semibold absolute top-0 right-0 h-6 w-6 -my-2 -mx-2 border-2 border-white rounded-full bg-yellow-200 z-2 leading-5 text-yellow-800">
-                      {{ detail.quantity / 1000 }}
+                      {{ toFigure(detail.quantity) }}
                     </div>
                   </div>
                 </div>
@@ -58,12 +61,23 @@
             </td>
  -->
             <td class="px-6 py-4">
-              <span class="font-semibold text-md font-medium text-gray-900 mr-1">{{ 'D120' }}</span>
+              <span class="font-semibold text-md font-medium text-gray-900 mr-1">{{ 'test' }}</span>
               <span v-for="load in figures.loads">
                 <span class="px-2 py-2 text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800" v-for="detail in load.loads.load" v-if="detail.product.name === 'Diesel'">
                   {{ load.driver.name }}
                   <span class="p-1 rounded-full text-yellow-800 text-xs ml-2 bg-yellow-400">
-                      {{  detail.quantity / 1000 }}
+                      {{ toFigure(detail.quantity) }}
+                  </span>
+                </span>
+              </span>
+            </td>
+            <td class="px-6 py-4">
+              <span class="font-semibold text-md font-medium text-gray-900 mr-1">{{ 'H100' }}</span>
+              <span v-for="haul in figures.hauls">
+                <span class="px-2 py-2 text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800" v-for="detail in haul.hauls.haul" v-if="detail.product.name === 'Diesel'">
+                  {{ detail.client.name }}
+                  <span class="p-1 rounded-full text-yellow-800 text-xs ml-2 bg-yellow-400">
+                      {{ toFigure(detail.quantity) }}
                   </span>
                 </span>
               </span>
@@ -74,7 +88,7 @@
                 <span class="px-2 py-2 text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800" v-for="detail in delivery.deliveries.delivery" v-if="detail.product.name === 'Diesel'">
                   {{ detail.client.name }}
                   <span class="p-1 rounded-full text-yellow-800 text-xs ml-2 bg-yellow-400">
-                      {{  detail.quantity / 1000 }}
+                      {{ toFigure(detail.quantity) }}
                   </span>
                 </span>
               </span>
@@ -89,10 +103,10 @@
             <td class="px-6 py-4">
               <div class="text-md text-gray-900" v-for="purchase in figures.purchases" v-if="purchase.product.name === 'Regular'">
                 <span class="font-semibold">
-                  {{ purchase.quantity / 1000 }}{{'K'}}
+                  {{ toFigure(purchase.quantity) }}
                 </span>
                 <span class="font-semibold text-sm ml-2 px-2 inline-flex leading-5 rounded-full bg-green-100 text-green-800">
-                  {{ purchase.unit_price }}
+                  {{ toPHP(purchase.unit_price) }}
                 </span>
               </div>
             </td>
@@ -105,7 +119,7 @@
                   <div class="relative w-12 h-12 ml-1" v-for="detail in load.loads" v-if="detail.product_id === 2">
                     <img class="rounded-full border border-gray-100 shadow-sm" src="https://randomuser.me/api/portraits/women/81.jpg" alt="user image" />
                     <div class="text-xs font-medium font-semibold absolute top-0 right-0 h-6 w-6 -my-2 -mx-2 border-2 border-white rounded-full bg-green-200 z-2 leading-5 text-green-800">
-                      {{ detail.quantity / 1000 }}
+                      {{ toFigure(detail.quantity) }}
                     </div>
                   </div>
                 </div>
@@ -118,7 +132,18 @@
                 <span class="px-2 py-2 text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800" v-for="detail in load.loads.load" v-if="detail.product.name === 'Regular'">
                   {{ load.driver.name }}
                   <span class="p-1 rounded-full text-green-800 text-xs ml-2 bg-green-400">
-                      {{  detail.quantity / 1000 }}
+                      {{ toFigure(detail.quantity) }}
+                  </span>
+                </span>
+              </span>
+            </td>
+            <td class="px-6 py-4">
+              <span class="font-semibold text-md font-medium text-gray-900 mr-1">{{ 'H100' }}</span>
+              <span v-for="haul in figures.hauls">
+                <span class="px-2 py-2 text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800" v-for="detail in haul.hauls.haul" v-if="detail.product.name === 'Regular'">
+                  {{ detail.client.name }}
+                  <span class="p-1 rounded-full text-green-800 text-xs ml-2 bg-green-400">
+                      {{ toFigure(detail.quantity) }}
                   </span>
                 </span>
               </span>
@@ -129,7 +154,7 @@
                 <span class="px-2 py-2 text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800" v-for="detail in delivery.deliveries.delivery" v-if="detail.product.name === 'Regular'">
                   {{ detail.client.name }}
                   <span class="p-1 rounded-full text-green-800 text-xs ml-2 bg-green-400">
-                      {{  detail.quantity / 1000 }}
+                      {{ toFigure(detail.quantity) }}
                   </span>
                 </span>
               </span>
@@ -144,10 +169,10 @@
             <td class="px-6 py-4">
               <div class="text-md text-gray-900" v-for="purchase in figures.purchases" v-if="purchase.product.name === 'Premium'">
                 <span class="font-semibold">
-                  {{ purchase.quantity / 1000 }}{{'K'}}
+                  {{ toFigure(purchase.quantity) }}
                 </span>
                 <span class="font-semibold text-sm ml-2 px-2 inline-flex leading-5 rounded-full bg-red-100 text-red-800">
-                  {{ purchase.unit_price }}
+                  {{ toPHP(purchase.unit_price) }}
                 </span>
               </div>
             </td>
@@ -160,7 +185,7 @@
                   <div class="relative w-12 h-12 ml-1" v-for="detail in load.loads" v-if="detail.product_id === 1">
                     <img class="rounded-full border border-gray-100 shadow-sm" src="https://randomuser.me/api/portraits/women/81.jpg" alt="user image" />
                     <div class="text-xs font-medium font-semibold absolute top-0 right-0 h-6 w-6 -my-2 -mx-2 border-2 border-white rounded-full bg-red-200 z-2 leading-5 text-red-800">
-                      {{ detail.quantity / 1000 }}
+                      {{ toFigure(detail.quantity) }}
                     </div>
                   </div>
                 </div>
@@ -173,7 +198,18 @@
                 <span class="px-2 py-2 text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800" v-for="detail in load.loads.load" v-if="detail.product.name === 'Premium'">
                   {{ load.driver.name }}
                   <span class="p-1 rounded-full text-red-800 text-xs ml-2 bg-red-400">
-                      {{  detail.quantity / 1000 }}
+                      {{ toFigure(detail.quantity) }}
+                  </span>
+                </span>
+              </span>
+            </td>
+            <td class="px-6 py-4">
+              <span class="font-semibold text-md font-medium text-gray-900 mr-1">{{ 'H100' }}</span>
+              <span v-for="haul in figures.hauls">
+                <span class="px-2 py-2 text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800" v-for="detail in haul.hauls.haul" v-if="detail.product.name === 'Premium'">
+                  {{ detail.client.name }}
+                  <span class="p-1 rounded-full text-red-800 text-xs ml-2 bg-red-400">
+                      {{ toFigure(detail.quantity) }}
                   </span>
                 </span>
               </span>
@@ -184,7 +220,7 @@
                 <span class="px-2 py-2 text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800" v-for="detail in delivery.deliveries.delivery" v-if="detail.product.name === 'Premium'">
                   {{ detail.client.name }}
                   <span class="p-1 rounded-full text-red-800 text-xs ml-2 bg-red-400">
-                      {{  detail.quantity / 1000 }}
+                      {{ toFigure(detail.quantity) }}
                   </span>
                 </span>
               </span>
@@ -246,22 +282,16 @@
                       <tbody class="bg-white divide-y divide-gray-200">
                         <tr v-for="purchase in figures.purchases" :key="purchase.id" :value="purchase.id">
                           <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="flex items-center">
-                              <div class="ml-4">
-                                <div class="text-sm font-medium text-gray-900">
-                                  {{ purchase.product.name }}
-                                </div>
-                              </div>
-                            </div>
+                            <div class="text-sm text-gray-900">{{ purchase.product.name }}</div>
                           </td>
                           <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900">{{ purchase.quantity }}</div>
+                            <div class="text-sm text-gray-900">{{ quantityFormat(purchase.quantity) }}</div>
                           </td>
                           <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900">{{ purchase.unit_price }}</div>
+                            <div class="text-sm text-gray-900">{{ toPHP(purchase.unit_price) }}</div>
                           </td>
                           <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900">{{ purchase.quantity * purchase.unit_price }}</div>
+                            <div class="text-sm text-gray-900">{{ totalCurrency(purchase.quantity, purchase.unit_price) }}</div>
                           </td>
                         </tr>
                       </tbody>
@@ -276,7 +306,9 @@
                 <div v-show="loadSelected == 1" class="border py-4 px-2">
                   <div class="rounded shadow overflow-x-auto mb-8 -mt-4" v-for="load in figures.loads" :key="load.id" :value="load.id">
                     <div class="ml-5 mt-5 mb-1">
-                      <p class="text-sm font-bold text-gray-900 mb-2">{{ load.driver.name }} & {{ load.helper.name }} ({{ load.tanker.plate_no }})</p>
+                      <inertia-link :href="route('tanker-loads.edit', load.id)" tabindex="-1">
+                        <p class="text-sm font-bold text-blue-700 mb-2">{{ load.driver.name }} & {{ load.helper.name }} ({{ load.tanker.plate_no }})</p>
+                      </inertia-link>
                     </div>
                     <table class="min-w-full divide-y divide-gray-200">
 <!--                       <thead class="bg-gray-50">
@@ -308,7 +340,7 @@
                             <div class="text-sm text-gray-900">{{ detail.product.name }}</div>
                           </td>
                           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            <div class="text-sm text-gray-900">{{ detail.quantity }}</div>
+                            <div class="text-sm text-gray-900">{{ quantityFormat(detail.quantity) }}</div>
                           </td>
                         </tr>
                       </tbody>
@@ -316,14 +348,95 @@
                   </div>
                 </div>
               </li>
+             <!-- Hauling -->
+              <li class="flex align-center flex-col">
+                <h4 @click="haulSelected !== 2 ? haulSelected = 2 : haulSelected = null"
+                class="cursor-pointer px-5 py-3 bg-blue-600 text-white inline-block hover:opacity-75 hover:shadow hover:-mb-3">Hauling</h4>
+                <div v-show="haulSelected == 2" class="border py-4 px-2">
+                  <div class="rounded shadow overflow-x-auto mb-8 -mt-4" v-for="haul in figures.hauls" :key="haul.id" :value="haul.id">
+                    <div class="ml-5 mt-5 mb-1">
+                      <inertia-link :href="route('hauls.edit', haul.id)" tabindex="-1">
+                        <p class="text-sm font-bold text-blue-700 mb-2">{{ haul.driver.name }} & {{ haul.helper.name }} ({{ haul.tanker.plate_no }})</p>
+                      </inertia-link>
+                    </div>
+
+
+                    <table class="min-w-full divide-y divide-gray-200">
+                      <thead class="bg-gray-50">
+                        <tr>
+                          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Date
+                          </th>
+                          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Client
+                          </th>
+                          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Product
+                          </th>
+                          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Quantity
+                          </th>
+                          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Unit Price
+                          </th>
+                          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Amount
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody class="bg-white divide-y divide-gray-200">
+                        <tr v-for="detail in haul.hauls.haul">
+                          <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-medium text-gray-900">
+                              {{ detail.date }}
+                            </div>
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-medium text-gray-900">
+                              {{ detail.client.name  }}
+                            </div>
+                          </td>
+<!--                           <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">GTEX - Fortune</div>
+                          </td>
+ -->
+                          <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-medium text-gray-900">
+                              {{ detail.product.name }}
+                            </div>
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <div class="text-sm font-medium text-gray-900">
+                              {{ quantityFormat(detail.quantity) }}
+                            </div>
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <div class="text-sm font-medium text-gray-900">
+                              {{ toPHP(detail.unit_price) }}
+                            </div>
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <div class="text-sm font-medium text-gray-900">
+                              {{ totalCurrency(detail.quantity, detail.unit_price) }}
+                            </div>
+                          </td>
+                        </tr>
+
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </li>
              <!-- Deliveries -->
               <li class="flex align-center flex-col">
-                <h4 @click="deliverySelected !== 2 ? deliverySelected = 2 : deliverySelected = null"
-                :class="{'cursor-pointer px-5 py-3 bg-blue-600 text-white inline-block hover:opacity-75 hover:shadow hover:-mb-3': true, 'rounded-b': deliverySelected != 2}">Deliveries</h4>
-                <div v-show="deliverySelected == 2" :class="{'border py-4 px-2': true, 'rounded-b': deliverySelected == 2}">
+                <h4 @click="deliverySelected !== 3 ? deliverySelected = 3 : deliverySelected = null"
+                :class="{'cursor-pointer px-5 py-3 bg-blue-600 text-white inline-block hover:opacity-75 hover:shadow hover:-mb-3': true, 'rounded-b': deliverySelected != 3}">Deliveries</h4>
+                <div v-show="deliverySelected == 3" :class="{'border py-4 px-2': true, 'rounded-b': deliverySelected == 3}">
                   <div class="rounded shadow overflow-x-auto mb-8 -mt-4" v-for="delivery in figures.deliveries" :key="delivery.id" :value="delivery.id">
                     <div class="ml-5 mt-5 mb-1">
-                      <p class="text-sm font-bold text-gray-900 mb-2">{{ delivery.driver.name }} & {{ delivery.helper.name }} ({{ delivery.tanker.plate_no }})</p>
+                      <inertia-link :href="route('deliveries.edit', delivery.id)" tabindex="-1">
+                        <p class="text-sm font-bold text-blue-700 mb-2">{{ delivery.driver.name }} & {{ delivery.helper.name }} ({{ delivery.tanker.plate_no }})</p>
+                      </inertia-link>
                     </div>
                     <table class="min-w-full divide-y divide-gray-200">
                       <thead class="bg-gray-50">
@@ -351,21 +464,13 @@
                       <tbody class="bg-white divide-y divide-gray-200">
                         <tr v-for="detail in delivery.deliveries.delivery">
                           <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="flex items-center">
-                              <div class="ml-4">
-                                <div class="text-sm font-medium text-gray-900">
-                                  {{ detail.date }}
-                                </div>
-                              </div>
+                            <div class="text-sm font-medium text-gray-900">
+                              {{ detail.date }}
                             </div>
                           </td>
                           <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="flex items-center">
-                              <div class="ml-4">
-                                <div class="text-sm font-medium text-gray-900">
-                                  {{ detail.client.name  }}
-                                </div>
-                              </div>
+                            <div class="text-sm font-medium text-gray-900">
+                              {{ detail.client.name  }}
                             </div>
                           </td>
 <!--                           <td class="px-6 py-4 whitespace-nowrap">
@@ -379,17 +484,17 @@
                           </td>
                           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             <div class="text-sm font-medium text-gray-900">
-                              {{ detail.quantity }}
+                              {{ quantityFormat(detail.quantity) }}
                             </div>
                           </td>
                           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             <div class="text-sm font-medium text-gray-900">
-                              {{ detail.unit_price }}
+                              {{ toPHP(detail.unit_price) }}
                             </div>
                           </td>
                           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             <div class="text-sm font-medium text-gray-900">
-                              {{ detail.quantity * detail.unit_price }}
+                              {{ totalCurrency(detail.quantity, detail.unit_price) }}
                             </div>
                           </td>
                         </tr>
@@ -429,8 +534,8 @@
                 <option :value="null" />
                 <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
               </select-input>
-              <text-input v-model="details.quantity" :error="errors.quantity" class="pr-6 pb-8 w-full lg:w-1/6" label="Quantity" />
-              <text-input v-model="details.unit_price" :error="errors.unit_price" class="pr-6 pb-8 w-full lg:w-1/6" label="Unit Price" />
+              <text-input type="number" step="any" v-model="details.quantity" :error="errors.quantity" class="pr-6 pb-8 w-full lg:w-1/6" label="Quantity" />
+              <text-input type="number" step="any" v-model="details.unit_price" :error="errors.unit_price" class="pr-6 pb-8 w-full lg:w-1/6" label="Unit Price" />
               <text-input v-model="details.remarks" :error="errors.remarks" class="pr-6 pb-8 w-full lg:w-1/6" label="Remarks" />
               <span style="background-color: red; color: white; cursor: pointer; float: right;" @click.prevent="deleteDetailForm(index, details.id)">X</span>
             </div>
@@ -457,8 +562,8 @@
                 <option :value="null" />
                 <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
               </select-input>
-              <text-input v-model="details.quantity" :error="errors.quantity" class="pr-6 pb-8 w-full lg:w-1/6" label="Quantity" />
-              <text-input v-model="details.unit_price" :error="errors.unit_price" class="pr-6 pb-8 w-full lg:w-1/6" label="Unit Price" />
+              <text-input type="number" step="any" v-model="details.quantity" :error="errors.quantity" class="pr-6 pb-8 w-full lg:w-1/6" label="Quantity" />
+              <text-input type="number" step="any" v-model="details.unit_price" :error="errors.unit_price" class="pr-6 pb-8 w-full lg:w-1/6" label="Unit Price" />
               <text-input v-model="details.remarks" :error="errors.remarks" class="pr-6 pb-8 w-full lg:w-1/6" label="Remarks" />
 
               <span style="background-color: red; color: white; cursor: pointer; float: right;" @click.prevent="deleteNewDetailForm(index)">X</span>
@@ -551,7 +656,8 @@
       // Accordion
       purchaseSelected: 0,
       loadSelected: 1,
-      deliverySelected: 2,
+      haulSelected: 2,
+      deliverySelected: 3,
     }
   },
   methods: {
@@ -604,7 +710,25 @@
       this.createForm.splice(index, 1);
     },
 
+    // Helpers
+    toFigure(value) {
+      return value / 1000;
+    },
+
+    quantityFormat(value) {
+      return Number(value).toLocaleString()
+    },
+
+    toPHP(value) {
+      return `₱${Number(value).toLocaleString()}`;
+    },
+
+    totalCurrency(quantity, unitPrice) {
+      return this.toPHP(quantity * unitPrice);
+    },
+
   },
+
 }
 </script>
 

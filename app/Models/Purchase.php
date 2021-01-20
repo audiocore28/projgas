@@ -34,6 +34,11 @@ class Purchase extends Model
 	 	return $this->hasMany(TankerLoad::class);
 	 }
 
+     public function hauls()
+     {
+        return $this->hasMany(Haul::class);
+     }
+
      public function deliveries()
      {
         return $this->hasMany(Delivery::class);

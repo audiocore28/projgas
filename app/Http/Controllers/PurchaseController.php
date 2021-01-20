@@ -113,6 +113,7 @@ class PurchaseController extends Controller
 
         $pD = $purchase->purchaseDetails->transform(function ($detail) {
             return [
+                'id' => $detail->id,
                 'quantity' => $detail->quantity,
                 'unit_price' => $detail->unit_price,
                 'remarks' => $detail->remarks,
@@ -124,8 +125,8 @@ class PurchaseController extends Controller
 
         $lD = $purchase->tankerLoads->transform(function ($load) {
             return [
+                'id' => $load->id,
                 // 'date' => $load->date,
-                // 'status' => $load->status,
                 // 'remarks' => $load->remarks,
                 // 'purchase_id' => $load->purchase_id,
                 // 'tanker_id' => $load->tanker_id,
@@ -141,8 +142,28 @@ class PurchaseController extends Controller
             ];
         });
 
+        $hD = $purchase->hauls->transform(function ($haul) {
+            return [
+                'id' => $haul->id,
+                // 'haul_id' => $haul->haul_id,
+                // 'product_id' => $haul->product_id,
+                // 'quantity' => $haul->quantity,
+                // 'unit_price' => $haul->unit_price,
+                'tanker' => $haul->tanker ? $haul->tanker->only('plate_no') : null,
+                'driver' => $haul->driver ? $haul->driver->only('name') : null,
+                'helper' => $haul->helper ? $haul->helper->only('name') : null,
+                // 'hauls' => $haul->haulDetails ? $haul->haulDetails : null,
+                'hauls' => [
+                    'haul' => $haul->haulDetails->each(function ($detail) {
+                        return ['p' => $detail->product->name, 'c' => $detail->client->name];
+                    })
+                ]
+            ];
+        });
+
         $dD = $purchase->deliveries->transform(function ($delivery) {
             return [
+                'id' => $delivery->id,
                 // 'delivery_id' => $delivery->delivery_id,
                 // 'product_id' => $delivery->product_id,
                 // 'quantity' => $delivery->quantity,
@@ -159,8 +180,8 @@ class PurchaseController extends Controller
             ];
         });
 
-       $keys = collect(['purchases', 'loads', 'deliveries']);
-       $figures = $keys->combine([$pD, $lD, $dD]);
+       $keys = collect(['purchases', 'loads', 'hauls', 'deliveries']);
+       $figures = $keys->combine([$pD, $lD, $hD, $dD]);
 
         return Inertia::render('Purchases/Edit', [
             'purchase' => [
@@ -204,7 +225,7 @@ class PurchaseController extends Controller
         {
             $purchase->purchaseDetails()->find($detail['id'])->update([
                 // 'purchase_id' => $detail['purchase_id'],
-                'product_id' => $detail['product_id'],
+                'product_id' => $detail['product']['id'],
                 'quantity' => $detail['quantity'],
                 'unit_price' => $detail['unit_price'],
                 'remarks' => $detail['remarks'],
