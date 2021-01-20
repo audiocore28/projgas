@@ -17,7 +17,7 @@ class CreateTankerLoadDetailsTable extends Migration
             $table->id();
             $table->bigInteger('tanker_load_id')->nullable();
             $table->bigInteger('product_id')->nullable();
-            $table->integer('quantity')->nullable();
+            $table->decimal('quantity', 8, 0)->nullable();
             $table->timestamps();
         });
     }

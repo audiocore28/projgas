@@ -56,7 +56,7 @@
                   <option :value="null" />
                   <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
                 </select-input>
-                <text-input v-model="details.quantity" :error="errors.quantity" class="pr-6 pb-8 w-full lg:w-1/4" label="Quantity" />
+                <text-input type="number" step="any" v-model="details.quantity" :error="errors.quantity" class="pr-6 pb-8 w-full lg:w-1/4" label="Quantity" />
 
                 <!-- Fix Me -->
                 <span style="background-color: red; color: white; cursor: pointer; float: right;" @click.prevent="deleteDetailForm(index, details.id)">X</span>
@@ -79,7 +79,7 @@
                   <option :value="null" />
                   <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
                 </select-input>
-                <text-input v-model="details.quantity" :error="errors.quantity" class="pr-6 pb-8 w-full lg:w-1/4" label="Quantity" />
+                <text-input type="number" step="any" v-model="details.quantity" :error="errors.quantity" class="pr-6 pb-8 w-full lg:w-1/4" label="Quantity" />
 
                 <span style="background-color: red; color: white; cursor: pointer; float: right;" @click.prevent="deleteNewDetailForm(index)">X</span>
               </div>
