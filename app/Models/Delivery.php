@@ -18,7 +18,7 @@ class Delivery extends Model
   //   use SoftDeletes;
 
 	 public $table = 'deliveries';
-	 protected $fillable = ['purchase_id', 'tanker_id', 'driver_id', 'helper_id', 'client_id'];
+	 protected $fillable = ['purchase_id', 'tanker_id', 'driver_id', 'helper_id'];
 
 	 public function purchase()
 	 {
@@ -38,11 +38,6 @@ class Delivery extends Model
 	 public function helper()
 	 {
 	 	return $this->belongsTo(Helper::class);
-	 }
-
-	 public function client()
-	 {
-	 	return $this->belongsTo(Client::class);
 	 }
 
 	 public function deliveryDetails()

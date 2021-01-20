@@ -16,7 +16,7 @@ class DeliveryDetail extends Model
   //   use SoftDeletes;
 
 	 protected $dates = ['date'];
-	 protected $fillable = ['date', 'quantity', 'unit_price', 'delivery_id', 'product_id', 'client_id'];
+	 protected $fillable = ['date', 'dr_no', 'quantity', 'unit_price', 'delivery_id', 'product_id', 'client_id'];
 
 	 public function delivery()
 	 {

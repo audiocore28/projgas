@@ -45,6 +45,7 @@ class DeliveryDetailController extends Controller
             $deliveryDetail = DeliveryDetail::create([
                 'delivery_id' => $detail['delivery_id'],
                 'date' => $detail['date'],
+                'dr_no' => $detail['dr_no'],
                 'client_id' => $detail['client_id'],
                 'product_id' => $detail['product_id'],
                 'quantity' => $detail['quantity'],
@@ -103,9 +104,9 @@ class DeliveryDetailController extends Controller
     }
 
 
-    public function restore(DeliveryDetail $DeliveryDetail)
+    public function restore(DeliveryDetail $deliveryDetail)
     {
-        // $DeliveryDetail->restore();
+        // $deliveryDetail->restore();
 
         // return redirect()->route('posts.index')->with('success', 'DeliveryDetail restored.');
     }

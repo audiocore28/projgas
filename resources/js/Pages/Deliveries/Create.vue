@@ -37,6 +37,7 @@
             <date-picker v-model="details.date" lang="en" value-type="format" :formatter="momentFormat"></date-picker>
           </span>
 
+          <text-input v-model="details.dr_no" :error="errors.dr_no" class="pr-6 pb-8 w-full lg:w-1/6" label="DR No." />
           <select-input v-model="details.client_id" :error="errors.client_id" class="pr-6 pb-8 w-full lg:w-1/6" label="Client">
             <option :value="null" />
             <option v-for="client in clients" :key="client.id" :value="client.id">{{ client.name }}</option>
@@ -45,8 +46,8 @@
             <option :value="null" />
             <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
           </select-input>
-          <text-input v-model="details.quantity" :error="errors.quantity" class="pr-6 pb-8 w-full lg:w-1/6" label="Quantity" />
-          <text-input v-model="details.unit_price" :error="errors.unit_price" class="pr-6 pb-8 w-full lg:w-1/6" label="Unit Price" />
+          <text-input type="number" step="any" v-model="details.quantity" :error="errors.quantity" class="pr-6 pb-8 w-full lg:w-1/6" label="Quantity" />
+          <text-input type="number" step="any" v-model="details.unit_price" :error="errors.unit_price" class="pr-6 pb-8 w-full lg:w-1/6" label="Unit Price" />
 
           <span style="background-color: red; color: white; cursor: pointer; float: right;" @click.prevent="deleteDetailForm(index)">X</span>
         </div>
@@ -118,6 +119,7 @@ export default {
         details: [
           {
             date: null,
+            dr_no: null,
             client_id: null,
             product_id: null,
             quantity: null,
@@ -139,6 +141,7 @@ export default {
       this.form.details.push({
         // delivery_id: null,
         date: null,
+        dr_no: null,
         client_id: null,
         product_id: null,
         quantity: null,

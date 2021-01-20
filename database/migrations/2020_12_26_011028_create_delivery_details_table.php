@@ -17,10 +17,11 @@ class CreateDeliveryDetailsTable extends Migration
             $table->id();
             $table->bigInteger('delivery_id');
             $table->date('date')->nullable();
+            $table->string('dr_no');
             $table->bigInteger('client_id')->nullable();
             $table->bigInteger('product_id');
-            $table->integer('quantity')->nullable();
-            $table->integer('unit_price')->nullable();
+            $table->decimal('quantity', 8, 0)->nullable();
+            $table->decimal('unit_price', 10, 3)->nullable();
             $table->timestamps();
         });
     }

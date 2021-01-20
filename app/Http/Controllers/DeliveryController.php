@@ -92,6 +92,7 @@ class DeliveryController extends Controller
             $deliveryDetail = DeliveryDetail::create([
                 'delivery_id' => $deliveryId,
                 'date' => $detail['date'],
+                'dr_no' => $detail['dr_no'],
                 'client_id' => $detail['client_id'],
                 'product_id' => $detail['product_id'],
                 'quantity' => $detail['quantity'],
@@ -155,7 +156,7 @@ class DeliveryController extends Controller
      */
     public function update(StoreDeliveryRequest $request, Delivery $delivery)
     {
-        // Purchase
+        // Delivery
         $delivery->update([
             'tanker_id' => $request->tanker_id,
             'driver_id' => $request->driver_id,
@@ -163,7 +164,7 @@ class DeliveryController extends Controller
             'purchase_id' => $request->purchase_id,
         ]);
 
-        // PurchaseDetail
+        // DeliveryDetail
         $existingDetails = collect($request->details)->filter(function($value){
             return $value['id'] !== null;
         });
@@ -173,6 +174,7 @@ class DeliveryController extends Controller
             $delivery->deliveryDetails()->find($detail['id'])->update([
                 // 'delivery_id' => $detail['delivery_id'],
                 'date' => $detail['date'],
+                'dr_no' => $detail['dr_no'],
                 'client_id' => $detail['client_id'],
                 'product_id' => $detail['product_id'],
                 'quantity' => $detail['quantity'],
