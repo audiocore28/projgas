@@ -5,6 +5,10 @@
       <span class="text-blue-600 font-medium">/</span> {{ form.plate_no }}
     </h1>
 
+    <trashed-message v-if="tanker.deleted_at" class="mb-6" @restore="restore">
+      This tanker has been deleted.
+    </trashed-message>
+
     <div class="p-1">
       <ul class="flex border-b">
         <li @click="openTab = 1" :class="{ '-mb-px': openTab === 1 }" class="-mb-px mr-1">
@@ -21,8 +25,8 @@
         </li>
       </ul>
 
-      <!-- Tab 1 -->
       <div class="w-full pt-4">
+        <!-- Tab 1 -->
         <div v-show="openTab === 1">
           <div class="bg-white rounded shadow overflow-hidden max-w-3xl -mt-4">
             <form @submit.prevent="submit">
@@ -125,9 +129,9 @@ import TextInput from '@/Shared/TextInput'
 import TrashedMessage from '@/Shared/TrashedMessage'
 
 export default {
-  // metaInfo() {
-  //   return { title: this.form.name }
-  // },
+  metaInfo() {
+    return { title: this.form.plate_no }
+  },
   layout: Layout,
   components: {
     Icon,

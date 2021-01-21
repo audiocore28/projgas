@@ -4,6 +4,11 @@
       <inertia-link class="text-blue-600 hover:text-blue-800" :href="route('products.index')">Products</inertia-link>
       <span class="text-blue-600 font-medium">/</span> {{ form.name }}
     </h1>
+
+    <trashed-message v-if="product.deleted_at" class="mb-6" @restore="restore">
+      This product has been deleted.
+    </trashed-message>
+
     <div class="bg-white rounded shadow overflow-hidden max-w-3xl">
       <form @submit.prevent="submit">
         <div class="p-8 -mr-6 -mb-8 flex flex-wrap">
@@ -28,9 +33,9 @@ import TextInput from '@/Shared/TextInput'
 import TrashedMessage from '@/Shared/TrashedMessage'
 
 export default {
-  // metaInfo() {
-  //   return { title: this.form.name }
-  // },
+  metaInfo() {
+    return { title: this.form.name }
+  },
   layout: Layout,
   components: {
     Icon,

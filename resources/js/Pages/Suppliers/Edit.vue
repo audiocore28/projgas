@@ -4,6 +4,11 @@
       <inertia-link class="text-blue-600 hover:text-blue-800" :href="route('suppliers.index')">Suppliers</inertia-link>
       <span class="text-blue-600 font-medium">/</span> {{ form.name }}
     </h1>
+
+    <trashed-message v-if="supplier.deleted_at" class="mb-6" @restore="restore">
+      This supplier has been deleted.
+    </trashed-message>
+
     <div class="p-1">
       <ul class="flex border-b">
         <li @click="openTab = 1" :class="{ '-mb-px': openTab === 1 }" class="-mb-px mr-1">
@@ -51,9 +56,9 @@ import TextInput from '@/Shared/TextInput'
 import TrashedMessage from '@/Shared/TrashedMessage'
 
 export default {
-  // metaInfo() {
-  //   return { title: this.form.name }
-  // },
+  metaInfo() {
+    return { title: this.form.name }
+  },
   layout: Layout,
   components: {
     Icon,

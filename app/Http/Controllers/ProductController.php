@@ -20,10 +20,10 @@ class ProductController extends Controller
     public function index()
     {
         return Inertia::render('Products/Index', [
-            'filters' => Request::all('search'),
-            'products' => product::filter(Request::only('search'))
+            'filters' => Request::all('search', 'trashed'),
+            'products' => product::filter(Request::only('search', 'trashed'))
                 ->orderBy('id', 'desc')
-                ->paginate(5)
+                ->paginate()
         ]);
     }
 
@@ -74,6 +74,7 @@ class ProductController extends Controller
                 'id' => $product->id,
                 'name' => $product->name,
                 'description' => $product->description,
+                'deleted_at' => $product->deleted_at,
             ]
         ]);
     }
@@ -89,7 +90,7 @@ class ProductController extends Controller
     {
         $product->update($request->all());
 
-        return redirect()->route('products.index')->with('success', 'Product updated.');
+        return Redirect::back()->with('success', 'Product updated.');
     }
 
     /**
@@ -102,7 +103,7 @@ class ProductController extends Controller
     {
         $product->delete();
 
-        return redirect()->route('products.index')->with('success', 'Product deleted.');
+        return Redirect::back()->with('success', 'Product deleted.');
     }
 
 
@@ -110,6 +111,6 @@ class ProductController extends Controller
     {
         $product->restore();
 
-        return redirect()->route('products.index')->with('success', 'Product restored.');
+        return Redirect::back()->with('success', 'Product restored.');
     }
 }

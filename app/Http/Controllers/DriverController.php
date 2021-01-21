@@ -20,10 +20,10 @@ class DriverController extends Controller
     public function index()
     {
         return Inertia::render('Drivers/Index', [
-            'filters' => Request::all('search'),
-            'drivers' => Driver::filter(Request::only('search'))
+            'filters' => Request::all('search', 'trashed'),
+            'drivers' => Driver::filter(Request::only('search', 'trashed'))
                 ->orderBy('id', 'desc')
-                ->paginate(5)
+                ->paginate()
         ]);
     }
 
@@ -77,6 +77,7 @@ class DriverController extends Controller
                 'address' => $driver->address,
                 'license_no' => $driver->license_no,
                 'contact_no' => $driver->contact_no,
+                'deleted_at' => $driver->deleted_at,
            ],
            'tankers' => $driver->tankers,
         ]);
@@ -93,7 +94,7 @@ class DriverController extends Controller
     {
         $driver->update($request->all());
 
-        return redirect()->route('drivers.index')->with('success', 'Driver updated.');
+        return Redirect::back()->with('success', 'Driver updated.');
     }
 
     /**
@@ -106,7 +107,7 @@ class DriverController extends Controller
     {
         $driver->delete();
 
-        return redirect()->route('drivers.index')->with('success', 'Driver deleted.');
+        return Redirect::back()->with('success', 'Driver deleted.');
     }
 
 
@@ -114,6 +115,6 @@ class DriverController extends Controller
     {
         $driver->restore();
 
-        return redirect()->route('drivers.index')->with('success', 'Driver restored.');
+        return Redirect::back()->with('success', 'Driver restored.');
     }
 }

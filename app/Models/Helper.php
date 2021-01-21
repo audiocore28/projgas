@@ -3,8 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-// use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Tanker;
 use App\Models\Driver;
 use App\Models\Delivery;
@@ -12,9 +11,10 @@ use App\Models\Delivery;
 class Helper extends Model
 {
     use HasFactory;
-  //   use SoftDeletes;
+    use SoftDeletes;
 
-	 protected $fillable = ['name', 'nickname', 'address', 'contact_no'];
+    protected $dates = ['deleted_at'];
+	protected $fillable = ['name', 'nickname', 'address', 'contact_no'];
 
     public function scopeFilter($query, array $filters)
     {
@@ -24,6 +24,12 @@ class Helper extends Model
                     ->orWhere('nickname', 'like', '%'.$search.'%')
                     ->orWhere('address', 'like', '%'.$search.'%');
             });
+        })->when($filters['trashed'] ?? null, function ($query, $trashed) {
+            if ($trashed === 'with') {
+                $query->withTrashed();
+            } elseif ($trashed === 'only') {
+                $query->onlyTrashed();
+            }
         });
     }
 

@@ -22,10 +22,10 @@ class TankerController extends Controller
     public function index()
     {
         return Inertia::render('Tankers/Index', [
-            'filters' => Request::all('search'),
-            'tankers' => Tanker::filter(Request::only('search'))
+            'filters' => Request::all('search', 'trashed'),
+            'tankers' => Tanker::filter(Request::only('search', 'trashed'))
                 ->orderBy('id', 'desc')
-                ->paginate(5)
+                ->paginate()
         ]);
     }
 
@@ -93,6 +93,7 @@ class TankerController extends Controller
                 'id' => $tanker->id,
                 'plate_no' => $tanker->plate_no,
                 'compartment' => $tanker->compartment,
+                'deleted_at' => $tanker->deleted_at,
             ],
             'drivers' => $tanker->drivers,
             'helpers' => $tanker->helpers,
@@ -110,7 +111,7 @@ class TankerController extends Controller
     {
         $tanker->update($request->all());
 
-        return redirect()->route('tankers.index')->with('success', 'Tanker updated.');
+        return Redirect::back()->with('success', 'Tanker updated.');
     }
 
     /**
@@ -123,7 +124,7 @@ class TankerController extends Controller
     {
         $tanker->delete();
 
-        return redirect()->route('tankers.index')->with('success', 'Tanker deleted.');
+        return Redirect::back()->with('success', 'Tanker deleted.');
     }
 
 
@@ -131,6 +132,6 @@ class TankerController extends Controller
     {
         $tanker->restore();
 
-        return redirect()->route('tankers.index')->with('success', 'Tanker restored.');
+        return Redirect::back()->with('success', 'Tanker restored.');
     }
 }

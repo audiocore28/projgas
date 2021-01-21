@@ -27,6 +27,7 @@ import LoadingButton from '@/Shared/LoadingButton'
 import TextInput from '@/Shared/TextInput'
 
 export default {
+  metaInfo: { title: 'Create Supplier' },
   layout: Layout,
   components: {
     LoadingButton,

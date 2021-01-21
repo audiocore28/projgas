@@ -42,11 +42,9 @@ import FileInput from '@/Shared/FileInput'
 import TrashedMessage from '@/Shared/TrashedMessage'
 
 export default {
-  // metaInfo() {
-  //   return {
-  //     title: `${this.form.first_name} ${this.form.last_name}`,
-  //   }
-  // },
+  metaInfo() {
+    return { title: this.form.name }
+  },
   layout: Layout,
   components: {
     LoadingButton,

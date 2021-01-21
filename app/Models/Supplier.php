@@ -3,15 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-// use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Supplier extends Model
 {
     use HasFactory;
-  //   use SoftDeletes;
+    use SoftDeletes;
 
-	 protected $fillable = ['name', 'contact_no', 'office', 'contact_person', 'email_address'];
+    protected $dates = ['deleted_at'];
+	protected $fillable = ['name', 'contact_no', 'office', 'contact_person', 'email_address'];
 
     public function scopeFilter($query, array $filters)
     {
@@ -20,6 +20,12 @@ class Supplier extends Model
                 $query->where('name', 'like', '%'.$search.'%')
                     ->orWhere('office', 'like', '%'.$search.'%');
             });
+        })->when($filters['trashed'] ?? null, function ($query, $trashed) {
+            if ($trashed === 'with') {
+                $query->withTrashed();
+            } elseif ($trashed === 'only') {
+                $query->onlyTrashed();
+            }
         });
     }
 

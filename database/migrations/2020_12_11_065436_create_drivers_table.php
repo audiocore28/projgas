@@ -21,6 +21,7 @@ class CreateDriversTable extends Migration
             $table->string('license_no')->nullable();
             $table->string('contact_no')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

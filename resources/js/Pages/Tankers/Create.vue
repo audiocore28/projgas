@@ -15,7 +15,7 @@
           </select-input>
  -->
           <div>
-            <h5>Driver(s)</h5>
+            <label class="form-label block">Driver(s)</label>
             <multiselect
               class="mt-3"
               v-model="form.driver_id"
@@ -26,7 +26,7 @@
           </div>
 
           <div class="ml-5">
-            <h5>Helper(s)</h5>
+            <label class="form-label block">Helper(s)</label>
             <multiselect
               class="mt-3"
               v-model="form.helper_id"
@@ -52,6 +52,7 @@ import TextInput from '@/Shared/TextInput'
 import Multiselect from 'vue-multiselect'
 
 export default {
+  metaInfo: { title: 'Create Tanker' },
   layout: Layout,
   components: {
     LoadingButton,

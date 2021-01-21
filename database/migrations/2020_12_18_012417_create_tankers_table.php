@@ -18,6 +18,7 @@ class CreateTankersTable extends Migration
             $table->string('plate_no', 30);
             $table->string('compartment', 30)->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

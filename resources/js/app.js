@@ -4,6 +4,8 @@ require('moment');
 
 import Vue from 'vue';
 
+import VueMeta from 'vue-meta'
+Vue.use(VueMeta)
 
 import Multiselect from 'vue-multiselect';
 Vue.use(Multiselect);
@@ -23,7 +25,10 @@ Vue.use(PortalVue);
 const app = document.getElementById('app');
 
 new Vue({
-    render: (h) =>
+	metaInfo: {
+		titleTemplate: (title) => title ? `${title} - IBB` : 'IBB'
+	},
+	render: (h) =>
         h(InertiaApp, {
             props: {
                 initialPage: JSON.parse(app.dataset.page),

@@ -33,7 +33,7 @@ import TextInput from '@/Shared/TextInput'
 import FileInput from '@/Shared/FileInput'
 
 export default {
-  // metaInfo: { title: 'Create User' },
+  metaInfo: { title: 'Create User' },
   layout: Layout,
   components: {
     LoadingButton,

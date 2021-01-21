@@ -20,6 +20,7 @@ class CreateHelpersTable extends Migration
             $table->string('address')->nullable();
             $table->string('contact_no')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

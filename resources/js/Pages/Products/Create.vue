@@ -25,6 +25,7 @@ import SelectInput from '@/Shared/SelectInput'
 import TextInput from '@/Shared/TextInput'
 
 export default {
+  metaInfo: { title: 'Create Product' },
   layout: Layout,
   components: {
     LoadingButton,

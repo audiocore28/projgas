@@ -20,10 +20,10 @@ class HelperController extends Controller
     public function index()
     {
         return Inertia::render('Helpers/Index', [
-            'filters' => Request::all('search'),
-            'helpers' => Helper::filter(Request::only('search'))
+            'filters' => Request::all('search', 'trashed'),
+            'helpers' => Helper::filter(Request::only('search', 'trashed'))
                 ->orderBy('id', 'desc')
-                ->paginate(5)
+                ->paginate()
         ]);
     }
 
@@ -76,6 +76,7 @@ class HelperController extends Controller
                 'nickname' => $helper->nickname,
                 'address' => $helper->address,
                 'contact_no' => $helper->contact_no,
+                'deleted_at' => $helper->deleted_at,
             ]
         ]);
     }
@@ -91,7 +92,7 @@ class HelperController extends Controller
     {
         $helper->update($request->all());
 
-        return redirect()->route('helpers.index')->with('success', 'Helper updated.');
+        return Redirect::back()->with('success', 'Helper updated.');
     }
 
     /**
@@ -104,7 +105,7 @@ class HelperController extends Controller
     {
         $helper->delete();
 
-        return redirect()->route('helpers.index')->with('success', 'Helper deleted.');
+        return Redirect::back()->with('success', 'Helper deleted.');
     }
 
 
@@ -112,6 +113,6 @@ class HelperController extends Controller
     {
         $helper->restore();
 
-        return redirect()->route('helpers.index')->with('success', 'Helper restored.');
+        return Redirect::back()->with('success', 'Helper restored.');
     }
 }

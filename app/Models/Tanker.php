@@ -3,8 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-// use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Delivery;
 use App\Models\Driver;
 use App\Models\Helper;
@@ -12,8 +11,9 @@ use App\Models\Helper;
 class Tanker extends Model
 {
     use HasFactory;
-  //   use SoftDeletes;
+    use SoftDeletes;
 
+    protected $dates = ['deleted_at'];
 	protected $fillable = ['plate_no', 'compartment'];
 
     public function scopeFilter($query, array $filters)
@@ -23,6 +23,12 @@ class Tanker extends Model
                 $query->where('plate_no', 'like', '%'.$search.'%')
                     ->orWhere('compartment', 'like', '%'.$search.'%');
             });
+        })->when($filters['trashed'] ?? null, function ($query, $trashed) {
+            if ($trashed === 'with') {
+                $query->withTrashed();
+            } elseif ($trashed === 'only') {
+                $query->onlyTrashed();
+            }
         });
     }
 

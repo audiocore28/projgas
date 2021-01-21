@@ -27,6 +27,7 @@ import SelectInput from '@/Shared/SelectInput'
 import TextInput from '@/Shared/TextInput'
 
 export default {
+  metaInfo: { title: 'Create Helper' },
   layout: Layout,
   components: {
     LoadingButton,

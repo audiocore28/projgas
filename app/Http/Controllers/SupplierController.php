@@ -20,8 +20,8 @@ class SupplierController extends Controller
     public function index()
     {
         return Inertia::render('Suppliers/Index', [
-            'filters' => Request::all('search'),
-            'suppliers' => Supplier::filter(Request::only('search'))
+            'filters' => Request::all('trashed'),
+            'suppliers' => Supplier::filter(Request::only('trashed'))
                 ->orderBy('id', 'desc')
                 ->paginate(5)
         ]);
@@ -77,6 +77,7 @@ class SupplierController extends Controller
                 'email_address' => $supplier->email_address,
                 'contact_person' => $supplier->contact_person,
                 'contact_no' => $supplier->contact_no,
+                'deleted_at' => $supplier->deleted_at,
             ]
         ]);
     }
@@ -92,7 +93,7 @@ class SupplierController extends Controller
     {
         $supplier->update($request->all());
 
-        return redirect()->route('suppliers.index')->with('success', 'Supplier updated.');
+        return Redirect::back()->with('success', 'Supplier updated.');
     }
 
     /**
@@ -105,7 +106,7 @@ class SupplierController extends Controller
     {
         $supplier->delete();
 
-        return redirect()->route('suppliers.index')->with('success', 'Supplier deleted.');
+        return Redirect::back()->with('success', 'Supplier deleted.');
     }
 
 
@@ -113,6 +114,6 @@ class SupplierController extends Controller
     {
         $supplier->restore();
 
-        return redirect()->route('suppliers.index')->with('success', 'Supplier restored.');
+        return Redirect::back()->with('success', 'Supplier restored.');
     }
 }
