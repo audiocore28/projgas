@@ -5,6 +5,10 @@
       <span class="text-blue-600 font-medium">/</span> {{ updateForm.purchase_no }}
     </h1>
 
+    <trashed-message v-if="purchase.deleted_at" class="mb-6" @restore="restore">
+      This purchase has been deleted.
+    </trashed-message>
+
     <!-- Overview of Distribution -->
     <div class="rounded shadow overflow-x-auto mb-8 -mt-4">
       <table class="w-full whitespace-no-wrap">
@@ -596,9 +600,9 @@
   import moment from 'moment'
 
   export default {
-  // metaInfo() {
-  //   return { title: this.form.name }
-  // },
+  metaInfo() {
+    return { title: this.updateForm.purchase_no }
+  },
   layout: Layout,
   components: {
     Icon,

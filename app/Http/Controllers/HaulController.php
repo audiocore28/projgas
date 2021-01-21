@@ -27,22 +27,26 @@ class HaulController extends Controller
      */
     public function index()
     {
-        $hauls = Haul::filter(Request::only('search'))
+        $hauls = Haul::filter(Request::only('search', 'trashed'))
             ->orderBy('id', 'desc')
-            ->paginate(5)
+            ->paginate()
             ->transform(function ($haul) {
                 return [
                     'id' => $haul->id,
+                    'deleted_at' => $haul->deleted_at,
+                    'purchase' => $haul->purchase ? $haul->purchase->only('purchase_no') : null,
                     'tanker' => $haul->tanker ? $haul->tanker->only('plate_no') : null,
                     'driver' => $haul->driver ? $haul->driver->only('name') : null,
                     'helper' => $haul->helper ? $haul->helper->only('name') : null,
-                    // 'purchase' => $haul->purchase ? $haul->purchase->only('purchase_no') : null,
+                    'clients' => $haul->haulDetails->each(function ($detail) {
+                            return [ 'name' => $detail->client->name ];
+                        }),
                     // 'tanker_load_id' => $haul->tanker_load_id,
                 ];
             });
 
         return Inertia::render('Hauls/Index', [
-            'filters' => Request::all('search'),
+            'filters' => Request::all('search', 'trashed'),
             'hauls' => $hauls,
         ]);
     }
@@ -99,7 +103,7 @@ class HaulController extends Controller
             ]);
         }
 
-        return redirect()->route('hauls.index')->with('success', 'Haul was successfully added.');
+        return redirect()->route('hauls.index')->with('success', 'Hauling was successfully added.');
     }
 
     /**
@@ -136,6 +140,7 @@ class HaulController extends Controller
                 'helper_id' => $haul->helper_id,
                 'purchase_id' => $haul->purchase_id,
                 'details' => $haul->haulDetails,
+                'deleted_at' => $haul->deleted_at,
             ],
             'clients' => $clients,
             'purchases' => $purchases,
@@ -180,7 +185,7 @@ class HaulController extends Controller
             ]);
         }
 
-        return redirect()->route('hauls.index')->with('success', 'Haul updated.');
+        return Redirect::back()->with('success', 'Hauling updated.');
     }
 
     /**
@@ -193,7 +198,7 @@ class HaulController extends Controller
     {
         $haul->delete();
 
-        return redirect()->route('hauls.index')->with('success', 'Haul deleted.');
+        return Redirect::back()->with('success', 'Hauling deleted.');
     }
 
 
@@ -201,6 +206,6 @@ class HaulController extends Controller
     {
         $haul->restore();
 
-        return redirect()->route('hauls.index')->with('success', 'Haul restored.');
+        return Redirect::back()->with('success', 'Hauling restored.');
     }
 }

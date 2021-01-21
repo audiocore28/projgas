@@ -25,25 +25,29 @@ class TankerLoadController extends Controller
      */
     public function index()
     {
-        $tankerLoad = TankerLoad::filter(Request::only('search'))
+        $tankerLoad = TankerLoad::filter(Request::only('search', 'trashed'))
             // ->select('id', 'date', 'purchase_id', 'tanker_id', 'driver_id', 'helper_id')
             ->orderBy('id', 'desc')
-            ->paginate(5)
+            ->paginate()
             ->transform(function ($tankerLoad) {
                 return [
                     'id' => $tankerLoad->id,
                     'date' => $tankerLoad->date,
+                    'deleted_at' => $tankerLoad->deleted_at,
                     // 'status' => $tankerLoad->status,
                     // 'remarks' => $tankerLoad->remarks,
                     'purchase' => $tankerLoad->purchase ? $tankerLoad->purchase->only('purchase_no') : null,
                     'tanker' => $tankerLoad->tanker ? $tankerLoad->tanker->only('plate_no') : null,
                     'driver' => $tankerLoad->driver ? $tankerLoad->driver->only('name') : null,
                     'helper' => $tankerLoad->helper ? $tankerLoad->helper->only('name') : null,
+                    'products' => $tankerLoad->tankerLoadDetails->each(function ($detail) {
+                            return [ 'name' => $detail->product->name, ];
+                        }),
                 ];
             });
 
         return Inertia::render('TankerLoads/Index', [
-            'filters' => Request::all('search'),
+            'filters' => Request::all('search', 'trashed'),
             'tanker_loads' => $tankerLoad,
         ]);
     }
@@ -136,6 +140,7 @@ class TankerLoadController extends Controller
                 'driver_id' => $tankerLoad->driver_id,
                 'helper_id' => $tankerLoad->helper_id,
                 'details' => $tankerLoad->tankerLoadDetails,
+                'deleted_at' => $tankerLoad->deleted_at,
             ],
             'purchases' => $purchases,
             'tankers' => $tankers,
@@ -178,7 +183,7 @@ class TankerLoadController extends Controller
             ]);
         }
 
-        return redirect()->route('tanker-loads.index')->with('success', 'Load updated.');
+        return Redirect::back()->with('success', 'Load updated.');
     }
 
     /**
@@ -191,14 +196,14 @@ class TankerLoadController extends Controller
     {
         $tankerLoad->delete();
 
-        return redirect()->route('tanker-loads.index')->with('success', 'Load deleted.');
+        return Redirect::back()->with('success', 'Load deleted.');
     }
 
 
-    public function restore(TankerLoad $tankerload)
+    public function restore(TankerLoad $tankerLoad)
     {
         $tankerLoad->restore();
 
-        return redirect()->route('tanker-loads.index')->with('success', 'Load restored.');
+        return Redirect::back()->with('success', 'Load restored.');
     }
 }

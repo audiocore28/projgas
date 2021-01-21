@@ -22,6 +22,7 @@ class CreateTankerLoadsTable extends Migration
             $table->bigInteger('purchase_id')->nullable();
             $table->string('remarks')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

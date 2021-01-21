@@ -5,6 +5,10 @@
       <span class="text-blue-600 font-medium">/</span> {{ updateForm.client_id }}
     </h1>
 
+    <trashed-message v-if="delivery.deleted_at" class="mb-6" @restore="restore">
+      This delivery has been deleted.
+    </trashed-message>
+
     <div class="p-1">
       <ul class="flex border-b">
         <li @click="openTab = 1" :class="{ '-mb-px': openTab === 1 }" class="-mb-px mr-1">
@@ -138,9 +142,7 @@ import DatePicker from 'vue2-datepicker'
 import moment from 'moment'
 
 export default {
-  // metaInfo() {
-  //   return { title: this.form.name }
-  // },
+  metaInfo: { title: 'Edit Delivery' },
   layout: Layout,
   components: {
     Icon,

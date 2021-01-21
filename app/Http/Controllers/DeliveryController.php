@@ -27,22 +27,26 @@ class DeliveryController extends Controller
      */
     public function index()
     {
-        $deliveries = Delivery::filter(Request::only('search'))
+        $deliveries = Delivery::filter(Request::only('search', 'trashed'))
             ->orderBy('id', 'desc')
-            ->paginate(5)
+            ->paginate()
             ->transform(function ($delivery) {
                 return [
                     'id' => $delivery->id,
+                    'deleted_at' => $delivery->deleted_at,
+                    'purchase' => $delivery->purchase ? $delivery->purchase->only('purchase_no') : null,
                     'tanker' => $delivery->tanker ? $delivery->tanker->only('plate_no') : null,
                     'driver' => $delivery->driver ? $delivery->driver->only('name') : null,
                     'helper' => $delivery->helper ? $delivery->helper->only('name') : null,
-                    // 'purchase' => $delivery->purchase ? $delivery->purchase->only('purchase_no') : null,
+                    'clients' => $delivery->deliveryDetails->each(function ($detail) {
+                            return [ 'name' => $detail->client->name, 'dr_no' => $detail->dr_no ];
+                        }),
                     // 'tanker_load_id' => $delivery->tanker_load_id,
                 ];
             });
 
         return Inertia::render('Deliveries/Index', [
-            'filters' => Request::all('search'),
+            'filters' => Request::all('search', 'trashed'),
             'deliveries' => $deliveries,
         ]);
     }
@@ -137,6 +141,7 @@ class DeliveryController extends Controller
                 'helper_id' => $delivery->helper_id,
                 'purchase_id' => $delivery->purchase_id,
                 'details' => $delivery->deliveryDetails,
+                'deleted_at' => $delivery->deleted_at,
             ],
             'clients' => $clients,
             'purchases' => $purchases,
@@ -182,7 +187,7 @@ class DeliveryController extends Controller
             ]);
         }
 
-        return redirect()->route('deliveries.index')->with('success', 'Delivery updated.');
+        return Redirect::back()->with('success', 'Delivery updated.');
     }
 
     /**
@@ -195,7 +200,7 @@ class DeliveryController extends Controller
     {
         $delivery->delete();
 
-        return redirect()->route('deliveries.index')->with('success', 'Delivery deleted.');
+        return Redirect::back()->with('success', 'Delivery deleted.');
     }
 
 
@@ -203,6 +208,6 @@ class DeliveryController extends Controller
     {
         $delivery->restore();
 
-        return redirect()->route('deliveries.index')->with('success', 'Delivery restored.');
+        return Redirect::back()->with('success', 'Delivery restored.');
     }
 }

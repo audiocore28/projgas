@@ -20,6 +20,7 @@ class CreateHaulsTable extends Migration
             $table->bigInteger('driver_id')->nullable();
             $table->bigInteger('helper_id')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

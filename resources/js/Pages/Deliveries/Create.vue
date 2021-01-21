@@ -75,6 +75,7 @@ import DatePicker from 'vue2-datepicker'
 import moment from 'moment'
 
 export default {
+  metaInfo: { title: 'Create Delivery' },
   layout: Layout,
   components: {
     LoadingButton,

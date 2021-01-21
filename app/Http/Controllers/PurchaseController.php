@@ -24,20 +24,24 @@ class PurchaseController extends Controller
      */
     public function index()
     {
-        $purchases = Purchase::filter(Request::only('search'))
+        $purchases = Purchase::filter(Request::only('search', 'trashed'))
                 ->orderBy('id', 'desc')
-                ->paginate(5)
+                ->paginate()
                 ->transform(function ($purchase) {
                     return [
                         'id' => $purchase->id,
                         'date' => $purchase->date,
                         'purchase_no' => $purchase->purchase_no,
+                        'deleted_at' => $purchase->deleted_at,
                         'supplier' => $purchase->supplier ? $purchase->supplier->only('name') : null,
-                    ];
+                        'products' => $purchase->purchaseDetails->each(function ($detail) {
+                                return [ 'name' => $detail->product->name, ];
+                            }),
+                        ];
                 });
 
         return Inertia::render('Purchases/Index', [
-            'filters' => Request::all('search'),
+            'filters' => Request::all('search', 'trashed'),
             'purchases' => $purchases,
         ]);
     }
@@ -190,6 +194,7 @@ class PurchaseController extends Controller
                 'purchase_no' => $purchase->purchase_no,
                 'supplier_id' => $purchase->supplier_id,
                 'details' => $purchase->purchaseDetails,
+                'deleted_at' => $purchase->deleted_at,
             ],
             'suppliers' => $suppliers,
             'products' => $products,
@@ -232,7 +237,7 @@ class PurchaseController extends Controller
             ]);
         }
 
-        return redirect()->route('purchases.index')->with('success', 'Purchase updated.');
+        return Redirect::back()->with('success', 'Purchase updated.');
     }
 
     /**
@@ -245,7 +250,7 @@ class PurchaseController extends Controller
     {
         $purchase->delete();
 
-        return redirect()->route('purchases.index')->with('success', 'Purchase deleted.');
+        return Redirect::back()->with('success', 'Purchase deleted.');
     }
 
 
@@ -253,6 +258,6 @@ class PurchaseController extends Controller
     {
         $purchase->restore();
 
-        return redirect()->route('purchases.index')->with('success', 'Purchase restored.');
+        return Redirect::back()->with('success', 'Purchase restored.');
     }
 }

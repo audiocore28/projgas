@@ -3,13 +3,13 @@
     <h1 class="mb-8 font-bold text-3xl">Loads</h1>
     <div class="mb-6 flex justify-between items-center">
       <search-filter v-model="form.search" class="w-full max-w-md mr-4" @reset="reset">
-<!--         <label class="block text-gray-700">Trashed:</label>
+        <label class="block text-gray-700">Trashed:</label>
         <select v-model="form.trashed" class="mt-1 w-full form-select">
           <option :value="null" />
           <option value="with">With Trashed</option>
           <option value="only">Only Trashed</option>
         </select>
- -->      </search-filter>
+      </search-filter>
       <inertia-link class="btn-indigo" :href="route('tanker-loads.create')">
         <span>Add</span>
         <span class="hidden md:inline">Load</span>
@@ -23,7 +23,7 @@
           <th class="px-6 pt-6 pb-4">Purchase No.</th>
           <th class="px-6 pt-6 pb-4">Tanker</th>
           <th class="px-6 pt-6 pb-4">Driver</th>
-          <th class="px-6 pt-6 pb-4">Helper</th>
+          <th class="px-6 pt-6 pb-4">Loads</th>
         </tr>
          <tr v-for="load in tanker_loads.data" :key="load.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
           <!-- table columns -->
@@ -35,6 +35,7 @@
           <td class="border-t">
             <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('tanker-loads.edit', load.id)">
               {{ load.date }}
+              <icon v-if="load.deleted_at" name="trash" class="flex-shrink-0 w-3 h-3 fill-gray-400 ml-2" />
             </inertia-link>
           </td>
           <td class="border-t">
@@ -60,8 +61,13 @@
           </td>
           <td class="border-t">
             <inertia-link class="px-6 py-4 flex items-center" :href="route('tanker-loads.edit', load.id)" tabindex="-1">
-              <div v-if="load.helper">
-                {{ load.helper.name }}
+              <div v-if="load.products" v-for="product in load.products">
+                <span class="px-2 py-2 text-sm leading-5 font-semibold rounded-full bg-grey-100 text-grey-800">
+                  {{ product.product.name }}
+                  <span class="p-1 rounded-full text-grey-800 text-sm bg-grey-400">
+                      {{ toFigure(product.quantity) }}
+                  </span>
+                </span>
               </div>
             </inertia-link>
           </td>
@@ -71,7 +77,7 @@
             </inertia-link>
           </td>
         </tr>
-         <tr v-if="tanker_loads.length === 0">
+         <tr v-if="tanker_loads.data.length === 0">
           <td class="border-t px-6 py-4" colspan="4">No loads found.</td>
         </tr>
     </table>
@@ -90,7 +96,7 @@ import SearchFilter from '@/Shared/SearchFilter'
 import throttle from 'lodash/throttle'
 
 export default {
-  // metaInfo: { title: 'tanker-loads' },
+  metaInfo: { title: 'Loads' },
   layout: Layout,
   components: {
     Icon,
@@ -105,7 +111,7 @@ export default {
     return {
       form: {
         search: this.filters.search,
-        // trashed: this.filters.trashed,
+        trashed: this.filters.trashed,
       },
     }
   },
@@ -121,6 +127,11 @@ export default {
   methods: {
     reset() {
       this.form = mapValues(this.form, () => null)
+    },
+
+    // Helpers
+    toFigure(value) {
+      return value / 1000;
     },
   },
 }

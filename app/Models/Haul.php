@@ -3,8 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-// use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\HaulDetail;
 use App\Models\Purchase;
 use App\Models\Tanker;
@@ -15,8 +14,9 @@ use Carbon\Carbon;
 class Haul extends Model
 {
     use HasFactory;
-  //   use SoftDeletes;
+    use SoftDeletes;
 
+    protected $dates = ['deleted_at'];
 	 protected $fillable = ['purchase_id', 'tanker_id', 'driver_id', 'helper_id'];
 
 	 public function purchase()
@@ -39,7 +39,7 @@ class Haul extends Model
 	 	return $this->belongsTo(Helper::class);
 	 }
 
-	 public function HaulDetails()
+	 public function haulDetails()
 	 {
 	 	return $this->hasMany(HaulDetail::class);
 	 }
@@ -52,6 +52,12 @@ class Haul extends Model
 	                        $query->where('name', 'like', '%'.$search.'%');
 	                    });
             });
+        })->when($filters['trashed'] ?? null, function ($query, $trashed) {
+            if ($trashed === 'with') {
+                $query->withTrashed();
+            } elseif ($trashed === 'only') {
+                $query->onlyTrashed();
+            }
         });
     }
 
