@@ -12,19 +12,13 @@
     <div class="p-1">
       <ul class="flex border-b">
         <li @click="openTab = 1" :class="{ '-mb-px': openTab === 1 }" class="-mb-px mr-1">
-          <a :class="openTab === 1 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold" href="#">Information</a>
+          <a :class="openTab === 1 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold" href="#">Info</a>
         </li>
-        <li @click="openTab = 2" :class="{ '-mb-px': openTab === 2 }" class="mr-1">
-          <a :class="openTab === 2 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold" href="#">Tanker | Helper</a>
+        <li @click="openTab = 2" :class="{ '-mb-px': openTab === 2 }" class="mr-1" v-show="deliveryDetails.length">
+          <a :class="openTab === 2 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold" href="#">Deliveries</a>
         </li>
-        <li @click="openTab = 3" :class="{ '-mb-px': openTab === 3 }" class="mr-1">
-          <a :class="openTab === 3 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold" href="#">Loads</a>
-        </li>
-        <li @click="openTab = 4" :class="{ '-mb-px': openTab === 4 }" class="mr-1">
-          <a :class="openTab === 4 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold" href="#">Deliveries</a>
-        </li>
-        <li @click="openTab = 5" :class="{ '-mb-px': openTab === 5 }" class="mr-1">
-          <a :class="openTab === 5 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold" href="#">Salaries</a>
+        <li @click="openTab = 3" :class="{ '-mb-px': openTab === 3 }" class="mr-1" v-show="haulDetails.length">
+          <a :class="openTab === 3 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold" href="#">Hauling</a>
         </li>
       </ul>
 
@@ -41,61 +35,155 @@
                 <text-input v-model="form.contact_no" :error="errors.contact_no" class="pr-6 pb-8 w-full lg:w-1/2" label="Contact No" />
               </div>
               <div class="px-8 py-4 bg-gray-100 border-t border-gray-200 flex justify-end items-center">
-                <button v-if="!driver.deleted_at" class="text-red-600 hover:underline" tabindex="-1" type="button" @click="destroy">Delete Driver</button>
+                <button v-if="!deliveryDetails.length && !haulDetails.length && !driver.deleted_at" class="text-red-600 hover:underline" tabindex="-1" type="button" @click="destroy">Delete Driver</button>
                 <loading-button :loading="sending" class="btn-indigo ml-auto" type="submit">Update Driver</loading-button>
               </div>
             </form>
           </div>
-
-          <h1 class="mt-20 mb-8 font-bold text-2xl">Tanker(s)</h1>
-
-          <div class="bg-white rounded shadow overflow-x-auto">
-            <table class="w-full whitespace-no-wrap">
-              <tr class="text-left font-bold">
-                <th class="px-6 pt-6 pb-4">ID</th>
-                <th class="px-6 pt-6 pb-4">Plate No.</th>
-                <th class="px-6 pt-6 pb-4">Compartment</th>
-              </tr>
-              <tr v-for="tanker in tankers" :key="tanker.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
-                <!-- table columns -->
-                <td class="border-t">
-                  <inertia-link class="px-6 py-4 flex items-center" :href="route('tankers.edit', tanker.id)" tabindex="-1">
-                    {{ tanker.id }}
-                  </inertia-link>
-                </td>
-                <td class="border-t">
-                  <inertia-link class="px-6 py-4 flex items-center" :href="route('tankers.edit', tanker.id)" tabindex="-1">
-                    {{ tanker.plate_no }}
-                  </inertia-link>
-                </td>
-                <td class="border-t">
-                  <inertia-link class="px-6 py-4 flex items-center" :href="route('tankers.edit', tanker.id)" tabindex="-1">
-                    {{ tanker.compartment }}
-                  </inertia-link>
-                </td>
-              </tr>
-              <tr v-if="tankers.length === 0">
-                <td class="border-t px-6 py-4" colspan="4">No tankers found.</td>
-              </tr>
-            </table>
-          </div>
         </div>
+
         <!-- Tab 2 -->
         <div v-show="openTab === 2">
-          Tanker | Helper
+          <div class="bg-white rounded shadow overflow-x-auto mb-8 -mt-4">
+            <div class="rounded shadow overflow-x-auto mb-8" v-for="delivery in deliveryDetails">
+              <div class="ml-5 mt-5 mb-1">
+                <inertia-link :href="route('deliveries.edit', delivery.id)" tabindex="-1">
+                  <p class="text-sm font-bold text-blue-700 mb-2">{{ delivery.driver.name }} & {{ delivery.helper.name }} ({{ delivery.tanker.plate_no }})</p>
+                </inertia-link>
+              </div>
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Date
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Client
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Product
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Quantity
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Unit Price
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Amount
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                  <tr v-for="detail in delivery.deliveries" :key="detail.id" :value="detail.id">
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm font-medium text-gray-900">
+                        {{ detail.date }}
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm font-medium text-gray-900">
+                        {{ detail.client.name  }}
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm font-medium text-gray-900">
+                        {{ detail.product.name }}
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <div class="text-sm font-medium text-gray-900">
+                        {{ quantityFormat(detail.quantity) }}
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <div class="text-sm font-medium text-gray-900">
+                        {{ toPHP(detail.unit_price) }}
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <div class="text-sm font-medium text-gray-900">
+                        {{ totalCurrency(detail.quantity, detail.unit_price) }}
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
+
         <!-- Tab 3 -->
         <div v-show="openTab === 3">
-          Loads
+          <div class="bg-white rounded shadow overflow-x-auto mb-8 -mt-4">
+            <div class="rounded shadow overflow-x-auto mb-8" v-for="haul in haulDetails">
+              <div class="ml-5 mt-5 mb-1">
+                <inertia-link :href="route('hauls.edit', haul.id)" tabindex="-1">
+                  <p class="text-sm font-bold text-blue-700 mb-2">{{ haul.driver.name }} & {{ haul.helper.name }} ({{ haul.tanker.plate_no }})</p>
+                </inertia-link>
+              </div>
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Date
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Client
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Product
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Quantity
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Unit Price
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Amount
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                  <tr v-for="detail in haul.hauls" :key="detail.id" :value="detail.id">
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm font-medium text-gray-900">
+                        {{ detail.date }}
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm font-medium text-gray-900">
+                        {{ detail.client.name  }}
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm font-medium text-gray-900">
+                        {{ detail.product.name }}
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <div class="text-sm font-medium text-gray-900">
+                        {{ quantityFormat(detail.quantity) }}
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <div class="text-sm font-medium text-gray-900">
+                        {{ toPHP(detail.unit_price) }}
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <div class="text-sm font-medium text-gray-900">
+                        {{ totalCurrency(detail.quantity, detail.unit_price) }}
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
-        <!-- Tab 4 -->
-        <div v-show="openTab === 4">
-          Deliveries
-        </div>
-        <!-- Tab 5 -->
-        <div v-show="openTab === 5">
-          Salaries
-        </div>
+
       </div>
     </div>
   </div>
@@ -108,6 +196,7 @@ import LoadingButton from '@/Shared/LoadingButton'
 import SelectInput from '@/Shared/SelectInput'
 import TextInput from '@/Shared/TextInput'
 import TrashedMessage from '@/Shared/TrashedMessage'
+import moment from 'moment'
 
 export default {
   metaInfo() {
@@ -124,12 +213,27 @@ export default {
   props: {
     errors: Object,
     driver: Object,
-    tankers: Array,
+    deliveryDetails: Array,
+    haulDetails: Array,
   },
   remember: 'form',
   data() {
     return {
       sending: false,
+      momentFormat: {
+        //[optional] Date to String
+        stringify: (date) => {
+          return date ? moment(date).format('ll') : ''
+        },
+        //[optional]  String to Date
+        parse: (value) => {
+          return value ? moment(value, 'll').toDate() : null
+        },
+        // [optional] getWeekNumber
+        getWeek: (date) => {
+          return // a number
+        }
+      },
       form: {
         name: this.driver.name,
         nickname: this.driver.nickname,
@@ -159,6 +263,19 @@ export default {
       if (confirm('Are you sure you want to restore this driver?')) {
         this.$inertia.put(this.route('drivers.restore', this.driver.id))
       }
+    },
+
+    // Helpers
+    quantityFormat(value) {
+      return Number(value).toLocaleString()
+    },
+
+    toPHP(value) {
+      return `₱${Number(value).toLocaleString()}`;
+    },
+
+    totalCurrency(quantity, unitPrice) {
+      return this.toPHP(quantity * unitPrice);
     },
   },
 }

@@ -69,6 +69,30 @@ class HelperController extends Controller
      */
     public function edit(Helper $helper)
     {
+        $hD = $helper->hauls->transform(function ($haul) {
+            return [
+                'id' => $haul->id,
+                'tanker' => $haul->tanker ? $haul->tanker->only('plate_no') : null,
+                'driver' => $haul->driver ? $haul->driver->only('name') : null,
+                'helper' => $haul->helper ? $haul->helper->only('name') : null,
+                'hauls' => $haul->haulDetails->each(function ($detail) {
+                        return ['p' => $detail->product->name, 'c' => $detail->client->name];
+                    })
+            ];
+        });
+
+        $dD = $helper->deliveries->transform(function ($delivery) {
+            return [
+                'id' => $delivery->id,
+                'tanker' => $delivery->tanker ? $delivery->tanker->only('plate_no') : null,
+                'driver' => $delivery->driver ? $delivery->driver->only('name') : null,
+                'helper' => $delivery->helper ? $delivery->helper->only('name') : null,
+                'deliveries' => $delivery->deliveryDetails->each(function ($detail) {
+                        return ['p' => $detail->product->name, 'c' => $detail->client->name];
+                    })
+            ];
+        });
+
         return Inertia::render('Helpers/Edit', [
             'helper' => [
                 'id' => $helper->id,
@@ -77,7 +101,9 @@ class HelperController extends Controller
                 'address' => $helper->address,
                 'contact_no' => $helper->contact_no,
                 'deleted_at' => $helper->deleted_at,
-            ]
+            ],
+           'deliveryDetails' => $dD,
+           'haulDetails' => $hD,
         ]);
     }
 
@@ -103,6 +129,14 @@ class HelperController extends Controller
      */
     public function destroy(Helper $helper)
     {
+        if ($helper->deliveries()->count()) {
+            return back()->withErrors(['error' => 'Cannot delete, delivery has helper records']);
+        }
+
+        if ($helper->hauls()->count()) {
+            return back()->withErrors(['error' => 'Cannot delete, hauling has helper records']);
+        }
+
         $helper->delete();
 
         return Redirect::back()->with('success', 'Helper deleted.');

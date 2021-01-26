@@ -69,6 +69,30 @@ class DriverController extends Controller
      */
     public function edit(Driver $driver)
     {
+        $hD = $driver->hauls->transform(function ($haul) {
+            return [
+                'id' => $haul->id,
+                'tanker' => $haul->tanker ? $haul->tanker->only('plate_no') : null,
+                'driver' => $haul->driver ? $haul->driver->only('name') : null,
+                'helper' => $haul->helper ? $haul->helper->only('name') : null,
+                'hauls' => $haul->haulDetails->each(function ($detail) {
+                        return ['p' => $detail->product->name, 'c' => $detail->client->name];
+                    })
+            ];
+        });
+
+        $dD = $driver->deliveries->transform(function ($delivery) {
+            return [
+                'id' => $delivery->id,
+                'tanker' => $delivery->tanker ? $delivery->tanker->only('plate_no') : null,
+                'driver' => $delivery->driver ? $delivery->driver->only('name') : null,
+                'helper' => $delivery->helper ? $delivery->helper->only('name') : null,
+                'deliveries' => $delivery->deliveryDetails->each(function ($detail) {
+                        return ['p' => $detail->product->name, 'c' => $detail->client->name];
+                    })
+            ];
+        });
+
         return Inertia::render('Drivers/Edit', [
            'driver' => [
                 'id' => $driver->id,
@@ -80,6 +104,8 @@ class DriverController extends Controller
                 'deleted_at' => $driver->deleted_at,
            ],
            'tankers' => $driver->tankers,
+           'deliveryDetails' => $dD,
+           'haulDetails' => $hD,
         ]);
     }
 
@@ -105,6 +131,14 @@ class DriverController extends Controller
      */
     public function destroy(Driver $driver)
     {
+        if ($driver->deliveries()->count()) {
+            return back()->withErrors(['error' => 'Cannot delete, delivery has driver records']);
+        }
+
+        if ($driver->hauls()->count()) {
+            return back()->withErrors(['error' => 'Cannot delete, hauling has driver records']);
+        }
+
         $driver->delete();
 
         return Redirect::back()->with('success', 'Driver deleted.');

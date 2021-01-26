@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Tanker;
+use App\Models\Haul;
 use App\Models\Delivery;
 
 class Driver extends Model
@@ -33,6 +34,11 @@ class Driver extends Model
         });
     }
 
+     public function hauls()
+     {
+        return $this->hasMany(Haul::class);
+     }
+
      public function deliveries()
      {
         return $this->hasMany(Delivery::class);
@@ -41,5 +47,10 @@ class Driver extends Model
     public function tankers()
     {
        return $this->belongsToMany(Tanker::class);
+    }
+
+    public function getDateAttribute($value)
+    {
+        return Carbon::parse($value)->format('M d, Y');
     }
 }

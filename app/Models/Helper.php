@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Tanker;
 use App\Models\Driver;
+use App\Models\Haul;
 use App\Models\Delivery;
 
 class Helper extends Model
@@ -33,6 +34,11 @@ class Helper extends Model
         });
     }
 
+     public function hauls()
+     {
+        return $this->hasMany(Haul::class);
+     }
+
      public function deliveries()
      {
         return $this->hasMany(Delivery::class);
@@ -46,5 +52,10 @@ class Helper extends Model
     public function tankers()
     {
        return $this->belongsToMany(Tanker::class);
+    }
+
+    public function getDateAttribute($value)
+    {
+        return Carbon::parse($value)->format('M d, Y');
     }
 }
