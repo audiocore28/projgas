@@ -28,6 +28,7 @@ import SelectInput from '@/Shared/SelectInput'
 import TextInput from '@/Shared/TextInput'
 
 export default {
+  metaInfo: { title: 'Create Client' },
   layout: Layout,
   components: {
     LoadingButton,

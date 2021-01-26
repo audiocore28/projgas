@@ -3,6 +3,12 @@
     <h1 class="mb-8 font-bold text-3xl">Clients</h1>
     <div class="mb-6 flex justify-between items-center">
       <search-filter v-model="form.search" class="w-full max-w-md mr-4" @reset="reset">
+        <label class="block text-gray-700">Trashed:</label>
+        <select v-model="form.trashed" class="mt-1 w-full form-select">
+          <option :value="null" />
+          <option value="with">With Trashed</option>
+          <option value="only">Only Trashed</option>
+        </select>
       </search-filter>
       <inertia-link class="btn-indigo" :href="route('clients.create')">
         <span>Add</span>
@@ -28,6 +34,7 @@
           <td class="border-t">
             <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('clients.edit', client.id)">
               {{ client.name }}
+              <icon v-if="client.deleted_at" name="trash" class="flex-shrink-0 w-3 h-3 fill-gray-400 ml-2" />
             </inertia-link>
           </td>
           <td class="border-t">
@@ -65,7 +72,7 @@ import SearchFilter from '@/Shared/SearchFilter'
 import throttle from 'lodash/throttle'
 
 export default {
-  // metaInfo: { title: 'clients' },
+  metaInfo: { title: 'Clients' },
   layout: Layout,
   components: {
     Icon,
@@ -80,7 +87,7 @@ export default {
     return {
       form: {
         search: this.filters.search,
-        // trashed: this.filters.trashed,
+        trashed: this.filters.trashed,
       },
     }
   },

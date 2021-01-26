@@ -20,10 +20,10 @@ class ClientController extends Controller
     public function index()
     {
         return Inertia::render('Clients/Index', [
-            'filters' => Request::all('search'),
-            'clients' => Client::filter(Request::only('search'))
+            'filters' => Request::all('search', 'trashed'),
+            'clients' => Client::filter(Request::only('search', 'trashed'))
                 ->orderBy('id', 'desc')
-                ->paginate(5)
+                ->paginate()
         ]);
     }
 
@@ -69,6 +69,31 @@ class ClientController extends Controller
      */
     public function edit(Client $client)
     {
+        $hD = $client->haulDetails->transform(function ($haul) {
+            return [
+                'id' => $haul->id,
+                'date' => $haul->date,
+                'haul_id' => $haul->haul_id,
+                'quantity' => $haul->quantity,
+                'unit_price' => $haul->unit_price,
+                'client' => $haul->client ? $haul->client->only('id', 'name') : null,
+                'product' => $haul->product ? $haul->product->only('id', 'name') : null,
+            ];
+        });
+
+        $dD = $client->deliveryDetails->transform(function ($delivery) {
+            return [
+                'id' => $delivery->id,
+                'date' => $delivery->date,
+                'delivery_id' => $delivery->delivery_id,
+                'dr_no' => $delivery->dr_no,
+                'quantity' => $delivery->quantity,
+                'unit_price' => $delivery->unit_price,
+                'client' => $delivery->client ? $delivery->client->only('id', 'name') : null,
+                'product' => $delivery->product ? $delivery->product->only('id', 'name') : null,
+            ];
+        });
+
         return Inertia::render('Clients/Edit', [
             'client' => [
                 'id' => $client->id,
@@ -77,7 +102,10 @@ class ClientController extends Controller
                 'contact_person' => $client->contact_person,
                 'contact_no' => $client->contact_no,
                 'email_address' => $client->email_address,
-            ]
+                'deleted_at' => $client->deleted_at,
+            ],
+            'deliveryDetails' => $dD,
+            'haulDetails' => $hD,
         ]);
     }
 
@@ -92,7 +120,7 @@ class ClientController extends Controller
     {
         $client->update($request->all());
 
-        return redirect()->route('clients.index')->with('success', 'Client updated.');
+        return Redirect::back()->with('success', 'Client updated.');
     }
 
     /**
@@ -103,9 +131,17 @@ class ClientController extends Controller
      */
     public function destroy(Client $client)
     {
+        if ($client->deliveryDetails()->count()) {
+            return back()->withErrors(['error' => 'Cannot delete, delivery has client records']);
+        }
+
+        if ($client->haulDetails()->count()) {
+            return back()->withErrors(['error' => 'Cannot delete, hauling has client records']);
+        }
+
         $client->delete();
 
-        return redirect()->route('clients.index')->with('success', 'Client deleted.');
+        return Redirect::back()->with('success', 'Client deleted.');
     }
 
 
@@ -113,6 +149,6 @@ class ClientController extends Controller
     {
         $client->restore();
 
-        return redirect()->route('clients.index')->with('success', 'Client restored.');
+        return Redirect::back()->with('success', 'Client restored.');
     }
 }
