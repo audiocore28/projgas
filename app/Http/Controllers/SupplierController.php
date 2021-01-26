@@ -69,6 +69,17 @@ class SupplierController extends Controller
      */
     public function edit(Supplier $supplier)
     {
+        $pD = $supplier->purchases->transform(function ($purchase) {
+            return [
+                'id' => $purchase->id,
+                'date' => $purchase->date,
+                'purchase_no' => $purchase->purchase_no,
+                'purchases' => $purchase->purchaseDetails->each(function ($detail) {
+                        return ['product' => $detail->product->name, 'purchase_no' => $detail->purchase->purchase_no];
+                    })
+            ];
+        });
+
         return Inertia::render('Suppliers/Edit', [
             'supplier' => [
                 'id' => $supplier->id,
@@ -78,7 +89,8 @@ class SupplierController extends Controller
                 'contact_person' => $supplier->contact_person,
                 'contact_no' => $supplier->contact_no,
                 'deleted_at' => $supplier->deleted_at,
-            ]
+            ],
+            'purchaseDetails' => $pD,
         ]);
     }
 
@@ -104,6 +116,10 @@ class SupplierController extends Controller
      */
     public function destroy(Supplier $supplier)
     {
+        if ($supplier->purchases()->count()) {
+            return back()->withErrors(['error' => 'Cannot delete, purchase has supplier records']);
+        }
+
         $supplier->delete();
 
         return Redirect::back()->with('success', 'Supplier deleted.');

@@ -12,10 +12,10 @@
     <div class="p-1">
       <ul class="flex border-b">
         <li @click="openTab = 1" :class="{ '-mb-px': openTab === 1 }" class="-mb-px mr-1">
-          <a :class="openTab === 1 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold" href="#">Information</a>
+          <a :class="openTab === 1 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold" href="#">Info</a>
         </li>
-        <li @click="openTab = 2" :class="{ '-mb-px': openTab === 2 }" class="mr-1">
-          <a :class="openTab === 2 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold" href="#">Supplied Products</a>
+        <li @click="openTab = 2" :class="{ '-mb-px': openTab === 2 }" class="mr-1" v-show="purchaseDetails.length">
+          <a :class="openTab === 2 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold" href="#">Purchases</a>
         </li>
       </ul>
 
@@ -32,16 +32,69 @@
                 <text-input v-model="form.email_address" :error="errors.email_address" class="pr-6 pb-8 w-full lg:w-1/2" label="Email Address" />
               </div>
               <div class="px-8 py-4 bg-gray-100 border-t border-gray-200 flex justify-end items-center">
-                <button v-if="!supplier.deleted_at" class="text-red-600 hover:underline" tabindex="-1" type="button" @click="destroy">Delete Supplier</button>
+                <button v-if="!purchaseDetails.length && !supplier.deleted_at" class="text-red-600 hover:underline" tabindex="-1" type="button" @click="destroy">Delete Supplier</button>
                 <loading-button :loading="sending" class="btn-indigo ml-auto" type="submit">Update Supplier</loading-button>
               </div>
             </form>
           </div>
         </div>
+
         <!-- Tab 2 -->
         <div v-show="openTab === 2">
-          Supplied Products
+          <div class="bg-white rounded shadow overflow-x-auto mb-8 -mt-4">
+            <div class="rounded shadow overflow-x-auto mb-8" v-for="purchase in purchaseDetails">
+              <div class="ml-5 mr-5 mt-6 flex justify-between">
+                <inertia-link :href="route('purchases.edit', purchase.id)" tabindex="-1">
+                  <h2 class="text-md font-bold text-blue-700 mb-2">{{ purchase.purchase_no }}</h2>
+                </inertia-link>
+                <p class="text-sm font-medium text-gray-900 mb-4">{{ purchase.date }}</p>
+              </div>
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Product
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Quantity
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Unit Price
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Amount
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                  <tr v-for="detail in purchase.purchases" :key="detail.id" :value="detail.id">
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm font-medium text-gray-900">
+                        {{ detail.product.name }}
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm font-medium text-gray-900">
+                        {{ quantityFormat(detail.quantity) }}
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm font-medium text-gray-900">
+                        {{ toPHP(detail.unit_price) }}
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <div class="text-sm font-medium text-gray-900">
+                        {{ totalCurrency(detail.quantity, detail.unit_price) }}
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
+
       </div>
     </div>
   </div>
@@ -70,11 +123,26 @@ export default {
   props: {
     errors: Object,
     supplier: Object,
+    purchaseDetails: Array,
   },
   remember: 'form',
   data() {
     return {
       sending: false,
+      momentFormat: {
+        //[optional] Date to String
+        stringify: (date) => {
+          return date ? moment(date).format('ll') : ''
+        },
+        //[optional]  String to Date
+        parse: (value) => {
+          return value ? moment(value, 'll').toDate() : null
+        },
+        // [optional] getWeekNumber
+        getWeek: (date) => {
+          return // a number
+        }
+      },
       form: {
         name: this.supplier.name,
         office: this.supplier.office,
@@ -104,6 +172,19 @@ export default {
       if (confirm('Are you sure you want to restore this Supplier?')) {
         this.$inertia.put(this.route('suppliers.restore', this.supplier.id))
       }
+    },
+
+    // Helpers
+    quantityFormat(value) {
+      return Number(value).toLocaleString()
+    },
+
+    toPHP(value) {
+      return `₱${Number(value).toLocaleString()}`;
+    },
+
+    totalCurrency(quantity, unitPrice) {
+      return this.toPHP(quantity * unitPrice);
     },
   },
 }
