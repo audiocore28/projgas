@@ -32,7 +32,6 @@ class PurchaseController extends Controller
                         'id' => $purchase->id,
                         'date' => $purchase->date,
                         'purchase_no' => $purchase->purchase_no,
-                        'deleted_at' => $purchase->deleted_at,
                         'supplier' => $purchase->supplier ? $purchase->supplier->only('name') : null,
                         'products' => $purchase->purchaseDetails->each(function ($detail) {
                                 return [ 'name' => $detail->product->name, ];
@@ -130,19 +129,17 @@ class PurchaseController extends Controller
         $lD = $purchase->tankerLoads->transform(function ($load) {
             return [
                 'id' => $load->id,
-                // 'date' => $load->date,
-                // 'remarks' => $load->remarks,
+                'date' => $load->date,
+                'trip_no' => $load->trip_no,
+                'destination' => $load->destination,
+                'remarks' => $load->remarks,
                 // 'purchase_id' => $load->purchase_id,
-                // 'tanker_id' => $load->tanker_id,
                 'tanker' => $load->tanker ? $load->tanker->only('plate_no') : null,
                 'driver' => $load->driver ? $load->driver->only('name') : null,
                 'helper' => $load->helper ? $load->helper->only('name') : null,
-                // 'loads' => $load->tankerLoadDetails ? $load->tankerLoadDetails : null,
-                'loads' => [
-                    'load' => $load->tankerLoadDetails->each(function ($detail) {
+                'loads' => $load->tankerLoadDetails->each(function ($detail) {
                         return $detail->product->name;
                     })
-                ]
             ];
         });
 
@@ -157,11 +154,9 @@ class PurchaseController extends Controller
                 'driver' => $haul->driver ? $haul->driver->only('name') : null,
                 'helper' => $haul->helper ? $haul->helper->only('name') : null,
                 // 'hauls' => $haul->haulDetails ? $haul->haulDetails : null,
-                'hauls' => [
-                    'haul' => $haul->haulDetails->each(function ($detail) {
+                'hauls' => $haul->haulDetails->each(function ($detail) {
                         return ['p' => $detail->product->name, 'c' => $detail->client->name];
                     })
-                ]
             ];
         });
 
@@ -176,11 +171,9 @@ class PurchaseController extends Controller
                 'driver' => $delivery->driver ? $delivery->driver->only('name') : null,
                 'helper' => $delivery->helper ? $delivery->helper->only('name') : null,
                 // 'deliveries' => $delivery->deliveryDetails ? $delivery->deliveryDetails : null,
-                'deliveries' => [
-                    'delivery' => $delivery->deliveryDetails->each(function ($detail) {
+                'deliveries' => $delivery->deliveryDetails->each(function ($detail) {
                         return ['p' => $detail->product->name, 'c' => $detail->client->name];
                     })
-                ]
             ];
         });
 
@@ -194,7 +187,6 @@ class PurchaseController extends Controller
                 'purchase_no' => $purchase->purchase_no,
                 'supplier_id' => $purchase->supplier_id,
                 'details' => $purchase->purchaseDetails,
-                'deleted_at' => $purchase->deleted_at,
             ],
             'suppliers' => $suppliers,
             'products' => $products,
@@ -250,14 +242,7 @@ class PurchaseController extends Controller
     {
         $purchase->delete();
 
-        return Redirect::back()->with('success', 'Purchase deleted.');
+        return redirect()->route('purchases.index')->with('success', 'Purchase deleted.');
     }
 
-
-    public function restore(Purchase $purchase)
-    {
-        $purchase->restore();
-
-        return Redirect::back()->with('success', 'Purchase restored.');
-    }
 }

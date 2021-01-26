@@ -105,15 +105,7 @@ class PurchaseDetailController extends Controller
     {
         $purchaseDetail->delete();
 
-        // Fix this redirect!
-        // return redirect()->route('purchases.edit', $purchase)->with('success', 'purchaseDetail deleted.');
+        return Redirect::back()->with('success', 'Row deleted.');
     }
 
-
-    public function restore(PurchaseDetail $purchaseDetail)
-    {
-        // $purchaseDetail->restore();
-
-        // return redirect()->route('purchases.index')->with('success', 'purchaseDetail restored.');
-    }
 }

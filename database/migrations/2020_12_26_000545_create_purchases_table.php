@@ -19,7 +19,6 @@ class CreatePurchasesTable extends Migration
             $table->string('purchase_no');
             $table->bigInteger('supplier_id')->nullable();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

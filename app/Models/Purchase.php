@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Supplier;
 use App\Models\PurchaseDetail;
 use App\Models\TankerLoad;
@@ -13,9 +12,8 @@ use Carbon\Carbon;
 class Purchase extends Model
 {
     use HasFactory;
-    use SoftDeletes;
 
-	 protected $dates = ['date', 'deleted_at'];
+	 protected $dates = ['date'];
 	 protected $fillable = ['date', 'supplier_id', 'purchase_no'];
 
 	 public function supplier()
@@ -53,12 +51,6 @@ class Purchase extends Model
 	                        $query->where('name', 'like', '%'.$search.'%');
 	                    });
             });
-        })->when($filters['trashed'] ?? null, function ($query, $trashed) {
-            if ($trashed === 'with') {
-                $query->withTrashed();
-            } elseif ($trashed === 'only') {
-                $query->onlyTrashed();
-            }
         });
     }
 
