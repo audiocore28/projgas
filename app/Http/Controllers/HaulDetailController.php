@@ -100,14 +100,7 @@ class HaulDetailController extends Controller
     {
         $haulDetail->delete();
 
-        // return redirect()->route('haul-details.index')->with('success', 'HaulDetail deleted.');
+        return Redirect::back()->with('success', 'Row deleted.');
     }
 
-
-    public function restore(HaulDetail $haulDetail)
-    {
-        // $haulDetail->restore();
-
-        // return redirect()->route('haul-details.index')->with('success', 'HaulDetail restored.');
-    }
 }

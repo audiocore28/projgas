@@ -15,7 +15,7 @@ class CreateDeliveryDetailsTable extends Migration
     {
         Schema::create('delivery_details', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('delivery_id');
+            $table->unsignedBigInteger('delivery_id');
             $table->date('date')->nullable();
             $table->string('dr_no');
             $table->bigInteger('client_id')->nullable();
@@ -23,6 +23,8 @@ class CreateDeliveryDetailsTable extends Migration
             $table->decimal('quantity', 8, 0)->nullable();
             $table->decimal('unit_price', 10, 3)->nullable();
             $table->timestamps();
+
+            $table->foreign('delivery_id')->references('id')->on('deliveries')->onDelete('cascade');
         });
     }
 

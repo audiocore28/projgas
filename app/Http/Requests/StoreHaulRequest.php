@@ -25,6 +25,7 @@ class StoreHaulRequest extends FormRequest
     {
         return [
             'date' => ['nullable', 'max:50'],
+            'trip_no' => ['nullable', 'max:50'],
             'tanker_id' => ['nullable', 'max:50'],
             'driver_id' => ['nullable', 'max:50'],
             'helper_id' => ['nullable', 'max:50'],

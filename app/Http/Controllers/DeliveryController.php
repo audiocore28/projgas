@@ -33,7 +33,6 @@ class DeliveryController extends Controller
             ->transform(function ($delivery) {
                 return [
                     'id' => $delivery->id,
-                    'deleted_at' => $delivery->deleted_at,
                     'purchase' => $delivery->purchase ? $delivery->purchase->only('purchase_no') : null,
                     'tanker' => $delivery->tanker ? $delivery->tanker->only('plate_no') : null,
                     'driver' => $delivery->driver ? $delivery->driver->only('name') : null,
@@ -84,6 +83,7 @@ class DeliveryController extends Controller
     public function store(StoreDeliveryRequest $request)
     {
         $deliveryId = Delivery::create([
+            'trip_no' => $request->trip_no,
             'purchase_id' => $request->purchase_id,
             'tanker_id' => $request->tanker_id,
             'driver_id' => $request->driver_id,
@@ -136,12 +136,12 @@ class DeliveryController extends Controller
         return Inertia::render('Deliveries/Edit', [
             'delivery' => [
                 'id' => $delivery->id,
+                'trip_no' => $delivery->trip_no,
                 'tanker_id' => $delivery->tanker_id,
                 'driver_id' => $delivery->driver_id,
                 'helper_id' => $delivery->helper_id,
                 'purchase_id' => $delivery->purchase_id,
                 'details' => $delivery->deliveryDetails,
-                'deleted_at' => $delivery->deleted_at,
             ],
             'clients' => $clients,
             'purchases' => $purchases,
@@ -163,6 +163,7 @@ class DeliveryController extends Controller
     {
         // Delivery
         $delivery->update([
+            'trip_no' => $request->trip_no,
             'tanker_id' => $request->tanker_id,
             'driver_id' => $request->driver_id,
             'helper_id' => $request->helper_id,
@@ -200,14 +201,7 @@ class DeliveryController extends Controller
     {
         $delivery->delete();
 
-        return Redirect::back()->with('success', 'Delivery deleted.');
+        return redirect()->route('deliveries.index')->with('success', 'Delivery deleted.');
     }
 
-
-    public function restore(Delivery $delivery)
-    {
-        $delivery->restore();
-
-        return Redirect::back()->with('success', 'Delivery restored.');
-    }
 }

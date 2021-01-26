@@ -5,23 +5,13 @@
       <span class="text-blue-600 font-medium">/</span> {{ updateForm.client_id }}
     </h1>
 
-    <trashed-message v-if="delivery.deleted_at" class="mb-6" @restore="restore">
-      This delivery has been deleted.
-    </trashed-message>
-
     <div class="p-1">
-      <ul class="flex border-b">
+<!--       <ul class="flex border-b">
         <li @click="openTab = 1" :class="{ '-mb-px': openTab === 1 }" class="-mb-px mr-1">
-          <a :class="openTab === 1 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold" href="#">Information</a>
-        </li>
-        <li @click="openTab = 2" :class="{ '-mb-px': openTab === 2 }" class="mr-1">
-          <a :class="openTab === 2 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold" href="#">From PO</a>
-        </li>
-        <li @click="openTab = 3" :class="{ '-mb-px': openTab === 3 }" class="mr-1">
-          <a :class="openTab === 3 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold" href="#">From Load</a>
+          <a :class="openTab === 1 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold" href="#">Info</a>
         </li>
       </ul>
-
+ -->
       <!-- Tab 1 -->
       <div class="w-full pt-4">
         <div v-show="openTab === 1">
@@ -31,6 +21,8 @@
               <!-- Delivery -->
               <div class="p-8 -mr-6 -mb-8 flex flex-wrap">
                 <!-- <text-input v-model="updateForm.date" :error="errors.date" class="pr-6 pb-8 w-full lg:w-1/2" label="Date" /> -->
+                <text-input v-model="updateForm.trip_no" :error="errors.trip_no" class="pr-6 pb-8 w-full lg:w-1/2" label="Trip No." />
+
                 <select-input v-model="updateForm.tanker_id" :error="errors.tanker_id" class="pr-6 pb-8 w-full lg:w-1/2" label="Tanker">
                   <option :value="null" />
                   <option v-for="tanker in tankers" :key="tanker.id" :value="tanker.id">{{ tanker.plate_no }}</option>
@@ -118,15 +110,8 @@
             </form>
           </div>
         </div>
-        <!-- Tab 2 -->
-        <div v-show="openTab === 2">
-          From PO
-        </div>
-        <!-- Tab 3 -->
-        <div v-show="openTab === 3">
-          From Load
-        </div>
       </div>
+
     </div>
   </div>
 </template>
@@ -181,6 +166,7 @@ export default {
         }
       },
       updateForm: {
+        trip_no: this.delivery.trip_no,
         tanker_id: this.delivery.tanker_id,
         driver_id: this.delivery.driver_id,
         helper_id: this.delivery.helper_id,
@@ -214,7 +200,7 @@ export default {
       });
     },
     destroy() {
-      if (confirm('Are you sure you want to delete this delivery?')) {
+      if (confirm('Are you sure you want to permanently delete this delivery and its details?')) {
         this.$inertia.delete(this.route('deliveries.destroy', this.delivery.id))
       }
     },

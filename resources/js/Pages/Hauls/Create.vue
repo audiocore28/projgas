@@ -9,6 +9,7 @@
         <!-- Hauling -->
         <div class="p-8 -mr-6 -mb-8 flex flex-wrap">
           <!-- <text-input v-model="form.date" :error="errors.date" class="pr-6 pb-8 w-full lg:w-1/2" label="Date" /> -->
+          <text-input v-model="form.trip_no" :error="errors.trip_no" class="pr-6 pb-8 w-full lg:w-1/2" label="Trip No." />
 
           <select-input v-model="form.tanker_id" :error="errors.tanker_id" class="pr-6 pb-8 w-full lg:w-1/2" label="Tanker">
             <option :value="null" />
@@ -112,6 +113,7 @@ export default {
       },
       form: {
   		  date: null,
+        trip_no: null,
         tanker_id: null,
         driver_id: null,
         helper_id: null,

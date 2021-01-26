@@ -33,7 +33,6 @@ class HaulController extends Controller
             ->transform(function ($haul) {
                 return [
                     'id' => $haul->id,
-                    'deleted_at' => $haul->deleted_at,
                     'purchase' => $haul->purchase ? $haul->purchase->only('purchase_no') : null,
                     'tanker' => $haul->tanker ? $haul->tanker->only('plate_no') : null,
                     'driver' => $haul->driver ? $haul->driver->only('name') : null,
@@ -84,6 +83,7 @@ class HaulController extends Controller
     public function store(StoreHaulRequest $request)
     {
         $haulId = Haul::create([
+            'trip_no' => $request->trip_no,
             'purchase_id' => $request->purchase_id,
             'tanker_id' => $request->tanker_id,
             'driver_id' => $request->driver_id,
@@ -135,12 +135,12 @@ class HaulController extends Controller
         return Inertia::render('Hauls/Edit', [
             'haul' => [
                 'id' => $haul->id,
+                'trip_no' => $haul->trip_no,
                 'tanker_id' => $haul->tanker_id,
                 'driver_id' => $haul->driver_id,
                 'helper_id' => $haul->helper_id,
                 'purchase_id' => $haul->purchase_id,
                 'details' => $haul->haulDetails,
-                'deleted_at' => $haul->deleted_at,
             ],
             'clients' => $clients,
             'purchases' => $purchases,
@@ -162,6 +162,7 @@ class HaulController extends Controller
     {
         // Haul
         $haul->update([
+            'trip_no' => $request->trip_no,
             'tanker_id' => $request->tanker_id,
             'driver_id' => $request->driver_id,
             'helper_id' => $request->helper_id,
@@ -198,14 +199,7 @@ class HaulController extends Controller
     {
         $haul->delete();
 
-        return Redirect::back()->with('success', 'Hauling deleted.');
+        return redirect()->route('hauls.index')->with('success', 'Hauling deleted.');
     }
 
-
-    public function restore(Haul $haul)
-    {
-        $haul->restore();
-
-        return Redirect::back()->with('success', 'Hauling restored.');
-    }
 }

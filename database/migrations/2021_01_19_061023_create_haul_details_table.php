@@ -15,13 +15,15 @@ class CreateHaulDetailsTable extends Migration
     {
         Schema::create('haul_details', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('haul_id');
+            $table->unsignedBigInteger('haul_id');
             $table->date('date')->nullable();
             $table->bigInteger('client_id')->nullable();
             $table->bigInteger('product_id');
             $table->decimal('quantity', 8, 0)->nullable();
             $table->decimal('unit_price', 10, 3)->nullable();
             $table->timestamps();
+
+            $table->foreign('haul_id')->references('id')->on('hauls')->onDelete('cascade');
         });
     }
 

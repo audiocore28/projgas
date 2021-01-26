@@ -100,14 +100,7 @@ class DeliveryDetailController extends Controller
     {
         $deliveryDetail->delete();
 
-        // return redirect()->route('posts.index')->with('success', 'DeliveryDetail deleted.');
+        return Redirect::back()->with('success', 'Row deleted.');
     }
 
-
-    public function restore(DeliveryDetail $deliveryDetail)
-    {
-        // $deliveryDetail->restore();
-
-        // return redirect()->route('posts.index')->with('success', 'DeliveryDetail restored.');
-    }
 }

@@ -19,8 +19,8 @@ class CreateHaulsTable extends Migration
             $table->bigInteger('tanker_id')->nullable();
             $table->bigInteger('driver_id')->nullable();
             $table->bigInteger('helper_id')->nullable();
+            $table->string('trip_no')->nullable();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

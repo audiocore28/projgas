@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-// use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Haul;
 use App\Models\Product;
 use App\Models\Client;
@@ -12,7 +11,6 @@ use Carbon\Carbon;
 class HaulDetail extends Model
 {
     use HasFactory;
-  //   use SoftDeletes;
 
 	 protected $dates = ['date'];
 	 protected $fillable = ['date', 'quantity', 'unit_price', 'haul_id', 'product_id', 'client_id'];
