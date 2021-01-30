@@ -236,10 +236,10 @@
     <div class="p-1">
       <ul class="flex border-b">
         <li @click="openTab = 1" :class="{ '-mb-px': openTab === 1 }" class="mr-1">
-          <a :class="openTab === 1 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold" href="#">Details</a>
+          <a :class="openTab === 1 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold">Details</a>
         </li>
         <li @click="openTab = 2" :class="{ '-mb-px': openTab === 2 }" class="-mb-px mr-1">
-          <a :class="openTab === 2 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold" href="#">Edit Purchase</a>
+          <a :class="openTab === 2 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold">Edit Purchase</a>
         </li>
       </ul>
 
@@ -294,6 +294,21 @@
                             <div class="text-sm text-gray-900">{{ totalCurrency(purchase.quantity, purchase.unit_price) }}</div>
                           </td>
                         </tr>
+                        <!-- Total -->
+                        <tr class="bg-gray-200">
+                          <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-left text-xs font-medium text-gray-500 uppercase">Total:</div>
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">{{ totalPurchasesQty }}</div>
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900"></div>
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">{{ totalPurchasesAmount }}</div>
+                          </td>
+                        </tr>
                       </tbody>
                     </table>
                   </div>
@@ -311,31 +326,8 @@
                       </inertia-link>
                     </div>
                     <table class="min-w-full divide-y divide-gray-200">
-<!--                       <thead class="bg-gray-50">
-                        <tr>
-                          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Driver
-                          </th>
-                          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Product
-                          </th>
-                          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Quantity
-                          </th>
-                        </tr>
-                      </thead>
- -->                      <tbody class="bg-white divide-y divide-gray-200">
+                      <tbody class="bg-white divide-y divide-gray-200">
                         <tr v-for="detail in load.loads">
-<!--                           <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="flex items-center">
-                              <div class="ml-4">
-                                <div class="text-sm font-medium text-gray-900">
-                                  Rodel - Driver
-                                </div>
-                              </div>
-                            </div>
-                          </td>
- -->
                           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             <div class="text-sm text-gray-900">{{ detail.product.name }}</div>
                           </td>
@@ -347,6 +339,23 @@
                     </table>
                   </div>
                 </div>
+<!--                 <div class="border py-4 px-2">
+                  <div class="rounded shadow overflow-x-auto mb-8 -mt-4">
+                    <table class="min-w-full divide-y divide-gray-200">
+                      <tbody class="bg-white divide-y divide-gray-200">
+                        <tr class="bg-gray-200">
+                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <div class="text-left text-xs font-medium text-gray-500 uppercase">Total:</div>
+                          </td>
+                          <td class="px-26 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <div class="text-sm text-gray-900">{{ totalLoadsQty }}</div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+ -->
               </li>
              <!-- Hauling -->
               <li class="flex align-center flex-col">
@@ -396,10 +405,6 @@
                               {{ detail.client.name  }}
                             </div>
                           </td>
-<!--                           <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900">GTEX - Fortune</div>
-                          </td>
- -->
                           <td class="px-6 py-4 whitespace-nowrap">
                             <div class="text-sm font-medium text-gray-900">
                               {{ detail.product.name }}
@@ -419,6 +424,27 @@
                             <div class="text-sm font-medium text-gray-900">
                               {{ totalCurrency(detail.quantity, detail.unit_price) }}
                             </div>
+                          </td>
+                        </tr>
+                        <!-- Total -->
+                        <tr class="bg-gray-200">
+                          <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-left text-xs font-medium text-gray-500 uppercase">Total:</div>
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900"></div>
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900"></div>
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">{{ totalHaulsQty(haul.id) }}</div>
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900"></div>
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">{{ totalHaulsAmount(haul.id) }}</div>
                           </td>
                         </tr>
 
@@ -496,6 +522,27 @@
                             <div class="text-sm font-medium text-gray-900">
                               {{ totalCurrency(detail.quantity, detail.unit_price) }}
                             </div>
+                          </td>
+                        </tr>
+                        <!-- Total -->
+                        <tr class="bg-gray-200">
+                          <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-left text-xs font-medium text-gray-500 uppercase">Total:</div>
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900"></div>
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900"></div>
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">{{ totalDeliveriesQty(delivery.id) }}</div>
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900"></div>
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">{{ totalDeliveriesAmount(delivery.id) }}</div>
                           </td>
                         </tr>
 
@@ -729,41 +776,178 @@
 
     // Total Figures
     totalLoadQty(product) {
-      return this.figures.loads.reduce(function (acc, load) {
+      var totalQty = this.figures.loads.reduce(function (acc, load) {
         load.loads.forEach(detail => {
           if(detail.product.name == product) {
             acc += parseFloat(detail.quantity) / 1000;
           }
         });
-        return acc;
+        return parseFloat(acc);
       }, 0);
+      return this.quantityFormat(totalQty);
     },
 
     totalHaulQty(product) {
-      return this.figures.hauls.reduce(function (acc, haul) {
+      var totalQty = this.figures.hauls.reduce(function (acc, haul) {
         haul.hauls.forEach(detail => {
           if(detail.product.name == product) {
             acc += parseFloat(detail.quantity) / 1000;
           }
         });
-        return acc;
+        return parseFloat(acc);
       }, 0);
+      return this.quantityFormat(totalQty);
     },
 
     totalDeliveryQty(product) {
-      return this.figures.deliveries.reduce(function (acc, delivery) {
+      var totalQty = this.figures.deliveries.reduce(function (acc, delivery) {
         delivery.deliveries.forEach(detail => {
           if(detail.product.name == product) {
             acc += parseFloat(detail.quantity) / 1000;
           }
         });
-        return acc;
+        return parseFloat(acc);
       }, 0);
+      return this.quantityFormat(totalQty);
+    },
+
+    // Total Details
+
+    // Haul
+    totalHaulsAmount(haulId) {
+      for (var i = 0; i < this.figures.hauls.length; i++) {
+        if (this.figures.hauls[i].id === haulId) {
+
+          var totalAmt = this.figures.hauls[i].hauls.reduce(function (acc, haul) {
+            acc += parseFloat(haul.quantity) * parseFloat(haul.unit_price);
+            return acc;
+          }, 0);
+
+          return this.toPHP(totalAmt);
+        }
+      }
+    },
+
+    totalHaulsQty(haulId) {
+      for (var i = 0; i < this.figures.hauls.length; i++) {
+        if (this.figures.hauls[i].id === haulId) {
+
+          var totalQty = this.figures.hauls[i].hauls.reduce(function (acc, haul) {
+            acc += parseFloat(haul.quantity);
+            return acc;
+          }, 0);
+
+          return this.quantityFormat(totalQty);
+        }
+      }
+    },
+
+    // Delivery
+    totalDeliveriesAmount(deliveryId) {
+      for (var i = 0; i < this.figures.deliveries.length; i++) {
+        if (this.figures.deliveries[i].id === deliveryId) {
+
+          var totalAmt = this.figures.deliveries[i].deliveries.reduce(function (acc, delivery) {
+            acc += parseFloat(delivery.quantity) * parseFloat(delivery.unit_price);
+            return acc;
+          }, 0);
+
+          return this.toPHP(totalAmt);
+        }
+      }
+    },
+
+    totalDeliveriesQty(deliveryId) {
+      for (var i = 0; i < this.figures.deliveries.length; i++) {
+        if (this.figures.deliveries[i].id === deliveryId) {
+
+          var totalQty = this.figures.deliveries[i].deliveries.reduce(function (acc, delivery) {
+            acc += parseFloat(delivery.quantity);
+            return acc;
+          }, 0);
+
+          return this.quantityFormat(totalQty);
+        }
+      }
     },
 
   },
 
-  // computed: {
+  computed: {
+    // Overall Total Details
+
+    // Purchases
+    totalPurchasesAmount() {
+      var totalAmt = this.figures.purchases.reduce(function (acc, purchase) {
+        acc += parseFloat(purchase.quantity) * parseFloat(purchase.unit_price);
+        return acc;
+      }, 0);
+
+      return this.toPHP(totalAmt);
+    },
+
+    totalPurchasesQty() {
+      var totalQty = this.figures.purchases.reduce(function (acc, purchase) {
+        acc += parseFloat(purchase.quantity);
+        return acc;
+      }, 0);
+      return this.quantityFormat(totalQty);
+    },
+
+    // Loads
+    // overallTotalLoadsQty() {
+    //   var totalQty = this.figures.loads.reduce(function (acc, load) {
+    //     load.loads.forEach(detail => {
+    //       acc += parseFloat(detail.quantity);
+    //     });
+    //     return acc;
+    //   }, 0);
+    //   return this.quantityFormat(totalQty);
+    // },
+
+    // Haulings
+    // overallTotalHaulsAmount() {
+    //   var totalAmt = this.figures.hauls.reduce(function (acc, haul) {
+    //     haul.hauls.forEach(detail => {
+    //         acc += parseFloat(detail.quantity) * parseFloat(detail.unit_price);
+    //     });
+    //     return acc;
+    //   }, 0);
+    //   return this.toPHP(totalAmt);
+    // },
+
+    // overallTotalHaulsQty() {
+    //   var totalQty = this.figures.hauls.reduce(function (acc, haul) {
+    //     haul.hauls.forEach(detail => {
+    //         acc += parseFloat(detail.quantity);
+    //     });
+    //     return acc;
+    //   }, 0);
+    //   return this.quantityFormat(totalQty);
+    // },
+
+    // Deliveries
+    // overallTotalDeliveriesAmount() {
+    //   var totalAmt = this.figures.deliveries.reduce(function (acc, delivery) {
+    //     delivery.deliveries.forEach(detail => {
+    //         acc += parseFloat(detail.quantity) * parseFloat(detail.unit_price);
+    //     });
+    //     return acc;
+    //   }, 0);
+    //   return this.toPHP(totalAmt);
+    // },
+
+    // overallTotalDeliveriesQty() {
+    //   var totalQty = this.figures.deliveries.reduce(function (acc, delivery) {
+    //     delivery.deliveries.forEach(detail => {
+    //         acc += parseFloat(detail.quantity);
+    //     });
+    //     return acc;
+    //   }, 0);
+    //   return this.quantityFormat(totalQty);
+    // },
+
+
       // sum = arr.reduce(function (a, b) {
       //         b.forEach(function (c) {
       //             a += c.invoicedNet.amountString;
@@ -771,7 +955,7 @@
       //         return a;
       //     }, 0);
       // },
-  // }
+  }
 
 }
 </script>
