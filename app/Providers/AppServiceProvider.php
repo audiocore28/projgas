@@ -119,6 +119,7 @@ class AppServiceProvider extends ServiceProvider
                         'url' => $this->previousPageUrl(),
                         'label' => 'Previous',
                         'active' => false,
+                        'current_page' => $this->currentPage(),
                     ])->push([
                         'url' => $this->nextPageUrl(),
                         'label' => 'Next',
