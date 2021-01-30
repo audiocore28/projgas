@@ -12,10 +12,10 @@
     <div class="p-1">
       <ul class="flex border-b">
         <li @click="openTab = 1" :class="{ '-mb-px': openTab === 1 }" class="-mb-px mr-1">
-          <a :class="openTab === 1 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold" href="#">Info</a>
+          <a :class="openTab === 1 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold">Info</a>
         </li>
-        <li @click="openTab = 2" :class="{ '-mb-px': openTab === 2 }" class="mr-1" v-show="purchaseDetails.length">
-          <a :class="openTab === 2 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold" href="#">Purchases</a>
+        <li @click="openTab = 2" :class="{ '-mb-px': openTab === 2 }" class="mr-1" v-show="purchaseDetails.data.length">
+          <a :class="openTab === 2 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold">Purchases</a>
         </li>
       </ul>
 
@@ -32,7 +32,7 @@
                 <text-input v-model="form.email_address" :error="errors.email_address" class="pr-6 pb-8 w-full lg:w-1/2" label="Email Address" />
               </div>
               <div class="px-8 py-4 bg-gray-100 border-t border-gray-200 flex justify-end items-center">
-                <button v-if="!purchaseDetails.length && !supplier.deleted_at" class="text-red-600 hover:underline" tabindex="-1" type="button" @click="destroy">Delete Supplier</button>
+                <button v-if="!purchaseDetails.data.length && !supplier.deleted_at" class="text-red-600 hover:underline" tabindex="-1" type="button" @click="destroy">Delete Supplier</button>
                 <loading-button :loading="sending" class="btn-indigo ml-auto" type="submit">Update Supplier</loading-button>
               </div>
             </form>
@@ -42,12 +42,12 @@
         <!-- Tab 2 -->
         <div v-show="openTab === 2">
           <div class="bg-white rounded shadow overflow-x-auto mb-8 -mt-4">
-            <div class="rounded shadow overflow-x-auto mb-8" v-for="purchase in purchaseDetails">
-              <div class="ml-5 mr-5 mt-6 flex justify-between">
+            <div class="rounded shadow overflow-x-auto mb-8" v-for="purchase in localPurchaseDetails">
+              <div class="ml-5 mr-5 mt-6">
                 <inertia-link :href="route('purchases.edit', purchase.id)" tabindex="-1">
                   <h2 class="text-md font-bold text-blue-700 mb-2">{{ purchase.purchase_no }}</h2>
                 </inertia-link>
-                <p class="text-sm font-medium text-gray-900 mb-4">{{ purchase.date }}</p>
+                <p class="text-sm font-medium text-gray-600 mb-4 ml-1">{{ purchase.date }}</p>
               </div>
               <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
@@ -89,10 +89,26 @@
                       </div>
                     </td>
                   </tr>
+                  <!-- Total -->
+                  <tr class="bg-gray-200">
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-left text-xs font-medium text-gray-500 uppercase">Total:</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm text-gray-900">{{ totalPurchasesQty(purchase.id) }}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm text-gray-900"></div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm text-gray-900">{{ totalPurchasesAmount(purchase.id) }}</div>
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>
           </div>
+          <button @click="loadMorePurchase">Load more...</button>
         </div>
 
       </div>
@@ -107,8 +123,13 @@ import LoadingButton from '@/Shared/LoadingButton'
 import SelectInput from '@/Shared/SelectInput'
 import TextInput from '@/Shared/TextInput'
 import TrashedMessage from '@/Shared/TrashedMessage'
+import axios from 'axios'
+import { loadMorePurchaseMixin } from '@/Mixins/loadMorePurchaseMixin'
 
 export default {
+  mixins: [
+    loadMorePurchaseMixin('suppliers'),
+  ],
   metaInfo() {
     return { title: this.form.name }
   },
@@ -123,7 +144,6 @@ export default {
   props: {
     errors: Object,
     supplier: Object,
-    purchaseDetails: Array,
   },
   remember: 'form',
   data() {
@@ -186,6 +206,39 @@ export default {
     totalCurrency(quantity, unitPrice) {
       return this.toPHP(quantity * unitPrice);
     },
+
+    // Purchases
+    totalPurchasesAmount(purchaseId) {
+      for (var i = 0; i < this.localPurchaseDetails.length; i++) {
+        if (this.localPurchaseDetails[i].id === purchaseId) {
+
+          var totalAmt = this.localPurchaseDetails[i].purchases.reduce(function (acc, purchase) {
+            acc += parseFloat(purchase.quantity) * parseFloat(purchase.unit_price);
+            return acc;
+          }, 0);
+
+          return this.toPHP(totalAmt);
+        }
+      }
+    },
+
+    totalPurchasesQty(purchaseId) {
+      for (var i = 0; i < this.localPurchaseDetails.length; i++) {
+        if (this.localPurchaseDetails[i].id === purchaseId) {
+
+          var totalQty = this.localPurchaseDetails[i].purchases.reduce(function (acc, purchase) {
+            acc += parseFloat(purchase.quantity);
+            return acc;
+          }, 0);
+
+          return this.quantityFormat(totalQty);
+        }
+      }
+    },
+
+
+
+
   },
 }
 </script>

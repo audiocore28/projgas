@@ -69,16 +69,25 @@ class SupplierController extends Controller
      */
     public function edit(Supplier $supplier)
     {
-        $pD = $supplier->purchases->transform(function ($purchase) {
-            return [
-                'id' => $purchase->id,
-                'date' => $purchase->date,
-                'purchase_no' => $purchase->purchase_no,
-                'purchases' => $purchase->purchaseDetails->each(function ($detail) {
-                        return ['product' => $detail->product->name, 'purchase_no' => $detail->purchase->purchase_no];
-                    })
-            ];
-        });
+        $pD = $supplier->purchases()
+            ->latest()
+            ->paginate()
+            ->transform(function ($purchase) {
+                return [
+                    'id' => $purchase->id,
+                    'date' => $purchase->date,
+                    'purchase_no' => $purchase->purchase_no,
+                    'purchases' => $purchase->purchaseDetails->each(function ($detail) {
+                            return ['product' => $detail->product->name, 'purchase_no' => $detail->purchase->purchase_no];
+                        })
+                ];
+            });
+
+       if (request()->wantsJson()) {
+         return [
+            'purchaseDetails' => $pD,
+         ];
+       }
 
         return Inertia::render('Suppliers/Edit', [
             'supplier' => [
