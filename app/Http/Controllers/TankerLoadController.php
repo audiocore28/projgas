@@ -33,8 +33,6 @@ class TankerLoadController extends Controller
                 return [
                     'id' => $tankerLoad->id,
                     'date' => $tankerLoad->date,
-                    'deleted_at' => $tankerLoad->deleted_at,
-                    // 'status' => $tankerLoad->status,
                     // 'remarks' => $tankerLoad->remarks,
                     'purchase' => $tankerLoad->purchase ? $tankerLoad->purchase->only('purchase_no') : null,
                     'tanker' => $tankerLoad->tanker ? $tankerLoad->tanker->only('plate_no') : null,
@@ -84,6 +82,7 @@ class TankerLoadController extends Controller
     {
         $tankerLoadId = TankerLoad::create([
             'date' => $request->date,
+            'trip_no' => $request->trip_no,
             'remarks' => $request->remarks,
             'purchase_id' => $request->purchase_id,
             'tanker_id' => $request->tanker_id,
@@ -134,13 +133,13 @@ class TankerLoadController extends Controller
             'tanker_load' => [
                 'id' => $tankerLoad->id,
                 'date' => $tankerLoad->date,
+                'trip_no' => $tankerLoad->trip_no,
                 'remarks' => $tankerLoad->remarks,
                 'purchase_id' => $tankerLoad->purchase_id,
                 'tanker_id' => $tankerLoad->tanker_id,
                 'driver_id' => $tankerLoad->driver_id,
                 'helper_id' => $tankerLoad->helper_id,
                 'details' => $tankerLoad->tankerLoadDetails,
-                'deleted_at' => $tankerLoad->deleted_at,
             ],
             'purchases' => $purchases,
             'tankers' => $tankers,
@@ -162,6 +161,7 @@ class TankerLoadController extends Controller
         // TankerLoad
         $tankerLoad->update([
             'date' => $request->date,
+            'trip_no' => $request->trip_no,
             'remarks' => $request->remarks,
             'purchase_id' => $request->purchase_id,
             'tanker_id' => $request->tanker_id,
@@ -196,14 +196,7 @@ class TankerLoadController extends Controller
     {
         $tankerLoad->delete();
 
-        return Redirect::back()->with('success', 'Load deleted.');
+        return redirect()->route('tanker-loads.index')->with('success', 'Load deleted.');
     }
 
-
-    public function restore(TankerLoad $tankerLoad)
-    {
-        $tankerLoad->restore();
-
-        return Redirect::back()->with('success', 'Load restored.');
-    }
 }

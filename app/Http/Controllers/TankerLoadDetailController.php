@@ -97,14 +97,7 @@ class TankerLoadDetailController extends Controller
     {
         $tankerLoadDetail->delete();
 
-        // return redirect()->route('loads.index')->with('success', 'Load deleted.');
+        return Redirect::back()->with('success', 'Row deleted.');
     }
 
-
-    public function restore(TankerLoadDetail $tankerLoadDetail)
-    {
-        $tankerLoadDetail->restore();
-
-        return redirect()->route('tanker-loads.index')->with('success', 'TankerLoadDetail restored.');
-    }
 }

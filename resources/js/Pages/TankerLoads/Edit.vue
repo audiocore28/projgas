@@ -5,20 +5,13 @@
       <span class="text-blue-600 font-medium">/</span> {{ updateForm.purchase_id }}
     </h1>
 
-    <trashed-message v-if="tanker_load.deleted_at" class="mb-6" @restore="restore">
-      This load has been deleted.
-    </trashed-message>
-
     <div class="p-1">
-      <ul class="flex border-b">
+<!--       <ul class="flex border-b">
         <li @click="openTab = 1" :class="{ '-mb-px': openTab === 1 }" class="-mb-px mr-1">
           <a :class="openTab === 1 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold" href="#">Info</a>
         </li>
-        <li @click="openTab = 2" :class="{ '-mb-px': openTab === 2 }" class="mr-1">
-          <a :class="openTab === 2 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold" href="#">Tab 2</a>
-        </li>
       </ul>
-
+ -->
       <div class="w-full pt-4">
         <!-- Tab 1 -->
         <div v-show="openTab === 1">
@@ -32,6 +25,8 @@
                 <div class="pr-6 pb-8 w-full">
                   <date-picker v-model="updateForm.date" lang="en" value-type="format" :formatter="momentFormat"></date-picker>
                 </div>
+
+                <text-input v-model="updateForm.trip_no" :error="errors.trip_no" class="pr-6 pb-8 w-full lg:w-1/2" label="Trip No." />
                 <!-- Select inputs -->
                 <select-input v-model="updateForm.purchase_id" :error="errors.purchase_id" class="pr-6 pb-8 w-full lg:w-1/2" label="Purchase No.">
                   <option :value="null" />
@@ -99,10 +94,6 @@
           </div>
         </div>
 
-        <!-- Tab 2 -->
-        <div v-show="openTab === 2">
-          Extra tab
-        </div>
       </div>
     </div>
   </div>
@@ -158,6 +149,7 @@ export default {
       },
       updateForm: {
         date: this.tanker_load.date,
+        trip_no: this.tanker_load.trip_no,
         purchase_id: this.tanker_load.purchase_id,
         tanker_id: this.tanker_load.tanker_id,
         driver_id: this.tanker_load.driver_id,
@@ -188,7 +180,7 @@ export default {
       });
     },
     destroy() {
-      if (confirm('Are you sure you want to delete this load?')) {
+      if (confirm('Are you sure you want to permanently delete this load and its details?')) {
         this.$inertia.delete(this.route('tanker-loads.destroy', this.tanker_load.id))
       }
     },

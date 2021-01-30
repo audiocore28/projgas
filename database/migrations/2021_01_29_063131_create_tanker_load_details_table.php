@@ -15,10 +15,12 @@ class CreateTankerLoadDetailsTable extends Migration
     {
         Schema::create('tanker_load_details', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('tanker_load_id')->nullable();
+            $table->unsignedBigInteger('tanker_load_id');
             $table->bigInteger('product_id')->nullable();
             $table->decimal('quantity', 8, 0)->nullable();
             $table->timestamps();
+
+            $table->foreign('tanker_load_id')->references('id')->on('tanker_loads')->onDelete('cascade');
         });
     }
 
@@ -29,6 +31,6 @@ class CreateTankerLoadDetailsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('load_details');
+        Schema::dropIfExists('tanker_load_details');
     }
 }

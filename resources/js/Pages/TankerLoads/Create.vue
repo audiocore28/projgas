@@ -13,6 +13,10 @@
           <div class="pr-6 pb-8 w-full">
             <date-picker v-model="form.date" lang="en" value-type="format" :formatter="momentFormat"></date-picker>
           </div>
+
+          <!-- <text-input v-model="form.trip_no" @input="setDestination($event)" :error="errors.trip_no" class="pr-6 pb-8 w-full lg:w-1/2" label="Trip No." /> -->
+          <text-input v-model="form.trip_no" :error="errors.trip_no" class="pr-6 pb-8 w-full lg:w-1/2" label="Trip No." />
+
           <!-- Select inputs -->
           <select-input v-model="form.purchase_id" :error="errors.purchase_id" class="pr-6 pb-8 w-full lg:w-1/2" label="Purchase No.">
             <option :value="null" />
@@ -106,6 +110,7 @@ export default {
       },
       form: {
   		  date: null,
+        trip_no: null,
         purchase_id: null,
         tanker_id: null,
         driver_id: null,
@@ -137,7 +142,18 @@ export default {
     },
     deleteDetailForm(index) {
       this.form.details.splice(index, 1);
-    }
+    },
+
+    // setDestination(e) {
+    //   let field = String.fromCharCode(e.target); // Get the character
+
+    //   if(/[A-Za-z]/.test(field.value)) {
+    //     this.form.destination = 'batangas';
+    //   } else {
+    //     this.form.destination = 'oksi';
+    //   }
+    // },
+
   },
 
 }
