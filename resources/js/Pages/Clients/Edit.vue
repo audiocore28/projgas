@@ -12,13 +12,13 @@
     <div class="p-1">
       <ul class="flex border-b">
         <li @click="openTab = 1" :class="{ '-mb-px': openTab === 1 }" class="-mb-px mr-1">
-          <a :class="openTab === 1 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold" href="#">Info</a>
+          <a :class="openTab === 1 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold">Info</a>
         </li>
-        <li @click="openTab = 2" :class="{ '-mb-px': openTab === 2 }" class="mr-1" v-show="deliveryDetails.length">
-          <a :class="openTab === 2 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold" href="#">Deliveries</a>
+        <li @click="openTab = 2" :class="{ '-mb-px': openTab === 2 }" class="mr-1" v-show="deliveryDetails.data.length">
+          <a :class="openTab === 2 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold">Deliveries</a>
         </li>
-        <li @click="openTab = 3" :class="{ '-mb-px': openTab === 3 }" class="mr-1" v-show="haulDetails.length">
-          <a :class="openTab === 3 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold" href="#">Hauling</a>
+        <li @click="openTab = 3" :class="{ '-mb-px': openTab === 3 }" class="mr-1" v-show="haulDetails.data.length">
+          <a :class="openTab === 3 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold">Hauling</a>
         </li>
       </ul>
 
@@ -34,7 +34,7 @@
               <text-input v-model="form.email_address" :error="errors.email_address" class="pr-6 pb-8 w-full lg:w-1/2" label="Email Address" />
             </div>
             <div class="px-8 py-4 bg-gray-100 border-t border-gray-200 flex justify-end items-center">
-              <button v-if="!deliveryDetails.length && !haulDetails.length && !client.deleted_at" class="text-red-600 hover:underline" tabindex="-1" type="button" @click="destroy">Delete Client</button>
+              <button v-if="!deliveryDetails.data.length && !haulDetails.data.length && !client.deleted_at" class="text-red-600 hover:underline" tabindex="-1" type="button" @click="destroy">Delete Client</button>
               <loading-button :loading="sending" class="btn-indigo ml-auto" type="submit">Update Client</loading-button>
             </div>
           </form>
@@ -75,9 +75,6 @@
                   </th>
  -->
                   <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    ID
-                  </th>
-                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Date
                   </th>
                   <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -98,18 +95,13 @@
                 </tr>
               </thead>
               <tbody class="bg-white divide-y divide-gray-200">
-                <tr v-for="detail in deliveryDetails">
+                <tr v-for="detail in localDeliveryDetails">
 <!--                   <td class="px-6 py-4 whitespace-nowrap">
                     <div class="text-sm font-medium text-gray-900">
                       <input type="checkbox" :value="detail.id" v-model="statementForm.selected">
                     </div>
                   </td>
  -->
-                  <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="text-sm font-medium text-gray-900">
-                      {{ detail.id }}
-                    </div>
-                  </td>
                   <td class="px-6 py-4 whitespace-nowrap">
                     <div class="text-sm font-medium text-gray-900">
                       {{ detail.date }}
@@ -144,6 +136,7 @@
               </tbody>
             </table>
           </div>
+          <button @click="loadMoreDelivery">Load more...</button>
         </div>
 
 
@@ -179,9 +172,6 @@
                   </th>
  -->
                   <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    ID
-                  </th>
-                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Date
                   </th>
                   <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -199,18 +189,13 @@
                 </tr>
               </thead>
               <tbody class="bg-white divide-y divide-gray-200">
-                <tr v-for="detail in haulDetails">
+                <tr v-for="detail in localHaulDetails">
 <!--                   <td class="px-6 py-4 whitespace-nowrap">
                     <div class="text-sm font-medium text-gray-900">
                       <input type="checkbox" :value="detail.id" v-model="statementForm.selected">
                     </div>
                   </td>
  -->
-                  <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="text-sm font-medium text-gray-900">
-                      {{ detail.id }}
-                    </div>
-                  </td>
                   <td class="px-6 py-4 whitespace-nowrap">
                     <div class="text-sm font-medium text-gray-900">
                       {{ detail.date }}
@@ -240,6 +225,7 @@
               </tbody>
             </table>
           </div>
+          <button @click="loadMoreHaul">Load more...</button>
         </div>
       </div>
     </div>
@@ -255,8 +241,15 @@ import TextInput from '@/Shared/TextInput'
 import TrashedMessage from '@/Shared/TrashedMessage'
 import DatePicker from 'vue2-datepicker'
 import moment from 'moment'
+import axios from 'axios'
+import { loadMoreHaulMixin } from '@/Mixins/loadMoreHaulMixin'
+import { loadMoreDeliveryMixin } from '@/Mixins/loadMoreDeliveryMixin'
 
 export default {
+  mixins: [
+    loadMoreHaulMixin('clients'),
+    loadMoreDeliveryMixin('clients'),
+  ],
   metaInfo() {
     return { title: this.form.name }
   },
@@ -272,8 +265,6 @@ export default {
   props: {
     errors: Object,
     client: Object,
-    deliveryDetails: Array,
-    haulDetails: Array,
   },
   remember: 'form',
   data() {
@@ -345,8 +336,8 @@ export default {
     // select() {
     //   this.statementForm.selected = [];
     //   if (!this.statementForm.selectAll) {
-    //     for (let i in this.deliveryDetails) {
-    //       this.statementForm.selected.push(this.deliveryDetails[i].id);
+    //     for (let i in this.deliveryDetails.data) {
+    //       this.statementForm.selected.push(this.deliveryDetails.data[i].id);
     //     }
     //   }
     // },

@@ -69,30 +69,43 @@ class ClientController extends Controller
      */
     public function edit(Client $client)
     {
-        $hD = $client->haulDetails->transform(function ($haul) {
-            return [
-                'id' => $haul->id,
-                'date' => $haul->date,
-                'haul_id' => $haul->haul_id,
-                'quantity' => $haul->quantity,
-                'unit_price' => $haul->unit_price,
-                'client' => $haul->client ? $haul->client->only('id', 'name') : null,
-                'product' => $haul->product ? $haul->product->only('id', 'name') : null,
-            ];
-        });
+        $hD = $client->haulDetails()
+            ->latest()
+            ->paginate()
+            ->transform(function ($haul) {
+                return [
+                    'id' => $haul->id,
+                    'date' => $haul->date,
+                    'haul_id' => $haul->haul_id,
+                    'quantity' => $haul->quantity,
+                    'unit_price' => $haul->unit_price,
+                    'client' => $haul->client ? $haul->client->only('id', 'name') : null,
+                    'product' => $haul->product ? $haul->product->only('id', 'name') : null,
+                ];
+            });
 
-        $dD = $client->deliveryDetails->transform(function ($delivery) {
-            return [
-                'id' => $delivery->id,
-                'date' => $delivery->date,
-                'delivery_id' => $delivery->delivery_id,
-                'dr_no' => $delivery->dr_no,
-                'quantity' => $delivery->quantity,
-                'unit_price' => $delivery->unit_price,
-                'client' => $delivery->client ? $delivery->client->only('id', 'name') : null,
-                'product' => $delivery->product ? $delivery->product->only('id', 'name') : null,
-            ];
-        });
+        $dD = $client->deliveryDetails()
+            ->latest()
+            ->paginate()
+            ->transform(function ($delivery) {
+                return [
+                    'id' => $delivery->id,
+                    'date' => $delivery->date,
+                    'delivery_id' => $delivery->delivery_id,
+                    'dr_no' => $delivery->dr_no,
+                    'quantity' => $delivery->quantity,
+                    'unit_price' => $delivery->unit_price,
+                    'client' => $delivery->client ? $delivery->client->only('id', 'name') : null,
+                    'product' => $delivery->product ? $delivery->product->only('id', 'name') : null,
+                ];
+            });
+
+       if (request()->wantsJson()) {
+         return [
+           'deliveryDetails' => $dD,
+           'haulDetails' => $hD,
+         ];
+       }
 
         return Inertia::render('Clients/Edit', [
             'client' => [
