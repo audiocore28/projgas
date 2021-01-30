@@ -12,13 +12,16 @@
     <div class="p-1">
       <ul class="flex border-b">
         <li @click="openTab = 1" :class="{ '-mb-px': openTab === 1 }" class="-mb-px mr-1">
-          <a :class="openTab === 1 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold" href="#">Info</a>
+          <a :class="openTab === 1 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold">Info</a>
         </li>
-        <li @click="openTab = 2" :class="{ '-mb-px': openTab === 2 }" class="mr-1" v-show="deliveryDetails.length">
-          <a :class="openTab === 2 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold" href="#">Deliveries</a>
+        <li @click="openTab = 2" :class="{ '-mb-px': openTab === 2 }" class="mr-1" v-show="loadDetails.data.length">
+          <a :class="openTab === 2 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold">Loads</a>
         </li>
-        <li @click="openTab = 3" :class="{ '-mb-px': openTab === 3 }" class="mr-1" v-show="haulDetails.length">
-          <a :class="openTab === 3 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold" href="#">Hauling</a>
+        <li @click="openTab = 3" :class="{ '-mb-px': openTab === 3 }" class="mr-1" v-show="deliveryDetails.data.length">
+          <a :class="openTab === 3 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold">Deliveries</a>
+        </li>
+        <li @click="openTab = 4" :class="{ '-mb-px': openTab === 4 }" class="mr-1" v-show="haulDetails.data.length">
+          <a :class="openTab === 4 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold">Hauling</a>
         </li>
       </ul>
 
@@ -34,7 +37,7 @@
                 <text-input v-model="form.contact_no" :error="errors.contact_no" class="pr-6 pb-8 w-full lg:w-1/2" label="Contact No" />
               </div>
               <div class="px-8 py-4 bg-gray-100 border-t border-gray-200 flex justify-end items-center">
-                <button v-if="!deliveryDetails.length && !haulDetails.length && !helper.deleted_at" class="text-red-600 hover:underline" tabindex="-1" type="button" @click="destroy">Delete Helper</button>
+                <button v-if="!loadDetails.data.length && !deliveryDetails.data.length && !haulDetails.data.length && !helper.deleted_at" class="text-red-600 hover:underline" tabindex="-1" type="button" @click="destroy">Delete Helper</button>
                 <loading-button :loading="sending" class="btn-indigo ml-auto" type="submit">Update Helper</loading-button>
               </div>
             </form>
@@ -44,7 +47,34 @@
         <!-- Tab 2 -->
         <div v-show="openTab === 2">
           <div class="bg-white rounded shadow overflow-x-auto mb-8 -mt-4">
-            <div class="rounded shadow overflow-x-auto mb-8" v-for="delivery in deliveryDetails">
+            <div class="rounded shadow overflow-x-auto mb-8" v-for="load in localLoadDetails" :key="load.id" :value="load.id">
+              <div class="ml-5 mt-5 mb-1">
+                <inertia-link :href="route('tanker-loads.edit', load.id)" tabindex="-1">
+                  <p class="text-sm font-bold text-blue-700 mb-2">{{ load.trip_no }}. {{ load.driver.name }} & {{ load.helper.name }} ({{ load.tanker.plate_no }})</p>
+                </inertia-link>
+                <p class="text-sm font-medium text-gray-600 mb-4 ml-1">{{ load.date }} / {{ load.purchase.purchase_no }}</p>
+              </div>
+              <table class="min-w-full divide-y divide-gray-200">
+                <tbody class="bg-white divide-y divide-gray-200">
+                  <tr v-for="detail in load.loads">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <div class="text-sm text-gray-900">{{ detail.product.name }}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <div class="text-sm text-gray-900">{{ quantityFormat(detail.quantity) }}</div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <button @click="loadMoreLoad">Load more...</button>
+        </div>
+
+        <!-- Tab 3 -->
+        <div v-show="openTab === 3">
+          <div class="bg-white rounded shadow overflow-x-auto mb-8 -mt-4">
+            <div class="rounded shadow overflow-x-auto mb-8" v-for="delivery in localDeliveryDetails">
               <div class="ml-5 mt-5 mb-1">
                 <inertia-link :href="route('deliveries.edit', delivery.id)" tabindex="-1">
                   <p class="text-sm font-bold text-blue-700 mb-2">{{ delivery.driver.name }} & {{ delivery.helper.name }} ({{ delivery.tanker.plate_no }})</p>
@@ -55,6 +85,9 @@
                   <tr>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Date
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      DR No.
                     </th>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Client
@@ -78,6 +111,11 @@
                     <td class="px-6 py-4 whitespace-nowrap">
                       <div class="text-sm font-medium text-gray-900">
                         {{ detail.date }}
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm font-medium text-gray-900">
+                        {{ detail.dr_no }}
                       </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
@@ -106,16 +144,41 @@
                       </div>
                     </td>
                   </tr>
+                  <!-- Total -->
+                  <tr class="bg-gray-200">
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-left text-xs font-medium text-gray-500 uppercase">Total:</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm text-gray-900"></div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm text-gray-900"></div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm text-gray-900"></div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm text-gray-900">{{ totalDeliveriesQty(delivery.id) }}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm text-gray-900"></div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm text-gray-900">{{ totalDeliveriesAmount(delivery.id) }}</div>
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>
           </div>
+          <button @click="loadMoreDelivery">Load more...</button>
         </div>
 
-        <!-- Tab 3 -->
-        <div v-show="openTab === 3">
+        <!-- Tab 4 -->
+        <div v-show="openTab === 4">
           <div class="bg-white rounded shadow overflow-x-auto mb-8 -mt-4">
-            <div class="rounded shadow overflow-x-auto mb-8" v-for="haul in haulDetails">
+            <div class="rounded shadow overflow-x-auto mb-8" v-for="haul in localHaulDetails">
               <div class="ml-5 mt-5 mb-1">
                 <inertia-link :href="route('hauls.edit', haul.id)" tabindex="-1">
                   <p class="text-sm font-bold text-blue-700 mb-2">{{ haul.driver.name }} & {{ haul.helper.name }} ({{ haul.tanker.plate_no }})</p>
@@ -177,10 +240,32 @@
                       </div>
                     </td>
                   </tr>
+                  <!-- Total -->
+                  <tr class="bg-gray-200">
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-left text-xs font-medium text-gray-500 uppercase">Total:</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm text-gray-900"></div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm text-gray-900"></div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm text-gray-900">{{ totalHaulsQty(haul.id) }}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm text-gray-900"></div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm text-gray-900">{{ totalHaulsAmount(haul.id) }}</div>
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>
           </div>
+          <button @click="loadMoreHaul">Load more...</button>
         </div>
 
       </div>
@@ -196,8 +281,17 @@ import SelectInput from '@/Shared/SelectInput'
 import TextInput from '@/Shared/TextInput'
 import TrashedMessage from '@/Shared/TrashedMessage'
 import moment from 'moment'
+import axios from 'axios'
+import { loadMoreLoadMixin } from '@/Mixins/loadMoreLoadMixin'
+import { loadMoreHaulMixin } from '@/Mixins/loadMoreHaulMixin'
+import { loadMoreDeliveryMixin } from '@/Mixins/loadMoreDeliveryMixin'
 
 export default {
+  mixins: [
+    loadMoreLoadMixin('helpers'),
+    loadMoreHaulMixin('helpers'),
+    loadMoreDeliveryMixin('helpers'),
+  ],
   metaInfo() {
     return { title: this.form.name }
   },
@@ -212,8 +306,6 @@ export default {
   props: {
     errors: Object,
     helper: Object,
-    deliveryDetails: Array,
-    haulDetails: Array,
   },
   remember: 'form',
   data() {
@@ -275,6 +367,65 @@ export default {
     totalCurrency(quantity, unitPrice) {
       return this.toPHP(quantity * unitPrice);
     },
+
+    // Haul
+    totalHaulsAmount(haulId) {
+      for (var i = 0; i < this.localHaulDetails.length; i++) {
+        if (this.localHaulDetails[i].id === haulId) {
+
+          var totalAmt = this.localHaulDetails[i].hauls.reduce(function (acc, haul) {
+            acc += parseFloat(haul.quantity) * parseFloat(haul.unit_price);
+            return acc;
+          }, 0);
+
+          return this.toPHP(totalAmt);
+        }
+      }
+    },
+
+    totalHaulsQty(haulId) {
+      for (var i = 0; i < this.localHaulDetails.length; i++) {
+        if (this.localHaulDetails[i].id === haulId) {
+
+          var totalQty = this.localHaulDetails[i].hauls.reduce(function (acc, haul) {
+            acc += parseFloat(haul.quantity);
+            return acc;
+          }, 0);
+
+          return this.quantityFormat(totalQty);
+        }
+      }
+    },
+
+    // Delivery
+    totalDeliveriesAmount(deliveryId) {
+      for (var i = 0; i < this.localDeliveryDetails.length; i++) {
+        if (this.localDeliveryDetails[i].id === deliveryId) {
+
+          var totalAmt = this.localDeliveryDetails[i].deliveries.reduce(function (acc, delivery) {
+            acc += parseFloat(delivery.quantity) * parseFloat(delivery.unit_price);
+            return acc;
+          }, 0);
+
+          return this.toPHP(totalAmt);
+        }
+      }
+    },
+
+    totalDeliveriesQty(deliveryId) {
+      for (var i = 0; i < this.localDeliveryDetails.length; i++) {
+        if (this.localDeliveryDetails[i].id === deliveryId) {
+
+          var totalQty = this.localDeliveryDetails[i].deliveries.reduce(function (acc, delivery) {
+            acc += parseFloat(delivery.quantity);
+            return acc;
+          }, 0);
+
+          return this.quantityFormat(totalQty);
+        }
+      }
+    },
+
   },
 }
 </script>

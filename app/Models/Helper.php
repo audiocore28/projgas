@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Tanker;
 use App\Models\Driver;
+use App\Models\TankerLoad;
 use App\Models\Haul;
 use App\Models\Delivery;
 
@@ -33,6 +34,11 @@ class Helper extends Model
             }
         });
     }
+
+     public function tankerLoads()
+     {
+        return $this->hasMany(TankerLoad::class);
+     }
 
      public function hauls()
      {

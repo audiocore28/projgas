@@ -69,29 +69,61 @@ class HelperController extends Controller
      */
     public function edit(Helper $helper)
     {
-        $hD = $helper->hauls->transform(function ($haul) {
-            return [
-                'id' => $haul->id,
-                'tanker' => $haul->tanker ? $haul->tanker->only('plate_no') : null,
-                'driver' => $haul->driver ? $haul->driver->only('name') : null,
-                'helper' => $haul->helper ? $haul->helper->only('name') : null,
-                'hauls' => $haul->haulDetails->each(function ($detail) {
-                        return ['p' => $detail->product->name, 'c' => $detail->client->name];
-                    })
-            ];
-        });
+        $lD = $helper->tankerLoads()
+            ->latest()
+            ->paginate()
+            ->transform(function ($load) {
+                return [
+                    'id' => $load->id,
+                    'date' => $load->date,
+                    'trip_no' => $load->trip_no,
+                    'purchase' => $load->purchase ? $load->purchase->only('purchase_no') : null,
+                    'tanker' => $load->tanker ? $load->tanker->only('plate_no') : null,
+                    'driver' => $load->driver ? $load->driver->only('name') : null,
+                    'helper' => $load->helper ? $load->helper->only('name') : null,
+                    'loads' => $load->tankerLoadDetails->each(function ($detail) {
+                            return ['p' => $detail->product->name];
+                        })
+                ];
+            });
 
-        $dD = $helper->deliveries->transform(function ($delivery) {
-            return [
-                'id' => $delivery->id,
-                'tanker' => $delivery->tanker ? $delivery->tanker->only('plate_no') : null,
-                'driver' => $delivery->driver ? $delivery->driver->only('name') : null,
-                'helper' => $delivery->helper ? $delivery->helper->only('name') : null,
-                'deliveries' => $delivery->deliveryDetails->each(function ($detail) {
-                        return ['p' => $detail->product->name, 'c' => $detail->client->name];
-                    })
-            ];
-        });
+        $hD = $helper->hauls()
+            ->latest()
+            ->paginate()
+            ->transform(function ($haul) {
+                return [
+                    'id' => $haul->id,
+                    'tanker' => $haul->tanker ? $haul->tanker->only('plate_no') : null,
+                    'driver' => $haul->driver ? $haul->driver->only('name') : null,
+                    'helper' => $haul->helper ? $haul->helper->only('name') : null,
+                    'hauls' => $haul->haulDetails->each(function ($detail) {
+                            return ['p' => $detail->product->name, 'c' => $detail->client->name];
+                        })
+                ];
+            });
+
+        $dD = $helper->deliveries()
+            ->latest()
+            ->paginate()
+            ->transform(function ($delivery) {
+                return [
+                    'id' => $delivery->id,
+                    'tanker' => $delivery->tanker ? $delivery->tanker->only('plate_no') : null,
+                    'driver' => $delivery->driver ? $delivery->driver->only('name') : null,
+                    'helper' => $delivery->helper ? $delivery->helper->only('name') : null,
+                    'deliveries' => $delivery->deliveryDetails->each(function ($detail) {
+                            return ['p' => $detail->product->name, 'c' => $detail->client->name];
+                        })
+                ];
+            });
+
+       if (request()->wantsJson()) {
+         return [
+           'loadDetails' => $lD,
+           'deliveryDetails' => $dD,
+           'haulDetails' => $hD,
+         ];
+       }
 
         return Inertia::render('Helpers/Edit', [
             'helper' => [
@@ -102,6 +134,7 @@ class HelperController extends Controller
                 'contact_no' => $helper->contact_no,
                 'deleted_at' => $helper->deleted_at,
             ],
+           'loadDetails' => $lD,
            'deliveryDetails' => $dD,
            'haulDetails' => $hD,
         ]);
