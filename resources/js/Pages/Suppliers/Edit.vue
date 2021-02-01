@@ -19,8 +19,8 @@
         </li>
       </ul>
 
-      <!-- Tab 1 -->
       <div class="w-full pt-4">
+        <!-- Tab 1 -->
         <div v-show="openTab === 1">
           <div class="bg-white rounded shadow overflow-hidden max-w-3xl -mt-4">
             <form @submit.prevent="submit">
@@ -41,74 +41,7 @@
 
         <!-- Tab 2 -->
         <div v-show="openTab === 2">
-          <div class="bg-white rounded shadow overflow-x-auto mb-8 -mt-4">
-            <div class="rounded shadow overflow-x-auto mb-8" v-for="purchase in localPurchaseDetails">
-              <div class="ml-5 mr-5 mt-6">
-                <inertia-link :href="route('purchases.edit', purchase.id)" tabindex="-1">
-                  <h2 class="text-md font-bold text-blue-700 mb-2">{{ purchase.purchase_no }}</h2>
-                </inertia-link>
-                <p class="text-sm font-medium text-gray-600 mb-4 ml-1">{{ purchase.date }}</p>
-              </div>
-              <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
-                  <tr>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Product
-                    </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Quantity
-                    </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Unit Price
-                    </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Amount
-                    </th>
-                  </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                  <tr v-for="detail in purchase.purchases" :key="detail.id" :value="detail.id">
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <div class="text-sm font-medium text-gray-900">
-                        {{ detail.product.name }}
-                      </div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <div class="text-sm font-medium text-gray-900">
-                        {{ quantityFormat(detail.quantity) }}
-                      </div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <div class="text-sm font-medium text-gray-900">
-                        {{ toPHP(detail.unit_price) }}
-                      </div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      <div class="text-sm font-medium text-gray-900">
-                        {{ totalCurrency(detail.quantity, detail.unit_price) }}
-                      </div>
-                    </td>
-                  </tr>
-                  <!-- Total -->
-                  <tr class="bg-gray-200">
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <div class="text-left text-xs font-medium text-gray-500 uppercase">Total:</div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <div class="text-sm text-gray-900">{{ totalPurchasesQty(purchase.id) }}</div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <div class="text-sm text-gray-900"></div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <div class="text-sm text-gray-900">{{ totalPurchasesAmount(purchase.id) }}</div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-          <button @click="loadMorePurchase">Load more...</button>
+          <purchases :purchaseDetails="purchaseDetails" record="suppliers"></purchases>
         </div>
 
       </div>
@@ -123,13 +56,9 @@ import LoadingButton from '@/Shared/LoadingButton'
 import SelectInput from '@/Shared/SelectInput'
 import TextInput from '@/Shared/TextInput'
 import TrashedMessage from '@/Shared/TrashedMessage'
-import axios from 'axios'
-import { loadMorePurchaseMixin } from '@/Mixins/loadMorePurchaseMixin'
+import Purchases from '@/Shared/Purchases'
 
 export default {
-  mixins: [
-    loadMorePurchaseMixin('suppliers'),
-  ],
   metaInfo() {
     return { title: this.form.name }
   },
@@ -140,10 +69,12 @@ export default {
     SelectInput,
     TextInput,
     TrashedMessage,
+    Purchases,
   },
   props: {
     errors: Object,
     supplier: Object,
+    purchaseDetails: Object,
   },
   remember: 'form',
   data() {
@@ -193,52 +124,6 @@ export default {
         this.$inertia.put(this.route('suppliers.restore', this.supplier.id))
       }
     },
-
-    // Helpers
-    quantityFormat(value) {
-      return Number(value).toLocaleString()
-    },
-
-    toPHP(value) {
-      return `₱${Number(value).toLocaleString()}`;
-    },
-
-    totalCurrency(quantity, unitPrice) {
-      return this.toPHP(quantity * unitPrice);
-    },
-
-    // Purchases
-    totalPurchasesAmount(purchaseId) {
-      for (var i = 0; i < this.localPurchaseDetails.length; i++) {
-        if (this.localPurchaseDetails[i].id === purchaseId) {
-
-          var totalAmt = this.localPurchaseDetails[i].purchases.reduce(function (acc, purchase) {
-            acc += parseFloat(purchase.quantity) * parseFloat(purchase.unit_price);
-            return acc;
-          }, 0);
-
-          return this.toPHP(totalAmt);
-        }
-      }
-    },
-
-    totalPurchasesQty(purchaseId) {
-      for (var i = 0; i < this.localPurchaseDetails.length; i++) {
-        if (this.localPurchaseDetails[i].id === purchaseId) {
-
-          var totalQty = this.localPurchaseDetails[i].purchases.reduce(function (acc, purchase) {
-            acc += parseFloat(purchase.quantity);
-            return acc;
-          }, 0);
-
-          return this.quantityFormat(totalQty);
-        }
-      }
-    },
-
-
-
-
   },
 }
 </script>

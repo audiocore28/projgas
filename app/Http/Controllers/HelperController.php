@@ -93,6 +93,8 @@ class HelperController extends Controller
             ->transform(function ($haul) {
                 return [
                     'id' => $haul->id,
+                    'trip_no' => $haul->trip_no,
+                    'purchase' => $haul->purchase ? $haul->purchase->only('purchase_no') : null,
                     'tanker' => $haul->tanker ? $haul->tanker->only('plate_no') : null,
                     'driver' => $haul->driver ? $haul->driver->only('name') : null,
                     'helper' => $haul->helper ? $haul->helper->only('name') : null,
@@ -108,6 +110,8 @@ class HelperController extends Controller
             ->transform(function ($delivery) {
                 return [
                     'id' => $delivery->id,
+                    'trip_no' => $delivery->trip_no,
+                    'purchase' => $delivery->purchase ? $delivery->purchase->only('purchase_no') : null,
                     'tanker' => $delivery->tanker ? $delivery->tanker->only('plate_no') : null,
                     'driver' => $delivery->driver ? $delivery->driver->only('name') : null,
                     'helper' => $delivery->helper ? $delivery->helper->only('name') : null,
