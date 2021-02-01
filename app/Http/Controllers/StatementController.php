@@ -61,9 +61,18 @@ class StatementController extends Controller
      */
     public function store(StoreStatementRequest $request)
     {
-        $statement = Statement::create($request->all());
+        return $statement = Statement::create([
+            'date' => $request->date,
+            'client_id' => $request->client_id,
+            'payment' => $request->payment,
+            'check_no' => $request->check_no,
+            'soa_no' => $request->soa_no,
+            'lists' => $request->selected,
+        ]);
 
-        return redirect()->route('statements.index')->with('success', 'SOA was successfully added.');
+        // return redirect()->route('purchases.index')->with('success', 'Purchase was successfully added.');
+
+        // return redirect()->route('statements.index')->with('success', 'SOA was successfully added.');
     }
 
     /**

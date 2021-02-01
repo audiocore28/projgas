@@ -13,8 +13,16 @@ class Statement extends Model
     use HasFactory;
     use SoftDeletes;
 
-	 protected $dates = ['date'];
-	 protected $fillable = ['date', 'client_id', 'payment', 'check_no', 'soa_no'];
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'lists' => 'array',
+    ];
+    protected $dates = ['date'];
+	protected $fillable = ['date', 'client_id', 'payment', 'check_no', 'soa_no'];
 
 	 public function client()
 	 {

@@ -20,6 +20,7 @@ class CreateStatementsTable extends Migration
             $table->bigInteger('client_id')->nullable();
             $table->decimal('payment')->nullable();
             $table->string('check_no', 400)->nullable;
+            $table->json('lists')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

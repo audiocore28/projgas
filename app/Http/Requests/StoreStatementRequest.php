@@ -29,6 +29,7 @@ class StoreStatementRequest extends FormRequest
             'payment' => ['nullable', 'max:50'],
             'check_no' => ['nullable', 'max:50'],
             'soa_no' => ['nullable', 'max:50'],
+            'lists' => ['nullable', 'max:50'],
         ];
     }
 }
