@@ -6,6 +6,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DeliveryController;
 use App\Http\Controllers\DeliveryDetailController;
 use App\Http\Controllers\DriverController;
+use App\Http\Controllers\HaulController;
+use App\Http\Controllers\HaulDetailController;
 use App\Http\Controllers\HelperController;
 use App\Http\Controllers\TankerLoadController;
 use App\Http\Controllers\TankerLoadDetailController;
@@ -13,6 +15,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\PurchaseDetailController;
+// use App\Http\Controllers\StatementController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\TankerController;
 use App\Http\Controllers\UsersController;
@@ -51,21 +54,24 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 	// Purchases
-	// Route::put('purchases/{purchase}/restore', [PurchaseController::class, 'restore'])->name('purchases.restore');
 	Route::resource('purchases', PurchaseController::class);
 
 	// Purchase Details
 	Route::resource('purchase-details', PurchaseDetailController::class)->only(['store', 'destroy']);
 
 	// Tanker Loads
-	// Route::put('loads/{load}/restore', [LoadController::class, 'restore'])->name('loads.restore');
 	Route::resource('tanker-loads', TankerLoadController::class);
 
 	// Tanker Load Details
 	Route::resource('tanker-load-details', TankerLoadDetailController::class)->only(['store', 'destroy']);
 
+	// Hauling
+	Route::resource('hauls', HaulController::class);
+
+	// Hauling Details
+	Route::resource('haul-details', HaulDetailController::class)->only(['store', 'destroy']);
+
 	// Deliveries
-	Route::put('deliveries/{delivery}/restore', [DeliveryController::class, 'restore'])->name('deliveries.restore');
 	Route::resource('deliveries', DeliveryController::class);
 
 	// Delivery Details
@@ -78,6 +84,10 @@ Route::group(['middleware' => 'auth'], function() {
 	// Clients
 	Route::put('clients/{client}/restore', [ClientController::class, 'restore'])->name('clients.restore');
 	Route::resource('clients', ClientController::class);
+
+	// Statements
+	// Route::put('statements/{statement}/restore', [StatementController::class, 'restore'])->name('statements.restore');
+	// Route::resource('statements', StatementController::class);
 
 	// Users
 	Route::put('users/{user}/restore', [UsersController::class, 'restore'])->name('users.restore');
