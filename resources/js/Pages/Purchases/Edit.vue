@@ -365,7 +365,7 @@
                   <div class="rounded shadow overflow-x-auto mb-8 -mt-4" v-for="haul in figures.hauls" :key="haul.id" :value="haul.id">
                     <div class="ml-5 mt-5 mb-1">
                       <inertia-link :href="route('hauls.edit', haul.id)" tabindex="-1">
-                        <p class="text-sm font-bold text-blue-700 mb-2">{{ haul.driver.name }} & {{ haul.helper.name }} ({{ haul.tanker.plate_no }})</p>
+                        <p class="text-sm font-bold text-blue-700 mb-2">{{ haul.trip_no }}. {{ haul.driver.name }} & {{ haul.helper.name }} ({{ haul.tanker.plate_no }})</p>
                       </inertia-link>
                     </div>
 
@@ -461,7 +461,7 @@
                   <div class="rounded shadow overflow-x-auto mb-8 -mt-4" v-for="delivery in figures.deliveries" :key="delivery.id" :value="delivery.id">
                     <div class="ml-5 mt-5 mb-1">
                       <inertia-link :href="route('deliveries.edit', delivery.id)" tabindex="-1">
-                        <p class="text-sm font-bold text-blue-700 mb-2">{{ delivery.driver.name }} & {{ delivery.helper.name }} ({{ delivery.tanker.plate_no }})</p>
+                        <p class="text-sm font-bold text-blue-700 mb-2">{{ delivery.trip_no }}. {{ delivery.driver.name }} & {{ delivery.helper.name }} ({{ delivery.tanker.plate_no }})</p>
                       </inertia-link>
                     </div>
                     <table class="min-w-full divide-y divide-gray-200">
@@ -641,8 +641,10 @@
   import TrashedMessage from '@/Shared/TrashedMessage'
   import DatePicker from 'vue2-datepicker'
   import moment from 'moment'
+  import { numberFormatsMixin } from '@/Mixins/numberFormatsMixin'
 
-  export default {
+export default {
+  mixins: [numberFormatsMixin],
   metaInfo() {
     return { title: this.updateForm.purchase_no }
   },
@@ -760,18 +762,6 @@
     // Helpers
     toFigure(value) {
       return value / 1000;
-    },
-
-    quantityFormat(value) {
-      return Number(value).toLocaleString()
-    },
-
-    toPHP(value) {
-      return `₱${Number(value).toLocaleString()}`;
-    },
-
-    totalCurrency(quantity, unitPrice) {
-      return this.toPHP(quantity * unitPrice);
     },
 
     // Total Figures

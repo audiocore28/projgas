@@ -146,6 +146,7 @@ class PurchaseController extends Controller
         $hD = $purchase->hauls->transform(function ($haul) {
             return [
                 'id' => $haul->id,
+                'trip_no' => $haul->trip_no,
                 // 'haul_id' => $haul->haul_id,
                 // 'product_id' => $haul->product_id,
                 // 'quantity' => $haul->quantity,
@@ -163,6 +164,7 @@ class PurchaseController extends Controller
         $dD = $purchase->deliveries->transform(function ($delivery) {
             return [
                 'id' => $delivery->id,
+                'trip_no' => $delivery->trip_no,
                 // 'delivery_id' => $delivery->delivery_id,
                 // 'product_id' => $delivery->product_id,
                 // 'quantity' => $delivery->quantity,
