@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Haul;
 use App\Models\Delivery;
 use App\Models\Driver;
 use App\Models\Helper;
@@ -31,6 +32,11 @@ class Tanker extends Model
             }
         });
     }
+
+     public function hauls()
+     {
+        return $this->hasMany(Haul::class);
+     }
 
      public function deliveries()
      {

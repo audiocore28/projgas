@@ -14,7 +14,7 @@
             <option v-for="driver in drivers" :key="driver.id" :value="driver.id">{{ driver.fname }}</option>
           </select-input>
  -->
-          <div>
+          <!-- <div>
             <label class="form-label block">Driver(s)</label>
             <multiselect
               class="mt-3"
@@ -23,9 +23,9 @@
               :multiple="true"
               :searchable="true">
             </multiselect>
-          </div>
+          </div> -->
 
-          <div class="ml-5">
+          <!-- <div class="ml-5">
             <label class="form-label block">Helper(s)</label>
             <multiselect
               class="mt-3"
@@ -34,7 +34,8 @@
               :multiple="true"
               :searchable="true">
             </multiselect>
-          </div>
+          </div> -->
+
         </div>
         <div class="px-8 py-4 bg-gray-100 border-t border-gray-200 flex justify-end items-center">
           <loading-button :loading="sending" class="btn-indigo" type="submit">Save</loading-button>
@@ -49,7 +50,7 @@ import Layout from '@/Shared/Layout'
 import LoadingButton from '@/Shared/LoadingButton'
 import SelectInput from '@/Shared/SelectInput'
 import TextInput from '@/Shared/TextInput'
-import Multiselect from 'vue-multiselect'
+// import Multiselect from 'vue-multiselect'
 
 export default {
   metaInfo: { title: 'Create Tanker' },
@@ -58,7 +59,7 @@ export default {
     LoadingButton,
     SelectInput,
     TextInput,
-    Multiselect,
+    // Multiselect,
   },
   props: {
     errors: Object,
@@ -87,4 +88,4 @@ export default {
 }
 </script>
 
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
+<!-- <style src="vue-multiselect/dist/vue-multiselect.min.css"></style> -->
