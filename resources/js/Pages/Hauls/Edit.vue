@@ -20,33 +20,34 @@
             <form @submit.prevent="updateHaul">
               <!-- haul -->
               <div class="p-8 -mr-6 -mb-8 flex flex-wrap">
-                <!-- <text-input v-model="updateForm.date" :error="errors.date" class="pr-6 pb-8 w-full lg:w-1/2" label="Date" /> -->
-                <text-input v-model="updateForm.trip_no" :error="errors.trip_no" class="pr-6 pb-8 w-full lg:w-1/2" label="Trip No." />
+                <div class="pr-6 pb-2 w-full">
+                  <select-input v-model="updateForm.purchase_id" :error="errors.purchase_id" class="pr-6 pb-8 w-full lg:w-1/4" label="Purchase">
+                    <option :value="null" />
+                    <option v-for="purchase in purchases" :key="purchase.id" :value="purchase.id">{{ purchase.purchase_no }}</option>
+                  </select-input>
+                </div>
 
-                <select-input v-model="updateForm.tanker_id" :error="errors.tanker_id" class="pr-6 pb-8 w-full lg:w-1/2" label="Tanker">
-                  <option :value="null" />
-                  <option v-for="tanker in tankers" :key="tanker.id" :value="tanker.id">{{ tanker.plate_no }}</option>
-                </select-input>
-                <select-input v-model="updateForm.driver_id" :error="errors.driver_id" class="pr-6 pb-8 w-full lg:w-1/2" label="Driver">
+                <text-input v-model="updateForm.trip_no" :error="errors.trip_no" class="pr-6 pb-8 w-full lg:w-1/6" label="Trip No." />
+                <select-input v-model="updateForm.driver_id" :error="errors.driver_id" class="pr-6 pb-8 w-full lg:w-1/4" label="Driver">
                   <option :value="null" />
                   <option v-for="driver in drivers" :key="driver.id" :value="driver.id">{{ driver.name }}</option>
                 </select-input>
-                <select-input v-model="updateForm.helper_id" :error="errors.helper_id" class="pr-6 pb-8 w-full lg:w-1/2" label="Helper">
+                <select-input v-model="updateForm.helper_id" :error="errors.helper_id" class="pr-6 pb-8 w-full lg:w-1/4" label="Helper">
                   <option :value="null" />
                   <option v-for="helper in helpers" :key="helper.id" :value="helper.id">{{ helper.name }}</option>
                 </select-input>
-                <select-input v-model="updateForm.purchase_id" :error="errors.purchase_id" class="pr-6 pb-8 w-full lg:w-1/2" label="Purchase">
+                <select-input v-model="updateForm.tanker_id" :error="errors.tanker_id" class="pr-6 pb-8 w-full lg:w-1/4" label="Tanker">
                   <option :value="null" />
-                  <option v-for="purchase in purchases" :key="purchase.id" :value="purchase.id">{{ purchase.purchase_no }}</option>
+                  <option v-for="tanker in tankers" :key="tanker.id" :value="tanker.id">{{ tanker.plate_no }}</option>
                 </select-input>
               </div>
 
               <!-- Details -->
-              <div class="p-8 -mr-6 -mb-8 flex flex-wrap"
+              <div class="px-8 py-4 -mr-6 -mb-8 flex flex-wrap"
                 v-for="(details, index) in updateForm.details">
 
                 <label class="form-label block ml-1">Date</label>
-                <span class="pr-6 pb-8 mt-8 -ml-10">
+                <span class="pr-6 pb-8 mt-6 -ml-10">
                   <date-picker v-model="details.date" lang="en" value-type="format" :formatter="momentFormat"></date-picker>
                 </span>
 
@@ -61,7 +62,9 @@
                 <text-input type="number" step="any" v-model="details.quantity" :error="errors.quantity" class="pr-6 pb-8 w-full lg:w-1/6" label="Quantity" />
                 <text-input type="number" step="any" v-model="details.unit_price" :error="errors.unit_price" class="pr-6 pb-8 w-full lg:w-1/6" label="Unit Price" />
 
-                <span style="background-color: red; color: white; cursor: pointer; float: right;" @click.prevent="deleteDetailForm(index, details.id)">X</span>
+                <button @click.prevent="deleteDetailForm(index, details.id)" type="button" class="bg-white py-1 px-1 flex-shrink-0 text-sm leading-none">
+                  <icon name="trash" class="w-4 h-4 mr-2 fill-red-600"/>
+                </button>
               </div>
 
               <div class="px-8 py-4 bg-gray-100 border-t border-gray-200 flex justify-end items-center">
@@ -73,14 +76,14 @@
 
 
           <!-- Create Form -->
-          <div class="bg-white rounded shadow overflow-hidden max-w-6xl">
+          <div class="bg-white rounded shadow overflow-hidden max-w-6xl pt-4">
             <form @submit.prevent="saveNewDetails">
               <!-- Details -->
-              <div class="p-8 -mr-6 -mb-8 flex flex-wrap"
+              <div class="px-8 py-4 -mr-6 -mb-8 flex flex-wrap"
                 v-for="(details, index) in createForm">
 
                 <label class="form-label block ml-1">Date</label>
-                <span class="pr-6 pb-8 mt-8 -ml-10">
+                <span class="pr-6 pb-8 mt-6 -ml-10">
                   <date-picker v-model="details.date" lang="en" value-type="format" :formatter="momentFormat"></date-picker>
                 </span>
 
@@ -95,7 +98,9 @@
                 <text-input type="number" step="any" v-model="details.quantity" :error="errors.quantity" class="pr-6 pb-8 w-full lg:w-1/6" label="Quantity" />
                 <text-input type="number" step="any" v-model="details.unit_price" :error="errors.unit_price" class="pr-6 pb-8 w-full lg:w-1/6" label="Unit Price" />
 
-                <span style="background-color: red; color: white; cursor: pointer; float: right;" @click.prevent="deleteNewDetailForm(index)">X</span>
+                <button @click.prevent="deleteNewDetailForm(index)" type="button" class="bg-white py-1 px-1 flex-shrink-0 text-sm leading-none">
+                  <icon name="trash" class="w-4 h-4 mr-2 fill-red-600"/>
+                </button>
               </div>
 
               <div class="px-8 py-4 flex justify-end items-center">
