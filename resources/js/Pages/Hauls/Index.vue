@@ -20,9 +20,11 @@
         <tr class="text-left font-bold">
           <th class="px-6 pt-6 pb-4">ID</th>
           <th class="px-6 pt-6 pb-4">Purchase No.</th>
-          <th class="px-6 pt-6 pb-4">Tanker</th>
+          <th class="px-6 pt-6 pb-4">Trip No.</th>
           <th class="px-6 pt-6 pb-4">Driver</th>
-          <th class="px-6 pt-6 pb-4">Client</th>
+          <th class="px-6 pt-6 pb-4">Helper</th>
+          <th class="px-6 pt-6 pb-4">Tanker</th>
+          <!-- <th class="px-6 pt-6 pb-4">Client</th> -->
         </tr>
          <tr v-for="haul in hauls.data" :key="haul.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
           <!-- table columns -->
@@ -40,9 +42,7 @@
           </td>
           <td class="border-t">
             <inertia-link class="px-6 py-4 flex items-center" :href="route('hauls.edit', haul.id)" tabindex="-1">
-              <div v-if="haul.tanker">
-                {{ haul.tanker.plate_no }}
-              </div>
+              {{ haul.trip_no }}
             </inertia-link>
           </td>
           <td class="border-t">
@@ -54,6 +54,20 @@
           </td>
           <td class="border-t">
             <inertia-link class="px-6 py-4 flex items-center" :href="route('hauls.edit', haul.id)" tabindex="-1">
+              <div v-if="haul.helper">
+                {{ haul.helper.name }}
+              </div>
+            </inertia-link>
+          </td>
+          <td class="border-t">
+            <inertia-link class="px-6 py-4 flex items-center" :href="route('hauls.edit', haul.id)" tabindex="-1">
+              <div v-if="haul.tanker">
+                {{ haul.tanker.plate_no }}
+              </div>
+            </inertia-link>
+          </td>
+<!--           <td class="border-t">
+            <inertia-link class="px-6 py-4 flex items-center" :href="route('hauls.edit', haul.id)" tabindex="-1">
               <div v-if="haul.clients" v-for="client in haul.clients">
                 <span class="px-2 py-2 text-sm leading-5 font-semibold rounded-full bg-grey-100 text-grey-800">
                   {{ client.client.name }}
@@ -61,7 +75,7 @@
               </div>
             </inertia-link>
           </td>
-          <td class="border-t w-px">
+ -->          <td class="border-t w-px">
             <inertia-link class="px-4 flex items-center" :href="route('hauls.edit', haul.id)" tabindex="-1">
               <icon name="cheveron-right" class="block w-6 h-6 fill-gray-400" />
             </inertia-link>
