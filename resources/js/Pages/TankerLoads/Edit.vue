@@ -49,9 +49,8 @@
               </div>
 
               <!-- Details -->
-              <div class="p-8 -mr-6 -mb-8 flex flex-wrap"
-                v-for="(details, index) in updateForm.details">
-                <select-input v-model="details.product_id" :error="errors.product_id" class="pr-6 pb-8 w-full lg:w-1/4" label="Product">
+              <div class="p-8 -mr-6 -mb-8 flex flex-wrap" v-for="(details, index) in updateForm.details" :key="index">
+                <select-input v-model="details.product_id" :error="errors[`details.${index}.product_id`]" class="pr-6 pb-8 w-full lg:w-1/4" label="Product">
                   <option :value="null" />
                   <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
                 </select-input>
@@ -73,9 +72,8 @@
           <div class="bg-white rounded shadow overflow-hidden max-w-6xl pt-4">
             <form @submit.prevent="saveNewDetails">
               <!-- Details -->
-              <div class="px-8 py-4 -mr-6 -mb-8 flex flex-wrap"
-                v-for="(details, index) in createForm">
-                <select-input v-model="details.product_id" :error="errors.product_id" class="pr-6 pb-8 w-full lg:w-1/4" label="Product">
+              <div class="px-8 py-4 -mr-6 -mb-8 flex flex-wrap" v-for="(details, index) in createForm" :key="index">
+                <select-input v-model="details.product_id" :error="errors[`${index}.product_id`]" class="pr-6 pb-8 w-full lg:w-1/4" label="Product">
                   <option :value="null" />
                   <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
                 </select-input>

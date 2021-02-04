@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTankerLoadRequest;
+use App\Http\Requests\UpdateTankerLoadRequest;
 use App\Models\TankerLoad;
 use App\Models\TankerLoadDetail;
 use App\Models\Purchase;
@@ -33,6 +34,7 @@ class TankerLoadController extends Controller
                 return [
                     'id' => $tankerLoad->id,
                     'date' => $tankerLoad->date,
+                    'trip_no' => $tankerLoad->trip_no,
                     // 'remarks' => $tankerLoad->remarks,
                     'purchase' => $tankerLoad->purchase ? $tankerLoad->purchase->only('purchase_no') : null,
                     'tanker' => $tankerLoad->tanker ? $tankerLoad->tanker->only('plate_no') : null,
@@ -156,7 +158,7 @@ class TankerLoadController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(StoreTankerLoadRequest $request, TankerLoad $tankerLoad)
+    public function update(UpdateTankerLoadRequest $request, TankerLoad $tankerLoad)
     {
         // TankerLoad
         $tankerLoad->update([

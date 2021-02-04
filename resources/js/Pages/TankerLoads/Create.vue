@@ -40,9 +40,8 @@
         </div>
 
         <!-- Details -->
-        <div class="px-8 py-4 -mr-6 -mb-8 flex flex-wrap"
-          v-for="(details, index) in form.details">
-          <select-input v-model="details.product_id" :error="errors.product_id" class="pr-6 pb-8 w-full lg:w-1/4" label="Product">
+        <div class="px-8 py-4 -mr-6 -mb-8 flex flex-wrap" v-for="(details, index) in form.details" :key="index">
+          <select-input v-model="details.product_id" :error="errors[`details.${index}.product_id`]" class="pr-6 pb-8 w-full lg:w-1/4" label="Product">
             <option :value="null" />
             <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
           </select-input>
@@ -51,7 +50,7 @@
           <button @click.prevent="deleteDetailForm(index)" type="button" class="bg-white py-1 px-1 flex-shrink-0 text-sm leading-none">
             <icon name="trash" class="w-4 h-4 mr-2 fill-red-600"/>
           </button>
-       </div>
+        </div>
 
         <div class="px-8 py-4 flex justify-end items-center">
           <!-- <loading-button :loading="sending" class="btn-indigo" @click="addNewDetailForm">Add</loading-button> -->
