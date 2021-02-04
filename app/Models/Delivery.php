@@ -46,9 +46,19 @@ class Delivery extends Model
     {
         $query->when($filters['search'] ?? null, function ($query, $search) {
             $query->where(function ($query) use ($search) {
-                $query->WhereHas('client', function ($query) use ($search) {
+                $query->WhereHas('purchase', function ($query) use ($search) {
+	                        $query->where('purchase_no', 'like', '%'.$search.'%');
+	                    })
+                		->orWhereHas('tanker', function ($query) use ($search) {
+	                        $query->where('plate_no', 'like', '%'.$search.'%');
+	                    })
+                		->orWhereHas('driver', function ($query) use ($search) {
 	                        $query->where('name', 'like', '%'.$search.'%');
-	                    });
+	                    })
+                		->orWhereHas('helper', function ($query) use ($search) {
+	                        $query->where('name', 'like', '%'.$search.'%');
+	                    })
+                    ->orWhere('trip_no', 'like', '%'.$search.'%');
             });
         });
     }

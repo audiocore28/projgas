@@ -16,7 +16,7 @@ class CreateDeliveriesTable extends Migration
         Schema::create('deliveries', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('purchase_id')->nullable();
-            $table->bigInteger('tanker_id')->nullable();
+            $table->bigInteger('tanker_id');
             $table->bigInteger('driver_id')->nullable();
             $table->bigInteger('helper_id')->nullable();
             $table->string('trip_no')->nullable();

@@ -26,10 +26,18 @@ class StoreDeliveryDetailRequest extends FormRequest
         return [
             'delivery_id' => ['nullable', 'max:50'],
             'dr_no' => ['nullable', 'max:50'],
-            'product_id' => ['nullable', 'max:50'],
-            'client_id' => ['nullable', 'max:50'],
+            '*.product_id' => ['required', 'max:50'],
+            '*.client_id' => ['required', 'max:50'],
             'quantity' => ['nullable', 'max:50'],
             'unit_price' => ['nullable', 'max:50'],
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            '*.product_id.required' => 'Product is required.',
+            '*.client_id.required' => 'Client is required.',
         ];
     }
 }

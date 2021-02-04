@@ -31,20 +31,19 @@
         </div>
 
         <!-- Details -->
-        <div class="px-8 py-4 -mr-6 -mb-8 flex flex-wrap"
-          v-for="(details, index) in form.details">
+        <div class="px-8 py-4 -mr-6 -mb-8 flex flex-wrap" v-for="(details, index) in form.details" :key="index">
 
           <label class="form-label block ml-1">Date</label>
           <div class="pr-6 pb-8 w-full">
             <date-picker v-model="details.date" lang="en" value-type="format" :formatter="momentFormat"></date-picker>
           </div>
 
-          <select-input v-model="details.client_id" :error="errors.client_id" class="pr-6 pb-8 w-full lg:w-1/4" label="Client">
+          <select-input v-model="details.client_id" :error="errors[`details.${index}.client_id`]" class="pr-6 pb-8 w-full lg:w-1/4" label="Client">
             <option :value="null" />
             <option v-for="client in clients" :key="client.id" :value="client.id">{{ client.name }}</option>
           </select-input>
           <text-input v-model="details.dr_no" :error="errors.dr_no" class="pr-6 pb-8 w-full lg:w-1/6" label="DR No." />
-          <select-input v-model="details.product_id" :error="errors.product_id" class="pr-6 pb-8 w-full lg:w-1/6" label="Product">
+          <select-input v-model="details.product_id" :error="errors[`details.${index}.product_id`]" class="pr-6 pb-8 w-full lg:w-1/6" label="Product">
             <option :value="null" />
             <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
           </select-input>

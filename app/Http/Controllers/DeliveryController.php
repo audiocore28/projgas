@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreDeliveryRequest;
+use App\Http\Requests\UpdateDeliveryRequest;
 use App\Models\Delivery;
 use App\Models\DeliveryDetail;
 use App\Models\Purchase;
@@ -33,6 +34,7 @@ class DeliveryController extends Controller
             ->transform(function ($delivery) {
                 return [
                     'id' => $delivery->id,
+                    'trip_no' => $delivery->trip_no,
                     'purchase' => $delivery->purchase ? $delivery->purchase->only('purchase_no') : null,
                     'tanker' => $delivery->tanker ? $delivery->tanker->only('plate_no') : null,
                     'driver' => $delivery->driver ? $delivery->driver->only('name') : null,
@@ -159,7 +161,7 @@ class DeliveryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(StoreDeliveryRequest $request, Delivery $delivery)
+    public function update(UpdateDeliveryRequest $request, Delivery $delivery)
     {
         // Delivery
         $delivery->update([
