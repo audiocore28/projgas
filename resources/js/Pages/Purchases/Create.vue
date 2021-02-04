@@ -25,8 +25,8 @@
 
         <!-- Details -->
         <div class="px-8 py-4 -mr-6 -mb-8 flex flex-wrap"
-          v-for="(details, index) in form.details">
-          <select-input v-model="details.product_id" :error="errors.product_id" class="pr-6 pb-8 w-full lg:w-1/4" label="Product">
+          v-for="(details, index) in form.details" :key="index">
+          <select-input v-model="details.product_id" :error="errors[`details.${index}.product_id`]" class="pr-6 pb-8 w-full lg:w-1/4" label="Product">
             <option :value="null" />
             <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
           </select-input>

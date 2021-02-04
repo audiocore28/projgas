@@ -577,8 +577,8 @@
               </div>
 
               <!-- Details -->
-              <div class="px-8 py-4 -mr-6 -mb-8 flex flex-wrap" v-for="(details, index) in updateForm.details">
-                <select-input v-model="details.product.id" :error="errors.product_id" class="pr-6 pb-8 w-full lg:w-1/4" label="Product">
+              <div class="px-8 py-4 -mr-6 -mb-8 flex flex-wrap" v-for="(details, index) in updateForm.details" :key="index">
+                <select-input v-model="details.product.id" :error="errors[`details.${index}.product.id`]" class="pr-6 pb-8 w-full lg:w-1/4" label="Product">
                   <option :value="null" />
                   <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
                 </select-input>
@@ -606,20 +606,19 @@
           <div class="bg-white rounded shadow overflow-hidden max-w-6xl pt-4">
             <form @submit.prevent="saveNewDetails">
               <!-- Details -->
-              <div class="px-8 py-4 -mr-6 -mb-8 flex flex-wrap"
-              v-for="(details, index) in createForm">
-              <select-input v-model="details.product_id" :error="errors.product_id" class="pr-6 pb-8 w-full lg:w-1/4" label="Product">
-                <option :value="null" />
-                <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
-              </select-input>
-              <text-input type="number" step="any" v-model="details.quantity" :error="errors.quantity" class="pr-6 pb-8 w-full lg:w-1/6" label="Quantity" />
-              <text-input type="number" step="any" v-model="details.unit_price" :error="errors.unit_price" class="pr-6 pb-8 w-full lg:w-1/6" label="Unit Price" />
-              <text-input v-model="details.remarks" :error="errors.remarks" class="pr-6 pb-8 w-full lg:w-1/3" label="Remarks" />
+              <div class="px-8 py-4 -mr-6 -mb-8 flex flex-wrap" v-for="(details, index) in createForm" :key="index">
+                <select-input v-model="details.product_id" :error="errors[`${index}.product_id`]" class="pr-6 pb-8 w-full lg:w-1/4" label="Product">
+                  <option :value="null" />
+                  <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
+                </select-input>
+                <text-input type="number" step="any" v-model="details.quantity" :error="errors.quantity" class="pr-6 pb-8 w-full lg:w-1/6" label="Quantity" />
+                <text-input type="number" step="any" v-model="details.unit_price" :error="errors.unit_price" class="pr-6 pb-8 w-full lg:w-1/6" label="Unit Price" />
+                <text-input v-model="details.remarks" :error="errors.remarks" class="pr-6 pb-8 w-full lg:w-1/3" label="Remarks" />
 
-              <button @click.prevent="deleteNewDetailForm(index)" type="button" class="bg-white py-1 px-1 flex-shrink-0 text-sm leading-none">
-                <icon name="trash" class="w-4 h-4 mr-2 fill-red-600"/>
-              </button>
-            </div>
+                <button @click.prevent="deleteNewDetailForm(index)" type="button" class="bg-white py-1 px-1 flex-shrink-0 text-sm leading-none">
+                  <icon name="trash" class="w-4 h-4 mr-2 fill-red-600"/>
+                </button>
+              </div>
 
             <div class="px-8 py-4 flex justify-end items-center">
               <button class="btn-indigo" @click.prevent="createNewDetailForm">Add Row</button>

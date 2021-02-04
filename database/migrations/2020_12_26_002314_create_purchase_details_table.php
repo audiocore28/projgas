@@ -19,7 +19,7 @@ class CreatePurchaseDetailsTable extends Migration
             $table->decimal('unit_price', 10, 3)->nullable();
             $table->longText('remarks')->nullable();
             $table->unsignedBigInteger('purchase_id');
-            $table->bigInteger('product_id')->nullable();
+            $table->bigInteger('product_id');
             $table->timestamps();
 
             $table->foreign('purchase_id')->references('id')->on('purchases')->onDelete('cascade');
