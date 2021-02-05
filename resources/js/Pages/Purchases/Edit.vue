@@ -607,10 +607,15 @@
             <form @submit.prevent="saveNewDetails">
               <!-- Details -->
               <div class="px-8 py-4 -mr-6 -mb-8 flex flex-wrap" v-for="(details, index) in createForm" :key="index">
-                <select-input v-model="details.product_id" :error="errors[`${index}.product_id`]" class="pr-6 pb-8 w-full lg:w-1/4" label="Product">
-                  <option :value="null" />
-                  <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
-                </select-input>
+                <div class="pr-6 pb-8 w-full lg:w-1/4">
+                  <label class="form-label" :for="`product-${index}`">Product</label>
+                  <select :id="`product-${index}`" v-model="details.product_id" class="form-select" :class="{ error: errors[`${index}.product_id`] }">
+                    <option :value="null" />
+                    <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
+                  </select>
+                  <div v-if="errors[`${index}.product_id`]" class="form-error">{{ errors[`${index}.product_id`] }}</div>
+                </div>
+
                 <text-input type="number" step="any" v-model="details.quantity" :error="errors.quantity" class="pr-6 pb-8 w-full lg:w-1/6" label="Quantity" />
                 <text-input type="number" step="any" v-model="details.unit_price" :error="errors.unit_price" class="pr-6 pb-8 w-full lg:w-1/6" label="Unit Price" />
                 <text-input v-model="details.remarks" :error="errors.remarks" class="pr-6 pb-8 w-full lg:w-1/3" label="Remarks" />

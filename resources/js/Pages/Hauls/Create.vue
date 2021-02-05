@@ -38,14 +38,24 @@
             <date-picker v-model="details.date" lang="en" value-type="format" :formatter="momentFormat"></date-picker>
           </span>
 
-          <select-input v-model="details.client_id" :error="errors[`details.${index}.client_id`]" class="pr-6 pb-8 w-full lg:w-1/6" label="Client">
-            <option :value="null" />
-            <option v-for="client in clients" :key="client.id" :value="client.id">{{ client.name }}</option>
-          </select-input>
-          <select-input v-model="details.product_id" :error="errors[`details.${index}.product_id`]" class="pr-6 pb-8 w-full lg:w-1/6" label="Product">
-            <option :value="null" />
-            <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
-          </select-input>
+          <div class="pr-6 pb-8 w-full lg:w-1/6">
+            <label class="form-label" :for="`client-${index}`">Client</label>
+            <select :id="`client-${index}`" v-model="details.client_id" class="form-select" :class="{ error: errors[`details.${index}.client_id`] }">
+              <option :value="null" />
+              <option v-for="client in clients" :key="client.id" :value="client.id">{{ client.name }}</option>
+            </select>
+            <div v-if="errors[`details.${index}.client_id`]" class="form-error">{{ errors[`details.${index}.client_id`] }}</div>
+          </div>
+
+          <div class="pr-6 pb-8 w-full lg:w-1/6">
+            <label class="form-label" :for="`product-${index}`">Product</label>
+            <select :id="`product-${index}`" v-model="details.product_id" class="form-select" :class="{ error: errors[`details.${index}.product_id`] }">
+              <option :value="null" />
+              <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
+            </select>
+            <div v-if="errors[`details.${index}.product_id`]" class="form-error">{{ errors[`details.${index}.product_id`] }}</div>
+          </div>
+
           <text-input type="number" step="any" v-model="details.quantity" :error="errors.quantity" class="pr-6 pb-8 w-full lg:w-1/6" label="Quantity" />
           <text-input type="number" step="any" v-model="details.unit_price" :error="errors.unit_price" class="pr-6 pb-8 w-full lg:w-1/6" label="Unit Price" />
 
