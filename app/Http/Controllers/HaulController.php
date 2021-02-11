@@ -59,12 +59,12 @@ class HaulController extends Controller
      */
     public function create()
     {
-        $clients = Client::all();
-        $purchases = Purchase::all();
-        $tankers = Tanker::all();
-        $drivers = Driver::all();
-        $helpers = Helper::all();
-        $products = Product::all();
+        $clients = Client::orderBy('name', 'asc')->get();
+        $purchases = Purchase::orderBy('id', 'desc')->get();
+        $tankers = Tanker::orderBy('plate_no', 'asc')->get();
+        $drivers = Driver::orderBy('name', 'asc')->get();
+        $helpers = Helper::orderBy('name', 'asc')->get();
+        $products = Product::orderBy('name', 'asc')->get();
 
         return Inertia::render('Hauls/Create', [
             'clients' => $clients,
@@ -127,12 +127,12 @@ class HaulController extends Controller
      */
     public function edit(Haul $haul)
     {
-        $clients = Client::all();
-        $purchases = Purchase::all();
-        $tankers = Tanker::all();
-        $drivers = Driver::all();
-        $helpers = Helper::all();
-        $products = Product::all();
+        $clients = Client::orderBy('name', 'asc')->get();
+        $purchases = Purchase::orderBy('id', 'desc')->get();
+        $tankers = Tanker::orderBy('plate_no', 'asc')->get();
+        $drivers = Driver::orderBy('name', 'asc')->get();
+        $helpers = Helper::orderBy('name', 'asc')->get();
+        $products = Product::orderBy('name', 'asc')->get();
 
         return Inertia::render('Hauls/Edit', [
             'haul' => [

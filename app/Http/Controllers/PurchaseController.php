@@ -53,8 +53,8 @@ class PurchaseController extends Controller
      */
     public function create()
     {
-        $suppliers = Supplier::all();
-        $products = Product::all();
+        $suppliers = Supplier::orderBy('name', 'asc')->get();
+        $products = Product::orderBy('name', 'asc')->get();
 
         return Inertia::render('Purchases/Create', [
             'suppliers' => $suppliers,
@@ -110,8 +110,8 @@ class PurchaseController extends Controller
      */
     public function edit(Purchase $purchase)
     {
-        $suppliers = Supplier::all();
-        $products = Product::all();
+        $suppliers = Supplier::orderBy('name', 'asc')->get();
+        $products = Product::orderBy('name', 'asc')->get();
 
         // each, foreach, where, whereHas, get, return, has, filter, with
 
