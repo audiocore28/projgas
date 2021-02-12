@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreDeliveryRequest;
-use App\Http\Requests\UpdateDeliveryRequest;
 use App\Models\Delivery;
 use App\Models\DeliveryDetail;
 use App\Models\Purchase;
@@ -161,7 +160,7 @@ class DeliveryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateDeliveryRequest $request, Delivery $delivery)
+    public function update(StoreDeliveryRequest $request, Delivery $delivery)
     {
         // Delivery
         $delivery->update([

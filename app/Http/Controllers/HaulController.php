@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreHaulRequest;
-use App\Http\Requests\UpdateHaulRequest;
 use App\Models\Haul;
 use App\Models\HaulDetail;
 use App\Models\Purchase;
@@ -160,7 +159,7 @@ class HaulController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateHaulRequest $request, Haul $haul)
+    public function update(StoreHaulRequest $request, Haul $haul)
     {
         // Haul
         $haul->update([
