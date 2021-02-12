@@ -32,11 +32,11 @@
 
                 <div class="pr-6 pb-8 w-full lg:w-1/4">
                   <label class="form-label" :for="`product-${index}`">Product:</label>
-                  <select :id="`product-${index}`" v-model="pump.product_id" class="form-select" :class="{ error: errors[`pump.${index}.product_id`] }">
+                  <select :id="`product-${index}`" v-model="pump.product_id" class="form-select" :class="{ error: errors[`pumps.${index}.product_id`] }">
                     <option :value="null" />
                     <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
                   </select>
-                  <div v-if="errors[`pump.${index}.product_id`]" class="form-error">{{ errors[`pump.${index}.product_id`] }}</div>
+                  <div v-if="errors[`pumps.${index}.product_id`]" class="form-error">{{ errors[`pumps.${index}.product_id`] }}</div>
                 </div>
 
                 <button @click.prevent="deletePumpForm(index, pump.id)" type="button" class="bg-white py-1 px-1 flex-shrink-0 text-sm leading-none">
@@ -62,11 +62,11 @@
 
                 <div class="pr-6 pb-8 w-full lg:w-1/4">
                   <label class="form-label" :for="`product-${index}`">Product:</label>
-                  <select :id="`product-${index}`" v-model="pump.product_id" class="form-select" :class="{ error: errors[`pump.${index}.product_id`] }">
+                  <select :id="`product-${index}`" v-model="pump.product_id" class="form-select" :class="{ error: errors[`${index}.product_id`] }">
                     <option :value="null" />
                     <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
                   </select>
-                  <div v-if="errors[`pump.${index}.product_id`]" class="form-error">{{ errors[`pump.${index}.product_id`] }}</div>
+                  <div v-if="errors[`${index}.product_id`]" class="form-error">{{ errors[`${index}.product_id`] }}</div>
                 </div>
 
                 <button @click.prevent="deleteNewPumpForm(index)" type="button" class="bg-white py-1 px-1 flex-shrink-0 text-sm leading-none">
@@ -189,6 +189,7 @@ export default {
     // create form
     addNewPumpForm() {
       this.createForm.push({
+        id: null,
         station_id: this.station.id,
         pump: null,
         nozzle: null,

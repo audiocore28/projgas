@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePumpRequest;
 use App\Models\Pump;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -37,7 +38,7 @@ class PumpController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StorePumpRequest $request)
     {
         foreach($request->all() as $pump)
         {
@@ -81,7 +82,7 @@ class PumpController extends Controller
      * @param  \App\Models\Pump  $pump
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Pump $pump)
+    public function update(StorePumpRequest $request, Pump $pump)
     {
         //
     }

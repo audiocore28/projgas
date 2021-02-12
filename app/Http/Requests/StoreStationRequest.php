@@ -30,6 +30,7 @@ class StoreStationRequest extends FormRequest
             //
             'pumps.*.pump' => ['nullable', 'max:100'],
             'pumps.*.nozzle' => ['nullable', 'max:100'],
+            'pumps.*.product_id' => ['required', 'max:50'],
         ];
     }
 
@@ -37,6 +38,7 @@ class StoreStationRequest extends FormRequest
     {
         return [
             'name.required' => 'Station Name is required',
+            'pumps.*.product_id.required' => 'Product is required.',
         ];
     }
 }
