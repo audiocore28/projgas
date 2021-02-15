@@ -21,6 +21,7 @@
           <th class="px-6 pt-6 pb-4">ID</th>
           <th class="px-6 pt-6 pb-4">Full Name</th>
           <th class="px-6 pt-6 pb-4">Nickname</th>
+          <th class="px-6 pt-6 pb-4">Contact No</th>
         </tr>
          <tr v-for="pumpAttendant in pump_attendants.data" :key="pumpAttendant.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
           <!-- table columns -->
@@ -38,6 +39,11 @@
           <td class="border-t">
             <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('pump-attendants.edit', pumpAttendant.id)">
               {{ pumpAttendant.nickname }}
+            </inertia-link>
+          </td>
+          <td class="border-t">
+            <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('pump-attendants.edit', pumpAttendant.id)">
+              {{ pumpAttendant.contact_no }}
             </inertia-link>
           </td>
           <td class="border-t w-px">

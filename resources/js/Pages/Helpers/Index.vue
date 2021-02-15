@@ -21,6 +21,7 @@
           <th class="px-6 pt-6 pb-4">ID</th>
           <th class="px-6 pt-6 pb-4">Full Name</th>
           <th class="px-6 pt-6 pb-4">Nickname</th>
+          <th class="px-6 pt-6 pb-4">Contact No</th>
           <!-- <th class="px-6 pt-6 pb-4" colspan="2">helper No.</th> -->
         </tr>
          <tr v-for="helper in helpers.data" :key="helper.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
@@ -39,6 +40,11 @@
           <td class="border-t">
             <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('helpers.edit', helper.id)">
               {{ helper.nickname }}
+            </inertia-link>
+          </td>
+          <td class="border-t">
+            <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('helpers.edit', helper.id)">
+              {{ helper.contact_no }}
             </inertia-link>
           </td>
           <td class="border-t w-px">

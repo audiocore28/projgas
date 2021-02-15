@@ -21,7 +21,8 @@
           <th class="px-6 pt-6 pb-4">ID</th>
           <th class="px-6 pt-6 pb-4">Full Name</th>
           <th class="px-6 pt-6 pb-4">Nickname</th>
-          <th class="px-6 pt-6 pb-4">License No.</th>
+          <th class="px-6 pt-6 pb-4">License No</th>
+          <th class="px-6 pt-6 pb-4">Contact No</th>
           <!-- <th class="px-6 pt-6 pb-4" colspan="2">Driver No.</th> -->
         </tr>
          <tr v-for="driver in drivers.data" :key="driver.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
@@ -57,6 +58,11 @@
  -->          <td class="border-t">
             <inertia-link class="px-6 py-4 flex items-center" :href="route('drivers.edit', driver.id)" tabindex="-1">
               {{ driver.license_no }}
+            </inertia-link>
+          </td>
+          <td class="border-t">
+            <inertia-link class="px-6 py-4 flex items-center" :href="route('drivers.edit', driver.id)" tabindex="-1">
+              {{ driver.contact_no }}
             </inertia-link>
           </td>
           <td class="border-t w-px">
