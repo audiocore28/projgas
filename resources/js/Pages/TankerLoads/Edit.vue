@@ -2,7 +2,7 @@
   <div>
     <h1 class="mb-8 font-bold text-3xl">
       <inertia-link class="text-blue-600 hover:text-blue-800" :href="route('tanker-loads.index')">Loads</inertia-link>
-      <span class="text-blue-600 font-medium">/</span> {{ updateForm.purchase_id }}
+      <span class="text-blue-600 font-medium">/</span> {{ value }}
     </h1>
 
     <div class="p-1">
@@ -25,11 +25,20 @@
                   <date-picker v-model="updateForm.date" lang="en" value-type="format" :formatter="momentFormat"></date-picker>
                 </div>
 
-                <div class="pr-6 pb-2 w-full">
-                  <select-input v-model="updateForm.purchase_id" :error="errors.purchase_id" class="pr-6 pb-8 w-full lg:w-1/4" label="Purchase No.">
-                    <option :value="null" />
-                    <option v-for="purchase in purchases" :key="purchase.id" :value="purchase.id">{{ purchase.purchase_no }}</option>
-                  </select-input>
+                <div class="pr-6 pb-8 w-full">
+                  <div class="lg:w-1/2">
+                    <label class="form-label block">Purchase No.</label>
+                    <multiselect
+                      class="mt-3 text-xs"
+                      v-model="value"
+                      track-by="id"
+                      label="purchase_no"
+                      placeholder=""
+                      :options="purchases"
+                      :searchable="true"
+                      :allow-empty="true">
+                    </multiselect>
+                  </div>
                 </div>
 
                 <text-input v-model="updateForm.trip_no" :error="errors.trip_no" class="pr-6 pb-8 w-full lg:w-1/6" label="Trip No." />
@@ -114,6 +123,7 @@ import TextInput from '@/Shared/TextInput'
 import TrashedMessage from '@/Shared/TrashedMessage'
 import DatePicker from 'vue2-datepicker'
 import moment from 'moment'
+import Multiselect from 'vue-multiselect'
 
 export default {
   metaInfo: { title: 'Edit Load' },
@@ -125,6 +135,7 @@ export default {
     TextInput,
     TrashedMessage,
     DatePicker,
+    Multiselect,
   },
   props: {
     errors: Object,
@@ -153,6 +164,7 @@ export default {
           return // a number
         }
       },
+      value: null,
       updateForm: {
         date: this.tanker_load.date,
         trip_no: this.tanker_load.trip_no,
@@ -230,3 +242,4 @@ export default {
 </script>
 
 <style src="vue2-datepicker/index.css"></style>
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
