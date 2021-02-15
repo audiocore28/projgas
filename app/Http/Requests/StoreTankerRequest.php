@@ -25,7 +25,7 @@ class StoreTankerRequest extends FormRequest
     {
         return [
                 'plate_no' => ['required', 'max:40'],
-                'compartment' => ['max:40'],
+                'compartment' => ['nullable', 'max:40'],
         ];
     }
 }
