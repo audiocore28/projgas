@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreDriverRequest;
 use App\Models\Driver;
-// use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
@@ -69,6 +68,13 @@ class DriverController extends Controller
      */
     public function edit(Driver $driver)
     {
+        $trips = $driver->tankerLoads()
+            ->selectRaw('year(date) year, monthname(date) month, count(*) loaded')
+            ->groupBy('year', 'month')
+            ->orderByRaw('min(date)')
+            ->get()
+            ->toArray();
+
         $lD = $driver->tankerLoads()
             ->latest()
             ->paginate()
@@ -139,10 +145,10 @@ class DriverController extends Controller
                 'contact_no' => $driver->contact_no,
                 'deleted_at' => $driver->deleted_at,
            ],
-           'tankers' => $driver->tankers,
            'loadDetails' => $lD,
            'deliveryDetails' => $dD,
            'haulDetails' => $hD,
+           'trips' => $trips,
         ]);
     }
 
@@ -174,6 +180,10 @@ class DriverController extends Controller
 
         if ($driver->hauls()->count()) {
             return back()->withErrors(['error' => 'Cannot delete, hauling has driver records']);
+        }
+
+        if ($driver->tankerLoads()->count()) {
+            return back()->withErrors(['error' => 'Cannot delete, load has driver records']);
         }
 
         $driver->delete();
