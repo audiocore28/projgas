@@ -88,6 +88,15 @@ class StationController extends Controller
      */
     public function edit(Station $station)
     {
+        $pumps = $station->pumps
+            ->toArray();
+
+        if (request()->wantsJson()) {
+            return [
+                'pumps' => $pumps,
+            ];
+        }
+
         $products = Product::orderBy('name', 'asc')->get();
 
         return Inertia::render('Stations/Edit', [
