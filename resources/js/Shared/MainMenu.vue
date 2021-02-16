@@ -22,7 +22,7 @@
       </div>
     </div>
 
-    <h4 @click="reportSelected !== 2 ? reportSelected = 2 : reportSelected = null"
+<!--     <h4 @click="reportSelected !== 2 ? reportSelected = 2 : reportSelected = null"
     class="text-blue-300 text-xs cursor-pointer py-3 hover:text-white opacity-75 rounded-t">Reports</h4>
     <div v-show="reportSelected == 2" class="py-4 text-sm">
       <div class="mb-4" v-for="link in reportLinks">
@@ -32,7 +32,7 @@
         </inertia-link>
       </div>
     </div>
-
+ -->
     <h4 @click="employeeSelected !== 3 ? employeeSelected = 3 : employeeSelected = null"
     class="text-blue-300 text-xs cursor-pointer py-3 hover:text-white opacity-75 rounded-t">Employees</h4>
     <div v-show="employeeSelected == 3" class="py-4 text-sm">
@@ -75,31 +75,31 @@ export default {
         { route: 'tanker-loads.index', icon: 'dashboard', isUrl: 'tanker-loads', name: 'Loads'},
         { route: 'hauls.index', icon: 'location', isUrl: 'hauls', name: 'Hauling'},
         { route: 'deliveries.index', icon: 'location', isUrl: 'deliveries', name: 'Deliveries'},
-        // { route: 'statements.index', icon: 'book', isUrl: 'statements', name: 'SOA'},
       ],
       recordLinks: [
         { route: 'suppliers.index', icon: 'office', isUrl: 'suppliers', name: 'Suppliers'},
         { route: 'clients.index', icon: 'office', isUrl: 'clients', name: 'Clients'},
+        // { route: 'statements.index', icon: 'book', isUrl: 'statements', name: 'SOA'},
       ],
-      reportLinks: [
-        { route: 'station-transactions.index', icon: 'store-front', isUrl: 'station-transactions', name: 'DTR'},
-      ],
+      // reportLinks: [
+        // { route: 'station-transactions.index', icon: 'store-front', isUrl: 'station-transactions', name: 'DTR'},
+      // ],
       employeeLinks: [
         { route: 'drivers.index', icon: 'users', isUrl: 'drivers', name: 'Drivers'},
         { route: 'helpers.index', icon: 'users', isUrl: 'helpers', name: 'Helpers'},
-        { route: 'cashiers.index', icon: 'users', isUrl: 'cashiers', name: 'Cashiers'},
-        { route: 'pump-attendants.index', icon: 'users', isUrl: 'pump-attendants', name: 'Pump Attnd'},
-        { route: 'office-staffs.index', icon: 'users', isUrl: 'office-staffs', name: 'Office Staffs'},
+        // { route: 'cashiers.index', icon: 'users', isUrl: 'cashiers', name: 'Cashiers'},
+        // { route: 'pump-attendants.index', icon: 'users', isUrl: 'pump-attendants', name: 'Pump Attnd'},
+        // { route: 'office-staffs.index', icon: 'users', isUrl: 'office-staffs', name: 'Office Staffs'},
       ],
       assetLinks: [
         { route: 'tankers.index', icon: 'dashboard', isUrl: 'tankers', name: 'Tankers'},
-        { route: 'stations.index', icon: 'store-front', isUrl: 'stations', name: 'G. Stations'},
-        { route: 'companies.index', icon: 'office', isUrl: 'companies', name: 'B. Company'},
+        // { route: 'stations.index', icon: 'store-front', isUrl: 'stations', name: 'G. Stations'},
+        // { route: 'companies.index', icon: 'office', isUrl: 'companies', name: 'B. Company'},
         { route: 'products.index', icon: 'store-front', isUrl: 'products', name: 'Products'},
       ],
       truckingSelected: 0,
       recordSelected: 1,
-      reportSelected: 2,
+      // reportSelected: 2,
       employeeSelected: 3,
       assetSelected: 4,
     }
