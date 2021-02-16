@@ -68,12 +68,12 @@ class DriverController extends Controller
      */
     public function edit(Driver $driver)
     {
-        $trips = $driver->tankerLoads()
-            ->selectRaw('year(date) year, monthname(date) month, count(*) loaded')
-            ->groupBy('year', 'month')
-            ->orderByRaw('min(date)')
-            ->get()
-            ->toArray();
+        // $trips = $driver->tankerLoads()
+        //     ->selectRaw('year(date) year, monthname(date) month, count(*) loaded')
+        //     ->groupBy('year', 'month')
+        //     ->orderByRaw('min(date)')
+        //     ->get()
+        //     ->toArray();
 
         $lD = $driver->tankerLoads()
             ->latest()
@@ -148,7 +148,7 @@ class DriverController extends Controller
            'loadDetails' => $lD,
            'deliveryDetails' => $dD,
            'haulDetails' => $hD,
-           'trips' => $trips,
+           // 'trips' => $trips,
         ]);
     }
 

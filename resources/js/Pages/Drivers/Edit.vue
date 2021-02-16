@@ -23,9 +23,10 @@
         <li @click="openTab = 4" :class="{ '-mb-px': openTab === 4 }" class="mr-1" v-show="deliveryDetails.data.length">
           <a :class="openTab === 4 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold">Deliveries</a>
         </li>
-        <li @click="openTab = 5" :class="{ '-mb-px': openTab === 5 }" class="mr-1">
+<!--         <li @click="openTab = 5" :class="{ '-mb-px': openTab === 5 }" class="mr-1">
           <a :class="openTab === 5 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold">Salaries</a>
         </li>
+ -->
       </ul>
 
       <!-- Tab 1 -->
@@ -64,7 +65,7 @@
         </div>
 
         <!-- Tab 5 -->
-        <div v-show="openTab === 5" class="bg-white -mt-4">
+        <!-- <div v-show="openTab === 5" class="bg-white -mt-4">
           <div class="ml-5 pt-6">
             <text-input v-model="rate" class="pr-6 pb-8 w-full lg:w-1/6" label="Salary Rate" />
           </div>
@@ -114,7 +115,7 @@
               </table>
             </div>
           </div>
-        </div>
+        </div> -->
 
       </div>
     </div>
@@ -154,13 +155,13 @@ export default {
     deliveryDetails: Object,
     haulDetails: Object,
     loadDetails: Object,
-    trips: Array,
+    // trips: Array,
   },
   remember: 'form',
   data() {
     return {
       sending: false,
-      rate: 3500,
+      // rate: 3500,
       momentFormat: {
         //[optional] Date to String
         stringify: (date) => {
