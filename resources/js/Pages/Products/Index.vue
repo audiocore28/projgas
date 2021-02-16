@@ -18,12 +18,16 @@
     <div class="bg-white rounded shadow overflow-x-auto">
       <table class="w-full whitespace-no-wrap">
         <tr class="text-left font-bold">
-          <th @click="sort('id')" class="px-6 pt-6 pb-4">ID</th>
+<!--           <th @click="sort('id')" class="px-6 pt-6 pb-4">ID</th>
           <th @click="sort('name')" class="px-6 pt-6 pb-4">Name</th>
           <th @click="sort('description')" class="px-6 pt-6 pb-4">Description</th>
-          <!-- <th class="px-6 pt-6 pb-4" colspan="2">product No.</th> -->
+ -->
+          <th class="px-6 pt-6 pb-4">ID</th>
+          <th class="px-6 pt-6 pb-4">Name</th>
+          <th class="px-6 pt-6 pb-4">Description</th>
         </tr>
-         <tr v-for="product in sortedDatas" :key="product.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
+         <tr v-for="product in products.data" :key="product.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
+         <!-- sortedDatas  -->
           <!-- table columns -->
           <td class="border-t">
             <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('products.edit', product.id)">
@@ -64,10 +68,10 @@ import Pagination from '@/Shared/Pagination'
 import pickBy from 'lodash/pickBy'
 import SearchFilter from '@/Shared/SearchFilter'
 import throttle from 'lodash/throttle'
-import { sortingMixin } from '@/Mixins/sortingMixin'
+// import { sortingMixin } from '@/Mixins/sortingMixin'
 
 export default {
-  mixins: [sortingMixin],
+  // mixins: [sortingMixin],
   metaInfo: { title: 'Products' },
   layout: Layout,
   components: {
