@@ -33,13 +33,13 @@
         <!-- Details -->
         <div class="px-8 py-4 -mr-6 -mb-8 flex flex-wrap" v-for="(details, index) in form.details" :key="index">
 
-          <label class="form-label block ml-1">Date</label>
+          <label class="form-label block ml-1">Date:</label>
           <span class="pr-6 pb-8 mt-6 -ml-10">
             <date-picker v-model="details.date" lang="en" value-type="format" :formatter="momentFormat"></date-picker>
           </span>
 
           <div class="pr-6 pb-8 w-full lg:w-1/6">
-            <label class="form-label" :for="`client-${index}`">Client</label>
+            <label class="form-label" :for="`client-${index}`">Client:</label>
             <select :id="`client-${index}`" v-model="details.client_id" class="form-select" :class="{ error: errors[`details.${index}.client_id`] }">
               <option :value="null" />
               <option v-for="client in clients" :key="client.id" :value="client.id">{{ client.name }}</option>
@@ -48,7 +48,7 @@
           </div>
 
           <div class="pr-6 pb-8 w-full lg:w-1/6">
-            <label class="form-label" :for="`product-${index}`">Product</label>
+            <label class="form-label" :for="`product-${index}`">Product:</label>
             <select :id="`product-${index}`" v-model="details.product_id" class="form-select" :class="{ error: errors[`details.${index}.product_id`] }">
               <option :value="null" />
               <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>

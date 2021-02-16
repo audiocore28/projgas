@@ -563,7 +563,7 @@
               <!-- Purchase -->
               <div class="p-8 -mr-6 -mb-8 flex flex-wrap">
                 <!-- <text-input v-model="updateForm.date" :error="errors.date" class="pr-6 pb-8 w-full lg:w-1/2" label="Date" /> -->
-                <label class="form-label block mr-5">Date</label>
+                <label class="form-label block mr-5">Date:</label>
                 <div class="pr-6 pb-8 w-full">
                   <date-picker v-model="updateForm.date" lang="en" value-type="format" :formatter="momentFormat"></date-picker>
                 </div>
@@ -578,10 +578,15 @@
 
               <!-- Details -->
               <div class="px-8 py-4 -mr-6 -mb-8 flex flex-wrap" v-for="(details, index) in updateForm.details" :key="index">
-                <select-input v-model="details.product.id" :error="errors[`details.${index}.product.id`]" class="pr-6 pb-8 w-full lg:w-1/4" label="Product">
-                  <option :value="null" />
-                  <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
-                </select-input>
+                <div class="pr-6 pb-8 w-full lg:w-1/4">
+                  <label class="form-label" :for="`product-${index}`">Product:</label>
+                  <select :id="`product-${index}`" v-model="details.product.id" class="form-select" :class="{ error: errors[`details.${index}.product.id`] }">
+                    <option :value="null" />
+                    <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
+                  </select>
+                  <div v-if="errors[`details.${index}.product.id`]" class="form-error">{{ errors[`details.${index}.product.id`] }}</div>
+                </div>
+
                 <text-input type="number" step="any" v-model="details.quantity" :error="errors.quantity" class="pr-6 pb-8 w-full lg:w-1/6" label="Quantity" />
                 <text-input type="number" step="any" v-model="details.unit_price" :error="errors.unit_price" class="pr-6 pb-8 w-full lg:w-1/6" label="Unit Price" />
                 <text-input v-model="details.remarks" :error="errors.remarks" class="pr-6 pb-8 w-full lg:w-1/3" label="Remarks" />
@@ -608,7 +613,7 @@
               <!-- Details -->
               <div class="px-8 py-4 -mr-6 -mb-8 flex flex-wrap" v-for="(details, index) in createForm" :key="index">
                 <div class="pr-6 pb-8 w-full lg:w-1/4">
-                  <label class="form-label" :for="`product-${index}`">Product</label>
+                  <label class="form-label" :for="`product-${index}`">Product:</label>
                   <select :id="`product-${index}`" v-model="details.product_id" class="form-select" :class="{ error: errors[`${index}.product_id`] }">
                     <option :value="null" />
                     <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
