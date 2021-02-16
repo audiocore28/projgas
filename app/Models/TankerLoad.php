@@ -68,9 +68,10 @@ class TankerLoad extends Model
 	                    })
                     ->orWhere('trip_no', 'like', '%'.$search.'%');
             });
-        })->when($filters['range'] ?? null, function ($query, $range) {
-        		$query->whereBetween('date', [$range['from'], $range['to']]);
         });
+        // })->when($filters['range'] ?? null, function ($query, $range) {
+        // 		$query->whereBetween('date', [$range['from'], $range['to']]);
+        // });
     }
 
     public function getDateAttribute($value)

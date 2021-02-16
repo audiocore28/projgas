@@ -9,7 +9,7 @@
         <!-- Load -->
         <div class="p-8 -mr-6 -mb-8 flex flex-wrap">
           <!-- <text-input v-model="form.date" :error="errors.date" class="pr-6 pb-8 w-full lg:w-1/2" label="Date" /> -->
-          <label class="form-label block mr-5">Date</label>
+          <label class="form-label block mr-5">Date:</label>
           <div class="pr-6 pb-8 w-full">
             <date-picker v-model="form.date" lang="en" value-type="format" :formatter="momentFormat"></date-picker>
           </div>
@@ -42,7 +42,7 @@
         <!-- Details -->
         <div class="px-8 py-4 -mr-6 -mb-8 flex flex-wrap" v-for="(details, index) in form.details" :key="index">
           <div class="pr-6 pb-8 w-full lg:w-1/4">
-            <label class="form-label" :for="`product-${index}`">Product</label>
+            <label class="form-label" :for="`product-${index}`">Product:</label>
             <select :id="`product-${index}`" v-model="details.product_id" class="form-select" :class="{ error: errors[`details.${index}.product_id`] }">
               <option :value="null" />
               <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>

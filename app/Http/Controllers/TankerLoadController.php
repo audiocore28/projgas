@@ -25,7 +25,8 @@ class TankerLoadController extends Controller
      */
     public function index()
     {
-        $tankerLoad = TankerLoad::filter(Request::only('search', 'trashed', 'range'))
+        $tankerLoad = TankerLoad::filter(Request::only('search', 'trashed'))
+            // , 'range'
             // ->select('id', 'date', 'purchase_id', 'tanker_id', 'driver_id', 'helper_id')
             ->orderBy('id', 'desc')
             ->paginate()
@@ -46,7 +47,8 @@ class TankerLoadController extends Controller
             });
 
         return Inertia::render('TankerLoads/Index', [
-            'filters' => Request::all('search', 'trashed', 'range'),
+            'filters' => Request::all('search', 'trashed'),
+            // , 'range'
             'tanker_loads' => $tankerLoad,
         ]);
     }

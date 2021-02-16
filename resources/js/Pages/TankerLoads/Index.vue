@@ -11,7 +11,7 @@
         </select>
  -->      </search-filter>
 
-      <label class="form-label block mr-5">From</label>
+<!--       <label class="form-label block mr-5">From</label>
       <div class="pr-6 pb-8 w-full">
         <date-picker v-model="form.range.from" lang="en" value-type="format"></date-picker>
       </div>
@@ -19,7 +19,7 @@
       <div class="pr-6 pb-8 w-full">
         <date-picker v-model="form.range.to" lang="en" value-type="format"></date-picker>
       </div>
-
+ -->
       <inertia-link class="btn-indigo" :href="route('tanker-loads.create')">
         <span>Add</span>
         <span class="hidden md:inline">Load</span>
@@ -117,7 +117,7 @@ import Pagination from '@/Shared/Pagination'
 import pickBy from 'lodash/pickBy'
 import SearchFilter from '@/Shared/SearchFilter'
 import throttle from 'lodash/throttle'
-import DatePicker from 'vue2-datepicker'
+// import DatePicker from 'vue2-datepicker'
 
 export default {
   metaInfo: { title: 'Loads' },
@@ -126,7 +126,7 @@ export default {
     Icon,
     Pagination,
     SearchFilter,
-    DatePicker,
+    // DatePicker,
   },
   props: {
     tanker_loads: Object,
@@ -137,10 +137,10 @@ export default {
       form: {
         search: this.filters.search,
         // trashed: this.filters.trashed,
-        range: {
-          from: null,
-          to: null,
-        }
+        // range: {
+        //   from: null,
+        //   to: null,
+        // }
       },
     }
   },
@@ -149,13 +149,13 @@ export default {
       handler: throttle(function() {
         let query = pickBy(this.form)
 
-        if (query.range.from !== null && query.range.to === null) {
-          return;
-        }
+        // if (query.range.from !== null && query.range.to === null) {
+        //   return;
+        // }
 
-        if (query.range.from === null && query.range.to !== null) {
-          return;
-        }
+        // if (query.range.from === null && query.range.to !== null) {
+        //   return;
+        // }
 
         this.$inertia.replace(this.route('tanker-loads.index', Object.keys(query).length ? query : { remember: 'forget' }))
       }, 150),
@@ -175,4 +175,4 @@ export default {
 }
 </script>
 
-<style src="vue2-datepicker/index.css"></style>
+<!-- <style src="vue2-datepicker/index.css"></style> -->
