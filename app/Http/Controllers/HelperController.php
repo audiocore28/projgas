@@ -174,6 +174,10 @@ class HelperController extends Controller
             return back()->withErrors(['error' => 'Cannot delete, hauling has helper records']);
         }
 
+        if ($helper->tankerLoads()->count()) {
+            return back()->withErrors(['error' => 'Cannot delete, load has helper records']);
+        }
+
         $helper->delete();
 
         return Redirect::back()->with('success', 'Helper deleted.');

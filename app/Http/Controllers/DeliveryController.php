@@ -33,6 +33,7 @@ class DeliveryController extends Controller
             ->transform(function ($delivery) {
                 return [
                     'id' => $delivery->id,
+                    'trip_no' => $delivery->trip_no,
                     'purchase' => $delivery->purchase ? $delivery->purchase->only('purchase_no') : null,
                     'tanker' => $delivery->tanker ? $delivery->tanker->only('plate_no') : null,
                     'driver' => $delivery->driver ? $delivery->driver->only('name') : null,
@@ -57,12 +58,12 @@ class DeliveryController extends Controller
      */
     public function create()
     {
-        $clients = Client::all();
-        $purchases = Purchase::all();
-        $tankers = Tanker::all();
-        $drivers = Driver::all();
-        $helpers = Helper::all();
-        $products = Product::all();
+        $clients = Client::orderBy('name', 'asc')->get();
+        $purchases = Purchase::orderBy('id', 'desc')->get();
+        $tankers = Tanker::orderBy('plate_no', 'asc')->get();
+        $drivers = Driver::orderBy('name', 'asc')->get();
+        $helpers = Helper::orderBy('name', 'asc')->get();
+        $products = Product::orderBy('name', 'asc')->get();
 
         return Inertia::render('Deliveries/Create', [
             'clients' => $clients,
@@ -126,12 +127,12 @@ class DeliveryController extends Controller
      */
     public function edit(Delivery $delivery)
     {
-        $clients = Client::all();
-        $purchases = Purchase::all();
-        $tankers = Tanker::all();
-        $drivers = Driver::all();
-        $helpers = Helper::all();
-        $products = Product::all();
+        $clients = Client::orderBy('name', 'asc')->get();
+        $purchases = Purchase::orderBy('id', 'desc')->get();
+        $tankers = Tanker::orderBy('plate_no', 'asc')->get();
+        $drivers = Driver::orderBy('name', 'asc')->get();
+        $helpers = Helper::orderBy('name', 'asc')->get();
+        $products = Product::orderBy('name', 'asc')->get();
 
         return Inertia::render('Deliveries/Edit', [
             'delivery' => [

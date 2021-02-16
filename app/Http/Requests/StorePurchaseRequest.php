@@ -28,11 +28,19 @@ class StorePurchaseRequest extends FormRequest
             'purchase_no' => ['required', 'max:150'],
             'supplier_id' => ['nullable', 'max:50'],
             //
-            // 'product_id' => ['nullable', 'max:50'],
-            // 'quantity' => ['nullable', 'max:50'],
-            // 'unit_price' => ['nullable', 'max:50'],
-            // 'amount' => ['nullable', 'max:50'],
-            // 'remarks' => ['nullable', 'max:50'],
+            'details.*.quantity' => ['nullable', 'max:50'],
+            'details.*.unit_price' => ['nullable', 'max:50'],
+            'details.*.remarks' => ['nullable', 'max:100'],
+            'details.*.purchase_id' => ['nullable', 'max:50'],
+            'details.*.product_id' => ['required', 'max:50'],
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'purchase_no.required' => 'Purchase no. is required',
+            'details.*.product_id.required' => 'Product is required.',
         ];
     }
 }

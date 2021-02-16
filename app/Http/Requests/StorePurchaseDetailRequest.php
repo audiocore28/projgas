@@ -28,7 +28,15 @@ class StorePurchaseDetailRequest extends FormRequest
             'unit_price' => ['nullable', 'max:50'],
             'remarks' => ['nullable', 'max:100'],
             'purchase_id' => ['nullable', 'max:50'],
-            'product_id' => ['nullable', 'max:50'],
+            '*.product_id' => ['required', 'max:50'],
+            //
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            '*.product_id.required' => 'Product is required.',
         ];
     }
 }

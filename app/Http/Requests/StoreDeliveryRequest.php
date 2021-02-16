@@ -24,12 +24,26 @@ class StoreDeliveryRequest extends FormRequest
     public function rules()
     {
         return [
-            'date' => ['nullable', 'max:50'],
             'trip_no' => ['nullable', 'max:50'],
-            'tanker_id' => ['nullable', 'max:50'],
+            'tanker_id' => ['required', 'max:50'],
             'driver_id' => ['nullable', 'max:50'],
             'helper_id' => ['nullable', 'max:50'],
             'purchase_id' => ['nullable', 'max:50'],
+            //
+            'details.*.dr_no' => ['nullable', 'max:50'],
+            'details.*.product_id' => ['required', 'max:50'],
+            'details.*.client_id' => ['required', 'max:50'],
+            'details.*.quantity' => ['nullable', 'max:50'],
+            'details.*.unit_price' => ['nullable', 'max:50'],
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'tanker_id.required' => 'Tanker is required',
+            'details.*.product_id.required' => 'Product is required.',
+            'details.*.client_id.required' => 'Client is required.',
         ];
     }
 }

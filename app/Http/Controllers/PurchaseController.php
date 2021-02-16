@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePurchaseRequest;
+use App\Http\Requests\UpdatePurchaseRequest;
 use App\Models\Purchase;
 use App\Models\PurchaseDetail;
 use App\Models\Supplier;
@@ -52,8 +53,8 @@ class PurchaseController extends Controller
      */
     public function create()
     {
-        $suppliers = Supplier::all();
-        $products = Product::all();
+        $suppliers = Supplier::orderBy('name', 'asc')->get();
+        $products = Product::orderBy('name', 'asc')->get();
 
         return Inertia::render('Purchases/Create', [
             'suppliers' => $suppliers,
@@ -109,8 +110,8 @@ class PurchaseController extends Controller
      */
     public function edit(Purchase $purchase)
     {
-        $suppliers = Supplier::all();
-        $products = Product::all();
+        $suppliers = Supplier::orderBy('name', 'asc')->get();
+        $products = Product::orderBy('name', 'asc')->get();
 
         // each, foreach, where, whereHas, get, return, has, filter, with
 
@@ -204,7 +205,7 @@ class PurchaseController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(StorePurchaseRequest $request, Purchase $purchase)
+    public function update(UpdatePurchaseRequest $request, Purchase $purchase)
     {
         // dd($purchase->purchaseDetails);
 

@@ -23,6 +23,10 @@
         <li @click="openTab = 4" :class="{ '-mb-px': openTab === 4 }" class="mr-1" v-show="deliveryDetails.data.length">
           <a :class="openTab === 4 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold">Deliveries</a>
         </li>
+<!--         <li @click="openTab = 5" :class="{ '-mb-px': openTab === 5 }" class="mr-1">
+          <a :class="openTab === 5 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold">Salaries</a>
+        </li>
+ -->
       </ul>
 
       <!-- Tab 1 -->
@@ -59,6 +63,59 @@
         <div v-show="openTab === 4">
           <deliveries :deliveryDetails="deliveryDetails" record="drivers"></deliveries>
         </div>
+
+        <!-- Tab 5 -->
+        <!-- <div v-show="openTab === 5" class="bg-white -mt-4">
+          <div class="ml-5 pt-6">
+            <text-input v-model="rate" class="pr-6 pb-8 w-full lg:w-1/6" label="Salary Rate" />
+          </div>
+          <div class="bg-white rounded shadow overflow-x-auto mb-8 -mt-4">
+            <div class="rounded shadow overflow-x-auto mb-8">
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Year
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Month
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Loaded
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Amount
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                  <tr v-for="trip in trips" :key="trip.id" :value="trip.id">
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm font-medium text-gray-900">
+                        {{ trip.year }}
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm font-medium text-gray-900">
+                        {{ trip.month }}
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm font-medium text-gray-900">
+                        {{ trip.loaded }}
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm font-medium text-gray-900">
+                        {{ trip.loaded * rate }}
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div> -->
 
       </div>
     </div>
@@ -98,11 +155,13 @@ export default {
     deliveryDetails: Object,
     haulDetails: Object,
     loadDetails: Object,
+    // trips: Array,
   },
   remember: 'form',
   data() {
     return {
       sending: false,
+      // rate: 3500,
       momentFormat: {
         //[optional] Date to String
         stringify: (date) => {

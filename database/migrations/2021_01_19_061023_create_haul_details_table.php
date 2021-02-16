@@ -17,7 +17,7 @@ class CreateHaulDetailsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('haul_id');
             $table->date('date')->nullable();
-            $table->bigInteger('client_id')->nullable();
+            $table->bigInteger('client_id');
             $table->bigInteger('product_id');
             $table->decimal('quantity', 8, 0)->nullable();
             $table->decimal('unit_price', 10, 3)->nullable();

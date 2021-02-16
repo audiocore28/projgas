@@ -4,6 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\PurchaseDetail;
+use App\Models\TankerLoadDetail;
+use App\Models\HaulDetail;
+use App\Models\DeliveryDetail;
 
 class Product extends Model
 {
@@ -29,4 +33,23 @@ class Product extends Model
         });
     }
 
+    public function purchaseDetails()
+    {
+        return $this->hasMany(PurchaseDetail::class);
+    }
+
+    public function tankerLoadDetails()
+    {
+        return $this->hasMany(TankerLoadDetail::class);
+    }
+
+    public function haulDetails()
+    {
+        return $this->hasMany(HaulDetail::class);
+    }
+
+    public function deliveryDetails()
+    {
+        return $this->hasMany(DeliveryDetail::class);
+    }
 }

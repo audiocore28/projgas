@@ -20,10 +20,10 @@ class SupplierController extends Controller
     public function index()
     {
         return Inertia::render('Suppliers/Index', [
-            'filters' => Request::all('trashed'),
-            'suppliers' => Supplier::filter(Request::only('trashed'))
+            'filters' => Request::all('search', 'trashed'),
+            'suppliers' => Supplier::filter(Request::only('search', 'trashed'))
                 ->orderBy('id', 'desc')
-                ->paginate(5)
+                ->paginate()
         ]);
     }
 

@@ -5,7 +5,7 @@
       <div class="md:h-screen md:flex md:flex-col" @click="hideDropdownMenus">
         <div class="md:flex md:flex-shrink-0">
           <div class="bg-yellow-500 md:flex-shrink-0 md:w-56 px-6 py-4 flex items-center justify-between md:justify-center">
-            <inertia-link class="mt-1" :href="route('dashboard')">
+            <inertia-link class="mt-1" :href="route('purchases.index')">
               <logo class="fill-white" width="120" height="28" />
             </inertia-link>
             <dropdown class="md:hidden" placement="bottom-end">
@@ -16,7 +16,9 @@
             </dropdown>
           </div>
           <div class="bg-white border-b w-full p-4 md:py-0 md:px-12 text-sm md:text-md flex justify-between items-center">
-            <div class="mt-1 mr-4">{{ $page.auth.user.id }}</div>
+            <div class="mt-1 mr-4">
+              <!-- {{ $page.auth.user.id }} -->
+            </div>
             <dropdown class="mt-1" placement="bottom-end">
               <div class="flex items-center cursor-pointer select-none group">
                 <div class="text-gray-700 group-hover:text-blue-600 focus:text-blue-600 mr-1 whitespace-no-wrap">
@@ -28,7 +30,7 @@
               <div slot="dropdown" class="mt-2 py-2 shadow-xl bg-white rounded text-sm">
                 <!-- <inertia-link class="block px-6 py-2 hover:bg-blue-600 hover:text-white" :href="route('users.edit', $page.auth.user.id)">My Profile</inertia-link> -->
                 <inertia-link class="block px-6 py-2 hover:bg-blue-600 hover:text-white" :href="route('profile.show')">Profile</inertia-link>
-                <inertia-link class="block px-6 py-2 hover:bg-blue-600 hover:text-white" :href="route('users.index')">Manage Users</inertia-link>
+                <!-- <inertia-link class="block px-6 py-2 hover:bg-blue-600 hover:text-white" :href="route('users.index')">Manage Users</inertia-link> -->
                 <inertia-link class="block px-6 py-2 hover:bg-blue-600 hover:text-white" :href="route('logout')" method="post">Logout</inertia-link>
               </div>
             </dropdown>

@@ -20,11 +20,13 @@
         <tr class="text-left font-bold">
           <th class="px-6 pt-6 pb-4">ID</th>
           <th class="px-6 pt-6 pb-4">Purchase No.</th>
-          <th class="px-6 pt-6 pb-4">Tanker</th>
+          <th class="px-6 pt-6 pb-4">Trip No.</th>
           <th class="px-6 pt-6 pb-4">Driver</th>
+          <th class="px-6 pt-6 pb-4">Helper</th>
+          <th class="px-6 pt-6 pb-4">Tanker</th>
+<!--           <th class="px-6 pt-6 pb-4">DR Nos.</th>
           <th class="px-6 pt-6 pb-4">Client</th>
-          <th class="px-6 pt-6 pb-4">DR Nos.</th>
-        </tr>
+ -->        </tr>
          <tr v-for="delivery in deliveries.data" :key="delivery.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
           <!-- table columns -->
           <td class="border-t">
@@ -41,15 +43,36 @@
           </td>
           <td class="border-t">
             <inertia-link class="px-6 py-4 flex items-center" :href="route('deliveries.edit', delivery.id)" tabindex="-1">
-              <div v-if="delivery.tanker">
-                {{ delivery.tanker.plate_no }}
-              </div>
+              {{ delivery.trip_no }}
             </inertia-link>
           </td>
           <td class="border-t">
             <inertia-link class="px-6 py-4 flex items-center" :href="route('deliveries.edit', delivery.id)" tabindex="-1">
               <div v-if="delivery.driver">
                 {{ delivery.driver.name }}
+              </div>
+            </inertia-link>
+          </td>
+          <td class="border-t">
+            <inertia-link class="px-6 py-4 flex items-center" :href="route('deliveries.edit', delivery.id)" tabindex="-1">
+              <div v-if="delivery.helper">
+                {{ delivery.helper.name }}
+              </div>
+            </inertia-link>
+          </td>
+          <td class="border-t">
+            <inertia-link class="px-6 py-4 flex items-center" :href="route('deliveries.edit', delivery.id)" tabindex="-1">
+              <div v-if="delivery.tanker">
+                {{ delivery.tanker.plate_no }}
+              </div>
+            </inertia-link>
+          </td>
+<!--           <td class="border-t">
+            <inertia-link class="px-6 py-4 flex items-center" :href="route('deliveries.edit', delivery.id)" tabindex="-1">
+              <div v-if="delivery.clients" v-for="client in delivery.clients">
+                <span class="px-2 py-2 text-sm leading-5 font-semibold rounded-full bg-grey-100 text-grey-800">
+                  {{ client.dr_no }}
+                </span>
               </div>
             </inertia-link>
           </td>
@@ -62,16 +85,7 @@
               </div>
             </inertia-link>
           </td>
-          <td class="border-t">
-            <inertia-link class="px-6 py-4 flex items-center" :href="route('deliveries.edit', delivery.id)" tabindex="-1">
-              <div v-if="delivery.clients" v-for="client in delivery.clients">
-                <span class="px-2 py-2 text-sm leading-5 font-semibold rounded-full bg-grey-100 text-grey-800">
-                  {{ client.dr_no }}
-                </span>
-              </div>
-            </inertia-link>
-          </td>
-          <td class="border-t w-px">
+ -->          <td class="border-t w-px">
             <inertia-link class="px-4 flex items-center" :href="route('deliveries.edit', delivery.id)" tabindex="-1">
               <icon name="cheveron-right" class="block w-6 h-6 fill-gray-400" />
             </inertia-link>

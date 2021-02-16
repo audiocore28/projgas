@@ -21,7 +21,7 @@ class ProductController extends Controller
     {
         return Inertia::render('Products/Index', [
             'filters' => Request::all('search', 'trashed'),
-            'products' => product::filter(Request::only('search', 'trashed'))
+            'products' => Product::filter(Request::only('search', 'trashed'))
                 ->orderBy('id', 'desc')
                 ->paginate()
         ]);
@@ -101,6 +101,22 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
+        if ($product->purchaseDetails()->count()) {
+            return back()->withErrors(['error' => 'Cannot delete, purchase has product records']);
+        }
+
+        if ($product->tankerLoadDetails()->count()) {
+            return back()->withErrors(['error' => 'Cannot delete, load has product records']);
+        }
+
+        if ($product->haulDetails()->count()) {
+            return back()->withErrors(['error' => 'Cannot delete, hauling has product records']);
+        }
+
+        if ($product->deliveryDetails()->count()) {
+            return back()->withErrors(['error' => 'Cannot delete, delivery has product records']);
+        }
+
         $product->delete();
 
         return Redirect::back()->with('success', 'Product deleted.');

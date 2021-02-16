@@ -122,6 +122,18 @@ class TankerController extends Controller
      */
     public function destroy(Tanker $tanker)
     {
+        if ($tanker->deliveries()->count()) {
+            return back()->withErrors(['error' => 'Cannot delete, delivery has tanker records']);
+        }
+
+        if ($tanker->hauls()->count()) {
+            return back()->withErrors(['error' => 'Cannot delete, hauling has tanker records']);
+        }
+
+        if ($tanker->tankerLoads()->count()) {
+            return back()->withErrors(['error' => 'Cannot delete, load has tanker records']);
+        }
+
         $tanker->delete();
 
         return Redirect::back()->with('success', 'Tanker deleted.');
