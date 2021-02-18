@@ -7,11 +7,16 @@ module.exports = {
   purge: {
     layers: ['components', 'utilities'],
     content: [
-      "./pages/**/*.vue",
-      "./components/**/*.vue",
-      "./plugins/**/*.vue",
-      "./static/**/*.vue",
-      "./store/**/*.vue"
+      // "./Jetstream/**/*.vue"
+      // "./Layouts/**/*.vue",
+      // "./Mixins/**/*.vue",
+      // "./Pages/**/*.vue",
+      // "./Shared/**/*.vue",
+      // "./pages/**/*.vue",
+      // "./components/**/*.vue",
+      // "./plugins/**/*.vue",
+      // "./static/**/*.vue",
+      // "./store/**/*.vue"
     ],
   },
   theme: {
