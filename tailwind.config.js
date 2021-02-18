@@ -1,6 +1,9 @@
 const defaultTheme = require('tailwindcss/defaultTheme')
 
 module.exports = {
+  future: {
+    purgeLayersByDefault: true,
+  },
   purge: {
     layers: ['components', 'utilities'],
     content: [
@@ -10,7 +13,6 @@ module.exports = {
       "./static/**/*.vue",
       "./store/**/*.vue"
     ],
-
   },
   theme: {
     extend: {
