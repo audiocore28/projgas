@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class officeStaff extends Model
+class OfficeStaff extends Model
 {
 	use HasFactory;
 	use SoftDeletes;
