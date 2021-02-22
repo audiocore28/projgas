@@ -54,6 +54,18 @@
         </inertia-link>
       </div>
     </div>
+
+    <h4 @click="utilitySelected !== 5 ? utilitySelected = 5 : utilitySelected = null"
+    class="text-blue-300 text-xs cursor-pointer py-3 hover:text-white opacity-75 rounded-t">Utilities</h4>
+    <div v-show="utilitySelected == 5" class="py-4 text-sm">
+      <div class="mb-4" v-for="link in utilityLinks">
+        <inertia-link class="flex items-center group py-3" :href="route(link.route)">
+          <icon :name="link.icon" class="w-4 h-4 mr-2" :class="isUrl(link.isUrl) ? 'fill-white' : 'fill-blue-400 group-hover:fill-white'" />
+          <div :class="isUrl(link.isUrl) ? 'text-white' : 'text-blue-300 group-hover:text-white'">{{ link.name }}</div>
+        </inertia-link>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -97,11 +109,15 @@ export default {
         // { route: 'companies.index', icon: 'office', isUrl: 'companies', name: 'B. Company'},
         { route: 'products.index', icon: 'store-front', isUrl: 'products', name: 'Products'},
       ],
+      utilityLinks: [
+        { route: 'backup', icon: 'book', isUrl: 'backup', name: 'Backup DB'},
+      ],
       truckingSelected: 0,
       recordSelected: 1,
       // reportSelected: 2,
       employeeSelected: 3,
       assetSelected: 4,
+      utilitySelected: 5,
     }
   },
   methods: {

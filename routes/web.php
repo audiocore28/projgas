@@ -153,4 +153,4 @@ Route::get('/backup', function () {
     \Illuminate\Support\Facades\Artisan::call('backup:run');
     return 'Successful backup!';
 	// Storage::disk('google')->put('hello.txt', 'Hello IBB');
-});
+})->name('backup');
