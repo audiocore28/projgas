@@ -1,5 +1,6 @@
 <?php
 
+// use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClientController;
 // use App\Http\Controllers\DashboardController;
@@ -151,4 +152,5 @@ Route::group(['middleware' => 'auth'], function() {
 Route::get('/backup', function () {
     \Illuminate\Support\Facades\Artisan::call('backup:run');
     return 'Successful backup!';
+	// Storage::disk('google')->put('hello.txt', 'Hello IBB');
 });
