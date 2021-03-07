@@ -60,7 +60,9 @@ class TankerLoadController extends Controller
      */
     public function create()
     {
-        $purchases = Purchase::orderBy('id', 'desc')->get();
+        $purchases = Purchase::when(request('term'), function($query, $term) {
+            $query->where('purchase_no', 'like', "%$term%");
+        })->get();
         $tankers = Tanker::orderBy('plate_no', 'asc')->get();
         $drivers = Driver::orderBy('name', 'asc')->get();
         $helpers = Helper::orderBy('name', 'asc')->get();
@@ -125,8 +127,9 @@ class TankerLoadController extends Controller
      */
     public function edit(TankerLoad $tankerLoad)
     {
-        $purchases = Purchase::orderBy('id', 'desc')->get();
-        // dd($purchases);
+        $purchases = Purchase::when(request('term'), function($query, $term) {
+            $query->where('purchase_no', 'like', "%$term%");
+        })->get();
         $tankers = Tanker::orderBy('plate_no', 'asc')->get();
         $drivers = Driver::orderBy('name', 'asc')->get();
         $helpers = Helper::orderBy('name', 'asc')->get();

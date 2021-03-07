@@ -16,11 +16,21 @@
 
           <!-- <text-input v-model="form.trip_no" @input="setDestination($event)" :error="errors.trip_no" class="pr-6 pb-8 w-full lg:w-1/2" label="Trip No." /> -->
 
-          <div class="pr-6 pb-2 w-full">
-            <select-input v-model="form.purchase_id" :error="errors.purchase_id" class="pr-6 pb-8 w-full lg:w-1/4" label="Purchase No.">
-              <option :value="null" />
-              <option v-for="purchase in purchases" :key="purchase.id" :value="purchase.id">{{ purchase.purchase_no }}</option>
-            </select-input>
+          <div class="pr-6 pb-8 w-full">
+            <div class="lg:w-1/4">
+              <label class="form-label block">Purchase No.</label>
+              <multiselect id="purchase_id" v-model="selectedPurchase"
+                placeholder=""
+                class="mt-3 text-xs"
+                :options="purchases"
+                label="purchase_no"
+                track-by="id"
+                @search-change="onSearchPurchaseChange"
+                @input="onSelectedPurchase"
+                :show-labels="false"
+                :allow-empty="false"
+              ></multiselect>
+            </div>
           </div>
 
           <text-input v-model="form.trip_no" :error="errors.trip_no" class="pr-6 pb-8 w-full lg:w-1/6" label="Trip No." />
@@ -79,6 +89,7 @@ import Icon from '@/Shared/Icon'
 import Multiselect from 'vue-multiselect'
 import DatePicker from 'vue2-datepicker'
 import moment from 'moment'
+import {throttle} from 'lodash'
 
 export default {
   metaInfo: { title: 'Create Loads' },
@@ -93,7 +104,10 @@ export default {
   },
   props: {
     errors: Object,
-    purchases: Array,
+    purchases: {
+      type: Array,
+      default: () => [],
+    },
     tankers: Array,
     drivers: Array,
     helpers: Array,
@@ -102,6 +116,7 @@ export default {
   remember: 'form',
   data() {
     return {
+      selectedPurchase: undefined,
       sending: false,
       momentFormat: {
         //[optional] Date to String
@@ -153,6 +168,18 @@ export default {
       this.form.details.splice(index, 1);
     },
 
+    // Multiselect
+    onSearchPurchaseChange: throttle(function(term) {
+      this.$inertia.get(this.route('tanker-loads.create'), {term}, {
+        preserveState: true,
+        preserveScroll: true,
+        replace: true,
+      })
+    }, 300),
+    onSelectedPurchase(purchase) {
+      this.form.purchase_id = purchase.id;
+    },
+
     // setDestination(e) {
     //   let field = String.fromCharCode(e.target); // Get the character
 
@@ -168,5 +195,12 @@ export default {
 }
 </script>
 
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style src="vue2-datepicker/index.css"></style>
+
+<style>
+  .multiselect__single, .multiselect__option {
+    font-size: 0.875rem;
+  }
+
+  .multiselect__element span {}
+</style>
