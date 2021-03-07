@@ -58,11 +58,18 @@ class DeliveryController extends Controller
      */
     public function create()
     {
-        $clients = Client::orderBy('name', 'asc')->get();
-        $purchases = Purchase::orderBy('id', 'desc')->get();
+        $purchases = Purchase::when(request('term'), function($query, $term) {
+            $query->where('purchase_no', 'like', "%$term%");
+        })->get();
+
         $tankers = Tanker::orderBy('plate_no', 'asc')->get();
         $drivers = Driver::orderBy('name', 'asc')->get();
         $helpers = Helper::orderBy('name', 'asc')->get();
+
+        $clients = Client::when(request('term'), function($query, $term) {
+            $query->where('name', 'like', "%$term%");
+        })->get();
+
         $products = Product::orderBy('name', 'asc')->get();
 
         return Inertia::render('Deliveries/Create', [
@@ -127,12 +134,34 @@ class DeliveryController extends Controller
      */
     public function edit(Delivery $delivery)
     {
-        $clients = Client::orderBy('name', 'asc')->get();
-        $purchases = Purchase::orderBy('id', 'desc')->get();
+        $purchases = Purchase::when(request('term'), function($query, $term) {
+            $query->where('purchase_no', 'like', "%$term%");
+        })->get();
+
         $tankers = Tanker::orderBy('plate_no', 'asc')->get();
         $drivers = Driver::orderBy('name', 'asc')->get();
         $helpers = Helper::orderBy('name', 'asc')->get();
+
+        $clients = Client::when(request('term'), function($query, $term) {
+            $query->where('name', 'like', "%$term%");
+        })->get();
+
         $products = Product::orderBy('name', 'asc')->get();
+        $details = $delivery->deliveryDetails
+                ->map(function ($detail) {
+                    return [
+                       'id' => $detail->id,
+                       'date' => $detail->date,
+                       'dr_no' => $detail->dr_no,
+                       'quantity' => $detail->quantity,
+                       'unit_price' => $detail->unit_price,
+                       'delivery_id' => $detail->delivery_id,
+                       'product_id' => $detail->product_id,
+                       'client_id' => $detail->client_id,
+                       'selectedClient' => $detail->client_id,
+                    ];
+                })
+                ->toArray();
 
         return Inertia::render('Deliveries/Edit', [
             'delivery' => [
@@ -142,7 +171,7 @@ class DeliveryController extends Controller
                 'driver_id' => $delivery->driver_id,
                 'helper_id' => $delivery->helper_id,
                 'purchase_id' => $delivery->purchase_id,
-                'details' => $delivery->deliveryDetails,
+                'details' => $details,
             ],
             'clients' => $clients,
             'purchases' => $purchases,

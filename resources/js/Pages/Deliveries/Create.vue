@@ -8,11 +8,22 @@
       <form @submit.prevent="submit">
         <!-- Delivery -->
         <div class="p-8 -mr-6 -mb-8 flex flex-wrap">
-          <div class="pr-6 pb-2 w-full">
-            <select-input v-model="form.purchase_id" :error="errors.purchase_id" class="pr-6 pb-8 w-full lg:w-1/4" label="Purchase">
-              <option :value="null" />
-              <option v-for="purchase in purchases" :key="purchase.id" :value="purchase.id">{{ purchase.purchase_no }}</option>
-            </select-input>
+
+          <div class="pr-6 pb-8 w-full">
+            <div class="lg:w-1/4">
+              <label class="form-label block">Purchase No.</label>
+              <multiselect id="purchase_id" v-model="selectedPurchase"
+                placeholder=""
+                class="mt-3 text-xs"
+                :options="purchases"
+                label="purchase_no"
+                track-by="id"
+                @search-change="onSearchPurchaseChange"
+                @input="onSelectedPurchase"
+                :show-labels="false"
+                :allow-empty="false"
+              ></multiselect>
+            </div>
           </div>
 
           <text-input v-model="form.trip_no" :error="errors.trip_no" class="pr-6 pb-8 w-full lg:w-1/6" label="Trip No." />
@@ -38,12 +49,28 @@
             <date-picker v-model="details.date" lang="en" value-type="format" :formatter="momentFormat"></date-picker>
           </div>
 
-          <div class="pr-6 pb-8 w-full lg:w-1/4">
+<!--           <div class="pr-6 pb-8 w-full lg:w-1/4">
             <label class="form-label" :for="`client-${index}`">Client:</label>
             <select :id="`client-${index}`" v-model="details.client_id" class="form-select" :class="{ error: errors[`details.${index}.client_id`] }">
               <option :value="null" />
               <option v-for="client in clients" :key="client.id" :value="client.id">{{ client.name }}</option>
             </select>
+            <div v-if="errors[`details.${index}.client_id`]" class="form-error">{{ errors[`details.${index}.client_id`] }}</div>
+          </div>
+ -->
+          <div class="-mt-1 pr-6 pb-8 w-full lg:w-1/4">
+            <label class="form-label block">Client:</label>
+            <multiselect :id="index" v-model="details.selectedClient"
+              placeholder=""
+              class="mt-3 text-xs"
+              :options="clients"
+              label="name"
+              track-by="id"
+              @search-change="onSearchClientChange"
+              @input="onSelectedClient"
+              :show-labels="false"
+              :allow-empty="false"
+            ></multiselect>
             <div v-if="errors[`details.${index}.client_id`]" class="form-error">{{ errors[`details.${index}.client_id`] }}</div>
           </div>
 
@@ -88,6 +115,7 @@ import Icon from '@/Shared/Icon'
 import Multiselect from 'vue-multiselect'
 import DatePicker from 'vue2-datepicker'
 import moment from 'moment'
+import {throttle} from 'lodash'
 
 export default {
   metaInfo: { title: 'Create Delivery' },
@@ -102,8 +130,14 @@ export default {
   },
   props: {
     errors: Object,
-    clients: Array,
-    purchases: Array,
+    purchases: {
+      type: Array,
+      default: () => [],
+    },
+    clients: {
+      type: Array,
+      default: () => [],
+    },
     products: Array,
     tankers: Array,
     drivers: Array,
@@ -112,6 +146,7 @@ export default {
   remember: 'form',
   data() {
     return {
+      selectedPurchase: undefined,
       sending: false,
       momentFormat: {
         //[optional] Date to String
@@ -128,7 +163,6 @@ export default {
         }
       },
       form: {
-  		  date: null,
         trip_no: null,
         tanker_id: null,
         driver_id: null,
@@ -139,6 +173,7 @@ export default {
             date: null,
             dr_no: null,
             client_id: null,
+            selectedClient: null,
             product_id: null,
             quantity: null,
             unit_price: null,
@@ -161,6 +196,7 @@ export default {
         date: null,
         dr_no: null,
         client_id: null,
+        selectedClient: null,
         product_id: null,
         quantity: null,
         unit_price: null,
@@ -168,11 +204,40 @@ export default {
     },
     deleteDetailForm(index) {
       this.form.details.splice(index, 1);
-    }
+    },
+
+    // Multiselect
+    onSearchPurchaseChange: throttle(function(term) {
+      this.$inertia.get(this.route('deliveries.create'), {term}, {
+        preserveState: true,
+        preserveScroll: true,
+        replace: true,
+      })
+    }, 300),
+    onSelectedPurchase(purchase) {
+      this.form.purchase_id = purchase.id;
+    },
+    onSearchClientChange: throttle(function(term) {
+      this.$inertia.get(this.route('deliveries.create'), {term}, {
+        preserveState: true,
+        preserveScroll: true,
+        replace: true,
+      })
+    }, 300),
+    onSelectedClient(client, id) {
+      this.form.details[id].client_id = client.id;
+    },
   },
 
 }
 </script>
 
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style src="vue2-datepicker/index.css"></style>
+
+<style>
+  .multiselect__single, .multiselect__option {
+    font-size: 0.875rem;
+  }
+
+  .multiselect__element span {}
+</style>
