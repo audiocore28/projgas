@@ -241,6 +241,9 @@
         <li @click="openTab = 2" :class="{ '-mb-px': openTab === 2 }" class="-mb-px mr-1">
           <a :class="openTab === 2 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold">Edit Purchase</a>
         </li>
+        <li @click="openTab = 3" :class="{ '-mb-px': openTab === 3 }" class="-mb-px mr-1">
+          <a :class="openTab === 3 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold">Add Row</a>
+        </li>
       </ul>
 
       <div class="w-full pt-4">
@@ -499,10 +502,6 @@
                               {{ detail.client.name  }}
                             </div>
                           </td>
-<!--                           <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900">GTEX - Fortune</div>
-                          </td>
- -->
                           <td class="px-6 py-4 whitespace-nowrap">
                             <div class="text-sm font-medium text-gray-900">
                               {{ detail.product.name }}
@@ -595,10 +594,6 @@
                 </button>
               </div>
 
-        <!--         <div class="px-8 py-4 bg-gray-100 border-t border-gray-200 flex justify-end items-center">
-                  <button class="btn-indigo" @click.prevent="addNewDetailForm">Add Row</button>
-                </div>
-              -->
               <div class="px-8 py-4 bg-gray-100 border-t border-gray-200 flex justify-end items-center">
                 <button v-if="!purchase.deleted_at" class="text-red-600 hover:underline" tabindex="-1" type="button" @click="destroy">Delete Purchase</button>
                 <loading-button :loading="sending" class="btn-indigo ml-auto" type="submit">Update Purchase</loading-button>
@@ -606,44 +601,20 @@
             </form>
           </div>
 
-
-          <!-- Create Form -->
-          <div class="bg-white rounded shadow overflow-hidden max-w-6xl pt-4">
-            <form @submit.prevent="saveNewDetails">
-              <!-- Details -->
-              <div class="px-8 py-4 -mr-6 -mb-8 flex flex-wrap" v-for="(details, index) in createForm" :key="index">
-                <div class="pr-6 pb-8 w-full lg:w-1/4">
-                  <label class="form-label" :for="`product-${index}`">Product:</label>
-                  <select :id="`product-${index}`" v-model="details.product_id" class="form-select" :class="{ error: errors[`${index}.product_id`] }">
-                    <option :value="null" />
-                    <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
-                  </select>
-                  <div v-if="errors[`${index}.product_id`]" class="form-error">{{ errors[`${index}.product_id`] }}</div>
-                </div>
-
-                <text-input type="number" step="any" v-model="details.quantity" :error="errors.quantity" class="pr-6 pb-8 w-full lg:w-1/6" label="Quantity" />
-                <text-input type="number" step="any" v-model="details.unit_price" :error="errors.unit_price" class="pr-6 pb-8 w-full lg:w-1/6" label="Unit Price" />
-                <text-input v-model="details.remarks" :error="errors.remarks" class="pr-6 pb-8 w-full lg:w-1/3" label="Remarks" />
-
-                <button @click.prevent="deleteNewDetailForm(index)" type="button" class="bg-white py-1 px-1 flex-shrink-0 text-sm leading-none">
-                  <icon name="trash" class="w-4 h-4 mr-2 fill-red-600"/>
-                </button>
-              </div>
-
-            <div class="px-8 py-4 flex justify-end items-center">
-              <button class="btn-indigo" @click.prevent="createNewDetailForm">Add Row</button>
-            </div>
-
-            <div class="px-8 py-4 bg-gray-100 border-t border-gray-200 flex justify-end items-center">
-              <loading-button :loading="sending" class="btn-indigo ml-auto" type="submit">Save Details</loading-button>
-            </div>
-          </form>
         </div>
-      </div>
 
+        <!-- Tab 3 -->
+        <div v-show="openTab === 3">
+          <purchase-create-form
+            :errors="errors"
+            :purchase="purchase"
+            :products="products">
+          </purchase-create-form>
+        </div>
+
+      </div>
     </div>
   </div>
-</div>
 </template>
 
 <script>
@@ -654,6 +625,7 @@
   import TextInput from '@/Shared/TextInput'
   import TrashedMessage from '@/Shared/TrashedMessage'
   import DatePicker from 'vue2-datepicker'
+  import PurchaseCreateForm from '@/Shared/PurchaseCreateForm'
   import moment from 'moment'
   import { numberFormatsMixin } from '@/Mixins/numberFormatsMixin'
 
@@ -670,6 +642,7 @@ export default {
     TextInput,
     TrashedMessage,
     DatePicker,
+    PurchaseCreateForm,
   },
   props: {
     errors: Object,
@@ -702,16 +675,6 @@ export default {
         supplier_id: this.purchase.supplier_id,
         details: this.purchase.details,
       },
-      createForm: [
-        {
-          id: null,
-          purchase_id: this.purchase.id,
-          product_id: null,
-          quantity: null,
-          unit_price: null,
-          remarks: null,
-        },
-      ],
       // Tabs
       openTab: 1,
       activeClasses: 'border-l border-t border-r rounded-t text-blue-600',
@@ -746,31 +709,6 @@ export default {
         this.$inertia.delete(this.route('purchase-details.destroy', productDetailId));
         this.purchase.details.splice(index, 1);
       }
-    },
-
-    // ----New Created Form
-
-    // save
-    saveNewDetails() {
-      this.$inertia.post(this.route('purchase-details.store'), this.createForm, {
-        onStart: () => this.sending = true,
-        onFinish: () => this.sending = false,
-      });
-    },
-    // create form
-    createNewDetailForm() {
-      this.createForm.push({
-        id: null,
-        purchase_id: this.purchase.id,
-        product_id: null,
-        quantity: null,
-        unit_price: null,
-        remarks: null,
-      });
-    },
-    // remove form
-    deleteNewDetailForm(index) {
-      this.createForm.splice(index, 1);
     },
 
     // Helpers
