@@ -9,9 +9,9 @@ use App\Models\Purchase;
 use App\Models\TankerLoad;
 use App\Models\Client;
 use App\Models\Product;
-use App\Models\Tanker;
-use App\Models\Driver;
-use App\Models\Helper;
+// use App\Models\Tanker;
+// use App\Models\Driver;
+// use App\Models\Helper;
 // use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
@@ -34,14 +34,10 @@ class MindoroTransactionController extends Controller
                 return [
                     'id' => $transaction->id,
                     'trip_no' => $transaction->trip_no,
-                    'purchase' => $transaction->purchase ? $transaction->purchase->only('purchase_no') : null,
-                    'tanker' => $transaction->tanker ? $transaction->tanker->only('plate_no') : null,
-                    'driver' => $transaction->driver ? $transaction->driver->only('name') : null,
-                    'helper' => $transaction->helper ? $transaction->helper->only('name') : null,
+                    'purchases' => $transaction->purchases ? $transaction->purchases->only('purchase_no') : null,
                     'clients' => $transaction->mindoroTransactionDetails->each(function ($detail) {
                             return [ 'name' => $detail->client->name ];
                         }),
-                    // 'tanker_load_id' => $transaction->tanker_load_id,
                 ];
             });
 
@@ -62,9 +58,32 @@ class MindoroTransactionController extends Controller
             $query->where('purchase_no', 'like', "%$term%");
         })->get();
 
-        $tankers = Tanker::orderBy('plate_no', 'asc')->get();
-        $drivers = Driver::orderBy('name', 'asc')->get();
-        $helpers = Helper::orderBy('name', 'asc')->get();
+        $purchases->map(function ($purchase) {
+                return [
+                    'id' => $purchase->id,
+                    'date' => $purchase->date,
+                    'purchase_no' => $purchase->purchase_no,
+                    'supplier' => $purchase->supplier ? $purchase->supplier->only('name') : null,
+                    'loads' => $purchase->tankerLoads->each(function ($load) {
+                            return [
+                                'date' => $load->date,
+                                'trip_no' => $load->trip_no,
+                                'remarks' => $load->remarks,
+                                'purchase' => $load->purchase->purchase_no,
+                                'tanker' => $load->tanker->plate_no,
+                                'driver' => $load->driver->name,
+                                'helper' => $load->helper->name,
+                                'details' => $load->tankerLoadDetails->each(function ($detail) {
+                                    return [
+                                        'quantity' => $detail->quantity,
+                                        'product' => $detail->product->name,
+                                        'unit_price' => $detail->unit_price,
+                                    ];
+                                }),
+                            ];
+                        }),
+                    ];
+                });
 
         $clients = Client::when(request('term'), function($query, $term) {
             $query->where('name', 'like', "%$term%");
@@ -76,9 +95,6 @@ class MindoroTransactionController extends Controller
             'clients' => $clients,
             'purchases' => $purchases,
             'products' => $products,
-            'tankers' => $tankers,
-            'drivers' => $drivers,
-            'helpers' => $helpers,
         ]);
     }
 
@@ -92,18 +108,17 @@ class MindoroTransactionController extends Controller
     {
         $mindoroTransactionId = MindoroTransaction::create([
             'trip_no' => $request->trip_no,
-            'purchase_id' => $request->purchase_id,
-            'tanker_id' => $request->tanker_id,
-            'driver_id' => $request->driver_id,
-            'helper_id' => $request->helper_id,
         ])->id;
 
+        $mindoroTransaction = MindoroTransaction::find($mindoroTransactionId);
+        $mindoroTransaction->purchases()->sync($request->purchases);
 
         foreach($request->details as $detail)
         {
             $mindoroTransactionDetail = MindoroTransactionDetail::create([
                 'mindoro_transaction_id' => $mindoroTransactionId,
                 'date' => $detail['date'],
+                'dr_no' => $detail['dr_no'],
                 'client_id' => $detail['client_id'],
                 'product_id' => $detail['product_id'],
                 'quantity' => $detail['quantity'],
@@ -133,49 +148,107 @@ class MindoroTransactionController extends Controller
      */
     public function edit(MindoroTransaction $mindoroTransaction)
     {
+        // Dropdowns ------------------
+
+        // Purchases
         $purchases = Purchase::when(request('term'), function($query, $term) {
             $query->where('purchase_no', 'like', "%$term%");
         })->get();
 
-        $tankers = Tanker::orderBy('plate_no', 'asc')->get();
-        $drivers = Driver::orderBy('name', 'asc')->get();
-        $helpers = Helper::orderBy('name', 'asc')->get();
+        $purchases->map(function ($purchase) {
+                return [
+                    'id' => $purchase->id,
+                    'date' => $purchase->date,
+                    'purchase_no' => $purchase->purchase_no,
+                    'supplier' => $purchase->supplier ? $purchase->supplier->only('name') : null,
+                    'tanker_loads' => $purchase->tankerLoads->each(function ($load) {
+                            return [
+                                'date' => $load->date,
+                                'trip_no' => $load->trip_no,
+                                'remarks' => $load->remarks,
+                                'purchase' => $load->purchase->purchase_no,
+                                'tanker' => $load->tanker->plate_no,
+                                'driver' => $load->driver->name,
+                                'helper' => $load->helper->name,
+                                'tanker_load_details' => $load->tankerLoadDetails->each(function ($detail) {
+                                    return [
+                                        'quantity' => $detail->quantity,
+                                        'product' => $detail->product->name,
+                                        'unit_price' => $detail->unit_price,
+                                    ];
+                                }),
+                            ];
+                        }),
+                    ];
+                });
 
+        // Clients
         $clients = Client::when(request('term'), function($query, $term) {
             $query->where('name', 'like', "%$term%");
         })->get();
 
+        // Products
         $products = Product::orderBy('name', 'asc')->get();
+
+
+        // Mindoro Transaction Queries ------------------
+
+        // Selected Purchases
+        $selectedPurchases = $mindoroTransaction->purchases->map(function ($purchase) {
+                return [
+                    'id' => $purchase->id,
+                    'date' => $purchase->date,
+                    'purchase_no' => $purchase->purchase_no,
+                    'supplier' => $purchase->supplier ? $purchase->supplier->only('name') : null,
+                    'tanker_loads' => $purchase->tankerLoads->each(function ($load) {
+                            return [
+                                'date' => $load->date,
+                                'trip_no' => $load->trip_no,
+                                'remarks' => $load->remarks,
+                                'purchase' => $load->purchase->purchase_no,
+                                'tanker' => $load->tanker->plate_no,
+                                'driver' => $load->driver->name,
+                                'helper' => $load->helper->name,
+                                'tanker_load_details' => $load->tankerLoadDetails->each(function ($detail) {
+                                    return [
+                                        'quantity' => $detail->quantity,
+                                        'product' => $detail->product->name,
+                                        'unit_price' => $detail->unit_price,
+                                    ];
+                                }),
+                            ];
+                        }),
+                    ];
+                });
+
+        // Details
         $details = $mindoroTransaction->mindoroTransactionDetails
                 ->map(function ($detail) {
                     return [
                        'id' => $detail->id,
                        'date' => $detail->date,
+                       'dr_no' => $detail->dr_no,
                        'quantity' => $detail->quantity,
                        'unit_price' => $detail->unit_price,
                        'mindoro_transaction_id' => $detail->mindoro_transaction_id,
                        'product_id' => $detail->product_id,
                        'client_id' => $detail->client_id,
-                       'selectedClient' => $detail->client_id,
+                       'selected_client' => $detail->client_id,
                     ];
                 })
                 ->toArray();
+
+
 
         return Inertia::render('MindoroTransactions/Edit', [
             'mindoro_transaction' => [
                 'id' => $mindoroTransaction->id,
                 'trip_no' => $mindoroTransaction->trip_no,
-                'tanker_id' => $mindoroTransaction->tanker_id,
-                'driver_id' => $mindoroTransaction->driver_id,
-                'helper_id' => $mindoroTransaction->helper_id,
-                'purchase_id' => $mindoroTransaction->purchase_id,
+                'selected_purchases' => $selectedPurchases,
                 'details' => $details,
             ],
-            'clients' => $clients,
             'purchases' => $purchases,
-            'tankers' => $tankers,
-            'drivers' => $drivers,
-            'helpers' => $helpers,
+            'clients' => $clients,
             'products' => $products,
         ]);
     }
@@ -189,16 +262,14 @@ class MindoroTransactionController extends Controller
      */
     public function update(StoreMindoroTransactionRequest $request, MindoroTransaction $mindoroTransaction)
     {
-        // mindoroTransaction
+        // Mindoro Transaction
         $mindoroTransaction->update([
             'trip_no' => $request->trip_no,
-            'tanker_id' => $request->tanker_id,
-            'driver_id' => $request->driver_id,
-            'helper_id' => $request->helper_id,
-            'purchase_id' => $request->purchase_id,
         ]);
 
-        // PurchaseDetail
+        $mindoroTransaction->purchases()->sync($request->purchases);
+
+        // Details
         $existingDetails = collect($request->details)->filter(function($value){
             return $value['id'] !== null;
         });
@@ -208,6 +279,7 @@ class MindoroTransactionController extends Controller
             $mindoroTransaction->mindoroTransactionDetails()->find($detail['id'])->update([
                 // 'mindoroTransaction_id' => $detail['mindoroTransaction_id'],
                 'date' => $detail['date'],
+                'dr_no' => $detail['dr_no'],
                 'client_id' => $detail['client_id'],
                 'product_id' => $detail['product_id'],
                 'quantity' => $detail['quantity'],

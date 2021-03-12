@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMindoroTransactionsTable extends Migration
+class CreateMindoroTransactionPurchaseTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,10 @@ class CreateMindoroTransactionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('mindoro_transactions', function (Blueprint $table) {
+        Schema::create('mindoro_transaction_purchase', function (Blueprint $table) {
             $table->id();
-            $table->string('trip_no')->nullable();
+            $table->unsignedBigInteger('mindoro_transaction_id');
+            $table->unsignedBigInteger('purchase_id');
             $table->timestamps();
         });
     }
@@ -27,6 +28,6 @@ class CreateMindoroTransactionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('mindoro_transactions');
+        Schema::dropIfExists('mindoro_transaction_purchase');
     }
 }

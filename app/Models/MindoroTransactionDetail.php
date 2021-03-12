@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Models\Haul;
+use App\Models\MindoroTransaction;
 use App\Models\Product;
 use App\Models\Client;
 use Carbon\Carbon;
@@ -13,11 +13,11 @@ class MindoroTransactionDetail extends Model
     use HasFactory;
 
 	 protected $dates = ['date'];
-	 protected $fillable = ['date', 'quantity', 'unit_price', 'mindoro_transaction_id', 'product_id', 'client_id'];
+	 protected $fillable = ['date', 'dr_no', 'quantity', 'unit_price', 'mindoro_transaction_id', 'product_id', 'client_id'];
 
-	 public function haul()
+	 public function mindoroTransaction()
 	 {
-	 	return $this->belongsTo(Haul::class);
+	 	return $this->belongsTo(MindoroTransaction::class);
 	 }
 
 	 public function product()

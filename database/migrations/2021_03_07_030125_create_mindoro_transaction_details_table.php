@@ -17,6 +17,7 @@ class CreateMindoroTransactionDetailsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('mindoro_transaction_id');
             $table->date('date')->nullable();
+            $table->string('dr_no')->nullable();
             $table->bigInteger('client_id');
             $table->bigInteger('product_id');
             $table->decimal('quantity', 8, 0)->nullable();
