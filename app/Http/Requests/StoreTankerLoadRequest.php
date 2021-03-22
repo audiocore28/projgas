@@ -28,19 +28,16 @@ class StoreTankerLoadRequest extends FormRequest
             'trip_no' => ['nullable', 'max:150'],
             'remarks' => ['nullable', 'max:250'],
             'purchase_id' => ['nullable', 'max:50'],
-            'tanker_id' => ['required', 'max:50'],
-            'driver_id' => ['nullable', 'max:50'],
-            'helper_id' => ['nullable', 'max:50'],
             //
             'details.*.quantity' => ['nullable', 'max:50'],
             'details.*.product_id' => ['required', 'max:50'],
+            'details.*.unit_price' => ['nullable', 'max:50'],
         ];
     }
 
     public function messages()
     {
         return [
-            'tanker_id.required' => 'Tanker is required',
             'details.*.product_id.required' => 'Product is required.',
         ];
     }

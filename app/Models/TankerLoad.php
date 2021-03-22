@@ -15,8 +15,7 @@ class TankerLoad extends Model
 {
     use HasFactory;
 
-	 protected $dates = ['date'];
-	 protected $fillable = ['date', 'trip_no', 'remarks', 'purchase_id', 'tanker_id', 'driver_id', 'helper_id'];
+	 protected $fillable = ['trip_no', 'remarks', 'purchase_id'];
 
 
 	 public function purchase()
@@ -27,21 +26,6 @@ class TankerLoad extends Model
 	 public function deliveries()
 	 {
 	 	return $this->hasMany(Delivery::class);
-	 }
-
-	 public function tanker()
-	 {
-	 	return $this->belongsTo(Tanker::class);
-	 }
-
-	 public function driver()
-	 {
-	 	return $this->belongsTo(Driver::class);
-	 }
-
-	 public function helper()
-	 {
-	 	return $this->belongsTo(Helper::class);
 	 }
 
 	 public function tankerLoadDetails()
