@@ -32,7 +32,7 @@ class UpdatePurchaseRequest extends FormRequest
             'details.*.unit_price' => ['nullable', 'max:50'],
             'details.*.remarks' => ['nullable', 'max:100'],
             'details.*.purchase_id' => ['nullable', 'max:50'],
-            'details.*.product.id' => ['required', 'max:50'],
+            'details.*.product_id' => ['required', 'max:50'],
         ];
     }
 
@@ -40,7 +40,7 @@ class UpdatePurchaseRequest extends FormRequest
     {
         return [
             'purchase_no.required' => 'Purchase no. is required',
-            'details.*.product.id.required' => 'Product is required.',
+            'details.*.product_id.required' => 'Product is required.',
         ];
     }
 }
