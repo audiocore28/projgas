@@ -11,12 +11,28 @@ class MindoroTransaction extends Model
 {
     use HasFactory;
 
-	 protected $fillable = ['trip_no'];
+     protected $dates = ['date'];
+	 protected $fillable = ['date', 'trip_no', 'driver_id', 'helper_id', 'tanker_id'];
 
 	 public function purchases()
 	 {
 	 	return $this->belongsToMany(Purchase::class);
 	 }
+
+     public function driver()
+     {
+        return $this->belongsTo(Driver::class);
+     }
+
+     public function helper()
+     {
+        return $this->belongsTo(Helper::class);
+     }
+
+     public function tanker()
+     {
+        return $this->belongsTo(Tanker::class);
+     }
 
 	 public function mindoroTransactionDetails()
 	 {

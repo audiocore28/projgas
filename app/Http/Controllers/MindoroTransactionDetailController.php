@@ -45,6 +45,7 @@ class MindoroTransactionDetailController extends Controller
             $mindoroTransactionDetail = MindoroTransactionDetail::create([
                 'mindoro_transaction_id' => $detail['mindoro_transaction_id'],
                 'date' => $detail['date'],
+                'dr_no' => $detail['dr_no'],
                 'client_id' => $detail['client_id'],
                 'product_id' => $detail['product_id'],
                 'quantity' => $detail['quantity'],

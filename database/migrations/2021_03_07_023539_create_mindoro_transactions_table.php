@@ -15,7 +15,11 @@ class CreateMindoroTransactionsTable extends Migration
     {
         Schema::create('mindoro_transactions', function (Blueprint $table) {
             $table->id();
+            $table->date('date')->nullable();
             $table->string('trip_no')->nullable();
+            $table->bigInteger('tanker_id')->nullable();
+            $table->bigInteger('driver_id')->nullable();
+            $table->bigInteger('helper_id')->nullable();
             $table->timestamps();
         });
     }
