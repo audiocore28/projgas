@@ -10,16 +10,16 @@
         <div class="px-8 pt-4 -mr-6 -mb-8 flex flex-wrap bg-yellow-500 highlight-yellow">
           <div>
             <label class="form-label block mr-5">Date:</label>
-            <div class="pr-6 pb-6 mt-3">
+            <div class="pr-6 pb-4 mt-3">
               <date-picker v-model="form.date" lang="en" value-type="format" :formatter="momentFormat"></date-picker>
             </div>
           </div>
 
           <div class="w-full lg:w-1/4">
-            <text-input v-model="form.purchase_no" :error="errors.purchase_no" class="pr-6 pb-6 w-full" label="Purchase No" />
+            <text-input v-model="form.purchase_no" :error="errors.purchase_no" class="pr-6 pb-4 w-full" label="Purchase No" />
           </div>
 
-          <select-input v-model="form.supplier_id" :error="errors.supplier_id" class="pr-6 pb-6 w-full lg:w-1/4" label="Supplier">
+          <select-input v-model="form.supplier_id" :error="errors.supplier_id" class="pr-6 pb-4 w-full lg:w-1/4" label="Supplier">
             <option :value="null" />
             <option v-for="supplier in suppliers" :key="supplier.id" :value="supplier.id">{{ supplier.name }}</option>
           </select-input>
@@ -140,19 +140,19 @@
           <span class="mr-2 px-2 py-2 text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
             Diesel
             <span class="p-1 rounded-full text-yellow-800 text-xs ml-2 bg-yellow-400">
-                {{ totalLoadQty(1) }}
+                {{ totalLoadQty('Diesel') }}
             </span>
           </span>
           <span class="mr-2 px-2 py-2 text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
             Regular
             <span class="p-1 rounded-full text-green-800 text-xs ml-2 bg-green-400">
-                {{ totalLoadQty(2) }}
+                {{ totalLoadQty('Regular') }}
             </span>
           </span>
           <span class="mr-2 px-2 py-2 text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
             Premium
             <span class="p-1 rounded-full text-red-800 text-xs ml-2 bg-red-400">
-                {{ totalLoadQty(3) }}
+                {{ totalLoadQty('Premium') }}
             </span>
           </span>
         </div>
@@ -162,11 +162,26 @@
         <div class="rounded overflow-hidden max-w-6xl" v-for="(load, loadIndex) in form.tankerLoads" :key="loadIndex">
           <div class="bg-white rounded shadow overflow-hidden max-w-6xl">
             <!-- TankerLoad -->
-            <div class="p-6 -mr-6 -mb-6 flex justify-between bg-blue-600">
-              <text-input v-model="load.trip_no" :error="errors.trip_no" class="pr-6" placeholder="Trip No." />
+            <div class="p-2 -mr-6 -mb-6 flex justify-between bg-blue-600">
+              <table>
+                <colgroup>
+                  <col span="1" style="width: 50%;">
+                  <col span="1" style="width: 50%;">
+                </colgroup>
+                <tr>
+                  <td class="text-sm text-gray-500">
+                    <div class="text-sm font-medium text-gray-900">
+                      <text-input v-model="load.trip_no" :error="errors.trip_no" class="pr-6" placeholder="Trip No." />
+                    </div>
+                  </td>
+                  <td class="text-sm">
+                    <!-- <div class="text-sm font-medium text-blue-100">Driver's Name</div> -->
+                  </td>
+                </tr>
+              </table>
 
-              <div class="ml-10 -mt-2 mr-4">
-                <span class="p-1 rounded-full text-white text-xs ml-2">
+              <div class="mr-5">
+                <span class="p-1 rounded-full text-blue-400 text-xs ml-2">
                   <button @click.prevent="deleteTankerLoadForm(loadIndex)" type="button" class="font-bold p-1 flex-shrink-0 leading-none" tabindex="-1">
                     {{ loadIndex + 1 }}
                   </button>
@@ -211,7 +226,7 @@
                   <tr v-for="(details, detailsIndex) in load.details" :key="detailsIndex">
                     <td>
                       <div class="text-sm font-medium text-gray-900">
-                        <select :id="`product-${detailsIndex}`" v-model="details.product_id" class="form-select" :class="{ error: errors[`details.${detailsIndex}.product_id`] }">
+                        <select :id="`product-${detailsIndex}`" v-model="details.product.id" class="form-select" :class="{ error: errors[`details.${detailsIndex}.product_id`] }" @change="onChange($event, loadIndex, detailsIndex)">
                           <option :value="null" />
                           <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
                         </select>
@@ -320,7 +335,10 @@ export default {
             remarks: null,
             details: [
               {
-                product_id: null,
+                product: {
+                  id: null,
+                  name: null,
+                },
                 quantity: 0,
                 unit_price: 0,
               }
@@ -379,7 +397,10 @@ export default {
         remarks: null,
         details: [
           {
-            product_id: null,
+            product: {
+              id: null,
+              name: null,
+            },
             quantity: 0,
             unit_price: 0,
           }
@@ -393,7 +414,10 @@ export default {
     // TankerLoadDetail
     addNewTankerLoadDetailForm(loadIndex) {
       this.form.tankerLoads[loadIndex].details.push({
-        product_id: null,
+        product: {
+          id: null,
+          name: null,
+        },
         quantity: 0,
         unit_price: 0,
       });
@@ -402,17 +426,22 @@ export default {
       this.form.tankerLoads[loadIndex].details.splice(detailsIndex, 1);
     },
 
-    // Load Totals
-    totalLoadQty(productId) {
+    onChange(event, loadIndex, detailsIndex) {
+      const product = event.target.options[event.target.options.selectedIndex].text;
+      this.form.tankerLoads[loadIndex].details[detailsIndex].product.name = product;
+    },
+
+    // TankerLoad Totals
+    totalLoadQty(product) {
       var totalQty = this.form.tankerLoads.reduce(function (acc, load) {
         load.details.forEach(detail => {
-          if(detail.product_id == productId) {
+          if(detail.product.name === product) {
             acc += parseFloat(detail.quantity) / 1000;
           }
         });
         return parseFloat(acc);
       }, 0);
-      return this.quantityFormat(totalQty);
+      return totalQty;
     },
   },
 

@@ -100,7 +100,7 @@ class PurchaseController extends Controller
             foreach ($load['details'] as $detail) {
                 $tankerLoadDetail = TankerLoadDetail::create([
                     'tanker_load_id' => $tankerLoadId,
-                    'product_id' => $detail['product_id'],
+                    'product_id' => $detail['product']['id'],
                     'quantity' => $detail['quantity'],
                     'unit_price' => $detail['unit_price'],
                 ]);
@@ -139,7 +139,21 @@ class PurchaseController extends Controller
                    'purchase_id' => $load->purchase_id,
                    'trip_no' => $load->trip_no,
                    'remarks' => $load->remarks,
-                   'details' => $load->tankerLoadDetails,
+                   'details' => $load->tankerLoadDetails->map(function ($detail) {
+                        return [
+                            'id' => $detail->id,
+                            'tanker_load_id' => $detail->tanker_load_id,
+                            'product' => $detail->product ? $detail->product->only('id', 'name') : null,
+                            'quantity' => $detail->quantity,
+                            'unit_price' => $detail->unit_price,
+                        ];
+                   }),
+                   'mindoro_transaction' => $load->purchase->mindoroTransactions->map(function ($transaction) {
+                        return [
+                            'trip_no' => $transaction->trip_no,
+                            'driver' => $transaction->driver->only('name'),
+                        ];
+                   }),
                 ];
             })
             ->toArray();
@@ -204,7 +218,7 @@ class PurchaseController extends Controller
                 $loadDetail = $tankerLoad->tankerLoadDetails()->findOrNew($detail['id']);
 
                 $loadDetail->quantity = $detail['quantity'];
-                $loadDetail->product_id = $detail['product_id'];
+                $loadDetail->product_id = $detail['product']['id'];
                 $loadDetail->unit_price = $detail['unit_price'];
                 $loadDetail->save();
             }
