@@ -7,6 +7,7 @@ use App\Models\MindoroTransaction;
 use App\Models\MindoroTransactionDetail;
 use App\Models\Purchase;
 use App\Models\TankerLoad;
+use App\Models\TankerLoadDetail;
 use App\Models\Client;
 use App\Models\Product;
 use App\Models\Tanker;
@@ -138,6 +139,19 @@ class MindoroTransactionController extends Controller
                 'quantity' => $detail['quantity'],
                 'unit_price' => $detail['unit_price'],
             ]);
+        }
+
+        foreach($request->selectedPurchases as $purchase)
+        {
+           foreach ($purchase['tanker_loads'] as $load)
+           {
+                foreach ($load['tanker_load_details'] as $detail)
+                {
+                    $loadDetail = TankerLoadDetail::find($detail['id']);
+                    $loadDetail->unit_price = $detail['unit_price'];
+                    $loadDetail->save();
+                }
+           }
         }
 
         return redirect()->route('mindoro-transactions.index')->with('success', 'Mindoro Transaction was successfully added.');
@@ -320,6 +334,19 @@ class MindoroTransactionController extends Controller
             $transaction->unit_price = $detail['unit_price'];
 
             $transaction->save();
+        }
+
+        foreach($request->selectedPurchases as $purchase)
+        {
+           foreach ($purchase['tanker_loads'] as $load)
+           {
+                foreach ($load['tanker_load_details'] as $detail)
+                {
+                    $loadDetail = TankerLoadDetail::find($detail['id']);
+                    $loadDetail->unit_price = $detail['unit_price'];
+                    $loadDetail->save();
+                }
+           }
         }
 
         return Redirect::back()->with('success', 'Mindoro Transaction updated.');

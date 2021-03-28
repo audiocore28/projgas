@@ -15,7 +15,7 @@
               <multiselect
                 id="purchase_id"
                 name="purchases[]"
-                v-model="selectedPurchases"
+                v-model="form.selectedPurchases"
                 placeholder=""
                 class="mt-3 text-xs"
                 :options="purchases"
@@ -36,7 +36,7 @@
             </div>
           </div>
 
-          <div class="w-full flex flex-wrap bg-yellow-500 pl-6 pt-2 rounded mb-2 highlight-yellow">
+          <div class="w-full flex flex-wrap bg-yellow-500 pl-6 pt-4 rounded mb-2 highlight-yellow">
             <text-input v-model="form.trip_no" :error="errors.trip_no" class="pr-6 pb-4 w-full lg:w-1/6" label="Trip No." />
             <select-input v-model="form.driver_id" :error="errors.driver_id" class="pr-6 pb-4 w-full lg:w-1/4" label="Driver">
               <option :value="null" />
@@ -55,9 +55,9 @@
         <!-- /Transaction -->
 
         <!-- Details table input form -->
-        <div class="bg-white rounded overflow-x-auto mb-8 mt-8 px-8">
+        <div class="bg-white rounded overflow-x-auto mb-8 mt-4 px-8">
           <div class="mb-12 overflow-x-auto">
-            <table class="min-w-full mt-2">
+            <table class="min-w-full mt-8 shadow divide-y divide-gray-200">
               <colgroup>
                 <col span="1" style="width: 10%;">
                 <col span="1" style="width: 38%;">
@@ -69,29 +69,29 @@
               </colgroup>
               <thead class="bg-gray-50">
                 <tr>
-                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th scope="col" class="text-center px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Date
                   </th>
-                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th scope="col" class="text-center px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Client<span class="text-red-500">*</span>
                   </th>
-                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th scope="col" class="text-center px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Product<span class="text-red-500">*</span>
                   </th>
-                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th scope="col" class="text-center px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Quantity
                   </th>
-                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Unit Price
+                  <th scope="col" class="text-center px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    U.Price
                   </th>
-                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th scope="col" class="text-center px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Amount
                   </th>
-                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    DR #
+                  <th scope="col" class="text-center px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    DR#
                   </th>
                   <th>
-                    <div class="px-6 py-4 whitespace-nowrap text-left text-xs font-medium text-gray-500 uppercase bg-gray">
+                    <div class="text-center px-6 py-3 whitespace-nowrap text-left text-xs font-medium text-gray-500 uppercase bg-gray">
                       <button @click.prevent="addNewDetailForm()">
                         <icon name="plus" class="w-4 h-4 mr-2 fill-green-600"/>
                       </button>
@@ -180,7 +180,7 @@
                   </td>
                   <td>
                     <div class="text-center px-6 py-4 whitespace-nowrap text-left text-sm font-medium text-gray-500 uppercase">
-                      {{ transactionTotalAmt() }}
+                      {{ toPHP(transactionTotalAmt()) }}
                     </div>
                   </td>
                   <td>
@@ -194,28 +194,38 @@
             </table>
           </div>
           <!-- /Details table input form -->
+        </div>
 
+
+        <!-- <div class="grid grid-cols-1 gap-3 xl:grid-cols-2"> -->
+        <div class="flex flex-wrap px-8">
           <!-- TankerLoad -->
-          <div class="grid grid-cols-1 gap-3 xl:grid-cols-2">
-            <div class="overflow-x-auto" v-for="purchase in selectedPurchases" :key="purchase.id" :value="purchase.id">
-              <p class="text-sm font-bold pl-4 text-white py-2 text-center bg-blue-600 rounded">{{ purchase.purchase_no }}</p>
+          <div class="grid grid-cols-1 gap-1 bg-white rounded overflow-x-auto">
+            <div class="rounded overflow-x-auto mb-4" v-for="purchase in form.selectedPurchases" :key="purchase.id" :value="purchase.id">
+              <p class="text-sm mb-2 font-bold pl-4 text-white py-2 text-center bg-blue-600 rounded">{{ purchase.purchase_no }}</p>
 
-              <div class="mt-4 mb-1 rounded shadow" v-for="load in purchase.tanker_loads">
+              <div class="mt-2 mb-1 rounded" v-for="load in purchase.tanker_loads">
                 <div v-if="load.trip_no === form.trip_no">
                   <!-- TankerLoadDetail Table -->
-                  <table class="w-full divide-y divide-gray-200">
+                  <table class="min-w-full shadow divide-y divide-gray-200">
+                    <colgroup>
+                      <col span="1" style="width: 25%;">
+                      <col span="1" style="width: 25%;">
+                      <col span="1" style="width: 25%;">
+                      <col span="1" style="width: 25%;">
+                    </colgroup>
                     <thead>
                       <tr>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                          Products
+                        <th scope="col" class="text-center px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                          Product
                         </th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        <th scope="col" class="text-center px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                           Quantity
                         </th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        <th scope="col" class="text-center px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                           Unit Price
                         </th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        <th scope="col" class="text-center px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                           Amount
                         </th>
                       </tr>
@@ -225,13 +235,15 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           <div class="text-sm text-gray-900">{{ detail.product.name }}</div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <td class="text-center px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           <div class="text-sm text-gray-900">{{ quantityFormat(detail.quantity) }}</div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          <div class="text-sm text-gray-900">{{ detail.unit_price }}</div>
+                        <td class="text-sm text-gray-500 text-center">
+                          <div class="text-sm font-medium text-gray-900">
+                            <text-input type="number" step="any" v-model="detail.unit_price" :error="errors.unit_price" />
+                          </div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <td class="text-center px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           <div class="text-sm text-gray-900">{{ totalCurrency(detail.quantity, detail.unit_price) }}</div>
                         </td>
                       </tr>
@@ -243,6 +255,50 @@
             </div>
           </div>
           <!-- /TankerLoad -->
+
+          <div class="xl:ml-12 rounded">
+            <!-- <p class="w-full text-sm bg-yellow-500 font-bold pl-4 mb-2 rounded text-center py-2 text-white">Computation</p> -->
+            <table class="shadow divide-y divide-gray-200">
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    Transaction:
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-yellow-600 font-semibold">
+                    {{ toPHP(transactionTotalAmt()) }}
+                  </td>
+                </tr>
+                <tr>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    Load:
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-blue-600 font-semibold">
+                    {{ toPHP(totalLoad) }}
+                  </td>
+                </tr>
+                <tr>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <!-- Constant: -->
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 font-semibold">
+                    {{ toPHP(35000) }}
+                  </td>
+                </tr>
+                <tr class="bg-gray-200">
+                  <td>
+                    <div class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium text-gray-500 uppercase">
+                      <!-- Total: -->
+                    </div>
+                  </td>
+                  <td>
+                    <div class="px-6 py-4 whitespace-nowrap text-left text-sm font-semibold text-gray-500">
+                      {{ toPHP(transactionTotalAmt() - totalLoad - 35000) }}
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
 
         <div class="px-8 py-4 bg-gray-100 border-t border-gray-200 flex justify-end items-center">
@@ -295,6 +351,7 @@ export default {
   remember: 'form',
   data() {
     return {
+      totalLoad: 0,
       sending: false,
       momentFormat: {
         //[optional] Date to String
@@ -317,6 +374,7 @@ export default {
         driver_id: null,
         helper_id: null,
         purchases: [],
+        selectedPurchases: [],
         details: [
           {
             date: null,
@@ -329,7 +387,6 @@ export default {
           }
         ],
       },
-      selectedPurchases: [],
     }
   },
   methods: {
@@ -381,14 +438,14 @@ export default {
       this.form.details[id].client_id = client.id;
     },
 
-    // Transaction Totals
+    // Transaction Total Amount
     transactionTotalAmt() {
       var totalAmt = this.form.details.reduce((acc, detail) => {
         acc += parseFloat(detail.quantity) * parseFloat(detail.unit_price);
         return acc;
       }, 0);
 
-      return this.toPHP(totalAmt);
+      return totalAmt;
     },
     transactionTotalQty() {
       var totalQty = this.form.details.reduce((acc, detail) => {
@@ -398,10 +455,34 @@ export default {
 
       return this.quantityFormat(totalQty);
     },
+
+    getLoadTotalAmt(purchasesArray) {
+      const loadsArray = purchasesArray.map(purchase => purchase.tanker_loads);
+      const loads = [].concat.apply([], loadsArray);
+      const filteredLoads = loads
+                              .filter(load => load.trip_no === this.form.trip_no)
+                              .map(load => load.tanker_load_details);
+
+      const details = [].concat.apply([], filteredLoads);
+      const totalAmt = details.reduce((acc, detail) => {
+        acc += parseFloat(detail.quantity) * parseFloat(detail.unit_price);
+        return acc;
+      }, 0);
+
+      this.totalLoad = totalAmt;
+    },
   },
   watch: {
-    selectedPurchases(purchases) {
-      this.form.purchases = purchases.map(purchase => purchase.id);
+    'form.selectedPurchases': {
+      handler: function (purchases) {
+        this.form.purchases = purchases.map(purchase => purchase.id);
+
+        this.getLoadTotalAmt(purchases);
+      },
+      deep: true,
+    },
+    'form.trip_no': function (value) {
+      this.getLoadTotalAmt(this.form.selectedPurchases);
     },
   },
 }
