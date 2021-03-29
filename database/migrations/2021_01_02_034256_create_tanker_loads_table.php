@@ -15,10 +15,12 @@ class CreateTankerLoadsTable extends Migration
     {
         Schema::create('tanker_loads', function (Blueprint $table) {
             $table->id();
-            $table->string('trip_no')->nullable();
-            $table->bigInteger('purchase_id')->nullable();
+            $table->string('trip_no');
+            $table->unsignedBigInteger('purchase_id');
             $table->string('remarks')->nullable();
             $table->timestamps();
+
+            $table->foreign('purchase_id')->references('id')->on('purchases')->onDelete('cascade');
         });
     }
 

@@ -9,14 +9,15 @@
         <!-- Purchase -->
         <div class="px-8 pt-4 -mr-6 -mb-8 flex flex-wrap bg-yellow-500 highlight-yellow">
           <div>
-            <label class="form-label block mr-5">Date:</label>
+            <label class="form-label block mr-5">Date:<span class="text-red-500">*</span></label>
             <div class="pr-6 pb-4 mt-3">
-              <date-picker v-model="form.date" lang="en" value-type="format" :formatter="momentFormat"></date-picker>
+              <date-picker v-model="form.date" :error="errors.date" lang="en" value-type="format" :formatter="momentFormat"></date-picker>
+              <div v-if="errors.date" class="form-error">{{ errors.date }}</div>
             </div>
           </div>
 
           <div class="w-full lg:w-1/4">
-            <text-input v-model="form.purchase_no" :error="errors.purchase_no" class="pr-6 pb-4 w-full" label="Purchase No" />
+            <text-input v-model="form.purchase_no" :error="errors.purchase_no" class="pr-6 pb-4 w-full" label="Purchase No*" />
           </div>
 
           <select-input v-model="form.supplier_id" :error="errors.supplier_id" class="pr-6 pb-4 w-full lg:w-1/4" label="Supplier">
@@ -38,7 +39,7 @@
             <thead class="bg-gray-50">
               <tr>
                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Product
+                  Product<span class="text-red-500">*</span>
                 </th>
                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Quantity
@@ -163,13 +164,13 @@
             <div class="p-2 -mr-6 -mb-8 flex justify-between bg-blue-600">
               <table>
                 <colgroup>
-                  <col span="1" style="width: 45%;">
-                  <col span="1" style="width: 55%;">
+                  <col span="1" style="width: 50%;">
+                  <col span="1" style="width: 50%;">
                 </colgroup>
                 <tr>
                   <td class="text-sm text-gray-500">
                     <div class="text-sm font-medium text-gray-900">
-                      <text-input v-model="load.trip_no" :error="errors.trip_no" class="pr-6" placeholder="Trip No." />
+                      <text-input v-model="load.trip_no" :error="errors.trip_no" class="pr-6" placeholder="Trip No.*" />
                     </div>
                   </td>
                   <td class="text-sm">
@@ -204,7 +205,7 @@
                 <thead class="bg-gray-50">
                   <tr>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Product
+                      Product<span class="text-red-500">*</span>
                     </th>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Quantity
@@ -265,8 +266,10 @@
         </div>
       </div>
 
-      <div class="px-8 py-4 border-t border-gray-200 flex justify-end items-center">
-        <loading-button :loading="sending" class="btn-indigo" type="submit">Save</loading-button>
+      <div class="px-8 py-4 bg-gray-100 border-t border-gray-200 flex justify-end items-center">
+        <button v-if="!purchase.deleted_at" class="text-red-600 hover:underline" tabindex="-1" type="button" @click="destroy">Delete Purchase</button>
+
+        <loading-button :loading="sending" class="btn-indigo ml-auto" type="submit">Update Purchase</loading-button>
       </div>
     </form>
   </div>

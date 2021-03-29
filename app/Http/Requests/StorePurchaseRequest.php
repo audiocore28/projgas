@@ -24,23 +24,32 @@ class StorePurchaseRequest extends FormRequest
     public function rules()
     {
         return [
-            'date' => ['nullable', 'max:50'],
+            'date' => ['required', 'max:50'],
             'purchase_no' => ['required', 'max:150'],
-            'supplier_id' => ['nullable', 'max:50'],
+            'supplier_id' => ['required', 'max:50'],
             //
             'details.*.quantity' => ['nullable', 'max:50'],
             'details.*.unit_price' => ['nullable', 'max:50'],
             'details.*.remarks' => ['nullable', 'max:100'],
             'details.*.purchase_id' => ['nullable', 'max:50'],
             'details.*.product_id' => ['required', 'max:50'],
+            //
+            'tankerLoads.*.details.*.product.id' => ['required', 'max:50'],
+            'tankerLoads.*.trip_no' => ['required', 'max:50'],
         ];
     }
 
     public function messages()
     {
         return [
+            'date.required' => 'Date is required',
             'purchase_no.required' => 'Purchase no. is required',
-            'details.*.product_id.required' => 'Product is required.',
+            'supplier_id.required' => 'Supplier is required',
+            //
+            'details.*.product_id.required' => 'Product is required',
+            //
+            'tankerLoads.*.details.*.product.id.required' => 'Product is required',
+            'tankerLoads.*.trip_no.required' => 'Trip no. is required',
         ];
     }
 }
