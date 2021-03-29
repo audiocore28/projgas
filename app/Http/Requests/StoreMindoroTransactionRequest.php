@@ -24,12 +24,15 @@ class StoreMindoroTransactionRequest extends FormRequest
     public function rules()
     {
         return [
-            'trip_no' => ['nullable', 'max:50'],
+            'selectedPurchases' => ['required', 'max:250'],
+            'date' => ['required', 'max:50'],
+            'trip_no' => ['required', 'max:50'],
             'tanker_id' => ['required', 'max:50'],
-            'driver_id' => ['nullable', 'max:50'],
-            'helper_id' => ['nullable', 'max:50'],
+            'driver_id' => ['required', 'max:50'],
+            'helper_id' => ['required', 'max:50'],
             // 'purchase_id' => ['nullable', 'max:50'],
             //
+            'details.*.date' => ['required', 'max:50'],
             'details.*.dr_no' => ['nullable', 'max:50'],
             'details.*.product_id' => ['required', 'max:50'],
             'details.*.client_id' => ['required', 'max:50'],
@@ -41,8 +44,16 @@ class StoreMindoroTransactionRequest extends FormRequest
     public function messages()
     {
         return [
-            'details.*.product_id.required' => 'Product is required.',
-            'details.*.client_id.required' => 'Client is required.',
+            'selectedPurchases.required' => 'Purchase no(s). is required',
+            'date.required' => 'Date is required',
+            'trip_no.required' => 'Trip no. is required',
+            'tanker_id.required' => 'Tanker is required',
+            'driver_id.required' => 'Driver is required',
+            'helper_id.required' => 'Helper is required',
+            //
+            'details.*.date.required' => 'Date is required',
+            'details.*.product_id.required' => 'Product is required',
+            'details.*.client_id.required' => 'Client is required',
         ];
     }
 }

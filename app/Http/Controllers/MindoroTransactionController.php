@@ -63,7 +63,7 @@ class MindoroTransactionController extends Controller
     {
         $purchases = Purchase::when(request('term'), function($query, $term) {
             $query->where('purchase_no', 'like', "%$term%");
-        })->get();
+        })->orderBy('id', 'desc')->get();
 
         $purchases->map(function ($purchase) {
                 return [
@@ -95,7 +95,7 @@ class MindoroTransactionController extends Controller
 
         $clients = Client::when(request('term'), function($query, $term) {
             $query->where('name', 'like', "%$term%");
-        })->get();
+        })->orderBy('name', 'asc')->get();
 
         $products = Product::orderBy('name', 'asc')->get();
 
@@ -181,7 +181,7 @@ class MindoroTransactionController extends Controller
         // Purchases
         $purchases = Purchase::when(request('term'), function($query, $term) {
             $query->where('purchase_no', 'like', "%$term%");
-        })->get();
+        })->orderBy('id', 'desc')->get();
 
         $purchases->map(function ($purchase) {
                 return [
@@ -213,7 +213,7 @@ class MindoroTransactionController extends Controller
         // Clients
         $clients = Client::when(request('term'), function($query, $term) {
             $query->where('name', 'like', "%$term%");
-        })->get();
+        })->orderBy('name', 'asc')->get();
 
         // Products
         $products = Product::orderBy('name', 'asc')->get();

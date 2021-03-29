@@ -15,7 +15,7 @@
             <div class="-mr-6 -mb-12 flex flex-wrap w-full mt-8 px-8">
               <div class="w-full flex flex-wrap justify-between">
                 <div class="pr-6 pb-4 lg:w-1/2">
-                  <label class="form-label block">Purchase No.</label>
+                  <label class="form-label block">Purchase No.<span class="text-red-500">*</span></label>
                   <multiselect
                     id="purchase_id"
                     name="purchases[]"
@@ -33,15 +33,16 @@
                   <!-- :allow-empty="false" -->
                 </div>
                 <div class="lg:w-1/3">
-                  <label class="form-label block mr-5">Date:</label>
+                  <label class="form-label block mr-5">Date:<span class="text-red-500">*</span></label>
                   <div class="pr-6 pb-4 mt-3">
-                    <date-picker v-model="updateForm.date" lang="en" value-type="format" :formatter="momentFormat"></date-picker>
+                    <date-picker v-model="updateForm.date" :error="errors.date" lang="en" value-type="format" :formatter="momentFormat"></date-picker>
+                    <div v-if="errors.date" class="form-error">{{ errors.date }}</div>
                   </div>
                 </div>
               </div>
 
               <div class="w-full flex flex-wrap mb-2 bg-yellow-500 rounded pl-6 pt-4 highlight-yellow">
-                <text-input v-model="updateForm.trip_no" :error="errors.trip_no" class="pr-6 pb-4 w-full lg:w-1/6" label="Trip No." />
+                <text-input v-model="updateForm.trip_no" :error="errors.trip_no" class="pr-6 pb-4 w-full lg:w-1/6" label="Trip No.*" />
                 <select-input v-model="updateForm.driver_id" :error="errors.driver_id" class="pr-6 pb-4 w-full lg:w-1/4" label="Driver">
                   <option :value="null" />
                   <option v-for="driver in drivers" :key="driver.id" :value="driver.id">{{ driver.name }}</option>
@@ -72,7 +73,7 @@
                 <thead class="bg-gray-50">
                   <tr>
                     <th scope="col" class="px-6 text-center py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Date
+                      Date<span class="text-red-500">*</span>
                     </th>
                     <th scope="col" class="px-6 text-center py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Client<span class="text-red-500">*</span>
@@ -398,10 +399,10 @@ export default {
       if (productDetailId) {
         if (confirm('Are you sure you want to delete this row?')) {
           this.$inertia.delete(this.route('mindoro-transaction-details.destroy', productDetailId));
-          this.mindoro_transaction.details.splice(index, 1);
+          this.updateForm.details.splice(index, 1);
         }
       } else {
-        this.mindoro_transaction.details.splice(index, 1);
+        this.updateForm.details.splice(index, 1);
       }
     },
 
@@ -535,4 +536,9 @@ export default {
   }
 
   /*.multiselect__element span {}*/
+
+  .multiselect--active {
+    position: relative;
+    z-index: 100;
+  }
 </style>
