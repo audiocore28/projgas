@@ -421,6 +421,7 @@ export default {
         preserveState: true,
         preserveScroll: true,
         replace: true,
+        only: ['purchases'],
       })
     }, 300),
     onSelectedPurchase(purchases) {
@@ -433,6 +434,7 @@ export default {
         preserveState: true,
         preserveScroll: true,
         replace: true,
+        only: ['clients'],
       })
     }, 300),
     onSelectedClient(client, id) {

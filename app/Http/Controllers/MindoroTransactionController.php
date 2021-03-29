@@ -61,34 +61,6 @@ class MindoroTransactionController extends Controller
      */
     public function create()
     {
-        $purchases = Purchase::when(request('term'), function($query, $term) {
-            $query->where('purchase_no', 'like', "%$term%");
-        })->orderBy('id', 'desc')->get();
-
-        $purchases->map(function ($purchase) {
-                return [
-                    'id' => $purchase->id,
-                    'date' => $purchase->date,
-                    'purchase_no' => $purchase->purchase_no,
-                    'supplier' => $purchase->supplier ? $purchase->supplier->only('name') : null,
-                    'loads' => $purchase->tankerLoads->each(function ($load) {
-                            return [
-                                'trip_no' => $load->trip_no,
-                                'remarks' => $load->remarks,
-                                'purchase' => $load->purchase->purchase_no,
-                                'details' => $load->tankerLoadDetails->each(function ($detail) {
-                                    return [
-                                        'quantity' => $detail->quantity,
-                                        'product' => $detail->product->name,
-                                        'unit_price' => $detail->unit_price,
-                                    ];
-                                }),
-                            ];
-                        }),
-                    ];
-                });
-
-
         $tankers = Tanker::orderBy('plate_no', 'asc')
             ->get()
             ->map
@@ -104,11 +76,6 @@ class MindoroTransactionController extends Controller
             ->map
             ->only('id', 'name');
 
-
-        $clients = Client::when(request('term'), function($query, $term) {
-            $query->where('name', 'like', "%$term%");
-        })->orderBy('name', 'asc')->get();
-
         $products = Product::orderBy('name', 'asc')
             ->get()
             ->map
@@ -118,9 +85,44 @@ class MindoroTransactionController extends Controller
             'tankers' => $tankers,
             'drivers' => $drivers,
             'helpers' => $helpers,
-            'clients' => $clients,
-            'purchases' => $purchases,
             'products' => $products,
+            'clients' => function () {
+                $clients = Client::when(request('term'), function($query, $term) {
+                    $query->where('name', 'like', "%$term%");
+                })->orderBy('name', 'asc')->get();
+
+                return $clients;
+            },
+            'purchases' => function () {
+                $purchases = Purchase::when(request('term'), function($query, $term) {
+                    $query->where('purchase_no', 'like', "%$term%");
+                })->orderBy('id', 'desc')->get();
+
+                $purchases->map(function ($purchase) {
+                        return [
+                            'id' => $purchase->id,
+                            'date' => $purchase->date,
+                            'purchase_no' => $purchase->purchase_no,
+                            'supplier' => $purchase->supplier ? $purchase->supplier->only('name') : null,
+                            'loads' => $purchase->tankerLoads->each(function ($load) {
+                                    return [
+                                        'trip_no' => $load->trip_no,
+                                        'remarks' => $load->remarks,
+                                        'purchase' => $load->purchase->purchase_no,
+                                        'details' => $load->tankerLoadDetails->each(function ($detail) {
+                                            return [
+                                                'quantity' => $detail->quantity,
+                                                'product' => $detail->product->name,
+                                                'unit_price' => $detail->unit_price,
+                                            ];
+                                        }),
+                                    ];
+                                }),
+                            ];
+                        });
+
+                return $purchases;
+            },
         ]);
     }
 
