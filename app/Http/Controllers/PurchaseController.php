@@ -53,8 +53,14 @@ class PurchaseController extends Controller
      */
     public function create()
     {
-        $suppliers = Supplier::orderBy('name', 'asc')->get();
-        $products = Product::orderBy('name', 'asc')->get();
+        $suppliers = Supplier::orderBy('name', 'asc')
+            ->get()
+            ->map
+            ->only('id', 'name');
+        $products = Product::orderBy('name', 'asc')
+            ->get()
+            ->map
+            ->only('id', 'name');
 
         return Inertia::render('Purchases/Create', [
             'suppliers' => $suppliers,
@@ -128,8 +134,14 @@ class PurchaseController extends Controller
      */
     public function edit(Purchase $purchase)
     {
-        $suppliers = Supplier::orderBy('name', 'asc')->get();
-        $products = Product::orderBy('name', 'asc')->get();
+        $suppliers = Supplier::orderBy('name', 'asc')
+            ->get()
+            ->map
+            ->only('id', 'name');
+        $products = Product::orderBy('name', 'asc')
+            ->get()
+            ->map
+            ->only('id', 'name');
 
         $loads = $purchase->tankerLoads
             ->map(function ($load) {

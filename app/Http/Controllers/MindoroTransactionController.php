@@ -89,15 +89,30 @@ class MindoroTransactionController extends Controller
                 });
 
 
-        $tankers = Tanker::orderBy('plate_no', 'asc')->get();
-        $drivers = Driver::orderBy('name', 'asc')->get();
-        $helpers = Helper::orderBy('name', 'asc')->get();
+        $tankers = Tanker::orderBy('plate_no', 'asc')
+            ->get()
+            ->map
+            ->only('id', 'plate_no');
+
+        $drivers = Driver::orderBy('name', 'asc')
+            ->get()
+            ->map
+            ->only('id', 'name');
+
+        $helpers = Helper::orderBy('name', 'asc')
+            ->get()
+            ->map
+            ->only('id', 'name');
+
 
         $clients = Client::when(request('term'), function($query, $term) {
             $query->where('name', 'like', "%$term%");
         })->orderBy('name', 'asc')->get();
 
-        $products = Product::orderBy('name', 'asc')->get();
+        $products = Product::orderBy('name', 'asc')
+            ->get()
+            ->map
+            ->only('id', 'name');
 
         return Inertia::render('MindoroTransactions/Create', [
             'tankers' => $tankers,
@@ -206,9 +221,20 @@ class MindoroTransactionController extends Controller
                     ];
                 });
 
-        $tankers = Tanker::orderBy('plate_no', 'asc')->get();
-        $drivers = Driver::orderBy('name', 'asc')->get();
-        $helpers = Helper::orderBy('name', 'asc')->get();
+        $tankers = Tanker::orderBy('plate_no', 'asc')
+            ->get()
+            ->map
+            ->only('id', 'plate_no');
+
+        $drivers = Driver::orderBy('name', 'asc')
+            ->get()
+            ->map
+            ->only('id', 'name');
+
+        $helpers = Helper::orderBy('name', 'asc')
+            ->get()
+            ->map
+            ->only('id', 'name');
 
         // Clients
         $clients = Client::when(request('term'), function($query, $term) {
@@ -216,7 +242,10 @@ class MindoroTransactionController extends Controller
         })->orderBy('name', 'asc')->get();
 
         // Products
-        $products = Product::orderBy('name', 'asc')->get();
+        $products = Product::orderBy('name', 'asc')
+            ->get()
+            ->map
+            ->only('id', 'name');
 
 
         // Mindoro Transaction Queries ------------------
