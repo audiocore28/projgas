@@ -24,7 +24,11 @@ class StoreClientRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required', 'max:50'],
+            'name' => [
+                'required',
+                'max:100',
+                'unique:clients,name,'.$this->id
+            ],
             'office' => ['nullable', 'max:50'],
             'contact_person' => ['nullable', 'max:150'],
             'contact_no' => ['nullable', 'max:50'],

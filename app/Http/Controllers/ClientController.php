@@ -69,41 +69,42 @@ class ClientController extends Controller
      */
     public function edit(Client $client)
     {
-        $hD = $client->haulDetails()
+        $mD = $client->mindoroTransactionDetails()
             ->latest()
             ->paginate()
-            ->transform(function ($haul) {
+            ->transform(function ($detail) {
                 return [
-                    'id' => $haul->id,
-                    'date' => $haul->date,
-                    'haul_id' => $haul->haul_id,
-                    'quantity' => $haul->quantity,
-                    'unit_price' => $haul->unit_price,
-                    'client' => $haul->client ? $haul->client->only('id', 'name') : null,
-                    'product' => $haul->product ? $haul->product->only('id', 'name') : null,
+                    'id' => $detail->id,
+                    'date' => $detail->date,
+                    'dr_no' => $detail->dr_no,
+                    'mindoro_transaction_id' => $detail->mindoro_transaction_id,
+                    'quantity' => $detail->quantity,
+                    'unit_price' => $detail->unit_price,
+                    'client' => $detail->client ? $detail->client->only('id', 'name') : null,
+                    'product' => $detail->product ? $detail->product->only('id', 'name') : null,
                 ];
             });
 
-        $dD = $client->deliveryDetails()
+        $bD = $client->batangasTransactionDetails()
             ->latest()
             ->paginate()
-            ->transform(function ($delivery) {
+            ->transform(function ($detail) {
                 return [
-                    'id' => $delivery->id,
-                    'date' => $delivery->date,
-                    'delivery_id' => $delivery->delivery_id,
-                    'dr_no' => $delivery->dr_no,
-                    'quantity' => $delivery->quantity,
-                    'unit_price' => $delivery->unit_price,
-                    'client' => $delivery->client ? $delivery->client->only('id', 'name') : null,
-                    'product' => $delivery->product ? $delivery->product->only('id', 'name') : null,
+                    'id' => $detail->id,
+                    'date' => $detail->date,
+                    'dr_no' => $detail->dr_no,
+                    'batangas_transaction_id' => $detail->batangas_transaction_id,
+                    'quantity' => $detail->quantity,
+                    'unit_price' => $detail->unit_price,
+                    'client' => $detail->client ? $detail->client->only('id', 'name') : null,
+                    'product' => $detail->product ? $detail->product->only('id', 'name') : null,
                 ];
             });
 
        if (request()->wantsJson()) {
          return [
-           'deliveryDetails' => $dD,
-           'haulDetails' => $hD,
+           'batangasDetails' => $bD,
+           'mindoroDetails' => $mD,
          ];
        }
 
@@ -117,8 +118,8 @@ class ClientController extends Controller
                 'email_address' => $client->email_address,
                 'deleted_at' => $client->deleted_at,
             ],
-            'deliveryDetails' => $dD,
-            'haulDetails' => $hD,
+            'batangasDetails' => $bD,
+            'mindoroDetails' => $mD,
         ]);
     }
 
@@ -144,12 +145,12 @@ class ClientController extends Controller
      */
     public function destroy(Client $client)
     {
-        if ($client->deliveryDetails()->count()) {
-            return back()->withErrors(['error' => 'Cannot delete, delivery has client records']);
+        if ($client->batangasTransactionDetails()->count()) {
+            return back()->withErrors(['error' => 'Cannot delete, Batangas transactions has client records']);
         }
 
-        if ($client->haulDetails()->count()) {
-            return back()->withErrors(['error' => 'Cannot delete, hauling has client records']);
+        if ($client->mindoroTransactionDetails()->count()) {
+            return back()->withErrors(['error' => 'Cannot delete, Mindoro transactions has client records']);
         }
 
         $client->delete();

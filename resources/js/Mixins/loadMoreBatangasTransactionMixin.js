@@ -1,17 +1,17 @@
-export function loadMoreDeliveryMixin (record) {
+export function loadMoreBatangasTransactionMixin (record) {
 	return {
 		props: {
-			deliveryDetails: Object,
+			batangasDetails: Object,
 		},
 		data() {
 			return {
-				localDeliveryDetails: this.deliveryDetails.data,
-				deliveryPagination: this.deliveryDetails,
+				localBatangasDetails: this.batangasDetails.data,
+				batangasPagination: this.batangasDetails,
 			}
 		},
 		methods: {
-	      loadMoreDelivery() {
-	       	var currentPage = this.deliveryPagination.links[0].current_page;
+	      loadMoreBatangasTransaction() {
+	       	var currentPage = this.batangasPagination.links[0].current_page;
 	       	var id = window.location.href.split('/');
 
 		      // if (this.loadingMore) return;
@@ -21,13 +21,13 @@ export function loadMoreDeliveryMixin (record) {
 		      axios.get(`/${record}/${id[4]}/edit?page=${currentPage + 1}`)
 			      .then(({ data }) => {
 		            // Prepending the old messages to the list.
-		            this.localDeliveryDetails = [
-		            ...this.localDeliveryDetails,
-		            ...data.deliveryDetails.data,
+		            this.localBatangasDetails = [
+		            ...this.localBatangasDetails,
+		            ...data.batangasDetails.data,
 		            ];
 
 		            // Update our pagination meta information.
-		            this.deliveryPagination = data.deliveryDetails;
+		            this.batangasPagination = data.batangasDetails;
 		         });
 		          // .finally(() => this.loadingMore = false);
 	      },
