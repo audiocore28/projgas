@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Tanker;
 use App\Models\Driver;
-use App\Models\TankerLoad;
-use App\Models\Haul;
-use App\Models\Delivery;
+// use App\Models\TankerLoad;
+use App\Models\BatangasTransaction;
+use App\Models\MindoroTransaction;
 
 class Helper extends Model
 {
@@ -35,19 +35,19 @@ class Helper extends Model
         });
     }
 
-     public function tankerLoads()
+     // public function tankerLoads()
+     // {
+     //    return $this->hasMany(TankerLoad::class);
+     // }
+
+     public function batangasTransactions()
      {
-        return $this->hasMany(TankerLoad::class);
+        return $this->hasMany(BatangasTransaction::class);
      }
 
-     public function hauls()
+     public function mindoroTransactions()
      {
-        return $this->hasMany(Haul::class);
-     }
-
-     public function deliveries()
-     {
-        return $this->hasMany(Delivery::class);
+        return $this->hasMany(MindoroTransaction::class);
      }
 
     public function drivers()

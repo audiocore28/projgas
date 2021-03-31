@@ -24,7 +24,11 @@ class StoreHelperRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required', 'max:50'],
+            'name' => [
+                'required',
+                'max:100',
+                'unique:helpers,name,'.$this->id
+            ],
             'nickname' => ['nullable', 'max:50'],
             'address' => ['nullable', 'max:150'],
             'contact_no' => ['nullable', 'max:25'],
