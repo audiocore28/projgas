@@ -32,6 +32,11 @@ class Purchase extends Model
 	 	return $this->hasMany(TankerLoad::class);
 	 }
 
+     public function batangasTransactions()
+     {
+        return $this->belongsToMany(BatangasTransaction::class);
+     }
+
      public function mindoroTransactions()
      {
         return $this->belongsToMany(MindoroTransaction::class);

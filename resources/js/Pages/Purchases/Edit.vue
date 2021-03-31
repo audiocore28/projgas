@@ -174,6 +174,11 @@
                     </div>
                   </td>
                   <td class="text-sm">
+                    <div class="text-sm font-semibold text-white" v-for="(transaction, index) in load.batangas_transaction" :key="index">
+                      <div v-if="load.trip_no === transaction.trip_no">
+                        {{ transaction.driver.name }}
+                      </div>
+                    </div>
                     <div class="text-sm font-semibold text-white" v-for="(transaction, index) in load.mindoro_transaction" :key="index">
                       <div v-if="load.trip_no === transaction.trip_no">
                         {{ transaction.driver.name }}
@@ -326,6 +331,7 @@ export default {
         }
       },
       form: {
+        id: this.purchase.id,
         date: this.purchase.date,
         purchase_no: this.purchase.purchase_no,
         supplier_id: this.purchase.supplier_id,

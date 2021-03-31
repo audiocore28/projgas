@@ -25,7 +25,11 @@ class StorePurchaseRequest extends FormRequest
     {
         return [
             'date' => ['required', 'max:50'],
-            'purchase_no' => ['required', 'max:150'],
+            'purchase_no' => [
+                'required',
+                'max:150',
+                'unique:purchases,purchase_no,'.$this->id
+            ],
             'supplier_id' => ['required', 'max:50'],
             //
             'details.*.quantity' => ['nullable', 'max:50'],

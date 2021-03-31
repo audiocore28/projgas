@@ -159,6 +159,12 @@ class PurchaseController extends Controller
                             'unit_price' => $detail->unit_price,
                         ];
                    }),
+                   'batangas_transaction' => $load->purchase->batangasTransactions->map(function ($transaction) {
+                        return [
+                            'trip_no' => $transaction->trip_no,
+                            'driver' => $transaction->driver->only('name'),
+                        ];
+                   }),
                    'mindoro_transaction' => $load->purchase->mindoroTransactions->map(function ($transaction) {
                         return [
                             'trip_no' => $transaction->trip_no,
