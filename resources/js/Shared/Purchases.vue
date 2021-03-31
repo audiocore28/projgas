@@ -1,12 +1,12 @@
 <template>
   <div>
     <div class="bg-white rounded shadow overflow-x-auto mb-8 -mt-4">
-      <div class="rounded shadow overflow-x-auto mb-8" v-for="purchase in localPurchaseDetails">
-        <div class="ml-5 mr-5 mt-6">
+      <div class="rounded shadow overflow-x-auto m-4 lg:w-2/3" v-for="purchase in localPurchaseDetails">
+        <div class="ml-5 mr-5 mt-5">
           <inertia-link :href="route('purchases.edit', purchase.id)" tabindex="-1">
-            <h2 class="text-md font-bold text-blue-700 mb-2">{{ purchase.purchase_no }}</h2>
+            <p class="text-md font-bold text-blue-700 mb-2">{{ purchase.purchase_no }}</p>
           </inertia-link>
-          <p class="text-sm font-medium text-gray-600 mb-4 ml-1">{{ purchase.date }}</p>
+          <p class="text-xs font-medium text-gray-600 mb-4">{{ purchase.date }}</p>
         </div>
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-gray-50">
