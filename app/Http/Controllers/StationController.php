@@ -89,6 +89,15 @@ class StationController extends Controller
     public function edit(Station $station)
     {
         $pumps = $station->pumps
+            ->map(function ($pump) {
+                return [
+                        'id' => $pump->id,
+                        'pump' => $pump->pump,
+                        'product' => $pump->product ? $pump->product->only(['id', 'name']) : null,
+                        'nozzle' => $pump->nozzle,
+                        'station_id' => $pump->station_id,
+                    ];
+            })
             ->toArray();
 
         if (request()->wantsJson()) {
