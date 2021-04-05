@@ -15,12 +15,14 @@ class CreatePumpReadingsTable extends Migration
     {
         Schema::create('pump_readings', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('station_transaction_id');
             $table->string('pump')->nullable();
             $table->decimal('opening', 10, 3)->nullable();
             $table->decimal('closing', 10, 3)->nullable();
             $table->decimal('unit_price', 10, 3)->nullable();
-            $table->bigInteger('station_transaction_id');
             $table->timestamps();
+
+            $table->foreign('station_transaction_id')->references('id')->on('station_transactions')->onDelete('cascade');
         });
     }
 

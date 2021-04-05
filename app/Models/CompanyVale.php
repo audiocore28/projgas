@@ -9,7 +9,7 @@ class CompanyVale extends Model
 	use HasFactory;
 
 	protected $fillable = [
-		'pump_no', 'voucher_no', 'client_id', 'product_id', 'quantity', 'station_transaction_id'
+		'pump_no', 'voucher_no', 'company_id', 'product_id', 'quantity', 'station_transaction_id', 'remarks'
 	];
 
 	public function stationTransaction()

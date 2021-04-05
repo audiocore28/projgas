@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreCompanyValeRequest;
 use App\Models\CompanyVale;
-use Illuminate\Http\Request;
+// use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
+use Inertia\Inertia;
 
 class CompanyValeController extends Controller
 {
@@ -33,9 +38,22 @@ class CompanyValeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreCompanyValeRequest $request)
     {
-        //
+        foreach($request->all() as $vale)
+        {
+            $valeDetail = CompanyVale::create([
+                'station_transaction_id' => $vale['station_transaction_id'],
+                'pump_no' => $vale['pump_no'],
+                'voucher_no' => $vale['voucher_no'],
+                'company_id' => $vale['company_id'],
+                'product_id' => $vale['product_id'],
+                'quantity' => $vale['quantity'],
+                'remarks' => $vale['remarks'],
+            ]);
+        }
+
+        return redirect()->route('station-transactions.index')->with('success', 'Transaction was successfully updated.');
     }
 
     /**
@@ -80,6 +98,8 @@ class CompanyValeController extends Controller
      */
     public function destroy(CompanyVale $companyVale)
     {
-        //
+        $companyVale->delete();
+
+        return Redirect::back()->with('success', 'Company Vale row deleted.');
     }
 }

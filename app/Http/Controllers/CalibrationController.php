@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreCalibrationRequest;
 use App\Models\Calibration;
-use Illuminate\Http\Request;
+// use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
+use Inertia\Inertia;
 
 class CalibrationController extends Controller
 {
@@ -33,9 +38,20 @@ class CalibrationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreCalibrationRequest $request)
     {
-        //
+        foreach($request->all() as $calibration)
+        {
+            $calibrationDetail = Calibration::create([
+                'station_transaction_id' => $calibration['station_transaction_id'],
+                'pump' => $calibration['pump'],
+                'quantity' => $calibration['quantity'],
+                'pump_no' => $calibration['pump_no'],
+                'voucher_no' => $calibration['voucher_no'],
+            ]);
+        }
+
+        return redirect()->route('station-transactions.index')->with('success', 'Transaction was successfully updated.');
     }
 
     /**
@@ -80,6 +96,8 @@ class CalibrationController extends Controller
      */
     public function destroy(Calibration $calibration)
     {
-        //
+        $calibration->delete();
+
+        return Redirect::back()->with('success', 'Calibration row deleted.');
     }
 }
