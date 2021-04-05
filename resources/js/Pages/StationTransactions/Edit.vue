@@ -5,18 +5,27 @@
       <span class="text-blue-600 font-medium">/</span> Edit
     </h1>
 
+    <transaction-summary></transaction-summary>
+
     <div class="p-1">
       <ul class="flex border-b">
         <li @click="openTab = 1" :class="{ '-mb-px': openTab === 1 }" class="-mb-px mr-1">
           <a :class="openTab === 1 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold">Info</a>
         </li>
+        <li @click="openTab = 2" :class="{ '-mb-px': openTab === 2 }" class="-mb-px mr-1">
+          <a :class="openTab === 2 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold">Add Row</a>
+        </li>
+        <li @click="openTab = 3" :class="{ '-mb-px': openTab === 3 }" class="-mb-px mr-1">
+          <a :class="openTab === 3 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold">View</a>
+        </li>
+
       </ul>
 
       <div class="w-full pt-4">
         <!-- Tab 1 -->
         <div v-show="openTab === 1">
           <!-- Update Existing Station Transaction -->
-          <div class="bg-white rounded shadow overflow-hidden max-w-6xl">
+          <div class="bg-white rounded shadow overflow-hidden max-w-6xl mb-8 -mt-4">
             <!-- Station Transaction -->
             <form @submit.prevent="updateTransaction">
               <div class="p-8 -mr-6 -mb-8">
@@ -27,7 +36,7 @@
                   </select-input>
                 </div>
 
-                <label class="form-label block mr-5">Date</label>
+                <label class="form-label block mr-5">Date:</label>
                 <div class="pr-6 pb-8 mb-2 w-full">
                   <date-picker v-model="updateForm.date" lang="en" value-type="format" :formatter="momentFormat"></date-picker>
                 </div>
@@ -89,21 +98,21 @@
                   <text-input v-model="sale.dr_no" :error="errors.dr_no" class="pr-6 pb-8 w-full lg:w-2/12" label="DR No." />
 
                   <div class="pr-6 pb-8 w-full lg:w-2/12">
-                    <label class="form-label" :for="`client-${index}`">Client</label>
-                    <select :id="`client-${index}`" v-model="sale.client_id" class="form-select" :class="{ error: errors[`sale.${index}.client_id`] }">
+                    <label class="form-label" :for="`client-${index}`">Client:</label>
+                    <select :id="`client-${index}`" v-model="sale.client_id" class="form-select" :class="{ error: errors[`sales.${index}.client_id`] }">
                       <option :value="null" />
                       <option v-for="client in clients" :key="client.id" :value="client.id">{{ client.name }}</option>
                     </select>
-                    <div v-if="errors[`sale.${index}.client_id`]" class="form-error">{{ errors[`sale.${index}.client_id`] }}</div>
+                    <div v-if="errors[`sales.${index}.client_id`]" class="form-error">{{ errors[`sales.${index}.client_id`] }}</div>
                   </div>
 
                   <div class="pr-6 pb-8 w-full lg:w-2/12">
-                    <label class="form-label" :for="`product-${index}`">Product</label>
-                    <select :id="`product-${index}`" v-model="sale.product_id" class="form-select" :class="{ error: errors[`sale.${index}.product_id`] }">
+                    <label class="form-label" :for="`product-${index}`">Product:</label>
+                    <select :id="`product-${index}`" v-model="sale.product_id" class="form-select" :class="{ error: errors[`sales.${index}.product_id`] }">
                       <option :value="null" />
                       <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
                     </select>
-                    <div v-if="errors[`sale.${index}.product_id`]" class="form-error">{{ errors[`sale.${index}.product_id`] }}</div>
+                    <div v-if="errors[`sales.${index}.product_id`]" class="form-error">{{ errors[`sales.${index}.product_id`] }}</div>
                   </div>
 
                   <text-input type="number" step="any" v-model="sale.quantity" :error="errors.quantity" class="pr-6 pb-8 w-full lg:w-2/12" label="Quantity" />
@@ -125,28 +134,29 @@
               class="font-bold text-1xl cursor-pointer px-5 py-3 block hover:opacity-75 shadow hover:-mb-3 rounded-t">III. Company Vale</h4>
               <div v-show="valeSelected == 2" class="py-4 px-2">
                 <div class="px-8 py-4 -mr-6 -mb-8 flex flex-wrap" v-for="(vale, index) in updateForm.company_vales" :key="index">
-                  <text-input v-model="vale.pump_no" :error="errors.pump_no" class="pr-6 pb-8 w-full lg:w-1/6" label="Pump No." />
+                  <text-input v-model="vale.pump_no" :error="errors.pump_no" class="pr-6 pb-8 w-full lg:w-1/12" label="Pump#" />
                   <text-input v-model="vale.voucher_no" :error="errors.voucher_no" class="pr-6 pb-8 w-full lg:w-1/6" label="Voucher No." />
 
-                  <div class="pr-6 pb-8 w-full lg:w-1/4">
-                    <label class="form-label" :for="`client-${index}`">Client</label>
-                    <select :id="`client-${index}`" v-model="vale.client_id" class="form-select" :class="{ error: errors[`vale.${index}.client_id`] }">
+                  <div class="pr-6 pb-8 w-full lg:w-1/6">
+                    <label class="form-label" :for="`company-${index}`">Company:</label>
+                    <select :id="`company-${index}`" v-model="vale.company_id" class="form-select" :class="{ error: errors[`company_vales.${index}.company_id`] }">
                       <option :value="null" />
-                      <option v-for="client in clients" :key="client.id" :value="client.id">{{ client.name }}</option>
+                      <option v-for="company in companies" :key="company.id" :value="company.id">{{ company.name }}</option>
                     </select>
-                    <div v-if="errors[`vale.${index}.client_id`]" class="form-error">{{ errors[`vale.${index}.client_id`] }}</div>
+                    <div v-if="errors[`company_vales.${index}.company_id`]" class="form-error">{{ errors[`company_vales.${index}.company_id`] }}</div>
                   </div>
 
                   <div class="pr-6 pb-8 w-full lg:w-1/6">
-                    <label class="form-label" :for="`product-${index}`">Product</label>
-                    <select :id="`product-${index}`" v-model="vale.product_id" class="form-select" :class="{ error: errors[`vale.${index}.product_id`] }">
+                    <label class="form-label" :for="`product-${index}`">Product:</label>
+                    <select :id="`product-${index}`" v-model="vale.product_id" class="form-select" :class="{ error: errors[`company_vales.${index}.product_id`] }">
                       <option :value="null" />
                       <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
                     </select>
-                    <div v-if="errors[`vale.${index}.product_id`]" class="form-error">{{ errors[`vale.${index}.product_id`] }}</div>
+                    <div v-if="errors[`company_vales.${index}.product_id`]" class="form-error">{{ errors[`company_vales.${index}.product_id`] }}</div>
                   </div>
 
                   <text-input type="number" step="any" v-model="vale.quantity" :error="errors.quantity" class="pr-6 pb-8 w-full lg:w-1/6" label="Quantity" />
+                  <text-input v-model="vale.remarks" :error="errors.remarks" class="pr-6 pb-8 w-full lg:w-1/6" label="Remarks" />
 
                   <button @click.prevent="deleteCompanyValesForm(index, vale.id)" type="button" class="bg-white py-1 px-1 flex-shrink-0 text-sm leading-none">
                     <icon name="trash" class="w-4 h-4 mr-2 fill-red-600"/>
@@ -187,12 +197,12 @@
                   <text-input type="number" step="any" v-model="discount.cash" :error="errors.cash" class="pr-6 pb-8 w-full lg:w-1/6" label="Cash" />
 
                   <div class="pr-6 pb-8 w-full lg:w-1/4">
-                    <label class="form-label" :for="`client-${index}`">Client</label>
-                    <select :id="`client-${index}`" v-model="discount.client_id" class="form-select" :class="{ error: errors[`discount.${index}.client_id`] }">
+                    <label class="form-label" :for="`client-${index}`">Client:</label>
+                    <select :id="`client-${index}`" v-model="discount.client_id" class="form-select" :class="{ error: errors[`discounts.${index}.client_id`] }">
                       <option :value="null" />
                       <option v-for="client in clients" :key="client.id" :value="client.id">{{ client.name }}</option>
                     </select>
-                    <div v-if="errors[`discount.${index}.client_id`]" class="form-error">{{ errors[`discount.${index}.client_id`] }}</div>
+                    <div v-if="errors[`discounts.${index}.client_id`]" class="form-error">{{ errors[`discounts.${index}.client_id`] }}</div>
                   </div>
 
                   <text-input type="number" step="any" v-model="discount.quantity" :error="errors.quantity" class="pr-6 pb-8 w-full lg:w-1/6" label="Quantity" />
@@ -219,6 +229,22 @@
           </div>
         </div>
 
+        <!-- Create Form -->
+        <div v-show="openTab === 2">
+          <transaction-create-form
+            :errors="errors"
+            :transaction="transaction"
+            :products="products"
+            :clients="clients"
+            :companies="companies">
+          </transaction-create-form>
+        </div>
+
+        <!-- View -->
+        <div v-show="openTab === 3">
+          <transaction-view></transaction-view>
+        </div>
+
       </div>
     </div>
   </div>
@@ -232,6 +258,9 @@ import TextInput from '@/Shared/TextInput'
 import Icon from '@/Shared/Icon'
 import Multiselect from 'vue-multiselect'
 import DatePicker from 'vue2-datepicker'
+import TransactionCreateForm from '@/Shared/TransactionCreateForm'
+import TransactionSummary from '@/Shared/TransactionSummary'
+import TransactionView from '@/Shared/TransactionView'
 import moment from 'moment'
 
 export default {
@@ -244,12 +273,16 @@ export default {
     Multiselect,
     DatePicker,
     Icon,
+    TransactionCreateForm,
+    TransactionSummary,
+    TransactionView,
   },
   props: {
     errors: Object,
     transaction: Object,
     products: Array,
     clients: Array,
+    companies: Array,
     stations: Array,
     cashiers: Array,
     pump_attendants: Array,
@@ -287,52 +320,6 @@ export default {
         calibrations: this.transaction.calibrations,
         discounts: this.transaction.discounts,
       },
-      createForm: {
-        pump_readings: [
-          {
-            pump: null,
-            opening: null,
-            closing: null,
-            unit_price: null,
-          }
-        ],
-        sales: [
-          {
-            pump_no: null,
-            dr_no: null,
-            client_id: null,
-            product_id: null,
-            quantity: null,
-            rs_no: null,
-          }
-        ],
-        company_vales: [
-          {
-            pump_no: null,
-            voucher_no: null,
-            client_id: null,
-            product_id: null,
-            quantity: null,
-          }
-        ],
-        calibrations: [
-          {
-            pump: null,
-            quantity: null,
-            pump_no: null,
-            voucher_no: null,
-          }
-        ],
-        discounts: [
-          {
-            voucher_no: null,
-            cash: null,
-            client_id: null,
-            quantity: null,
-            disc_amount: null,
-          }
-        ],
-      },
       // Tabs
       openTab: 1,
       activeClasses: 'border-l border-t border-r rounded-t text-blue-600',
@@ -345,15 +332,15 @@ export default {
       discountSelected: 4,
     }
   },
-  watch: {
-    'form.station_id': function (value) {
-      axios.get(`/station-transactions/${value}/edit`)
-        .then(response => {
-          console.log(response.data);
-          // this.createForm.pump_readings = response.data.data
-        })
-    },
-  },
+  // watch: {
+  //   'form.station_id': function (value) {
+  //     axios.get(`/station-transactions/${value}/edit`)
+  //       .then(response => {
+  //         console.log(response.data);
+  //         this.createForm.pump_readings = response.data.data
+  //       })
+  //   },
+  // },
   methods: {
     updateTransaction() {
       this.$inertia.put(this.route('station-transactions.update', this.transaction.id), this.updateForm, {
@@ -368,6 +355,7 @@ export default {
     },
     //
     deletePumpReadingsForm(index, pumpReadingId) {
+      console.log(pumpReadingId);
       if (confirm('Are you sure you want to delete this row?')) {
         this.$inertia.delete(this.route('pump-readings.destroy', pumpReadingId));
         this.transaction.pump_readings.splice(index, 1);
@@ -396,114 +384,6 @@ export default {
         this.$inertia.delete(this.route('discounts.destroy', discountId));
         this.transaction.discounts.splice(index, 1);
       }
-    },
-
-    // ----New Created Form
-
-    // Save
-    saveNewPumpReading() {
-      this.$inertia.post(this.route('pump-readings.store'), this.createForm.pump_readings, {
-        onStart: () => this.sending = true,
-        onFinish: () => this.sending = false,
-      });
-    },
-    saveNewSale() {
-      this.$inertia.post(this.route('sales.store'), this.createForm.sales, {
-        onStart: () => this.sending = true,
-        onFinish: () => this.sending = false,
-      });
-    },
-    saveNewCompanyVale() {
-      this.$inertia.post(this.route('company-vales.store'), this.createForm.company_vales, {
-        onStart: () => this.sending = true,
-        onFinish: () => this.sending = false,
-      });
-    },
-    saveNewCalibration() {
-      this.$inertia.post(this.route('calibrations.store'), this.createForm.calibrations, {
-        onStart: () => this.sending = true,
-        onFinish: () => this.sending = false,
-      });
-    },
-    saveNewDiscount() {
-      this.$inertia.post(this.route('discounts.store'), this.createForm.discounts, {
-        onStart: () => this.sending = true,
-        onFinish: () => this.sending = false,
-      });
-    },
-
-
-    // create form
-    addPumpReadingsForm() {
-      this.createForm.pump_readings.push({
-        id: null,
-        station_transaction_id: this.transaction.id,
-        pump: null,
-        opening: null,
-        closing: null,
-        unit_price: null,
-      });
-    },
-    addSalesForm() {
-      this.createForm.sales.push({
-        id: null,
-        station_transaction_id: this.transaction.id,
-        pump_no: null,
-        dr_no: null,
-        client_id: null,
-        product_id: null,
-        quantity: null,
-        rs_no: null,
-      });
-    },
-    addCompanyValesForm() {
-      this.createForm.company_vales.push({
-        id: null,
-        station_transaction_id: this.transaction.id,
-        pump_no: null,
-        voucher_no: null,
-        client_id: null,
-        product_id: null,
-        quantity: null,
-      });
-    },
-    addCalibrationsForm() {
-      this.createForm.calibrations.push({
-        id: null,
-        station_transaction_id: this.transaction.id,
-        pump: null,
-        quantity: null,
-        pump_no: null,
-        voucher_no: null,
-      });
-    },
-    addDiscountsForm() {
-      this.createForm.discounts.push({
-        id: null,
-        station_transaction_id: this.transaction.id,
-        voucher_no: null,
-        cash: null,
-        client_id: null,
-        quantity: null,
-        disc_amount: null,
-      });
-    },
-
-    // Delete Form/Row
-    deletePumpReadingsForm(index) {
-      this.createForm.pump_readings.splice(index, 1);
-    },
-    deleteSalesForm(index) {
-      this.createForm.sales.splice(index, 1);
-    },
-    deleteCompanyValesForm(index) {
-      this.createForm.company_vales.splice(index, 1);
-    },
-    deleteCalibrationsForm(index) {
-      this.createForm.calibrations.splice(index, 1);
-    },
-    deleteDiscountsForm(index) {
-      this.createForm.discounts.splice(index, 1);
     },
 
   },

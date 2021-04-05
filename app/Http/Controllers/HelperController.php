@@ -69,53 +69,48 @@ class HelperController extends Controller
      */
     public function edit(Helper $helper)
     {
-        $lD = $helper->tankerLoads()
-            ->latest()
-            ->paginate()
-            ->transform(function ($load) {
-                return [
-                    'id' => $load->id,
-                    'date' => $load->date,
-                    'trip_no' => $load->trip_no,
-                    'purchase' => $load->purchase ? $load->purchase->only('purchase_no') : null,
-                    'tanker' => $load->tanker ? $load->tanker->only('plate_no') : null,
-                    'driver' => $load->driver ? $load->driver->only('name') : null,
-                    'helper' => $load->helper ? $load->helper->only('name') : null,
-                    'loads' => $load->tankerLoadDetails->each(function ($detail) {
-                            return ['p' => $detail->product->name];
-                        })
-                ];
-            });
+        $trips = $helper->mindoroTransactions()
+            ->selectRaw('year(date) year, monthname(date) month, count(*) loaded')
+            ->groupBy('year', 'month')
+            ->orderByRaw('min(date)')
+            ->get()
+            ->toArray();
 
-        $hD = $helper->hauls()
+        $bD = $helper->batangasTransactions()
             ->latest()
             ->paginate()
-            ->transform(function ($haul) {
+            ->transform(function ($transaction) {
                 return [
-                    'id' => $haul->id,
-                    'trip_no' => $haul->trip_no,
-                    'purchase' => $haul->purchase ? $haul->purchase->only('purchase_no') : null,
-                    'tanker' => $haul->tanker ? $haul->tanker->only('plate_no') : null,
-                    'driver' => $haul->driver ? $haul->driver->only('name') : null,
-                    'helper' => $haul->helper ? $haul->helper->only('name') : null,
-                    'hauls' => $haul->haulDetails->each(function ($detail) {
+                    'id' => $transaction->id,
+                    'date' => $transaction->date,
+                    'trip_no' => $transaction->trip_no,
+                    'purchases' => $transaction->purchases->each(function ($purchase) {
+                            return ['purchase_no' => $purchase->purchase_no, ];
+                        }),
+                    'tanker' => $transaction->tanker ? $transaction->tanker->only('plate_no') : null,
+                    'driver' => $transaction->driver ? $transaction->driver->only('name') : null,
+                    'helper' => $transaction->helper ? $transaction->helper->only('name') : null,
+                    'details' => $transaction->batangasTransactionDetails->each(function ($detail) {
                             return ['p' => $detail->product->name, 'c' => $detail->client->name];
                         })
                 ];
             });
 
-        $dD = $helper->deliveries()
+        $mD = $helper->mindoroTransactions()
             ->latest()
             ->paginate()
-            ->transform(function ($delivery) {
+            ->transform(function ($transaction) {
                 return [
-                    'id' => $delivery->id,
-                    'trip_no' => $delivery->trip_no,
-                    'purchase' => $delivery->purchase ? $delivery->purchase->only('purchase_no') : null,
-                    'tanker' => $delivery->tanker ? $delivery->tanker->only('plate_no') : null,
-                    'driver' => $delivery->driver ? $delivery->driver->only('name') : null,
-                    'helper' => $delivery->helper ? $delivery->helper->only('name') : null,
-                    'deliveries' => $delivery->deliveryDetails->each(function ($detail) {
+                    'id' => $transaction->id,
+                    'date' => $transaction->date,
+                    'trip_no' => $transaction->trip_no,
+                    'purchases' => $transaction->purchases->each(function ($purchase) {
+                            return ['purchase_no' => $purchase->purchase_no, ];
+                        }),
+                    'tanker' => $transaction->tanker ? $transaction->tanker->only('plate_no') : null,
+                    'driver' => $transaction->driver ? $transaction->driver->only('name') : null,
+                    'helper' => $transaction->helper ? $transaction->helper->only('name') : null,
+                    'details' => $transaction->mindoroTransactionDetails->each(function ($detail) {
                             return ['p' => $detail->product->name, 'c' => $detail->client->name];
                         })
                 ];
@@ -123,9 +118,9 @@ class HelperController extends Controller
 
        if (request()->wantsJson()) {
          return [
-           'loadDetails' => $lD,
-           'deliveryDetails' => $dD,
-           'haulDetails' => $hD,
+           // 'loadDetails' => $lD,
+           'batangasDetails' => $bD,
+           'mindoroDetails' => $mD,
          ];
        }
 
@@ -138,9 +133,10 @@ class HelperController extends Controller
                 'contact_no' => $helper->contact_no,
                 'deleted_at' => $helper->deleted_at,
             ],
-           'loadDetails' => $lD,
-           'deliveryDetails' => $dD,
-           'haulDetails' => $hD,
+           // 'loadDetails' => $lD,
+           'batangasDetails' => $bD,
+           'mindoroDetails' => $mD,
+           'trips' => $trips,
         ]);
     }
 
@@ -166,16 +162,12 @@ class HelperController extends Controller
      */
     public function destroy(Helper $helper)
     {
-        if ($helper->deliveries()->count()) {
-            return back()->withErrors(['error' => 'Cannot delete, delivery has helper records']);
+        if ($helper->batangasTransactions()->count()) {
+            return back()->withErrors(['error' => 'Cannot delete, Batangas transactions has helper records']);
         }
 
-        if ($helper->hauls()->count()) {
-            return back()->withErrors(['error' => 'Cannot delete, hauling has helper records']);
-        }
-
-        if ($helper->tankerLoads()->count()) {
-            return back()->withErrors(['error' => 'Cannot delete, load has helper records']);
+        if ($helper->mindoroTransactions()->count()) {
+            return back()->withErrors(['error' => 'Cannot delete, Mindoro transactions has helper records']);
         }
 
         $helper->delete();

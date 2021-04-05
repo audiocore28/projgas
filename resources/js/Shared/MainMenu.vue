@@ -84,9 +84,8 @@ export default {
       truckingLinks: [
         // { route: 'dashboard', icon: 'office', isUrl: 'dashboard', name: 'Dashboard'},
         { route: 'purchases.index', icon: 'shopping-cart', isUrl: 'purchases', name: 'Purchases'},
-        { route: 'tanker-loads.index', icon: 'dashboard', isUrl: 'tanker-loads', name: 'Loads'},
-        { route: 'hauls.index', icon: 'location', isUrl: 'hauls', name: 'Hauling'},
-        { route: 'deliveries.index', icon: 'location', isUrl: 'deliveries', name: 'Deliveries'},
+        { route: 'batangas-transactions.index', icon: 'location', isUrl: 'batangas-transaction', name: 'Batangas'},
+        { route: 'mindoro-transactions.index', icon: 'location', isUrl: 'mindoro-transaction', name: 'Mindoro'},
       ],
       recordLinks: [
         { route: 'suppliers.index', icon: 'office', isUrl: 'suppliers', name: 'Suppliers'},
@@ -94,7 +93,7 @@ export default {
         // { route: 'statements.index', icon: 'book', isUrl: 'statements', name: 'SOA'},
       ],
       // reportLinks: [
-        // { route: 'station-transactions.index', icon: 'store-front', isUrl: 'station-transactions', name: 'DTR'},
+      //   { route: 'station-transactions.index', icon: 'book', isUrl: 'station-transactions', name: 'DTR'},
       // ],
       employeeLinks: [
         { route: 'drivers.index', icon: 'users', isUrl: 'drivers', name: 'Drivers'},

@@ -14,14 +14,14 @@
         <li @click="openTab = 1" :class="{ '-mb-px': openTab === 1 }" class="-mb-px mr-1">
           <a :class="openTab === 1 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold">Info</a>
         </li>
-        <li @click="openTab = 2" :class="{ '-mb-px': openTab === 2 }" class="mr-1" v-show="loadDetails.data.length">
-          <a :class="openTab === 2 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold">Loads</a>
+        <li @click="openTab = 2" :class="{ '-mb-px': openTab === 2 }" class="mr-1" v-show="batangasDetails.data.length">
+          <a :class="openTab === 2 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold">Batangas</a>
         </li>
-        <li @click="openTab = 3" :class="{ '-mb-px': openTab === 3 }" class="mr-1" v-show="haulDetails.data.length">
-          <a :class="openTab === 3 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold">Hauling</a>
+        <li @click="openTab = 3" :class="{ '-mb-px': openTab === 3 }" class="mr-1" v-show="mindoroDetails.data.length">
+          <a :class="openTab === 3 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold">Mindoro</a>
         </li>
-        <li @click="openTab = 4" :class="{ '-mb-px': openTab === 4 }" class="mr-1" v-show="deliveryDetails.data.length">
-          <a :class="openTab === 4 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold">Deliveries</a>
+        <li @click="openTab = 4" :class="{ '-mb-px': openTab === 4 }" class="mr-1">
+          <a :class="openTab === 4 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold">Salaries (M)</a>
         </li>
       </ul>
 
@@ -37,7 +37,7 @@
                 <text-input v-model="form.contact_no" :error="errors.contact_no" class="pr-6 pb-8 w-full lg:w-1/2" label="Contact No" />
               </div>
               <div class="px-8 py-4 bg-gray-100 border-t border-gray-200 flex justify-end items-center">
-                <button v-if="!loadDetails.data.length && !deliveryDetails.data.length && !haulDetails.data.length && !helper.deleted_at" class="text-red-600 hover:underline" tabindex="-1" type="button" @click="destroy">Delete Helper</button>
+                <button v-if="!batangasDetails.data.length && !mindoroDetails.data.length && !helper.deleted_at" class="text-red-600 hover:underline" tabindex="-1" type="button" @click="destroy">Delete Helper</button>
                 <loading-button :loading="sending" class="btn-indigo ml-auto" type="submit">Update Helper</loading-button>
               </div>
             </form>
@@ -46,17 +46,26 @@
 
         <!-- Tab 2 -->
         <div v-show="openTab === 2">
-          <tanker-loads :loadDetails="loadDetails" record="helpers"></tanker-loads>
+          <batangas-transactions
+            :transactionDetails="batangasDetails"
+            record="helpers">
+          </batangas-transactions>
         </div>
 
         <!-- Tab 3 -->
         <div v-show="openTab === 3">
-          <hauling :haulDetails="haulDetails" record="helpers"></hauling>
+          <mindoro-transactions
+            :transactionDetails="mindoroDetails"
+            record="helpers">
+          </mindoro-transactions>
         </div>
 
         <!-- Tab 4 -->
-        <div v-show="openTab === 4">
-          <deliveries :deliveryDetails="deliveryDetails" record="helpers"></deliveries>
+        <div v-show="openTab === 4" class="bg-white -mt-4">
+          <salary
+            :trips="trips"
+            :rate="1500">
+          </salary>
         </div>
 
       </div>
@@ -71,12 +80,14 @@ import LoadingButton from '@/Shared/LoadingButton'
 import SelectInput from '@/Shared/SelectInput'
 import TextInput from '@/Shared/TextInput'
 import TrashedMessage from '@/Shared/TrashedMessage'
-import Deliveries from '@/Shared/Deliveries'
-import Hauling from '@/Shared/Hauling'
-import TankerLoads from '@/Shared/TankerLoads'
+import BatangasTransactions from '@/Shared/BatangasTransactions'
+import MindoroTransactions from '@/Shared/MindoroTransactions'
+import Salary from '@/Shared/Salary'
 import moment from 'moment'
+import { numberFormatsMixin } from '@/Mixins/numberFormatsMixin'
 
 export default {
+  mixins: [numberFormatsMixin],
   metaInfo() {
     return { title: this.form.name }
   },
@@ -87,16 +98,16 @@ export default {
     SelectInput,
     TextInput,
     TrashedMessage,
-    Deliveries,
-    Hauling,
-    TankerLoads,
+    BatangasTransactions,
+    MindoroTransactions,
+    Salary,
   },
   props: {
     errors: Object,
     helper: Object,
-    deliveryDetails: Object,
-    haulDetails: Object,
-    loadDetails: Object,
+    batangasDetails: Object,
+    mindoroDetails: Object,
+    trips: Array,
   },
   remember: 'form',
   data() {
@@ -117,6 +128,7 @@ export default {
         }
       },
       form: {
+        id: this.helper.id,
         name: this.helper.name,
         nickname: this.helper.nickname,
         address: this.helper.address,

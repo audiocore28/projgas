@@ -68,70 +68,59 @@ class DriverController extends Controller
      */
     public function edit(Driver $driver)
     {
-        // $trips = $driver->tankerLoads()
-        //     ->selectRaw('year(date) year, monthname(date) month, count(*) loaded')
-        //     ->groupBy('year', 'month')
-        //     ->orderByRaw('min(date)')
-        //     ->get()
-        //     ->toArray();
+        $trips = $driver->mindoroTransactions()
+            ->selectRaw('year(date) year, monthname(date) month, count(*) loaded')
+            ->groupBy('year', 'month')
+            ->orderByRaw('min(date)')
+            ->get()
+            ->toArray();
 
-        $lD = $driver->tankerLoads()
+        $bD = $driver->batangasTransactions()
             ->latest()
             ->paginate()
-            ->transform(function ($load) {
+            ->transform(function ($transaction) {
                 return [
-                    'id' => $load->id,
-                    'date' => $load->date,
-                    'trip_no' => $load->trip_no,
-                    'purchase' => $load->purchase ? $load->purchase->only('purchase_no') : null,
-                    'tanker' => $load->tanker ? $load->tanker->only('plate_no') : null,
-                    'driver' => $load->driver ? $load->driver->only('name') : null,
-                    'helper' => $load->helper ? $load->helper->only('name') : null,
-                    'loads' => $load->tankerLoadDetails->each(function ($detail) {
-                            return ['p' => $detail->product->name];
-                        })
-                ];
-            });
-
-        $hD = $driver->hauls()
-            ->latest()
-            ->paginate()
-            ->transform(function ($haul) {
-                return [
-                    'id' => $haul->id,
-                    'trip_no' => $haul->trip_no,
-                    'purchase' => $haul->purchase ? $haul->purchase->only('purchase_no') : null,
-                    'tanker' => $haul->tanker ? $haul->tanker->only('plate_no') : null,
-                    'driver' => $haul->driver ? $haul->driver->only('name') : null,
-                    'helper' => $haul->helper ? $haul->helper->only('name') : null,
-                    'hauls' => $haul->haulDetails->each(function ($detail) {
+                    'id' => $transaction->id,
+                    'date' => $transaction->date,
+                    'trip_no' => $transaction->trip_no,
+                    'purchases' => $transaction->purchases->each(function ($purchase) {
+                            return ['purchase_no' => $purchase->purchase_no, ];
+                        }),
+                    'tanker' => $transaction->tanker ? $transaction->tanker->only('plate_no') : null,
+                    'driver' => $transaction->driver ? $transaction->driver->only('name') : null,
+                    'helper' => $transaction->helper ? $transaction->helper->only('name') : null,
+                    'details' => $transaction->batangasTransactionDetails->each(function ($detail) {
                             return ['p' => $detail->product->name, 'c' => $detail->client->name];
                         })
                 ];
             });
 
-        $dD = $driver->deliveries()
+        $mD = $driver->mindoroTransactions()
             ->latest()
             ->paginate()
-            ->transform(function ($delivery) {
+            ->transform(function ($transaction) {
                 return [
-                    'id' => $delivery->id,
-                    'trip_no' => $delivery->trip_no,
-                    'purchase' => $delivery->purchase ? $delivery->purchase->only('purchase_no') : null,
-                    'tanker' => $delivery->tanker ? $delivery->tanker->only('plate_no') : null,
-                    'driver' => $delivery->driver ? $delivery->driver->only('name') : null,
-                    'helper' => $delivery->helper ? $delivery->helper->only('name') : null,
-                    'deliveries' => $delivery->deliveryDetails->each(function ($detail) {
+                    'id' => $transaction->id,
+                    'date' => $transaction->date,
+                    'trip_no' => $transaction->trip_no,
+                    'purchases' => $transaction->purchases->each(function ($purchase) {
+                            return ['purchase_no' => $purchase->purchase_no, ];
+                        }),
+                    'tanker' => $transaction->tanker ? $transaction->tanker->only('plate_no') : null,
+                    'driver' => $transaction->driver ? $transaction->driver->only('name') : null,
+                    'helper' => $transaction->helper ? $transaction->helper->only('name') : null,
+                    'details' => $transaction->mindoroTransactionDetails->each(function ($detail) {
                             return ['p' => $detail->product->name, 'c' => $detail->client->name];
                         })
                 ];
             });
+
 
        if (request()->wantsJson()) {
          return [
-           'loadDetails' => $lD,
-           'deliveryDetails' => $dD,
-           'haulDetails' => $hD,
+           // 'loadDetails' => $lD,
+           'batangasDetails' => $bD,
+           'mindoroDetails' => $mD,
          ];
        }
 
@@ -145,10 +134,10 @@ class DriverController extends Controller
                 'contact_no' => $driver->contact_no,
                 'deleted_at' => $driver->deleted_at,
            ],
-           'loadDetails' => $lD,
-           'deliveryDetails' => $dD,
-           'haulDetails' => $hD,
-           // 'trips' => $trips,
+           // 'loadDetails' => $lD,
+           'batangasDetails' => $bD,
+           'mindoroDetails' => $mD,
+           'trips' => $trips,
         ]);
     }
 
@@ -174,16 +163,12 @@ class DriverController extends Controller
      */
     public function destroy(Driver $driver)
     {
-        if ($driver->deliveries()->count()) {
-            return back()->withErrors(['error' => 'Cannot delete, delivery has driver records']);
+        if ($driver->batangasTransactions()->count()) {
+            return back()->withErrors(['error' => 'Cannot delete, Batangas transactions has driver records']);
         }
 
-        if ($driver->hauls()->count()) {
-            return back()->withErrors(['error' => 'Cannot delete, hauling has driver records']);
-        }
-
-        if ($driver->tankerLoads()->count()) {
-            return back()->withErrors(['error' => 'Cannot delete, load has driver records']);
+        if ($driver->mindoroTransactions()->count()) {
+            return back()->withErrors(['error' => 'Cannot delete, Mindoro transactions has driver records']);
         }
 
         $driver->delete();

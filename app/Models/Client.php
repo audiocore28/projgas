@@ -4,9 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Models\Delivery;
-use App\Models\DeliveryDetail;
-use App\Models\HaulDetail;
+use App\Models\BatangasTransactionDetail;
+use App\Models\MindoroTransactionDetail;
 
 class Client extends Model
 {
@@ -17,19 +16,14 @@ class Client extends Model
 	protected $fillable = ['name', 'office', 'contact_person', 'email_address', 'contact_no'];
 
 
-     public function haulDetails()
+     public function batangasTransactionDetails()
      {
-        return $this->hasMany(HaulDetail::class);
+        return $this->hasMany(BatangasTransactionDetail::class);
      }
 
-     public function deliveryDetails()
+     public function mindoroTransactionDetails()
      {
-        return $this->hasMany(DeliveryDetail::class);
-     }
-
-     public function deliveries()
-     {
-        return $this->hasMany(Delivery::class);
+        return $this->hasMany(MindoroTransactionDetail::class);
      }
 
     public function scopeFilter($query, array $filters)

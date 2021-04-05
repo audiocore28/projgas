@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePurchaseRequest;
-use App\Http\Requests\UpdatePurchaseRequest;
 use App\Models\Purchase;
 use App\Models\PurchaseDetail;
 use App\Models\Supplier;
 use App\Models\Product;
 use App\Models\TankerLoad;
+use App\Models\TankerLoadDetail;
 use App\Models\Delivery;
 // use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -53,8 +53,14 @@ class PurchaseController extends Controller
      */
     public function create()
     {
-        $suppliers = Supplier::orderBy('name', 'asc')->get();
-        $products = Product::orderBy('name', 'asc')->get();
+        $suppliers = Supplier::orderBy('name', 'asc')
+            ->get()
+            ->map
+            ->only('id', 'name');
+        $products = Product::orderBy('name', 'asc')
+            ->get()
+            ->map
+            ->only('id', 'name');
 
         return Inertia::render('Purchases/Create', [
             'suppliers' => $suppliers,
@@ -88,6 +94,24 @@ class PurchaseController extends Controller
             ]);
         }
 
+        foreach($request->tankerLoads as $load)
+        {
+            $tankerLoadId = TankerLoad::create([
+                'trip_no' => $load['trip_no'],
+                'remarks' => $load['remarks'],
+                'purchase_id' => $purchaseId,
+            ])->id;
+
+            foreach ($load['details'] as $detail) {
+                $tankerLoadDetail = TankerLoadDetail::create([
+                    'tanker_load_id' => $tankerLoadId,
+                    'product_id' => $detail['product']['id'],
+                    'quantity' => $detail['quantity'],
+                    'unit_price' => $detail['unit_price'],
+                ]);
+            }
+        }
+
         return redirect()->route('purchases.index')->with('success', 'Purchase was successfully added.');
     }
 
@@ -110,78 +134,46 @@ class PurchaseController extends Controller
      */
     public function edit(Purchase $purchase)
     {
-        $suppliers = Supplier::orderBy('name', 'asc')->get();
-        $products = Product::orderBy('name', 'asc')->get();
+        $suppliers = Supplier::orderBy('name', 'asc')
+            ->get()
+            ->map
+            ->only('id', 'name');
+        $products = Product::orderBy('name', 'asc')
+            ->get()
+            ->map
+            ->only('id', 'name');
 
-        // each, foreach, where, whereHas, get, return, has, filter, with
-
-        $pD = $purchase->purchaseDetails->transform(function ($detail) {
-            return [
-                'id' => $detail->id,
-                'quantity' => $detail->quantity,
-                'unit_price' => $detail->unit_price,
-                'remarks' => $detail->remarks,
-                'purchase_id' => $detail->purchase_id,
-                'product' => $detail->product ? $detail->product->only('id', 'name') : null,
-                // 'supplier' => $detail->supplier ? $detail->supplier->only('id', 'name') : null,
-            ];
-        });
-
-        $lD = $purchase->tankerLoads->transform(function ($load) {
-            return [
-                'id' => $load->id,
-                'date' => $load->date,
-                'trip_no' => $load->trip_no,
-                'destination' => $load->destination,
-                'remarks' => $load->remarks,
-                // 'purchase_id' => $load->purchase_id,
-                'tanker' => $load->tanker ? $load->tanker->only('plate_no') : null,
-                'driver' => $load->driver ? $load->driver->only('name') : null,
-                'helper' => $load->helper ? $load->helper->only('name') : null,
-                'loads' => $load->tankerLoadDetails->each(function ($detail) {
-                        return $detail->product->name;
-                    })
-            ];
-        });
-
-        $hD = $purchase->hauls->transform(function ($haul) {
-            return [
-                'id' => $haul->id,
-                'trip_no' => $haul->trip_no,
-                // 'haul_id' => $haul->haul_id,
-                // 'product_id' => $haul->product_id,
-                // 'quantity' => $haul->quantity,
-                // 'unit_price' => $haul->unit_price,
-                'tanker' => $haul->tanker ? $haul->tanker->only('plate_no') : null,
-                'driver' => $haul->driver ? $haul->driver->only('name') : null,
-                'helper' => $haul->helper ? $haul->helper->only('name') : null,
-                // 'hauls' => $haul->haulDetails ? $haul->haulDetails : null,
-                'hauls' => $haul->haulDetails->each(function ($detail) {
-                        return ['p' => $detail->product->name, 'c' => $detail->client->name];
-                    })
-            ];
-        });
-
-        $dD = $purchase->deliveries->transform(function ($delivery) {
-            return [
-                'id' => $delivery->id,
-                'trip_no' => $delivery->trip_no,
-                // 'delivery_id' => $delivery->delivery_id,
-                // 'product_id' => $delivery->product_id,
-                // 'quantity' => $delivery->quantity,
-                // 'unit_price' => $delivery->unit_price,
-                'tanker' => $delivery->tanker ? $delivery->tanker->only('plate_no') : null,
-                'driver' => $delivery->driver ? $delivery->driver->only('name') : null,
-                'helper' => $delivery->helper ? $delivery->helper->only('name') : null,
-                // 'deliveries' => $delivery->deliveryDetails ? $delivery->deliveryDetails : null,
-                'deliveries' => $delivery->deliveryDetails->each(function ($detail) {
-                        return ['p' => $detail->product->name, 'c' => $detail->client->name];
-                    })
-            ];
-        });
-
-       $keys = collect(['purchases', 'loads', 'hauls', 'deliveries']);
-       $figures = $keys->combine([$pD, $lD, $hD, $dD]);
+        $loads = $purchase->tankerLoads
+            ->map(function ($load) {
+                return [
+                   'id' => $load->id,
+                   'purchase_id' => $load->purchase_id,
+                   'trip_no' => $load->trip_no,
+                   'remarks' => $load->remarks,
+                   'details' => $load->tankerLoadDetails->map(function ($detail) {
+                        return [
+                            'id' => $detail->id,
+                            'tanker_load_id' => $detail->tanker_load_id,
+                            'product' => $detail->product ? $detail->product->only('id', 'name') : null,
+                            'quantity' => $detail->quantity,
+                            'unit_price' => $detail->unit_price,
+                        ];
+                   }),
+                   'batangas_transaction' => $load->purchase->batangasTransactions->map(function ($transaction) {
+                        return [
+                            'trip_no' => $transaction->trip_no,
+                            'driver' => $transaction->driver->only('name'),
+                        ];
+                   }),
+                   'mindoro_transaction' => $load->purchase->mindoroTransactions->map(function ($transaction) {
+                        return [
+                            'trip_no' => $transaction->trip_no,
+                            'driver' => $transaction->driver->only('name'),
+                        ];
+                   }),
+                ];
+            })
+            ->toArray();
 
         return Inertia::render('Purchases/Edit', [
             'purchase' => [
@@ -191,9 +183,9 @@ class PurchaseController extends Controller
                 'supplier_id' => $purchase->supplier_id,
                 'details' => $purchase->purchaseDetails,
             ],
+            'tanker_loads' => $loads,
             'suppliers' => $suppliers,
             'products' => $products,
-            'figures' => $figures,
         ]);
 
     }
@@ -205,10 +197,8 @@ class PurchaseController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdatePurchaseRequest $request, Purchase $purchase)
+    public function update(StorePurchaseRequest $request, Purchase $purchase)
     {
-        // dd($purchase->purchaseDetails);
-
         // Purchase
         $purchase->update([
             'date' => $request->date,
@@ -217,19 +207,38 @@ class PurchaseController extends Controller
         ]);
 
         // PurchaseDetail
-        $existingDetails = collect($request->details)->filter(function($value){
-            return $value['id'] !== null;
-        });
-
-        foreach($existingDetails as $detail)
+        foreach($request->details as $detail)
         {
-            $purchase->purchaseDetails()->find($detail['id'])->update([
-                // 'purchase_id' => $detail['purchase_id'],
-                'product_id' => $detail['product']['id'],
-                'quantity' => $detail['quantity'],
-                'unit_price' => $detail['unit_price'],
-                'remarks' => $detail['remarks'],
-            ]);
+            $purchaseDetail = $purchase->purchaseDetails()->findOrNew($detail['id']);
+
+            $purchaseDetail->purchase_id = $detail['purchase_id'];
+            $purchaseDetail->product_id = $detail['product_id'];
+            $purchaseDetail->quantity = $detail['quantity'];
+            $purchaseDetail->unit_price = $detail['unit_price'];
+            $purchaseDetail->remarks = $detail['remarks'];
+            $purchaseDetail->save();
+        }
+
+        // TankerLoad
+        foreach($request->tankerLoads as $load)
+        {
+            $tankerLoad = $purchase->tankerLoads()->findOrNew($load['id']);
+
+            $tankerLoad->trip_no = $load['trip_no'];
+            $tankerLoad->remarks = $load['remarks'];
+            $tankerLoad->purchase_id = $load['purchase_id'];
+            $tankerLoad->save();
+
+            // TankerLoadDetail
+            foreach ($load['details'] as $detail) {
+
+                $loadDetail = $tankerLoad->tankerLoadDetails()->findOrNew($detail['id']);
+
+                $loadDetail->quantity = $detail['quantity'];
+                $loadDetail->product_id = $detail['product']['id'];
+                $loadDetail->unit_price = $detail['unit_price'];
+                $loadDetail->save();
+            }
         }
 
         return Redirect::back()->with('success', 'Purchase updated.');

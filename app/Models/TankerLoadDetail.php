@@ -10,7 +10,7 @@ class TankerLoadDetail extends Model
 {
     use HasFactory;
 
-	 protected $fillable = ['quantity', 'tanker_load_id', 'product_id'];
+	 protected $fillable = ['quantity', 'tanker_load_id', 'product_id', 'unit_price'];
 
 
 	 public function tankerLoad()

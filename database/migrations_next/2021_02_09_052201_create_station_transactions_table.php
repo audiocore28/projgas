@@ -15,10 +15,10 @@ class CreateStationTransactionsTable extends Migration
     {
         Schema::create('station_transactions', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('station_id')->nullable();
+            $table->bigInteger('station_id');
             $table->date('date')->nullable();
             $table->string('shift')->nullable();
-            $table->bigInteger('cashier_id')->nullable();
+            $table->bigInteger('cashier_id');
             $table->bigInteger('pump_attendant_id')->nullable();
             $table->bigInteger('office_staff_id')->nullable();
             $table->timestamps();

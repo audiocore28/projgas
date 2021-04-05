@@ -15,7 +15,7 @@
             </select-input>
           </div>
 
-          <label class="form-label block mr-5">Date</label>
+          <label class="form-label block mr-5">Date:</label>
           <div class="pr-6 pb-8 mb-2 w-full">
             <date-picker v-model="form.date" lang="en" value-type="format" :formatter="momentFormat"></date-picker>
           </div>
@@ -77,21 +77,21 @@
             <text-input v-model="sale.dr_no" :error="errors.dr_no" class="pr-6 pb-8 w-full lg:w-2/12" label="DR No." />
 
             <div class="pr-6 pb-8 w-full lg:w-2/12">
-              <label class="form-label" :for="`client-${index}`">Client</label>
-              <select :id="`client-${index}`" v-model="sale.client_id" class="form-select" :class="{ error: errors[`sale.${index}.client_id`] }">
+              <label class="form-label" :for="`client-${index}`">Client:</label>
+              <select :id="`client-${index}`" v-model="sale.client_id" class="form-select" :class="{ error: errors[`sales.${index}.client_id`] }">
                 <option :value="null" />
                 <option v-for="client in clients" :key="client.id" :value="client.id">{{ client.name }}</option>
               </select>
-              <div v-if="errors[`sale.${index}.client_id`]" class="form-error">{{ errors[`sale.${index}.client_id`] }}</div>
+              <div v-if="errors[`sales.${index}.client_id`]" class="form-error">{{ errors[`sales.${index}.client_id`] }}</div>
             </div>
 
             <div class="pr-6 pb-8 w-full lg:w-2/12">
-              <label class="form-label" :for="`product-${index}`">Product</label>
-              <select :id="`product-${index}`" v-model="sale.product_id" class="form-select" :class="{ error: errors[`sale.${index}.product_id`] }">
+              <label class="form-label" :for="`product-${index}`">Product:</label>
+              <select :id="`product-${index}`" v-model="sale.product_id" class="form-select" :class="{ error: errors[`sales.${index}.product_id`] }">
                 <option :value="null" />
                 <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
               </select>
-              <div v-if="errors[`sale.${index}.product_id`]" class="form-error">{{ errors[`sale.${index}.product_id`] }}</div>
+              <div v-if="errors[`sales.${index}.product_id`]" class="form-error">{{ errors[`sales.${index}.product_id`] }}</div>
             </div>
 
             <text-input type="number" step="any" v-model="sale.quantity" :error="errors.quantity" class="pr-6 pb-8 w-full lg:w-2/12" label="Quantity" />
@@ -113,28 +113,29 @@
         class="font-bold text-1xl cursor-pointer px-5 py-3 block hover:opacity-75 shadow hover:-mb-3 rounded-t">III. Company Vale</h4>
         <div v-show="valeSelected == 2" class="py-4 px-2">
           <div class="px-8 py-4 -mr-6 -mb-8 flex flex-wrap" v-for="(vale, index) in form.company_vales" :key="index">
-            <text-input v-model="vale.pump_no" :error="errors.pump_no" class="pr-6 pb-8 w-full lg:w-1/6" label="Pump No." />
+            <text-input v-model="vale.pump_no" :error="errors.pump_no" class="pr-6 pb-8 w-full lg:w-1/12" label="Pump#" />
             <text-input v-model="vale.voucher_no" :error="errors.voucher_no" class="pr-6 pb-8 w-full lg:w-1/6" label="Voucher No." />
 
-            <div class="pr-6 pb-8 w-full lg:w-1/4">
-              <label class="form-label" :for="`client-${index}`">Client</label>
-              <select :id="`client-${index}`" v-model="vale.client_id" class="form-select" :class="{ error: errors[`vale.${index}.client_id`] }">
+            <div class="pr-6 pb-8 w-full lg:w-1/6">
+              <label class="form-label" :for="`company-${index}`">Company:</label>
+              <select :id="`company-${index}`" v-model="vale.company_id" class="form-select" :class="{ error: errors[`company_vales.${index}.company_id`] }">
                 <option :value="null" />
-                <option v-for="client in clients" :key="client.id" :value="client.id">{{ client.name }}</option>
+                <option v-for="company in companies" :key="company.id" :value="company.id">{{ company.name }}</option>
               </select>
-              <div v-if="errors[`vale.${index}.client_id`]" class="form-error">{{ errors[`vale.${index}.client_id`] }}</div>
+              <div v-if="errors[`company_vales.${index}.company_id`]" class="form-error">{{ errors[`company_vales.${index}.company_id`] }}</div>
             </div>
 
             <div class="pr-6 pb-8 w-full lg:w-1/6">
-              <label class="form-label" :for="`product-${index}`">Product</label>
-              <select :id="`product-${index}`" v-model="vale.product_id" class="form-select" :class="{ error: errors[`vale.${index}.product_id`] }">
+              <label class="form-label" :for="`product-${index}`">Product:</label>
+              <select :id="`product-${index}`" v-model="vale.product_id" class="form-select" :class="{ error: errors[`company_vales.${index}.product_id`] }">
                 <option :value="null" />
                 <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
               </select>
-              <div v-if="errors[`vale.${index}.product_id`]" class="form-error">{{ errors[`vale.${index}.product_id`] }}</div>
+              <div v-if="errors[`company_vales.${index}.product_id`]" class="form-error">{{ errors[`company_vales.${index}.product_id`] }}</div>
             </div>
 
             <text-input type="number" step="any" v-model="vale.quantity" :error="errors.quantity" class="pr-6 pb-8 w-full lg:w-1/6" label="Quantity" />
+            <text-input v-model="vale.remarks" :error="errors.remarks" class="pr-6 pb-8 w-full lg:w-1/6" label="Remarks" />
 
             <button @click.prevent="deleteCompanyValesForm(index)" type="button" class="bg-white py-1 px-1 flex-shrink-0 text-sm leading-none">
               <icon name="trash" class="w-4 h-4 mr-2 fill-red-600"/>
@@ -175,12 +176,12 @@
             <text-input type="number" step="any" v-model="discount.cash" :error="errors.cash" class="pr-6 pb-8 w-full lg:w-1/6" label="Cash" />
 
             <div class="pr-6 pb-8 w-full lg:w-1/4">
-              <label class="form-label" :for="`client-${index}`">Client</label>
-              <select :id="`client-${index}`" v-model="discount.client_id" class="form-select" :class="{ error: errors[`discount.${index}.client_id`] }">
+              <label class="form-label" :for="`client-${index}`">Client:</label>
+              <select :id="`client-${index}`" v-model="discount.client_id" class="form-select" :class="{ error: errors[`discounts.${index}.client_id`] }">
                 <option :value="null" />
                 <option v-for="client in clients" :key="client.id" :value="client.id">{{ client.name }}</option>
               </select>
-              <div v-if="errors[`discount.${index}.client_id`]" class="form-error">{{ errors[`discount.${index}.client_id`] }}</div>
+              <div v-if="errors[`discounts.${index}.client_id`]" class="form-error">{{ errors[`discounts.${index}.client_id`] }}</div>
             </div>
 
             <text-input type="number" step="any" v-model="discount.quantity" :error="errors.quantity" class="pr-6 pb-8 w-full lg:w-1/6" label="Quantity" />
@@ -232,6 +233,7 @@ export default {
     errors: Object,
     products: Array,
     clients: Array,
+    companies: Array,
     stations: Array,
     cashiers: Array,
     pump_attendants: Array,
@@ -284,9 +286,10 @@ export default {
           {
             pump_no: null,
             voucher_no: null,
-            client_id: null,
+            company_id: null,
             product_id: null,
             quantity: null,
+            remarks: null,
           }
         ],
         calibrations: [
@@ -323,7 +326,7 @@ export default {
 
           var pumpReadings = data.pumps.map(value => {
             return {
-              pump: `${value.id}-${value.product_id} (${value.nozzle})`,
+              pump: `${value.pump}-${value.product.name} (${value.nozzle})`,
               opening: null,
               closing: null,
               unit_price: null,
@@ -336,7 +339,7 @@ export default {
 
           var pumpCalibrations = data.pumps.map(value => {
             return {
-              pump: `${value.id}-${value.product_id} (${value.nozzle})`,
+              pump: `${value.pump}-${value.product.name} (${value.nozzle})`,
               quantity: null,
               pump_no: null,
               voucher_no: null,
@@ -380,9 +383,10 @@ export default {
       this.form.company_vales.push({
         pump_no: null,
         voucher_no: null,
-        client_id: null,
+        company_id: null,
         product_id: null,
         quantity: null,
+        remarks: null,
       });
     },
     addCalibrationsForm() {

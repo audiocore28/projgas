@@ -14,11 +14,11 @@
         <li @click="openTab = 1" :class="{ '-mb-px': openTab === 1 }" class="-mb-px mr-1">
           <a :class="openTab === 1 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold">Info</a>
         </li>
-        <li @click="openTab = 2" :class="{ '-mb-px': openTab === 2 }" class="mr-1" v-show="deliveryDetails.data.length">
-          <a :class="openTab === 2 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold">Deliveries</a>
+        <li @click="openTab = 2" :class="{ '-mb-px': openTab === 2 }" class="mr-1" v-show="batangasDetails.data.length">
+          <a :class="openTab === 2 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold">Batangas</a>
         </li>
-        <li @click="openTab = 3" :class="{ '-mb-px': openTab === 3 }" class="mr-1" v-show="haulDetails.data.length">
-          <a :class="openTab === 3 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold">Hauling</a>
+        <li @click="openTab = 3" :class="{ '-mb-px': openTab === 3 }" class="mr-1" v-show="mindoroDetails.data.length">
+          <a :class="openTab === 3 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold">Mindoro</a>
         </li>
       </ul>
 
@@ -34,7 +34,7 @@
               <text-input v-model="form.email_address" :error="errors.email_address" class="pr-6 pb-8 w-full lg:w-1/2" label="Email Address" />
             </div>
             <div class="px-8 py-4 bg-gray-100 border-t border-gray-200 flex justify-end items-center">
-              <button v-if="!deliveryDetails.data.length && !haulDetails.data.length && !client.deleted_at" class="text-red-600 hover:underline" tabindex="-1" type="button" @click="destroy">Delete Client</button>
+              <button v-if="!batangasDetails.data.length && !mindoroDetails.data.length && !client.deleted_at" class="text-red-600 hover:underline" tabindex="-1" type="button" @click="destroy">Delete Client</button>
               <loading-button :loading="sending" class="btn-indigo ml-auto" type="submit">Update Client</loading-button>
             </div>
           </form>
@@ -92,10 +92,13 @@
                   <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Amount
                   </th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    DR#
+                  </th>
                 </tr>
               </thead>
               <tbody class="bg-white divide-y divide-gray-200">
-                <tr v-for="detail in localDeliveryDetails">
+                <tr v-for="detail in localBatangasDetails">
 <!--                   <td class="px-6 py-4 whitespace-nowrap">
                     <div class="text-sm font-medium text-gray-900">
                       <input type="checkbox" :value="detail.id" v-model="statementForm.selected">
@@ -132,11 +135,16 @@
                       {{ totalCurrency(detail.quantity, detail.unit_price) }}
                     </div>
                   </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm font-medium text-gray-900">
+                      {{ detail.dr_no }}
+                    </div>
+                  </td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <button @click="loadMoreDelivery">Load more...</button>
+          <button @click="loadMoreBatangasTransaction">Load more...</button>
         </div>
 
 
@@ -186,10 +194,13 @@
                   <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Amount
                   </th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    DR#
+                  </th>
                 </tr>
               </thead>
               <tbody class="bg-white divide-y divide-gray-200">
-                <tr v-for="detail in localHaulDetails">
+                <tr v-for="detail in localMindoroDetails">
 <!--                   <td class="px-6 py-4 whitespace-nowrap">
                     <div class="text-sm font-medium text-gray-900">
                       <input type="checkbox" :value="detail.id" v-model="statementForm.selected">
@@ -221,11 +232,16 @@
                       {{ totalCurrency(detail.quantity, detail.unit_price) }}
                     </div>
                   </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm font-medium text-gray-900">
+                      {{ detail.dr_no }}
+                    </div>
+                  </td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <button @click="loadMoreHaul">Load more...</button>
+          <button @click="loadMoreMindoroTransaction">Load more...</button>
         </div>
       </div>
     </div>
@@ -242,13 +258,13 @@ import TrashedMessage from '@/Shared/TrashedMessage'
 import DatePicker from 'vue2-datepicker'
 import moment from 'moment'
 import axios from 'axios'
-import { loadMoreHaulMixin } from '@/Mixins/loadMoreHaulMixin'
-import { loadMoreDeliveryMixin } from '@/Mixins/loadMoreDeliveryMixin'
+import { loadMoreMindoroTransactionMixin } from '@/Mixins/loadMoreMindoroTransactionMixin'
+import { loadMoreBatangasTransactionMixin } from '@/Mixins/loadMoreBatangasTransactionMixin'
 
 export default {
   mixins: [
-    loadMoreHaulMixin('clients'),
-    loadMoreDeliveryMixin('clients'),
+    loadMoreMindoroTransactionMixin('clients'),
+    loadMoreBatangasTransactionMixin('clients'),
   ],
   metaInfo() {
     return { title: this.form.name }
@@ -285,6 +301,7 @@ export default {
         }
       },
       form: {
+        id: this.client.id,
         name: this.client.name,
         office: this.client.office,
         contact_person: this.client.contact_person,

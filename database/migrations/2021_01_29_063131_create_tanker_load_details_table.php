@@ -18,6 +18,7 @@ class CreateTankerLoadDetailsTable extends Migration
             $table->unsignedBigInteger('tanker_load_id');
             $table->bigInteger('product_id');
             $table->decimal('quantity', 8, 0)->nullable();
+            $table->decimal('unit_price', 10, 2)->nullable();
             $table->timestamps();
 
             $table->foreign('tanker_load_id')->references('id')->on('tanker_loads')->onDelete('cascade');

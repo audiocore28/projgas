@@ -58,11 +58,18 @@ class HaulController extends Controller
      */
     public function create()
     {
-        $clients = Client::orderBy('name', 'asc')->get();
-        $purchases = Purchase::orderBy('id', 'desc')->get();
+        $purchases = Purchase::when(request('term'), function($query, $term) {
+            $query->where('purchase_no', 'like', "%$term%");
+        })->get();
+
         $tankers = Tanker::orderBy('plate_no', 'asc')->get();
         $drivers = Driver::orderBy('name', 'asc')->get();
         $helpers = Helper::orderBy('name', 'asc')->get();
+
+        $clients = Client::when(request('term'), function($query, $term) {
+            $query->where('name', 'like', "%$term%");
+        })->get();
+
         $products = Product::orderBy('name', 'asc')->get();
 
         return Inertia::render('Hauls/Create', [
@@ -126,12 +133,33 @@ class HaulController extends Controller
      */
     public function edit(Haul $haul)
     {
-        $clients = Client::orderBy('name', 'asc')->get();
-        $purchases = Purchase::orderBy('id', 'desc')->get();
+        $purchases = Purchase::when(request('term'), function($query, $term) {
+            $query->where('purchase_no', 'like', "%$term%");
+        })->get();
+
         $tankers = Tanker::orderBy('plate_no', 'asc')->get();
         $drivers = Driver::orderBy('name', 'asc')->get();
         $helpers = Helper::orderBy('name', 'asc')->get();
+
+        $clients = Client::when(request('term'), function($query, $term) {
+            $query->where('name', 'like', "%$term%");
+        })->get();
+
         $products = Product::orderBy('name', 'asc')->get();
+        $details = $haul->haulDetails
+                ->map(function ($detail) {
+                    return [
+                       'id' => $detail->id,
+                       'date' => $detail->date,
+                       'quantity' => $detail->quantity,
+                       'unit_price' => $detail->unit_price,
+                       'haul_id' => $detail->haul_id,
+                       'product_id' => $detail->product_id,
+                       'client_id' => $detail->client_id,
+                       'selectedClient' => $detail->client_id,
+                    ];
+                })
+                ->toArray();
 
         return Inertia::render('Hauls/Edit', [
             'haul' => [
@@ -141,7 +169,7 @@ class HaulController extends Controller
                 'driver_id' => $haul->driver_id,
                 'helper_id' => $haul->helper_id,
                 'purchase_id' => $haul->purchase_id,
-                'details' => $haul->haulDetails,
+                'details' => $details,
             ],
             'clients' => $clients,
             'purchases' => $purchases,

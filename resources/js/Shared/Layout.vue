@@ -38,7 +38,7 @@
         </div>
         <div class="md:flex md:flex-grow md:overflow-hidden">
           <main-menu :url="url()" class="hidden md:block bg-blue-800 flex-shrink-0 w-56 p-12 overflow-y-auto" />
-          <div class="md:flex-1 px-4 py-8 md:p-12 md:overflow-y-auto" scroll-region>
+          <div class="md:flex-1 px-4 py-8 md:px-4 py-12 md:overflow-y-auto" scroll-region>
             <flash-messages />
             <slot />
           </div>

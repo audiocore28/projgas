@@ -95,6 +95,7 @@ export default {
         }
       },
       form: {
+        id: this.supplier.id,
         name: this.supplier.name,
         office: this.supplier.office,
         contact_person: this.supplier.contact_person,

@@ -4,11 +4,11 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClientController;
 // use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\DeliveryController;
-use App\Http\Controllers\DeliveryDetailController;
 use App\Http\Controllers\DriverController;
-use App\Http\Controllers\HaulController;
-use App\Http\Controllers\HaulDetailController;
+use App\Http\Controllers\BatangasTransactionController;
+use App\Http\Controllers\BatangasTransactionDetailController;
+use App\Http\Controllers\MindoroTransactionController;
+use App\Http\Controllers\MindoroTransactionDetailController;
 use App\Http\Controllers\HelperController;
 // use App\Http\Controllers\CashierController;
 // use App\Http\Controllers\PumpAttendantController;
@@ -25,6 +25,11 @@ use App\Http\Controllers\SupplierController;
 // use App\Http\Controllers\PumpController;
 // use App\Http\Controllers\CompanyController;
 // use App\Http\Controllers\StationTransactionController;
+// use App\Http\Controllers\PumpReadingController;
+// use App\Http\Controllers\SaleController;
+// use App\Http\Controllers\CompanyValeController;
+// use App\Http\Controllers\CalibrationController;
+// use App\Http\Controllers\DiscountController;
 use App\Http\Controllers\TankerController;
 use App\Http\Controllers\UsersController;
 
@@ -73,17 +78,17 @@ Route::group(['middleware' => 'auth'], function() {
 	// Tanker Load Details
 	Route::resource('tanker-load-details', TankerLoadDetailController::class)->only(['store', 'destroy']);
 
-	// Hauling
-	Route::resource('hauls', HaulController::class);
+	// Batangas Transaction
+	Route::resource('batangas-transactions', BatangasTransactionController::class);
 
-	// Hauling Details
-	Route::resource('haul-details', HaulDetailController::class)->only(['store', 'destroy']);
+	// Batangas Transaction Details
+	Route::resource('batangas-transaction-details', BatangasTransactionDetailController::class)->only(['store', 'destroy']);
 
-	// Deliveries
-	Route::resource('deliveries', DeliveryController::class);
+	// Mindoro Transaction
+	Route::resource('mindoro-transactions', MindoroTransactionController::class);
 
-	// Delivery Details
-	Route::resource('delivery-details', DeliveryDetailController::class)->only(['store', 'destroy']);
+	// Mindoro Transaction Details
+	Route::resource('mindoro-transaction-details', MindoroTransactionDetailController::class)->only(['store', 'destroy']);
 
 	// Suppliers
 	Route::put('suppliers/{supplier}/restore', [SupplierController::class, 'restore'])->name('suppliers.restore');
@@ -142,8 +147,23 @@ Route::group(['middleware' => 'auth'], function() {
 	// Route::resource('office-staffs', OfficeStaffController::class);
 
 	// // Station Transactions
+	// Route::post('/station-transactions/addNewRow', [StationTransactionController::class, 'addNewRow'])->name('station-transactions.addNewRow');
 	// Route::resource('station-transactions', StationTransactionController::class);
 
+	// // Pump Readings
+	// Route::resource('pump-readings', PumpReadingController::class)->only(['store', 'destroy']);
+
+	// // Sales
+	// Route::resource('sales', SaleController::class)->only(['store', 'destroy']);
+
+	// // Company Vales
+	// Route::resource('company-vales', CompanyValeController::class)->only(['store', 'destroy']);
+
+	// // Calibrations
+	// Route::resource('calibrations', CalibrationController::class)->only(['store', 'destroy']);
+
+	// // Discounts
+	// Route::resource('discounts', DiscountController::class)->only(['store', 'destroy']);
 });
 
 

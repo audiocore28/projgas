@@ -9,3 +9,6 @@
 
 /* Utilities */
 @import "tailwindcss/utilities";
+
+/* Packages */
+@import "../../node_modules/vue-multiselect/dist/vue-multiselect.min.css";

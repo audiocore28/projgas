@@ -24,7 +24,11 @@ class StoreSupplierRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required', 'max:50'],
+            'name' => [
+                'required',
+                'max:100',
+                'unique:suppliers,name,'.$this->id
+            ],
             'office' => ['nullable', 'max:150'],
             'email_address' => ['nullable', 'max:100'],
             'contact_person' => ['nullable', 'max:50'],

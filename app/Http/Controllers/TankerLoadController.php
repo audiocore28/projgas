@@ -6,9 +6,6 @@ use App\Http\Requests\StoreTankerLoadRequest;
 use App\Models\TankerLoad;
 use App\Models\TankerLoadDetail;
 use App\Models\Purchase;
-use App\Models\Tanker;
-use App\Models\Driver;
-use App\Models\Helper;
 use App\Models\Product;
 // use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -60,17 +57,31 @@ class TankerLoadController extends Controller
      */
     public function create()
     {
-        $purchases = Purchase::orderBy('id', 'desc')->get();
-        $tankers = Tanker::orderBy('plate_no', 'asc')->get();
-        $drivers = Driver::orderBy('name', 'asc')->get();
-        $helpers = Helper::orderBy('name', 'asc')->get();
+        $purchases = Purchase::when(request('term'), function($query, $term) {
+            $query->where('purchase_no', 'like', "%$term%");
+        })->get();
+
+        // $purchases->map(function ($purchase) {
+        //         return [
+        //             'id' => $purchase->id,
+        //             'date' => $purchase->date,
+        //             'purchase_no' => $purchase->purchase_no,
+        //             'supplier' => $purchase->supplier ? $purchase->supplier->only('name') : null,
+        //             'purchase_details' => $purchase->purchaseDetails->each(function ($detail) {
+        //                     return [
+        //                         'product' => $detail->product ? $detail->product->only('name') : null,
+        //                         'quantity' => $detail->quantity,
+        //                         'unit_price' => $detail->unit_price,
+        //                         'remarks' => $detail->remarks,
+        //                     ];
+        //                 }),
+        //             ];
+        //         });
+
         $products = Product::orderBy('name', 'asc')->get();
 
         return Inertia::render('TankerLoads/Create', [
             'purchases' => $purchases,
-            'tankers' => $tankers,
-            'drivers' => $drivers,
-            'helpers' => $helpers,
             'products' => $products,
         ]);
     }
@@ -84,13 +95,9 @@ class TankerLoadController extends Controller
     public function store(StoreTankerLoadRequest $request)
     {
         $tankerLoadId = TankerLoad::create([
-            'date' => $request->date,
             'trip_no' => $request->trip_no,
             'remarks' => $request->remarks,
             'purchase_id' => $request->purchase_id,
-            'tanker_id' => $request->tanker_id,
-            'driver_id' => $request->driver_id,
-            'helper_id' => $request->helper_id,
         ])->id;
 
 
@@ -100,6 +107,7 @@ class TankerLoadController extends Controller
                 'tanker_load_id' => $tankerLoadId,
                 'product_id' => $detail['product_id'],
                 'quantity' => $detail['quantity'],
+                'unit_price' => $detail['unit_price'],
             ]);
         }
 
@@ -125,11 +133,9 @@ class TankerLoadController extends Controller
      */
     public function edit(TankerLoad $tankerLoad)
     {
-        $purchases = Purchase::orderBy('id', 'desc')->get();
-        // dd($purchases);
-        $tankers = Tanker::orderBy('plate_no', 'asc')->get();
-        $drivers = Driver::orderBy('name', 'asc')->get();
-        $helpers = Helper::orderBy('name', 'asc')->get();
+        $purchases = Purchase::when(request('term'), function($query, $term) {
+            $query->where('purchase_no', 'like', "%$term%");
+        })->get();
         $products = Product::orderBy('name', 'asc')->get();
 
         return Inertia::render('TankerLoads/Edit', [
@@ -139,15 +145,9 @@ class TankerLoadController extends Controller
                 'trip_no' => $tankerLoad->trip_no,
                 'remarks' => $tankerLoad->remarks,
                 'purchase_id' => $tankerLoad->purchase_id,
-                'tanker_id' => $tankerLoad->tanker_id,
-                'driver_id' => $tankerLoad->driver_id,
-                'helper_id' => $tankerLoad->helper_id,
                 'details' => $tankerLoad->tankerLoadDetails,
             ],
             'purchases' => $purchases,
-            'tankers' => $tankers,
-            'drivers' => $drivers,
-            'helpers' => $helpers,
             'products' => $products,
         ]);
     }
@@ -167,9 +167,6 @@ class TankerLoadController extends Controller
             'trip_no' => $request->trip_no,
             'remarks' => $request->remarks,
             'purchase_id' => $request->purchase_id,
-            'tanker_id' => $request->tanker_id,
-            'driver_id' => $request->driver_id,
-            'helper_id' => $request->helper_id,
         ]);
 
         // TankerLoadDetail
@@ -183,6 +180,7 @@ class TankerLoadController extends Controller
                 // 'load_id' => $detail['load_id'],
                 'product_id' => $detail['product_id'],
                 'quantity' => $detail['quantity'],
+                'unit_price' => $detail['unit_price'],
             ]);
         }
 
@@ -199,7 +197,7 @@ class TankerLoadController extends Controller
     {
         $tankerLoad->delete();
 
-        return redirect()->route('tanker-loads.index')->with('success', 'Load deleted.');
+        return Redirect::back()->with('success', 'Load deleted.');
     }
 
 }

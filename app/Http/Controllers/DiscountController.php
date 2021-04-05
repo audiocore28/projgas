@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreDiscountRequest;
 use App\Models\Discount;
-use Illuminate\Http\Request;
+// use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
+use Inertia\Inertia;
 
 class DiscountController extends Controller
 {
@@ -33,9 +38,21 @@ class DiscountController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreDiscountRequest $request)
     {
-        //
+        foreach($request->all() as $discount)
+        {
+            $discountDetail = Discount::create([
+                'station_transaction_id' => $discount['station_transaction_id'],
+                'voucher_no' => $discount['voucher_no'],
+                'cash' => $discount['cash'],
+                'client_id' => $discount['client_id'],
+                'quantity' => $discount['quantity'],
+                'disc_amount' => $discount['disc_amount'],
+            ]);
+        }
+
+        return redirect()->route('station-transactions.index')->with('success', 'Transaction was successfully added.');
     }
 
     /**
@@ -80,6 +97,8 @@ class DiscountController extends Controller
      */
     public function destroy(Discount $discount)
     {
-        //
+        $discount->delete();
+
+        return Redirect::back()->with('success', 'Discount row deleted.');
     }
 }

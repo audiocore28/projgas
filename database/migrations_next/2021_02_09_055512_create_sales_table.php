@@ -15,14 +15,16 @@ class CreateSalesTable extends Migration
     {
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('station_transaction_id');
             $table->string('pump_no')->nullable();
             $table->string('dr_no')->nullable();
-            $table->bigInteger('client_id')->nullable();
+            $table->bigInteger('client_id');
             $table->bigInteger('product_id');
             $table->decimal('quantity', 8, 3)->nullable();
             $table->string('rs_no')->nullable();
-            $table->bigInteger('station_transaction_id');
             $table->timestamps();
+
+            $table->foreign('station_transaction_id')->references('id')->on('station_transactions')->onDelete('cascade');
         });
     }
 

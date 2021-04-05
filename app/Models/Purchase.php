@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Supplier;
 use App\Models\PurchaseDetail;
+use App\Models\MindoroTransaction;
 use App\Models\TankerLoad;
 use App\Models\Delivery;
 use Carbon\Carbon;
@@ -31,9 +32,14 @@ class Purchase extends Model
 	 	return $this->hasMany(TankerLoad::class);
 	 }
 
-     public function hauls()
+     public function batangasTransactions()
      {
-        return $this->hasMany(Haul::class);
+        return $this->belongsToMany(BatangasTransaction::class);
+     }
+
+     public function mindoroTransactions()
+     {
+        return $this->belongsToMany(MindoroTransaction::class);
      }
 
      public function deliveries()

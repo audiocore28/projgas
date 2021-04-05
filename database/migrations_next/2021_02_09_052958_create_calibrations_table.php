@@ -15,12 +15,14 @@ class CreateCalibrationsTable extends Migration
     {
         Schema::create('calibrations', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('station_transaction_id');
             $table->string('pump')->nullable();
             $table->decimal('quantity', 8, 3)->nullable();
             $table->string('pump_no')->nullable();
             $table->string('voucher_no')->nullable();
-            $table->bigInteger('station_transaction_id');
             $table->timestamps();
+
+            $table->foreign('station_transaction_id')->references('id')->on('station_transactions')->onDelete('cascade');
         });
     }
 
