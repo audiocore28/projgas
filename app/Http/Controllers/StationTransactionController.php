@@ -6,6 +6,7 @@ use App\Http\Requests\StoreStationTransactionRequest;
 use App\Models\StationTransaction;
 use App\Models\Product;
 use App\Models\Client;
+use App\Models\Company;
 use App\Models\Station;
 use App\Models\Cashier;
 use App\Models\PumpAttendant;
@@ -60,6 +61,7 @@ class StationTransactionController extends Controller
     {
         $products = Product::orderBy('name', 'asc')->get();
         $clients = Client::orderBy('name', 'asc')->get();
+        $companies = Company::orderBy('name', 'asc')->get();
         $stations = Station::orderBy('name', 'asc')->get();
         $cashiers = Cashier::orderBy('name', 'asc')->get();
         $pumpAttendants = PumpAttendant::orderBy('name', 'asc')->get();
@@ -68,6 +70,7 @@ class StationTransactionController extends Controller
         return Inertia::render('StationTransactions/Create', [
             'products' => $products,
             'clients' => $clients,
+            'companies' => $companies,
             'stations' => $stations,
             'cashiers' => $cashiers,
             'pump_attendants' => $pumpAttendants,
@@ -123,9 +126,10 @@ class StationTransactionController extends Controller
                 'station_transaction_id' => $transactionId,
                 'pump_no' => $vale['pump_no'],
                 'voucher_no' => $vale['voucher_no'],
-                'client_id' => $vale['client_id'],
+                'company_id' => $vale['company_id'],
                 'product_id' => $vale['product_id'],
                 'quantity' => $vale['quantity'],
+                'remarks' => $vale['remarks'],
             ]);
         }
 
@@ -144,6 +148,71 @@ class StationTransactionController extends Controller
         {
             $discountDetail = Discount::create([
                 'station_transaction_id' => $transactionId,
+                'voucher_no' => $discount['voucher_no'],
+                'cash' => $discount['cash'],
+                'client_id' => $discount['client_id'],
+                'quantity' => $discount['quantity'],
+                'disc_amount' => $discount['disc_amount'],
+            ]);
+        }
+
+        return redirect()->route('station-transactions.index')->with('success', 'Transaction was successfully added.');
+    }
+
+    public function addNewRow(Request $request)
+    {
+        foreach($request->pump_readings as $reading)
+        {
+            $readingDetail = PumpReading::create([
+                'station_transaction_id' => $reading['station_transaction_id'],
+                'pump' => $reading['pump'],
+                'opening' => $reading['opening'],
+                'closing' => $reading['closing'],
+                'unit_price' => $reading['unit_price'],
+            ]);
+        }
+
+        foreach($request->sales as $sale)
+        {
+            $saleDetail = Sale::create([
+                'station_transaction_id' => $reading['station_transaction_id'],
+                'pump_no' => $sale['pump_no'],
+                'dr_no' => $sale['dr_no'],
+                'client_id' => $sale['client_id'],
+                'product_id' => $sale['product_id'],
+                'quantity' => $sale['quantity'],
+                'rs_no' => $sale['rs_no'],
+            ]);
+        }
+
+        foreach($request->company_vales as $vale)
+        {
+            $valeDetail = CompanyVale::create([
+                'station_transaction_id' => $reading['station_transaction_id'],
+                'pump_no' => $vale['pump_no'],
+                'voucher_no' => $vale['voucher_no'],
+                'company_id' => $vale['company_id'],
+                'product_id' => $vale['product_id'],
+                'quantity' => $vale['quantity'],
+                'remarks' => $vale['remarks'],
+            ]);
+        }
+
+        foreach($request->calibrations as $calibration)
+        {
+            $calibrationDetail = Calibration::create([
+                'station_transaction_id' => $reading['station_transaction_id'],
+                'pump' => $calibration['pump'],
+                'quantity' => $calibration['quantity'],
+                'pump_no' => $calibration['pump_no'],
+                'voucher_no' => $calibration['voucher_no'],
+            ]);
+        }
+
+        foreach($request->discounts as $discount)
+        {
+            $discountDetail = Discount::create([
+                'station_transaction_id' => $reading['station_transaction_id'],
                 'voucher_no' => $discount['voucher_no'],
                 'cash' => $discount['cash'],
                 'client_id' => $discount['client_id'],
@@ -176,6 +245,7 @@ class StationTransactionController extends Controller
     {
         $products = Product::orderBy('name', 'asc')->get();
         $clients = Client::orderBy('name', 'asc')->get();
+        $companies = Company::orderBy('name', 'asc')->get();
         $stations = Station::orderBy('name', 'asc')->get();
         $cashiers = Cashier::orderBy('name', 'asc')->get();
         $pumpAttendants = PumpAttendant::orderBy('name', 'asc')->get();
@@ -198,6 +268,7 @@ class StationTransactionController extends Controller
             ],
             'products' => $products,
             'clients' => $clients,
+            'companies' => $companies,
             'stations' => $stations,
             'cashiers' => $cashiers,
             'pump_attendants' => $pumpAttendants,
@@ -214,7 +285,102 @@ class StationTransactionController extends Controller
      */
     public function update(StoreStationTransactionRequest $request, StationTransaction $stationTransaction)
     {
-        //
+        // Transaction
+        $stationTransaction->update([
+            'date' => $request->date,
+            'shift' => $request->shift,
+            'station_id' => $request->station_id,
+            'cashier_id' => $request->cashier_id,
+            'pump_attendant_id' => $request->pump_attendant_id,
+            'office_staff_id' => $request->office_staff_id,
+        ]);
+
+        // PumpReading
+        $existingPumpReadings = collect($request->pump_readings)->filter(function($value){
+            return $value['id'] !== null;
+        });
+
+        foreach($existingPumpReadings as $reading)
+        {
+            $stationTransaction->pumpReadings()->find($reading['id'])->update([
+                // 'station_transaction_id' => $reading['station_transaction_id'],
+                'pump' => $reading['pump'],
+                'opening' => $reading['opening'],
+                'closing' => $reading['closing'],
+                'unit_price' => $reading['unit_price'],
+            ]);
+        }
+
+        // Sale
+        $existingSales = collect($request->sales)->filter(function($value){
+            return $value['id'] !== null;
+        });
+
+        foreach($existingSales as $sale)
+        {
+            $stationTransaction->sales()->find($sale['id'])->update([
+                // 'station_transaction_id' => $sale['station_transaction_id'],
+                'pump_no' => $sale['pump_no'],
+                'dr_no' => $sale['dr_no'],
+                'client_id' => $sale['client_id'],
+                'product_id' => $sale['product_id'],
+                'quantity' => $sale['quantity'],
+                'rs_no' => $sale['rs_no'],
+            ]);
+        }
+
+        // CompanyVale
+        $existingCompanyVales = collect($request->company_vales)->filter(function($value){
+            return $value['id'] !== null;
+        });
+
+        foreach($existingCompanyVales as $vale)
+        {
+            $stationTransaction->companyVales()->find($vale['id'])->update([
+                // 'station_transaction_id' => $vale['station_transaction_id'],
+                'pump_no' => $vale['pump_no'],
+                'voucher_no' => $vale['voucher_no'],
+                'company_id' => $vale['company_id'],
+                'product_id' => $vale['product_id'],
+                'quantity' => $vale['quantity'],
+                'remarks' => $vale['remarks'],
+            ]);
+        }
+
+        // Calibration
+        $existingCalibrations = collect($request->calibrations)->filter(function($value){
+            return $value['id'] !== null;
+        });
+
+        foreach($existingCalibrations as $calibration)
+        {
+            $stationTransaction->calibrations()->find($calibration['id'])->update([
+                // 'station_transaction_id' => $calibration['station_transaction_id'],
+                'pump' => $calibration['pump'],
+                'quantity' => $calibration['quantity'],
+                'pump_no' => $calibration['pump_no'],
+                'voucher_no' => $calibration['voucher_no'],
+            ]);
+        }
+
+        // Discount
+        $existingDiscounts = collect($request->discounts)->filter(function($value){
+            return $value['id'] !== null;
+        });
+
+        foreach($existingDiscounts as $discount)
+        {
+            $stationTransaction->discounts()->find($discount['id'])->update([
+                // 'station_transaction_id' => $discount['station_transaction_id'],
+                'voucher_no' => $discount['voucher_no'],
+                'cash' => $discount['cash'],
+                'client_id' => $discount['client_id'],
+                'quantity' => $discount['quantity'],
+                'disc_amount' => $discount['disc_amount'],
+            ]);
+        }
+
+        return Redirect::back()->with('success', 'Transaction updated.');
     }
 
     /**
@@ -225,6 +391,8 @@ class StationTransactionController extends Controller
      */
     public function destroy(StationTransaction $stationTransaction)
     {
-        //
+        $stationTransaction->delete();
+
+        return redirect()->route('station-transactions.index')->with('success', 'Delivery deleted.');
     }
 }
