@@ -47,20 +47,18 @@
 
         <!-- Tab 2 -->
         <div v-show="openTab === 2">
-          <transactions
+          <batangas-transactions
             :transactionDetails="batangasDetails"
-            record="drivers"
-            area="batangas">
-          </transactions>
+            record="drivers">
+          </batangas-transactions>
         </div>
 
         <!-- Tab 3 -->
         <div v-show="openTab === 3">
-          <transactions
+          <mindoro-transactions
             :transactionDetails="mindoroDetails"
-            record="drivers"
-            area="mindoro">
-          </transactions>
+            record="drivers">
+          </mindoro-transactions>
         </div>
 
         <!-- Tab 4 -->
@@ -83,7 +81,8 @@ import LoadingButton from '@/Shared/LoadingButton'
 import SelectInput from '@/Shared/SelectInput'
 import TextInput from '@/Shared/TextInput'
 import TrashedMessage from '@/Shared/TrashedMessage'
-import Transactions from '@/Shared/Transactions'
+import BatangasTransactions from '@/Shared/BatangasTransactions'
+import MindoroTransactions from '@/Shared/MindoroTransactions'
 import Salary from '@/Shared/Salary'
 import moment from 'moment'
 import { numberFormatsMixin } from '@/Mixins/numberFormatsMixin'
@@ -100,7 +99,8 @@ export default {
     SelectInput,
     TextInput,
     TrashedMessage,
-    Transactions,
+    BatangasTransactions,
+    MindoroTransactions,
     Salary,
   },
   props: {
