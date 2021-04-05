@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div class="bg-white rounded shadow overflow-x-auto mb-8 -mt-4">
-      <div class="rounded shadow overflow-x-auto mb-8" v-for="load in localLoadDetails" :key="load.id" :value="load.id">
+    <div class="bg-white rounded shadow overflow-x-auto mb-8 -mt-4 px-8">
+      <div class="rounded shadow overflow-x-auto mb-8 mt-2" v-for="load in localLoadDetails" :key="load.id" :value="load.id">
         <div class="ml-5 mt-5 mb-1">
           <inertia-link :href="route('tanker-loads.edit', load.id)" tabindex="-1">
             <p class="text-sm font-bold text-blue-700 mb-2">{{ load.trip_no }}. {{ load.driver.name }} & {{ load.helper.name }} ({{ load.tanker.plate_no }})</p>
