@@ -9,6 +9,7 @@ use App\Http\Controllers\BatangasTransactionController;
 use App\Http\Controllers\BatangasTransactionDetailController;
 use App\Http\Controllers\MindoroTransactionController;
 use App\Http\Controllers\MindoroTransactionDetailController;
+use App\Http\Controllers\MonthlyMindoroTransactionController;
 use App\Http\Controllers\HelperController;
 // use App\Http\Controllers\CashierController;
 // use App\Http\Controllers\PumpAttendantController;
@@ -89,6 +90,9 @@ Route::group(['middleware' => 'auth'], function() {
 
 	// Mindoro Transaction Details
 	Route::resource('mindoro-transaction-details', MindoroTransactionDetailController::class)->only(['store', 'destroy']);
+
+	// Monthly Mindoro Transaction
+	Route::resource('monthly-mindoro-transactions', MonthlyMindoroTransactionController::class);
 
 	// Suppliers
 	Route::put('suppliers/{supplier}/restore', [SupplierController::class, 'restore'])->name('suppliers.restore');

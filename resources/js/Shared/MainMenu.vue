@@ -84,8 +84,8 @@ export default {
       truckingLinks: [
         // { route: 'dashboard', icon: 'office', isUrl: 'dashboard', name: 'Dashboard'},
         { route: 'purchases.index', icon: 'shopping-cart', isUrl: 'purchases', name: 'Purchases'},
-        { route: 'batangas-transactions.index', icon: 'location', isUrl: 'batangas-transaction', name: 'Batangas'},
-        { route: 'mindoro-transactions.index', icon: 'location', isUrl: 'mindoro-transaction', name: 'Mindoro'},
+        { route: 'batangas-transactions.index', icon: 'location', isUrl: 'batangas-transactions', name: 'Batangas'},
+        { route: 'monthly-mindoro-transactions.index', icon: 'location', isUrl: 'monthly-mindoro-transactions', name: 'Mindoro'},
       ],
       recordLinks: [
         { route: 'suppliers.index', icon: 'office', isUrl: 'suppliers', name: 'Suppliers'},

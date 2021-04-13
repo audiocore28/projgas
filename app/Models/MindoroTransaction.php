@@ -12,7 +12,12 @@ class MindoroTransaction extends Model
     use HasFactory;
 
      protected $dates = ['date'];
-	 protected $fillable = ['date', 'trip_no', 'driver_id', 'helper_id', 'tanker_id'];
+	 protected $fillable = ['date', 'trip_no', 'driver_id', 'helper_id', 'tanker_id', 'monthly_mindoro_transaction_id'];
+
+     public function monthlyMindoroTransaction()
+     {
+        return $this->belongsTo(MonthlyMindoroTransaction::class);
+     }
 
 	 public function purchases()
 	 {
@@ -38,6 +43,11 @@ class MindoroTransaction extends Model
 	 {
 	 	return $this->hasMany(MindoroTransactionDetail::class);
 	 }
+
+     public function tankerLoads()
+     {
+        return $this->hasMany(TankerLoad::class);
+     }
 
     public function scopeFilter($query, array $filters)
     {

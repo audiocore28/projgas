@@ -15,7 +15,7 @@ class TankerLoad extends Model
 {
     use HasFactory;
 
-	 protected $fillable = ['trip_no', 'remarks', 'purchase_id'];
+	 protected $fillable = ['mindoro_transaction_id', 'remarks', 'purchase_id'];
 
 
 	 public function purchase()
@@ -23,9 +23,9 @@ class TankerLoad extends Model
 	 	return $this->belongsTo(Purchase::class);
 	 }
 
-	 public function deliveries()
+	 public function mindoroTransaction()
 	 {
-	 	return $this->hasMany(Delivery::class);
+	 	return $this->belongsTo(MindoroTransaction::class);
 	 }
 
 	 public function tankerLoadDetails()

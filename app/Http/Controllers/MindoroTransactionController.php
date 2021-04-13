@@ -393,7 +393,8 @@ class MindoroTransactionController extends Controller
     {
         $mindoroTransaction->delete();
 
-        return redirect()->route('mindoro-transactions.index')->with('success', 'Mindoro Transaction deleted.');
+        // return redirect()->route('mindoro-transactions.index')->with('success', 'Mindoro Transaction deleted.');
+        return Redirect::back()->with('success', 'Mindoro Transaction deleted.');
     }
 
 }

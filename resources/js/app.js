@@ -13,6 +13,11 @@ Vue.use(Multiselect);
 import DatePicker from 'vue2-datepicker';
 Vue.use(DatePicker);
 
+import { MonthPicker } from 'vue-month-picker'
+import { MonthPickerInput } from 'vue-month-picker'
+Vue.use(MonthPicker)
+Vue.use(MonthPickerInput)
+
 import { InertiaApp } from '@inertiajs/inertia-vue';
 import { InertiaForm } from 'laravel-jetstream';
 import PortalVue from 'portal-vue';

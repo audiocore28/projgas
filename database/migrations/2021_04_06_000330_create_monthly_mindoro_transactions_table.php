@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMindoroTransactionsTable extends Migration
+class CreateMonthlyMindoroTransactionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,10 @@ class CreateMindoroTransactionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('mindoro_transactions', function (Blueprint $table) {
+        Schema::create('monthly_mindoro_transactions', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('monthly_mindoro_transaction_id');
-            $table->string('trip_no');
-            $table->bigInteger('tanker_id');
-            $table->bigInteger('driver_id');
-            $table->bigInteger('helper_id');
+            $table->year('year');
+            $table->string('month');
             $table->timestamps();
         });
     }
@@ -31,6 +28,6 @@ class CreateMindoroTransactionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('mindoro_transactions');
+        Schema::dropIfExists('monthly_mindoro_transactions');
     }
 }
