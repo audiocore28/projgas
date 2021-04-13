@@ -18,6 +18,7 @@ class CreatePurchasesTable extends Migration
             $table->date('date');
             $table->string('purchase_no');
             $table->bigInteger('supplier_id');
+            $table->bigInteger('monthly_mindoro_transaction_id');
             $table->timestamps();
         });
     }

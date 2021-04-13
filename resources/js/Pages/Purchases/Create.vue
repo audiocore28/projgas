@@ -134,8 +134,18 @@
       <!-- TankerLoad Form -->
       <div class="mb-8 flex justify-between items-center">
         <div class="-mb-8 flex justify-start items-center">
-          <h1 class="my-8 font-bold text-2xl mr-8">Loads ({{ form.tankerLoads.length }})</h1>
-          <button class="btn-indigo" @click.prevent="addNewTankerLoadForm">Add</button>
+          <h1 class="my-8 font-bold text-2xl mr-4">To Mindoro</h1>
+
+          <!-- MonthlyMindoroTransaction -->
+          <div class="text-sm font-medium text-gray-900 mr-4">
+            <select v-model="form.monthly_mindoro_transaction_id" class="form-select">
+              <option :value="null" />
+              <option v-for="monthlyTransaction in monthlyMindoroTransactions" :key="monthlyTransaction.id" :value="monthlyTransaction.id">{{ `${monthlyTransaction.year}, ${monthlyTransaction.month}` }}</option>
+            </select>
+          </div>
+
+          <button class="btn-indigo" @click.prevent="addNewTankerLoadForm">Add ({{ form.tankerLoads.length }})</button>
+
         </div>
         <div class="-mb-8 flex justify-end items-center">
           <span class="mr-2 px-2 py-2 text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
@@ -165,19 +175,29 @@
             <!-- TankerLoad -->
             <div class="p-2 -mr-6 -mb-6 flex justify-between bg-blue-600">
               <table>
-                <colgroup>
+<!--                 <colgroup>
                   <col span="1" style="width: 50%;">
                   <col span="1" style="width: 50%;">
                 </colgroup>
-                <tr>
+ -->                <tr>
                   <td class="text-sm text-gray-500">
                     <div class="text-sm font-medium text-gray-900">
-                      <text-input v-model="load.trip_no" :error="errors.trip_no" class="pr-6" placeholder="Trip No.*" />
+                      <!-- <text-input v-model="load.trip_no" :error="errors.trip_no" class="pr-6" placeholder="Trip No.*" /> -->
+
+                      <!-- MindoroTransaction trip no. -->
+                      <div class="text-sm font-medium text-gray-900">
+                        <select :id="`mindoro-${loadIndex}`" class="form-select" v-model="form.tankerLoads[loadIndex].mindoro_transaction_id">
+                          <option :value="null" />
+                          <option v-for="transaction in form.mindoro_transactions" :key="transaction.id" :value="transaction.id">{{ `${transaction.trip_no} - ${transaction.driver.name}` }}</option>
+                        </select>
+                      </div>
+
                     </div>
                   </td>
-                  <td class="text-sm">
-                    <!-- <div class="text-sm font-medium text-blue-100">Driver's Name</div> -->
+<!--                   <td class="text-sm">
+                    <div class="text-sm font-medium text-blue-100">Driver's Name</div>
                   </td>
+ -->
                 </tr>
               </table>
 
@@ -273,6 +293,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import Layout from '@/Shared/Layout'
 import LoadingButton from '@/Shared/LoadingButton'
 import SelectInput from '@/Shared/SelectInput'
@@ -299,6 +320,7 @@ export default {
     errors: Object,
     suppliers: Array,
     products: Array,
+    monthlyMindoroTransactions: Array,
   },
   remember: 'form',
   data() {
@@ -322,6 +344,8 @@ export default {
   		  date: null,
         purchase_no: null,
         supplier_id: null,
+        monthly_mindoro_transaction_id: null,
+        mindoro_transactions: [],
         details: [
           {
             product_id: null,
@@ -332,7 +356,8 @@ export default {
         ],
         tankerLoads: [
           {
-            trip_no: null,
+            // trip_no: null,
+            mindoro_transaction_id: null,
             remarks: null,
             details: [
               {
@@ -444,6 +469,16 @@ export default {
       }, 0);
       return totalQty;
     },
+
+  },
+  watch: {
+    'form.monthly_mindoro_transaction_id': function (value) {
+      axios.get(`/monthly-mindoro-transactions/${value}/edit`)
+        .then(response => {
+          this.form.mindoro_transactions = response.data.mindoroTransactions;
+        });
+    }
+
   },
 
 }

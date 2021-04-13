@@ -9,6 +9,7 @@ use App\Models\Supplier;
 use App\Models\Product;
 use App\Models\TankerLoad;
 use App\Models\TankerLoadDetail;
+use App\Models\MonthlyMindoroTransaction;
 use App\Models\Delivery;
 // use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -57,14 +58,18 @@ class PurchaseController extends Controller
             ->get()
             ->map
             ->only('id', 'name');
+
         $products = Product::orderBy('name', 'asc')
             ->get()
             ->map
             ->only('id', 'name');
 
+        $monthlyMindoroTransactions = MonthlyMindoroTransaction::orderBy('id', 'desc')->get();
+
         return Inertia::render('Purchases/Create', [
             'suppliers' => $suppliers,
             'products' => $products,
+            'monthlyMindoroTransactions' => $monthlyMindoroTransactions,
         ]);
     }
 
@@ -80,6 +85,7 @@ class PurchaseController extends Controller
             'date' => $request->date,
             'purchase_no' => $request->purchase_no,
             'supplier_id' => $request->supplier_id,
+            'monthly_mindoro_transaction_id' => $request->monthly_mindoro_transaction_id,
         ])->id;
 
 
@@ -97,7 +103,7 @@ class PurchaseController extends Controller
         foreach($request->tankerLoads as $load)
         {
             $tankerLoadId = TankerLoad::create([
-                'trip_no' => $load['trip_no'],
+                'mindoro_transaction_id' => $load['mindoro_transaction_id'],
                 'remarks' => $load['remarks'],
                 'purchase_id' => $purchaseId,
             ])->id;
@@ -138,17 +144,20 @@ class PurchaseController extends Controller
             ->get()
             ->map
             ->only('id', 'name');
+
         $products = Product::orderBy('name', 'asc')
             ->get()
             ->map
             ->only('id', 'name');
+
+        $monthlyMindoroTransactions = MonthlyMindoroTransaction::orderBy('id', 'desc')->get();
 
         $loads = $purchase->tankerLoads
             ->map(function ($load) {
                 return [
                    'id' => $load->id,
                    'purchase_id' => $load->purchase_id,
-                   'trip_no' => $load->trip_no,
+                   'mindoro_transaction_id' => $load->mindoro_transaction_id,
                    'remarks' => $load->remarks,
                    'details' => $load->tankerLoadDetails->map(function ($detail) {
                         return [
@@ -181,11 +190,13 @@ class PurchaseController extends Controller
                 'date' => $purchase->date,
                 'purchase_no' => $purchase->purchase_no,
                 'supplier_id' => $purchase->supplier_id,
+                'monthly_mindoro_transaction_id' => $purchase->monthly_mindoro_transaction_id,
                 'details' => $purchase->purchaseDetails,
             ],
             'tanker_loads' => $loads,
             'suppliers' => $suppliers,
             'products' => $products,
+            'monthlyMindoroTransactions' => $monthlyMindoroTransactions,
         ]);
 
     }
@@ -204,6 +215,7 @@ class PurchaseController extends Controller
             'date' => $request->date,
             'purchase_no' => $request->purchase_no,
             'supplier_id' => $request->supplier_id,
+            'monthly_mindoro_transaction_id' => $request->monthly_mindoro_transaction_id,
         ]);
 
         // PurchaseDetail
@@ -224,7 +236,8 @@ class PurchaseController extends Controller
         {
             $tankerLoad = $purchase->tankerLoads()->findOrNew($load['id']);
 
-            $tankerLoad->trip_no = $load['trip_no'];
+            $tankerLoad->mindoro_transaction_id = $load['mindoro_transaction_id'];
+            // $tankerLoad->trip_no = $load['trip_no'];
             $tankerLoad->remarks = $load['remarks'];
             $tankerLoad->purchase_id = $load['purchase_id'];
             $tankerLoad->save();

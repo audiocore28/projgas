@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Supplier;
 use App\Models\PurchaseDetail;
+use App\Models\MonthlyMindoroTransaction;
 use App\Models\MindoroTransaction;
 use App\Models\TankerLoad;
-use App\Models\Delivery;
 use Carbon\Carbon;
 
 class Purchase extends Model
@@ -15,12 +15,17 @@ class Purchase extends Model
     use HasFactory;
 
 	 protected $dates = ['date'];
-	 protected $fillable = ['date', 'supplier_id', 'purchase_no'];
+	 protected $fillable = ['date', 'supplier_id', 'purchase_no', 'monthly_mindoro_transaction_id'];
 
 	 public function supplier()
 	 {
 	 	return $this->belongsTo(Supplier::class);
 	 }
+
+     public function monthlyMindoroTransaction()
+     {
+        return $this->belongsTo(MonthlyMindoroTransaction::class);
+     }
 
 	 public function purchaseDetails()
 	 {
