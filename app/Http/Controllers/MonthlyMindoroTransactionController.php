@@ -8,7 +8,7 @@ use App\Models\MindoroTransaction;
 use App\Models\MindoroTransactionDetail;
 // use App\Models\Purchase;
 // use App\Models\TankerLoad;
-// use App\Models\TankerLoadDetail;
+use App\Models\TankerLoadDetail;
 use App\Models\Client;
 use App\Models\Product;
 use App\Models\Tanker;
@@ -150,6 +150,7 @@ class MonthlyMindoroTransactionController extends Controller
                         'tanker_id' => $transaction->tanker_id,
                         'driver' => $transaction->driver ? $transaction->driver->only('id', 'name') : null,
                         'helper_id' => $transaction->helper_id,
+                        'expense' => $transaction->expense,
                         // 'selected_purchases' => $selectedPurchases,
                         'details' => $transaction->mindoroTransactionDetails
                                 ->map(function ($detail) {
@@ -232,6 +233,7 @@ class MonthlyMindoroTransactionController extends Controller
             $mindoroTransaction->tanker_id = $transaction['tanker_id'];
             $mindoroTransaction->driver_id = $transaction['driver']['id'];
             $mindoroTransaction->helper_id = $transaction['helper_id'];
+            $mindoroTransaction->expense = $transaction['expense'];
 
             $mindoroTransaction->save();
 
@@ -247,6 +249,16 @@ class MonthlyMindoroTransactionController extends Controller
                 $transactionDetail->unit_price = $detail['unit_price'];
 
                 $transactionDetail->save();
+            }
+
+            foreach ($transaction['tanker_loads'] as $load)
+            {
+                foreach ($load['tanker_load_details'] as $detail)
+                {
+                    $loadDetail = TankerLoadDetail::find($detail['id']);
+                    $loadDetail->unit_price = $detail['unit_price'];
+                    $loadDetail->save();
+                }
             }
         }
 

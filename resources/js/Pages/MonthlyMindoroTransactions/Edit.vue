@@ -53,7 +53,7 @@
             <!-- loop here -->
             <div v-for="(transaction, transactionIndex) in updateForm.transactions" :key="transactionIndex" class="bg-white rounded shadow mb-8">
               <!-- fix this -->
-              <div class="flex justify-between bg-yellow-500 rounded pl-6 pt-4 highlight-yellow">
+              <div class="flex justify-between bg-gradient-to-r from-yellow-500 to-blue-600 rounded pl-6 pt-4 highlight-yellow">
                 <div class="flex flex-wrap">
                   <text-input v-model="transaction.trip_no" :error="errors.trip_no" class="pr-6 pb-4 w-full lg:w-1/6" label="Trip No.*" />
                   <select-input v-model="transaction.driver.id" class="pr-6 pb-4 w-full lg:w-1/4" label="Driver">
@@ -216,9 +216,8 @@
                </div>
                <!-- /Details table form -->
 
-                <!-- <div class="grid grid-cols-1 gap-3 xl:grid-cols-2 mb-8"> -->
+                <!-- TankerLoad -->
                 <div class="flex flex-wrap px-8">
-                  <!-- TankerLoad -->
                   <div class="grid grid-cols-1 gap-1 bg-white rounded overflow-x-auto">
                     <div class="rounded overflow-x-auto mb-4" v-for="(load, loadIndex) in transaction.tanker_loads" :key="load.id" :value="load.id">
                       <p class="text-sm bg-blue-600 font-bold pl-4 mb-2 rounded text-center py-2 text-white">{{ load.purchase.purchase_no }}</p>
@@ -290,8 +289,7 @@
                             Load:
                           </td>
                           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-blue-600 font-semibold">
-                            <!-- {{ toPHP(totalLoad) }} -->
-                            <!-- {{ toPHP(getLoadTotalAmt(load.id)) }} -->
+                            {{ toPHP(getLoadTotalAmt(transaction.id)) }}
                           </td>
                         </tr>
                         <tr>
@@ -299,7 +297,9 @@
                             Expenses:
                           </td>
                           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 font-semibold">
-                            {{ toPHP(35000) }}
+                            <div class="text-sm font-medium text-gray-900">
+                              <text-input type="number" step="any" v-model="transaction.expense" :error="errors.expense" />
+                            </div>
                           </td>
                         </tr>
                         <tr class="bg-gray-200">
@@ -310,7 +310,7 @@
                           </td>
                           <td>
                             <div class="px-6 py-4 whitespace-nowrap text-left text-sm font-semibold text-gray-500">
-                              {{ toPHP(transactionTotalAmt(transaction.id) - 35000) }}
+                              {{ toPHP(transactionTotalAmt(transaction.id) - getLoadTotalAmt(transaction.id) - transaction.expense) }}
                             </div>
                           </td>
                         </tr>
@@ -384,7 +384,6 @@ export default {
   remember: 'form',
   data() {
     return {
-      totalLoad: 0,
       sending: false,
       momentFormat: {
         //[optional] Date to String
@@ -462,6 +461,7 @@ export default {
           name: null,
         },
         helper_id: null,
+        expense: 0,
         details: [
           {
             id: null,
@@ -474,6 +474,11 @@ export default {
             client_id: null,
           }
         ],
+        tanker_loads: [
+          {
+            unit_price: null,
+          }
+        ]
       });
     },
     deleteTransactionForm(transactionIndex, transactionId) {
@@ -542,35 +547,24 @@ export default {
       }
     },
 
-    // getLoadTotalAmt(transactions, loadId) {
-    //   const loadsArray = transactions.map(transaction => transaction.tanker_loads);
-    //   const loads = [].concat.apply([], loadsArray);
+    // Load Total Amount
+    getLoadTotalAmt(transactionId) {
+      for (var i = 0; i < this.updateForm.transactions.length; i++) {
+        if (this.updateForm.transactions[i].id === transactionId) {
 
-    //   for (var i = 0; i < loads.length; i++) {
-    //     // if (loads[i].id === loadId) {
+          const detailsArray = this.updateForm.transactions[i].tanker_loads.map(load => load.tanker_load_details);
+          const details = [].concat.apply([], detailsArray);
 
-    //       var totalAmt = loads[i].tanker_load_details.reduce(function (acc, detail) {
-    //         acc += parseFloat(detail.quantity) * parseFloat(detail.unit_price);
-    //         return acc;
-    //       }, 0);
+          var totalAmt = details.reduce(function (acc, detail) {
+            acc += parseFloat(detail.quantity) * parseFloat(detail.unit_price);
+            return acc;
+          }, 0);
 
-    //       this.totalLoad = totalAmt;
-    //     // }
-    //   }
+          return totalAmt;
+        }
+      }
+    }
 
-    //   // const loadsArray = transactions.map(transaction => transaction.tanker_loads);
-    //   // const loads = [].concat.apply([], loadsArray);
-
-    //   // const detailsArray = loads.map(load => load.tanker_load_details);
-    //   // const details = [].concat.apply([], detailsArray);
-
-    //   // const totalAmt = details.reduce((acc, detail) => {
-    //   //   acc += parseFloat(detail.quantity) * parseFloat(detail.unit_price);
-    //   //   return acc;
-    //   // }, 0);
-
-    //   // this.totalLoad = totalAmt;
-    // }
   },
   watch: {
     // 'updateForm.selectedPurchases': {

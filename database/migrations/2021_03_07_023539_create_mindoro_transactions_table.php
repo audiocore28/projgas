@@ -20,6 +20,7 @@ class CreateMindoroTransactionsTable extends Migration
             $table->bigInteger('tanker_id');
             $table->bigInteger('driver_id');
             $table->bigInteger('helper_id');
+            $table->decimal('expense', 10, 2)->nullable();
             $table->timestamps();
         });
     }
