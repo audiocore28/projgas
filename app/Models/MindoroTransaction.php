@@ -3,6 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\TankerLoad;
+use App\Models\Driver;
+use App\Models\Helper;
+use App\Models\Tanker;
+use App\Models\MonthlyMindoroTransaction;
 use App\Models\MindoroTransactionDetail;
 use App\Models\Purchase;
 use Carbon\Carbon;
