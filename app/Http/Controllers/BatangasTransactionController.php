@@ -375,7 +375,8 @@ class BatangasTransactionController extends Controller
     {
         $batangasTransaction->delete();
 
-        return redirect()->route('batangas-transactions.index')->with('success', 'Batangas Transaction deleted.');
+        // return redirect()->route('batangas-transactions.index')->with('success', 'Batangas Transaction deleted.');
+        return Redirect::back()->with('success', 'Batangas Transaction deleted.');
     }
 
 }

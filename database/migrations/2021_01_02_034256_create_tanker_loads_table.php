@@ -16,6 +16,7 @@ class CreateTankerLoadsTable extends Migration
         Schema::create('tanker_loads', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('mindoro_transaction_id');
+            $table->unsignedBigInteger('batangas_transaction_id');
             $table->unsignedBigInteger('purchase_id');
             $table->string('remarks')->nullable();
             $table->timestamps();

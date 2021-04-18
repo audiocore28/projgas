@@ -3,6 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\TankerLoad;
+use App\Models\Driver;
+use App\Models\Helper;
+use App\Models\Tanker;
+use App\Models\MonthlyBatangasTransaction;
 use App\Models\BatangasTransactionDetail;
 use App\Models\Purchase;
 use Carbon\Carbon;
@@ -12,7 +17,12 @@ class BatangasTransaction extends Model
     use HasFactory;
 
      protected $dates = ['date'];
-	 protected $fillable = ['date', 'trip_no', 'driver_id', 'helper_id', 'tanker_id'];
+	 protected $fillable = ['date', 'trip_no', 'driver_id', 'helper_id', 'tanker_id', 'monthly_batangas_transaction_id'];
+
+    public function monthlyBatangasTransaction()
+    {
+       return $this->belongsTo(MonthlyBatangasTransaction::class);
+    }
 
 	 public function purchases()
 	 {
@@ -38,6 +48,11 @@ class BatangasTransaction extends Model
 	 {
 	 	return $this->hasMany(BatangasTransactionDetail::class);
 	 }
+
+     public function tankerLoads()
+     {
+        return $this->hasMany(TankerLoad::class);
+     }
 
     public function scopeFilter($query, array $filters)
     {
