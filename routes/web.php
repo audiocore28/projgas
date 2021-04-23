@@ -95,6 +95,8 @@ Route::group(['middleware' => 'auth'], function() {
 	// Monthly Mindoro Transaction
 	Route::resource('monthly-mindoro-transactions', MonthlyMindoroTransactionController::class);
 
+	Route::get('monthly-mindoro-transactions/{monthlyMindoroTransaction}/print', [MonthlyMindoroTransactionController::class, 'print'])->name('monthly-mindoro-transactions.print');
+
 	// Monthly Batangas Transaction
 	Route::resource('monthly-batangas-transactions', MonthlyBatangasTransactionController::class);
 

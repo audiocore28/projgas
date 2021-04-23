@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
+use PDF;
 
 class MonthlyMindoroTransactionController extends Controller
 {
@@ -276,6 +277,60 @@ class MonthlyMindoroTransactionController extends Controller
         $monthlyMindoroTransaction->delete();
 
         return redirect()->route('monthly-mindoro-transactions.index')->with('success', 'Monthly Mindoro Transaction deleted.');
+    }
+
+    // DOMPDF - print
+    public function print(MonthlyMindoroTransaction $monthlyMindoroTransaction)
+    {
+        // MindoroTransaction
+        $transactions = $monthlyMindoroTransaction->mindoroTransactions
+                ->map(function ($transaction) {
+                    return [
+                        'id' => $transaction->id,
+                        'trip_no' => $transaction->trip_no,
+                        'tanker' => $transaction->tanker ? $transaction->tanker->only('id', 'plate_no') : null,
+                        'driver' => $transaction->driver ? $transaction->driver->only('id', 'name') : null,
+                        'helper' => $transaction->helper ? $transaction->helper->only('id', 'name') : null,
+                        'expense' => $transaction->expense,
+                        // 'selected_purchases' => $selectedPurchases,
+                        'details' => $transaction->mindoroTransactionDetails
+                                ->map(function ($detail) {
+                                    return [
+                                       'id' => $detail->id,
+                                       'date' => $detail->date,
+                                       'dr_no' => $detail->dr_no,
+                                       'quantity' => $detail->quantity,
+                                       'unit_price' => $detail->unit_price,
+                                       'mindoro_transaction_id' => $detail->mindoro_transaction_id,
+                                       'product' => $detail->product ? $detail->product->only('id', 'name') : null,
+                                       'client' => $detail->client ? $detail->client->only('id', 'name') : null,
+                                       'selected_client' => $detail->client_id,
+                                    ];
+                        }),
+                        'tanker_loads' => $transaction->tankerLoads
+                                ->map(function ($load) {
+                                    return [
+                                        'mindoro_transaction_id' => $load->mindoro_transaction_id,
+                                        'remarks' => $load->remarks,
+                                        'purchase' => $load->purchase->purchase_no,
+                                        'tanker_load_details' => $load->tankerLoadDetails->each(function ($detail) {
+                                            return [
+                                                'quantity' => $detail->quantity,
+                                                'product' => $detail->product->name,
+                                                'unit_price' => $detail->unit_price,
+                                            ];
+                                        }),
+                                    ];
+                        }),
+                    ];
+                })
+                ->toArray();
+
+
+        $pdf = PDF::loadView('print', compact('monthlyMindoroTransaction', 'transactions'));
+        $pdf->setPaper(array(0, 0, 612.00, 792.0));
+        return $pdf->stream("print.pdf");
+
     }
 
 }
