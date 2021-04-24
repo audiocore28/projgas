@@ -7,7 +7,7 @@
     <form @submit.prevent="submit">
       <div class="bg-white rounded shadow overflow-hidden max-w-6xl">
         <!-- Purchase -->
-        <div class="px-8 pt-4 -mr-6 -mb-8 flex flex-wrap bg-yellow-500 highlight-yellow">
+        <div class="px-8 pt-4 -mr-6 -mb-8 flex flex-wrap bg-gradient-to-r from-yellow-500 to-blue-600 highlight-yellow">
           <div>
             <label class="form-label block mr-5">Date:<span class="text-red-500">*</span></label>
             <div class="pr-6 pb-4 mt-3">
@@ -132,45 +132,47 @@
       </div>
 
       <!-- TankerLoad Form -->
+
+      <!-- Batangas -->
       <div class="mb-8 flex justify-between items-center">
         <div class="-mb-8 flex justify-start items-center">
-          <h1 class="my-8 font-bold text-2xl mr-4">To Mindoro</h1>
+          <h1 class="my-8 font-bold text-2xl mr-4">To Batangas</h1>
 
-          <!-- MonthlyMindoroTransaction -->
+          <!-- MonthlyBatangasTransaction -->
           <div class="text-sm font-medium text-gray-900 mr-4">
-            <select v-model="form.monthly_mindoro_transaction_id" class="form-select">
+            <select v-model="form.monthly_batangas_transaction_id" class="form-select">
               <option :value="null" />
-              <option v-for="monthlyTransaction in monthlyMindoroTransactions" :key="monthlyTransaction.id" :value="monthlyTransaction.id">{{ `${monthlyTransaction.year}, ${monthlyTransaction.month}` }}</option>
+              <option v-for="monthlyTransaction in monthlyBatangasTransactions" :key="monthlyTransaction.id" :value="monthlyTransaction.id">{{ `${monthlyTransaction.year}, ${monthlyTransaction.month}` }}</option>
             </select>
           </div>
 
-          <button class="btn-indigo" @click.prevent="addNewTankerLoadForm">Add ({{ form.tankerLoads.length }})</button>
+          <button class="btn-indigo" @click.prevent="addNewBatangasLoadForm">Add ({{ form.batangasLoads.length }})</button>
 
         </div>
         <div class="-mb-8 flex justify-end items-center">
           <span class="mr-2 px-2 py-2 text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
             Diesel
             <span class="p-1 rounded-full text-yellow-800 text-xs ml-2 bg-yellow-400">
-                {{ totalLoadQty('Diesel') }}
+                {{ totalBatangasLoadQty('Diesel') }}
             </span>
           </span>
           <span class="mr-2 px-2 py-2 text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
             Regular
             <span class="p-1 rounded-full text-green-800 text-xs ml-2 bg-green-400">
-                {{ totalLoadQty('Regular') }}
+                {{ totalBatangasLoadQty('Regular') }}
             </span>
           </span>
           <span class="mr-2 px-2 py-2 text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
             Premium
             <span class="p-1 rounded-full text-red-800 text-xs ml-2 bg-red-400">
-                {{ totalLoadQty('Premium') }}
+                {{ totalBatangasLoadQty('Premium') }}
             </span>
           </span>
         </div>
       </div>
 
       <div class="grid grid-cols-1 gap-3 xl:grid-cols-3">
-        <div class="rounded overflow-hidden max-w-6xl" v-for="(load, loadIndex) in form.tankerLoads" :key="loadIndex">
+        <div class="rounded overflow-hidden max-w-6xl" v-for="(load, loadIndex) in form.batangasLoads" :key="loadIndex">
           <div class="bg-white rounded shadow overflow-hidden max-w-6xl">
             <!-- TankerLoad -->
             <div class="p-2 -mr-6 -mb-6 flex justify-between bg-blue-600">
@@ -184,11 +186,11 @@
                     <div class="text-sm font-medium text-gray-900">
                       <!-- <text-input v-model="load.trip_no" :error="errors.trip_no" class="pr-6" placeholder="Trip No.*" /> -->
 
-                      <!-- MindoroTransaction trip no. -->
+                      <!-- BatangasTransaction trip no. -->
                       <div class="text-sm font-medium text-gray-900">
-                        <select :id="`mindoro-${loadIndex}`" class="form-select" v-model="form.tankerLoads[loadIndex].mindoro_transaction_id">
+                        <select :id="`batangas-${loadIndex}`" class="form-select" v-model="form.batangasLoads[loadIndex].batangas_transaction_id">
                           <option :value="null" />
-                          <option v-for="transaction in form.mindoro_transactions" :key="transaction.id" :value="transaction.id">{{ `${transaction.trip_no} - ${transaction.driver.name}` }}</option>
+                          <option v-for="transaction in form.batangas_transactions" :key="transaction.id" :value="transaction.id">{{ `${transaction.trip_no} - ${transaction.driver.name}` }}</option>
                         </select>
                       </div>
 
@@ -203,7 +205,7 @@
 
               <div class="mr-5">
                 <span class="p-1 rounded-full text-blue-400 text-xs ml-2">
-                  <button @click.prevent="deleteTankerLoadForm(loadIndex)" type="button" class="font-bold p-1 flex-shrink-0 leading-none" tabindex="-1">
+                  <button @click.prevent="deleteBatangasLoadForm(loadIndex)" type="button" class="font-bold p-1 flex-shrink-0 leading-none" tabindex="-1">
                     {{ loadIndex + 1 }}
                   </button>
                 </span>
@@ -237,7 +239,7 @@
                     </th>
                     -->
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      <button @click.prevent="addNewTankerLoadDetailForm(loadIndex)">
+                      <button @click.prevent="addNewBatangasLoadDetailForm(loadIndex)">
                         <icon name="plus" class="w-4 h-4 loadIr-2 fill-green-600"/>
                       </button>
                     </th>
@@ -247,7 +249,7 @@
                   <tr v-for="(details, detailsIndex) in load.details" :key="detailsIndex">
                     <td>
                       <div class="text-sm font-medium text-gray-900">
-                        <select :id="`product-${detailsIndex}`" v-model="details.product.id" class="form-select" :class="{ error: errors[`details.${detailsIndex}.product_id`] }" @change="onChange($event, loadIndex, detailsIndex)">
+                        <select :id="`product-${detailsIndex}`" v-model="details.product.id" class="form-select" :class="{ error: errors[`details.${detailsIndex}.product_id`] }" @change="onBatangasChange($event, loadIndex, detailsIndex)">
                           <option :value="null" />
                           <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
                         </select>
@@ -271,7 +273,162 @@
                     -->
                     <td class="text-sm text-gray-500">
                       <div class=" px-5 text-sm font-medium text-gray-900">
-                        <button @click.prevent="deleteTankerLoadDetailForm(loadIndex, detailsIndex)" type="button" class="bg-white py-1 px-1 flex-shrink-0 text-sm leading-none" tabindex="-1">
+                        <button @click.prevent="deleteBatangasLoadDetailForm(loadIndex, detailsIndex)" type="button" class="bg-white py-1 px-1 flex-shrink-0 text-sm leading-none" tabindex="-1">
+                          <icon name="trash" class="w-4 h-4 mr-2 fill-red-600"/>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- /TankerLoadDetail table form -->
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Mindoro -->
+      <div class="mt-6 mb-8 flex justify-between items-center">
+        <div class="-mb-8 flex justify-start items-center">
+          <h1 class="my-8 font-bold text-2xl mr-4">To Mindoro</h1>
+
+          <!-- MonthlyMindoroTransaction -->
+          <div class="text-sm font-medium text-gray-900 mr-4">
+            <select v-model="form.monthly_mindoro_transaction_id" class="form-select">
+              <option :value="null" />
+              <option v-for="monthlyTransaction in monthlyMindoroTransactions" :key="monthlyTransaction.id" :value="monthlyTransaction.id">{{ `${monthlyTransaction.year}, ${monthlyTransaction.month}` }}</option>
+            </select>
+          </div>
+
+          <button class="btn-indigo" @click.prevent="addNewMindoroLoadForm">Add ({{ form.mindoroLoads.length }})</button>
+
+        </div>
+        <div class="-mb-8 flex justify-end items-center">
+          <span class="mr-2 px-2 py-2 text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+            Diesel
+            <span class="p-1 rounded-full text-yellow-800 text-xs ml-2 bg-yellow-400">
+                {{ totalMindoroLoadQty('Diesel') }}
+            </span>
+          </span>
+          <span class="mr-2 px-2 py-2 text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+            Regular
+            <span class="p-1 rounded-full text-green-800 text-xs ml-2 bg-green-400">
+                {{ totalMindoroLoadQty('Regular') }}
+            </span>
+          </span>
+          <span class="mr-2 px-2 py-2 text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+            Premium
+            <span class="p-1 rounded-full text-red-800 text-xs ml-2 bg-red-400">
+                {{ totalMindoroLoadQty('Premium') }}
+            </span>
+          </span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 gap-3 xl:grid-cols-3">
+        <div class="rounded overflow-hidden max-w-6xl" v-for="(load, loadIndex) in form.mindoroLoads" :key="loadIndex">
+          <div class="bg-white rounded shadow overflow-hidden max-w-6xl">
+            <!-- TankerLoad -->
+            <div class="p-2 -mr-6 -mb-6 flex justify-between bg-yellow-500">
+              <table>
+<!--                 <colgroup>
+                  <col span="1" style="width: 50%;">
+                  <col span="1" style="width: 50%;">
+                </colgroup>
+ -->                <tr>
+                  <td class="text-sm text-gray-500">
+                    <div class="text-sm font-medium text-gray-900">
+                      <!-- <text-input v-model="load.trip_no" :error="errors.trip_no" class="pr-6" placeholder="Trip No.*" /> -->
+
+                      <!-- MindoroTransaction trip no. -->
+                      <div class="text-sm font-medium text-gray-900">
+                        <select :id="`mindoro-${loadIndex}`" class="form-select" v-model="form.mindoroLoads[loadIndex].mindoro_transaction_id">
+                          <option :value="null" />
+                          <option v-for="transaction in form.mindoro_transactions" :key="transaction.id" :value="transaction.id">{{ `${transaction.trip_no} - ${transaction.driver.name}` }}</option>
+                        </select>
+                      </div>
+
+                    </div>
+                  </td>
+<!--                   <td class="text-sm">
+                    <div class="text-sm font-medium text-blue-100">Driver's Name</div>
+                  </td>
+ -->
+                </tr>
+              </table>
+
+              <div class="mr-5">
+                <span class="p-1 rounded-full text-yellow-400 text-xs ml-2">
+                  <button @click.prevent="deleteMindoroLoadForm(loadIndex)" type="button" class="font-bold p-1 flex-shrink-0 leading-none" tabindex="-1">
+                    {{ loadIndex + 1 }}
+                  </button>
+                </span>
+              </div>
+              <!-- <text-input v-model="form.remarks" :error="errors.remarks" class="pr-6 pb-8 w-full lg:w-1/2" label="Remarks" /> -->
+            </div>
+            <!-- /TankerLoad -->
+
+            <!-- TankerLoadDetail table form -->
+            <div class="px-6 mt-8 mb-6 overflow-x-auto">
+              <table class="lg:w-4/6">
+                <colgroup>
+                  <col span="1" style="width: 30%;">
+                  <col span="1" style="width: 25%;">
+                  <col span="1" style="width: 25%;">
+                  <col span="1" style="width: 20%;">
+                </colgroup>
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Product<span class="text-red-500">*</span>
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Quantity
+                    </th>
+                    <!-- <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Unit Price
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Amount
+                    </th>
+                    -->
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <button @click.prevent="addNewMindoroLoadDetailForm(loadIndex)">
+                        <icon name="plus" class="w-4 h-4 loadIr-2 fill-green-600"/>
+                      </button>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                  <tr v-for="(details, detailsIndex) in load.details" :key="detailsIndex">
+                    <td>
+                      <div class="text-sm font-medium text-gray-900">
+                        <select :id="`product-${detailsIndex}`" v-model="details.product.id" class="form-select" :class="{ error: errors[`details.${detailsIndex}.product_id`] }" @change="onMindoroChange($event, loadIndex, detailsIndex)">
+                          <option :value="null" />
+                          <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
+                        </select>
+                      </div>
+                    </td>
+                    <td class="text-sm text-gray-500">
+                      <div class="text-sm font-medium text-gray-900">
+                        <text-input type="number" step="any" v-model="details.quantity" :error="errors.quantity" />
+                      </div>
+                    </td>
+                      <!-- <td class="text-sm text-gray-500">
+                      <div class="text-sm font-medium text-gray-900">
+                        <text-input type="number" step="any" v-model="details.unit_price" :error="errors.unit_price" />
+                      </div>
+                    </td>
+                    <td class="text-sm text-gray-500">
+                      <div class="text-sm font-medium text-gray-900 text-center">
+                        {{ totalCurrency(details.quantity, details.unit_price) }}
+                      </div>
+                    </td>
+                    -->
+                    <td class="text-sm text-gray-500">
+                      <div class=" px-5 text-sm font-medium text-gray-900">
+                        <button @click.prevent="deleteMindoroLoadDetailForm(loadIndex, detailsIndex)" type="button" class="bg-white py-1 px-1 flex-shrink-0 text-sm leading-none" tabindex="-1">
                           <icon name="trash" class="w-4 h-4 mr-2 fill-red-600"/>
                         </button>
                       </div>
@@ -321,6 +478,7 @@ export default {
     suppliers: Array,
     products: Array,
     monthlyMindoroTransactions: Array,
+    monthlyBatangasTransactions: Array,
   },
   remember: 'form',
   data() {
@@ -346,6 +504,8 @@ export default {
         supplier_id: null,
         monthly_mindoro_transaction_id: null,
         mindoro_transactions: [],
+        monthly_batangas_transaction_id: null,
+        batangas_transactions: [],
         details: [
           {
             product_id: null,
@@ -354,9 +514,24 @@ export default {
             remarks: null,
           }
         ],
-        tankerLoads: [
+        batangasLoads: [
           {
-            // trip_no: null,
+            batangas_transaction_id: null,
+            remarks: null,
+            details: [
+              {
+                product: {
+                  id: null,
+                  name: null,
+                },
+                quantity: 0,
+                unit_price: 0,
+              }
+            ],
+          },
+        ],
+        mindoroLoads: [
+          {
             mindoro_transaction_id: null,
             remarks: null,
             details: [
@@ -416,10 +591,10 @@ export default {
     },
 
 
-    // TankerLoad
-    addNewTankerLoadForm() {
-      this.form.tankerLoads.push({
-        trip_no: null,
+    // Batangas - TankerLoad
+    addNewBatangasLoadForm() {
+      this.form.batangasLoads.push({
+        batangas_transaction_id: null,
         remarks: null,
         details: [
           {
@@ -433,13 +608,13 @@ export default {
         ],
       });
     },
-    deleteTankerLoadForm(loadIndex) {
-      this.form.tankerLoads.splice(loadIndex, 1);
+    deleteBatangasLoadForm(loadIndex) {
+      this.form.batangasLoads.splice(loadIndex, 1);
     },
 
-    // TankerLoadDetail
-    addNewTankerLoadDetailForm(loadIndex) {
-      this.form.tankerLoads[loadIndex].details.push({
+    // Batangas - TankerLoadDetail
+    addNewBatangasLoadDetailForm(loadIndex) {
+      this.form.batangasLoads[loadIndex].details.push({
         product: {
           id: null,
           name: null,
@@ -448,18 +623,75 @@ export default {
         unit_price: 0,
       });
     },
-    deleteTankerLoadDetailForm(loadIndex, detailsIndex) {
-      this.form.tankerLoads[loadIndex].details.splice(detailsIndex, 1);
+    deleteBatangasLoadDetailForm(loadIndex, detailsIndex) {
+      this.form.batangasLoads[loadIndex].details.splice(detailsIndex, 1);
     },
 
-    onChange(event, loadIndex, detailsIndex) {
+    //
+    onBatangasChange(event, loadIndex, detailsIndex) {
       const product = event.target.options[event.target.options.selectedIndex].text;
-      this.form.tankerLoads[loadIndex].details[detailsIndex].product.name = product;
+      this.form.batangasLoads[loadIndex].details[detailsIndex].product.name = product;
     },
 
-    // TankerLoad Totals
-    totalLoadQty(product) {
-      var totalQty = this.form.tankerLoads.reduce(function (acc, load) {
+    // Batangas - TankerLoad Totals
+    totalBatangasLoadQty(product) {
+      var totalQty = this.form.batangasLoads.reduce(function (acc, load) {
+        load.details.forEach(detail => {
+          if(detail.product.name === product) {
+            acc += parseFloat(detail.quantity) / 1000;
+          }
+        });
+        return parseFloat(acc);
+      }, 0);
+      return totalQty;
+    },
+
+
+    // Mindoro - TankerLoad
+    addNewMindoroLoadForm() {
+      this.form.mindoroLoads.push({
+        mindoro_transaction_id: null,
+        remarks: null,
+        details: [
+          {
+            product: {
+              id: null,
+              name: null,
+            },
+            quantity: 0,
+            unit_price: 0,
+          }
+        ],
+      });
+    },
+    deleteMindoroLoadForm(loadIndex) {
+      this.form.mindoroLoads.splice(loadIndex, 1);
+    },
+
+    // Mindoro - TankerLoadDetail
+    addNewMindoroLoadDetailForm(loadIndex) {
+      this.form.mindoroLoads[loadIndex].details.push({
+        product: {
+          id: null,
+          name: null,
+        },
+        quantity: 0,
+        unit_price: 0,
+      });
+    },
+    deleteMindoroLoadDetailForm(loadIndex, detailsIndex) {
+      this.form.mindoroLoads[loadIndex].details.splice(detailsIndex, 1);
+    },
+
+    //
+    onMindoroChange(event, loadIndex, detailsIndex) {
+      const product = event.target.options[event.target.options.selectedIndex].text;
+      this.form.mindoroLoads[loadIndex].details[detailsIndex].product.name = product;
+    },
+
+    // Mindoro - TankerLoad Totals
+    totalMindoroLoadQty(product) {
+      var totalQty = this.form.mindoroLoads.reduce(function (acc, load) {
         load.details.forEach(detail => {
           if(detail.product.name === product) {
             acc += parseFloat(detail.quantity) / 1000;
@@ -476,6 +708,13 @@ export default {
       axios.get(`/monthly-mindoro-transactions/${value}/edit`)
         .then(response => {
           this.form.mindoro_transactions = response.data.mindoroTransactions;
+        });
+    },
+
+    'form.monthly_batangas_transaction_id': function (value) {
+      axios.get(`/monthly-batangas-transactions/${value}/edit`)
+        .then(response => {
+          this.form.batangas_transactions = response.data.batangasTransactions;
         });
     }
 

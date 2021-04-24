@@ -32,6 +32,7 @@ class StorePurchaseRequest extends FormRequest
             ],
             'supplier_id' => ['required', 'max:50'],
             'monthly_mindoro_transaction_id' => ['required', 'max:50'],
+            'monthly_batangas_transaction_id' => ['required', 'max:50'],
             //
             'details.*.quantity' => ['nullable', 'max:50'],
             'details.*.unit_price' => ['nullable', 'max:50'],
@@ -39,8 +40,9 @@ class StorePurchaseRequest extends FormRequest
             'details.*.purchase_id' => ['nullable', 'max:50'],
             'details.*.product_id' => ['required', 'max:50'],
             //
-            'tankerLoads.*.mindoro_transaction_id' => ['required', 'max:50'],
-            'tankerLoads.*.details.*.product.id' => ['required', 'max:50'],
+            // 'tankerLoads.*.mindoro_transaction_id' => ['required', 'max:50'],
+            // 'tankerLoads.*.batangas_transaction_id' => ['required', 'max:50'],
+            // 'tankerLoads.*.details.*.product.id' => ['required', 'max:50'],
         ];
     }
 
@@ -51,11 +53,13 @@ class StorePurchaseRequest extends FormRequest
             'purchase_no.required' => 'Purchase no. is required',
             'supplier_id.required' => 'Supplier is required',
             'monthtly_mindoro_transaction_id.required' => 'Transaction date is required',
+            'monthtly_batangas_transaction_id.required' => 'Transaction date is required',
             //
             'details.*.product_id.required' => 'Product is required',
             //
-            'tankerLoads.*.mindoro_transaction_id.required' => 'Trip no. is required',
-            'tankerLoads.*.details.*.product.id.required' => 'Product is required',
+            // 'tankerLoads.*.mindoro_transaction_id.required' => 'Trip no. is required',
+            // 'tankerLoads.*.batangas_transaction_id.required' => 'Trip no. is required',
+            // 'tankerLoads.*.details.*.product.id.required' => 'Product is required',
         ];
     }
 }
