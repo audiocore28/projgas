@@ -368,4 +368,54 @@ class PurchaseController extends Controller
         return redirect()->route('purchases.index')->with('success', 'Purchase deleted.');
     }
 
+    public function print(Purchase $purchase)
+    {
+        $batangasLoads = $purchase->batangasLoads
+            ->map(function ($load) {
+                return [
+                   'id' => $load->id,
+                   'purchase' => $load->purchase ? $load->purchase->only('id', 'purchase_no') : null,
+                   'trip_no' => $load->batangasTransaction->trip_no,
+                   'driver' => $load->batangasTransaction->driver->name,
+                   'remarks' => $load->remarks,
+                   'details' => $load->tankerLoadDetails->map(function ($detail) {
+                        return [
+                            'id' => $detail->id,
+                            'tanker_load_id' => $detail->tanker_load_id,
+                            'product' => $detail->product ? $detail->product->only('id', 'name') : null,
+                            'quantity' => $detail->quantity,
+                            'unit_price' => $detail->unit_price,
+                        ];
+                   }),
+                ];
+            })
+            ->toArray();
+
+        $mindoroLoads = $purchase->mindoroLoads
+            ->map(function ($load) {
+                return [
+                   'id' => $load->id,
+                   'purchase_id' => $load->purchase_id,
+                   'trip_no' => $load->mindoroTransaction->trip_no,
+                   'driver' => $load->mindoroTransaction->driver->name,
+                   'remarks' => $load->remarks,
+                   'details' => $load->tankerLoadDetails->map(function ($detail) {
+                        return [
+                            'id' => $detail->id,
+                            'tanker_load_id' => $detail->tanker_load_id,
+                            'product' => $detail->product ? $detail->product->only('id', 'name') : null,
+                            'quantity' => $detail->quantity,
+                            'unit_price' => $detail->unit_price,
+                        ];
+                   }),
+                ];
+            })
+            ->toArray();
+
+
+        $pdf = PDF::loadView('print-purchase', compact('purchase', 'batangasLoads', 'mindoroLoads'));
+        $pdf->setPaper(array(0, 0, 612.00, 792.0));
+        return $pdf->stream("print.pdf");
+    }
+
 }

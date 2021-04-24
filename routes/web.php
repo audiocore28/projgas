@@ -71,6 +71,8 @@ Route::group(['middleware' => 'auth'], function() {
 	// Purchases
 	Route::resource('purchases', PurchaseController::class);
 
+	Route::get('purchases/{purchase}/print', [PurchaseController::class, 'print'])->name('purchases.print');
+
 	// Purchase Details
 	Route::resource('purchase-details', PurchaseDetailController::class)->only(['store', 'destroy']);
 

@@ -56,8 +56,13 @@
           </td>
           <td class="border-t w-px">
             <inertia-link class="px-4 flex items-center" :href="route('purchases.edit', purchase.id)" tabindex="-1">
-              <icon name="cheveron-right" class="block w-6 h-6 fill-gray-400" />
+              <icon name="edit" class="block w-6 h-6 fill-gray-400" />
             </inertia-link>
+          </td>
+          <td class="border-t w-px">
+            <a class="px-4 flex items-center" target="_blank" :href="route('purchases.print', purchase.id)" tabindex="-1">
+              <icon name="printer" class="block w-6 h-6 fill-gray-400" />
+            </a>
           </td>
         </tr>
          <tr v-if="purchases.data.length === 0">
