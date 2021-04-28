@@ -19,11 +19,34 @@ class ClientController extends Controller
      */
     public function index()
     {
+        request()->validate([
+            'direction' => ['in:asc,desc'],
+            'field' => ['in:id,name'],
+        ]);
+
+        $query = Client::query();
+
+        if (request('search')) {
+            $query->where('name', 'like', '%'.request('search').'%')
+                ->orWhere('office', 'like', '%'.request('search').'%')
+                ->orWhere('contact_no', 'like', '%'.request('search').'%');
+        }
+
+        if (request()->has(['field', 'direction'])) {
+            $query->orderBy(request('field'), request('direction'));
+        }
+
+        if (request('trashed')) {
+            if (request('trashed') === 'with') {
+                $query->withTrashed();
+            } elseif (request('trashed') === 'only') {
+                $query->onlyTrashed();
+            }
+        }
+
         return Inertia::render('Clients/Index', [
-            'filters' => Request::all('search', 'trashed'),
-            'clients' => Client::filter(Request::only('search', 'trashed'))
-                ->orderBy('id', 'desc')
-                ->paginate()
+            'filters' => Request::all('search', 'field', 'direction', 'trashed'),
+            'clients' => $query->orderBy('id', 'desc')->paginate(),
         ]);
     }
 

@@ -18,8 +18,18 @@
     <div class="bg-white rounded shadow overflow-x-auto">
       <table class="w-full whitespace-no-wrap">
         <tr class="text-left font-bold">
-          <th class="px-6 pt-6 pb-4">ID</th>
-          <th class="px-6 pt-6 pb-4">Company Name</th>
+          <th class="px-6 pt-6 pb-4 cursor-pointer">
+            <span class="inline-flex w-full justify-between" @click="sort('id')">ID
+              <icon v-if="form.field === 'id' && form.direction === 'asc'" name="sort-up" class="block w-6 h-6 fill-gray-400" />
+              <icon v-if="form.field === 'id' && form.direction === 'desc'" name="sort-down" class="block w-6 h-6 fill-gray-400" />
+            </span>
+          </th>
+          <th class="px-6 pt-6 pb-4 cursor-pointer">
+            <span class="inline-flex w-full justify-between" @click="sort('name')">Name
+              <icon v-if="form.field === 'name' && form.direction === 'asc'" name="sort-up" class="block w-6 h-6 fill-gray-400" />
+              <icon v-if="form.field === 'name' && form.direction === 'desc'" name="sort-down" class="block w-6 h-6 fill-gray-400" />
+            </span>
+          </th>
           <th class="px-6 pt-6 pb-4">Office</th>
           <th class="px-6 pt-6 pb-4">Contact No</th>
           <!-- <th class="px-6 pt-6 pb-4" colspan="2">client No.</th> -->
@@ -87,6 +97,8 @@ export default {
     return {
       form: {
         search: this.filters.search,
+        field: this.filters.field,
+        direction: this.filters.direction,
         trashed: this.filters.trashed,
       },
     }
@@ -101,6 +113,10 @@ export default {
     },
   },
   methods: {
+    sort(field) {
+      this.form.field = field;
+      this.form.direction = this.form.direction === 'asc' ? 'desc' : 'asc';
+    },
     reset() {
       this.form = mapValues(this.form, () => null)
     },
