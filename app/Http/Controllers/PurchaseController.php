@@ -352,6 +352,10 @@ class PurchaseController extends Controller
             }
         }
 
+        $this->deletePurchaseDetail($request->removed_purchase_details);
+        $this->deleteTankerLoad($request->removed_loads);
+        $this->deleteTankerLoadDetail($request->removed_load_details);
+
         return Redirect::back()->with('success', 'Purchase updated.');
     }
 
@@ -366,6 +370,21 @@ class PurchaseController extends Controller
         $purchase->delete();
 
         return redirect()->route('purchases.index')->with('success', 'Purchase deleted.');
+    }
+
+    public function deletePurchaseDetail($purchaseDetailIds)
+    {
+        PurchaseDetail::whereIn('id', $purchaseDetailIds)->delete();
+    }
+
+    public function deleteTankerLoad($loadIds)
+    {
+        TankerLoad::whereIn('id', $loadIds)->delete();
+    }
+
+    public function deleteTankerLoadDetail($loadDetailIds)
+    {
+        TankerLoadDetail::whereIn('id', $loadDetailIds)->delete();
     }
 
     public function print(Purchase $purchase)

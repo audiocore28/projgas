@@ -518,6 +518,9 @@ export default {
         monthly_batangas_transaction_id: this.purchase.monthly_batangas_transaction_id,
         batangas_transactions: [],
         details: this.purchase.details,
+        removed_purchase_details: [],
+        removed_loads: [],
+        removed_load_details: [],
         batangasLoads: this.purchase.batangasLoads,
         mindoroLoads: this.purchase.mindoroLoads,
         // tankerLoads: this.tanker_loads,
@@ -549,13 +552,11 @@ export default {
         remarks: null,
       });
     },
-    deletePurchaseDetailForm(purchaseIndex, productDetailId) {
-      if (productDetailId) {
-        if (confirm('Are you sure you want to delete this row?')) {
-          this.$inertia.delete(this.route('purchase-details.destroy', productDetailId));
-          this.form.details.splice(purchaseIndex, 1);
-        }
-      } else{
+    deletePurchaseDetailForm(purchaseIndex, purchaseDetailId) {
+      if (purchaseDetailId) {
+        this.form.removed_purchase_details.push(purchaseDetailId);
+        this.form.details.splice(purchaseIndex, 1);
+      } else {
         this.form.details.splice(purchaseIndex, 1);
       }
     },
@@ -602,10 +603,8 @@ export default {
     },
     deleteBatangasLoadForm(loadIndex, loadId) {
       if (loadId) {
-        if (confirm('Are you sure you want to delete this load?')) {
-          this.$inertia.delete(this.route('tanker-loads.destroy', loadId));
-          this.form.batangasLoads.splice(loadIndex, 1);
-        }
+        this.form.removed_loads.push(loadId);
+        this.form.batangasLoads.splice(loadIndex, 1);
       } else {
         this.form.batangasLoads.splice(loadIndex, 1);
       }
@@ -627,10 +626,8 @@ export default {
 
     deleteBatangasLoadDetailForm(loadIndex, detailsIndex, loadDetailId) {
       if (loadDetailId) {
-        if (confirm('Are you sure you want to delete this detail?')) {
-          this.$inertia.delete(this.route('tanker-load-details.destroy', loadDetailId));
-          this.form.batangasLoads[loadIndex].details.splice(detailsIndex, 1);
-        }
+        this.form.removed_load_details.push(loadDetailId);
+        this.form.batangasLoads[loadIndex].details.splice(detailsIndex, 1);
       } else{
         this.form.batangasLoads[loadIndex].details.splice(detailsIndex, 1);
       }
@@ -680,10 +677,8 @@ export default {
     },
     deleteMindoroLoadForm(loadIndex, loadId) {
       if (loadId) {
-        if (confirm('Are you sure you want to delete this load?')) {
-          this.$inertia.delete(this.route('tanker-loads.destroy', loadId));
-          this.form.mindoroLoads.splice(loadIndex, 1);
-        }
+        this.form.removed_loads.push(loadId);
+        this.form.mindoroLoads.splice(loadIndex, 1);
       } else {
         this.form.mindoroLoads.splice(loadIndex, 1);
       }
@@ -704,10 +699,8 @@ export default {
     },
     deleteMindoroLoadDetailForm(loadIndex, detailsIndex, loadDetailId) {
       if (loadDetailId) {
-        if (confirm('Are you sure you want to delete this detail?')) {
-          this.$inertia.delete(this.route('tanker-load-details.destroy', loadDetailId));
-          this.form.mindoroLoads[loadIndex].details.splice(detailsIndex, 1);
-        }
+        this.form.removed_load_details.push(loadDetailId);
+        this.form.mindoroLoads[loadIndex].details.splice(detailsIndex, 1);
       } else{
         this.form.mindoroLoads[loadIndex].details.splice(detailsIndex, 1);
       }
