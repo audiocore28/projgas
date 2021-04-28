@@ -471,14 +471,32 @@ export default {
             unit_price: null,
             mindoro_transaction_id: null,
             product_id: null,
+            selected_client: null,
             client_id: null,
           }
         ],
         tanker_loads: [
           {
-            unit_price: null,
+            id: null,
+            mindoro_transaction_id: null,
+            batangas_transaction_id: 0,
+            remarks: null,
+            purchase: {
+              purchase_no: null,
+            },
+            tanker_load_details: [
+              {
+                id: null,
+                tanker_load_id: null,
+                product: {
+                  name: null,
+                },
+                quantity: null,
+                unit_price: null,
+              }
+            ],
           }
-        ]
+        ],
       });
     },
     deleteTransactionForm(transactionIndex, transactionId) {

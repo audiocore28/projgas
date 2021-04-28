@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Transactions</title>
+	<title>{{ $monthlyMindoroTransaction->month }} {{ $monthlyMindoroTransaction->year }} - Mindoro Transactions</title>
 	{{-- <link href="{{ asset('css/app.css') }}" rel="stylesheet"> --}}
 
 	<style>
@@ -42,7 +42,7 @@
 		</div>
 	</div>
 
-	<h2 style="font: 12px sans-serif; margin-bottom: 20px; color: red" align="center">{{ $monthlyMindoroTransaction->month }} {{ $monthlyMindoroTransaction->year }}</h2>
+	<h2 style="font: 12px sans-serif; margin-bottom: 20px; color: red" align="center">Mindoro - {{ $monthlyMindoroTransaction->month }} {{ $monthlyMindoroTransaction->year }}</h2>
 
 	{{-- Lists --}}
 	<div style="font: 9px sans-serif;">
@@ -183,7 +183,7 @@
 				</div>
 
 				<div class="column" style="margin-top: 15px;">
-					<table class='table' width="50%" cellspacing='0' cellpadding='5' style="margin-top: 5px">
+					<table class='table' width="40%" cellspacing='0' cellpadding='5' style="margin-top: 5px">
 						<tr>
 							<td align="right"> {{ number_format($total_transactions_amount) }} </td>
 						</tr>

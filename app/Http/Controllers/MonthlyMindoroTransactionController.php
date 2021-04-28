@@ -254,11 +254,13 @@ class MonthlyMindoroTransactionController extends Controller
 
             foreach ($transaction['tanker_loads'] as $load)
             {
-                foreach ($load['tanker_load_details'] as $detail)
-                {
-                    $loadDetail = TankerLoadDetail::find($detail['id']);
-                    $loadDetail->unit_price = $detail['unit_price'];
-                    $loadDetail->save();
+                if ($load['id'] !== null) {
+                    foreach ($load['tanker_load_details'] as $detail)
+                    {
+                        $loadDetail = TankerLoadDetail::findOrNew($detail['id']);
+                        $loadDetail->unit_price = $detail['unit_price'];
+                        $loadDetail->save();
+                    }
                 }
             }
         }
@@ -327,9 +329,11 @@ class MonthlyMindoroTransactionController extends Controller
                 ->toArray();
 
 
-        $pdf = PDF::loadView('print', compact('monthlyMindoroTransaction', 'transactions'));
+        $pdf = PDF::loadView('print-mindoro-transactions', compact('monthlyMindoroTransaction', 'transactions'));
         $pdf->setPaper(array(0, 0, 612.00, 792.0));
-        return $pdf->stream("print.pdf");
+
+        $fileName = "Mindoro - ".$monthlyMindoroTransaction->month." ".$monthlyMindoroTransaction->year.".pdf";
+        return $pdf->stream($fileName);
 
     }
 
