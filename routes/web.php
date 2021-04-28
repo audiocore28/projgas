@@ -102,6 +102,8 @@ Route::group(['middleware' => 'auth'], function() {
 	// Monthly Batangas Transaction
 	Route::resource('monthly-batangas-transactions', MonthlyBatangasTransactionController::class);
 
+	Route::get('monthly-batangas-transactions/{monthlyBatangasTransaction}/print', [MonthlyBatangasTransactionController::class, 'print'])->name('monthly-batangas-transactions.print');
+
 	// Suppliers
 	Route::put('suppliers/{supplier}/restore', [SupplierController::class, 'restore'])->name('suppliers.restore');
 	Route::resource('suppliers', SupplierController::class);
