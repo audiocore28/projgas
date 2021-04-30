@@ -15,13 +15,15 @@ class CreateMindoroTransactionsTable extends Migration
     {
         Schema::create('mindoro_transactions', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('monthly_mindoro_transaction_id');
+            $table->unsignedBigInteger('monthly_mindoro_transaction_id');
             $table->string('trip_no');
             $table->bigInteger('tanker_id');
             $table->bigInteger('driver_id');
             $table->bigInteger('helper_id');
             $table->decimal('expense', 10, 2)->nullable();
             $table->timestamps();
+
+            $table->foreign('monthly_mindoro_transaction_id')->references('id')->on('monthly_mindoro_transactions')->onDelete('cascade');
         });
     }
 

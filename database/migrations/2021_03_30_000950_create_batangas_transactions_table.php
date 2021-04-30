@@ -15,7 +15,7 @@ class CreateBatangasTransactionsTable extends Migration
     {
         Schema::create('batangas_transactions', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('monthly_batangas_transaction_id');
+            $table->unsignedBigInteger('monthly_batangas_transaction_id');
             $table->string('trip_no');
             $table->bigInteger('tanker_id');
             $table->bigInteger('driver_id');
@@ -23,6 +23,8 @@ class CreateBatangasTransactionsTable extends Migration
             $table->decimal('driver_salary', 8, 0)->nullable();
             $table->decimal('helper_salary', 8, 0)->nullable();
             $table->timestamps();
+
+            $table->foreign('monthly_batangas_transaction_id')->references('id')->on('monthly_batangas_transactions')->onDelete('cascade');
         });
     }
 
