@@ -266,6 +266,9 @@ class MonthlyBatangasTransactionController extends Controller
             }
         }
 
+        $this->deleteBatangasTransaction($request->removed_transactions);
+        $this->deleteBatangasTransactionDetail($request->removed_transaction_details);
+
         return Redirect::back()->with('success', 'Monthly Batangas Transaction updated.');
     }
 
@@ -280,6 +283,16 @@ class MonthlyBatangasTransactionController extends Controller
         $monthlyBatangasTransaction->delete();
 
         return redirect()->route('monthly-batangas-transactions.index')->with('success', 'Monthly Batangas Transaction deleted.');
+    }
+
+    public function deleteBatangasTransaction($transactionIds)
+    {
+        BatangasTransaction::whereIn('id', $transactionIds)->delete();
+    }
+
+    public function deleteBatangasTransactionDetail($transactionDetailIds)
+    {
+        BatangasTransactionDetail::whereIn('id', $transactionDetailIds)->delete();
     }
 
     // DOMPDF - print
