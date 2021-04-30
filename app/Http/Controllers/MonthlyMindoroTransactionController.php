@@ -148,9 +148,9 @@ class MonthlyMindoroTransactionController extends Controller
                     return [
                         'id' => $transaction->id,
                         'trip_no' => $transaction->trip_no,
-                        'tanker_id' => $transaction->tanker_id,
+                        'tanker' => $transaction->tanker ? $transaction->tanker->only('id', 'plate_no') : null,
                         'driver' => $transaction->driver ? $transaction->driver->only('id', 'name') : null,
-                        'helper_id' => $transaction->helper_id,
+                        'helper' => $transaction->helper ? $transaction->helper->only('id', 'name') : null,
                         'expense' => $transaction->expense,
                         // 'selected_purchases' => $selectedPurchases,
                         'details' => $transaction->mindoroTransactionDetails
@@ -231,9 +231,9 @@ class MonthlyMindoroTransactionController extends Controller
             $mindoroTransaction = $monthlyMindoroTransaction->mindoroTransactions()->findOrNew($transaction['id']);
 
             $mindoroTransaction->trip_no = $transaction['trip_no'];
-            $mindoroTransaction->tanker_id = $transaction['tanker_id'];
+            $mindoroTransaction->tanker_id = $transaction['tanker']['id'];
             $mindoroTransaction->driver_id = $transaction['driver']['id'];
-            $mindoroTransaction->helper_id = $transaction['helper_id'];
+            $mindoroTransaction->helper_id = $transaction['helper']['id'];
             $mindoroTransaction->expense = $transaction['expense'];
 
             $mindoroTransaction->save();
@@ -265,6 +265,9 @@ class MonthlyMindoroTransactionController extends Controller
             }
         }
 
+        $this->deleteMindoroTransaction($request->removed_transactions);
+        $this->deleteMindoroTransactionDetail($request->removed_transaction_details);
+
         return Redirect::back()->with('success', 'Monthly Mindoro Transaction updated.');
     }
 
@@ -279,6 +282,16 @@ class MonthlyMindoroTransactionController extends Controller
         $monthlyMindoroTransaction->delete();
 
         return redirect()->route('monthly-mindoro-transactions.index')->with('success', 'Monthly Mindoro Transaction deleted.');
+    }
+
+    public function deleteMindoroTransaction($transactionIds)
+    {
+        MindoroTransaction::whereIn('id', $transactionIds)->delete();
+    }
+
+    public function deleteMindoroTransactionDetail($transactionDetailIds)
+    {
+        MindoroTransactionDetail::whereIn('id', $transactionDetailIds)->delete();
     }
 
     // DOMPDF - print

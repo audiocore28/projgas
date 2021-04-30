@@ -50,24 +50,34 @@
               </div>
             </div>
 
-            <!-- loop here -->
             <div v-for="(transaction, transactionIndex) in updateForm.transactions" :key="transactionIndex" class="bg-white rounded shadow mb-8">
-              <!-- fix this -->
               <div class="flex justify-between bg-gradient-to-r from-yellow-500 to-blue-600 rounded pl-6 pt-4 highlight-yellow">
                 <div class="flex flex-wrap">
                   <text-input v-model="transaction.trip_no" :error="errors.trip_no" class="pr-6 pb-4 w-full lg:w-1/6" label="Trip No.*" />
-                  <select-input v-model="transaction.driver.id" class="pr-6 pb-4 w-full lg:w-1/4" label="Driver">
-                    <option :value="null" />
-                    <option v-for="driver in drivers" :key="driver.id" :value="driver.id">{{ driver.name }}</option>
-                  </select-input>
-                  <select-input v-model="transaction.helper_id" :error="errors.helper_id" class="pr-6 pb-4 w-full lg:w-1/4" label="Helper">
-                    <option :value="null" />
-                    <option v-for="helper in helpers" :key="helper.id" :value="helper.id">{{ helper.name }}</option>
-                  </select-input>
-                  <select-input v-model="transaction.tanker_id" :error="errors.tanker_id" class="pr-6 pb-4 w-full lg:w-1/4" label="Tanker">
-                    <option :value="null" />
-                    <option v-for="tanker in tankers" :key="tanker.id" :value="tanker.id">{{ tanker.plate_no }}</option>
-                  </select-input>
+
+                  <div class="pr-6 pb-4 w-full lg:w-1/4">
+                    <label class="form-label" :for="`driver-${transactionIndex}`">Driver:<span class="text-red-500">*</span></label>
+                    <select :id="`driver-${transactionIndex}`" v-model="transaction.driver.id" class="form-select">
+                      <option :value="null" />
+                      <option v-for="driver in drivers" :key="driver.id" :value="driver.id">{{ driver.name }}</option>
+                    </select>
+                  </div>
+
+                  <div class="pr-6 pb-4 w-full lg:w-1/4">
+                    <label class="form-label" :for="`helper-${transactionIndex}`">Helper:<span class="text-red-500">*</span></label>
+                    <select :id="`helper-${transactionIndex}`" v-model="transaction.helper.id" class="form-select">
+                      <option :value="null" />
+                      <option v-for="helper in helpers" :key="helper.id" :value="helper.id">{{ helper.name }}</option>
+                    </select>
+                  </div>
+
+                  <div class="pr-6 pb-4 w-full lg:w-1/4">
+                    <label class="form-label" :for="`tanker-${transactionIndex}`">Tanker:<span class="text-red-500">*</span></label>
+                    <select :id="`tanker-${transactionIndex}`" v-model="transaction.tanker.id" class="form-select">
+                      <option :value="null" />
+                      <option v-for="tanker in tankers" :key="tanker.id" :value="tanker.id">{{ tanker.plate_no }}</option>
+                    </select>
+                  </div>
                 </div>
                 <div class="mr-5">
                   <span class="p-1 rounded-full text-yellow-300 text-xs ml-2">
@@ -405,6 +415,8 @@ export default {
           month: this.monthly_mindoro_transaction.month,
         },
         transactions: this.monthly_mindoro_transaction.transactions,
+        removed_transactions: [],
+        removed_transaction_details: [],
         // purchases: [],
         // selectedPurchases: this.monthly_mindoro_transaction.selected_purchases,
       },
@@ -455,12 +467,18 @@ export default {
       this.updateForm.transactions.push({
         id: null,
         trip_no: null,
-        tanker_id: null,
+        tanker: {
+          id: null,
+          plate_no: null,
+        },
         driver: {
           id: null,
           name: null,
         },
-        helper_id: null,
+        helper: {
+          id: null,
+          name: null,
+        },
         expense: 0,
         details: [
           {
@@ -501,10 +519,8 @@ export default {
     },
     deleteTransactionForm(transactionIndex, transactionId) {
       if (transactionId) {
-        if (confirm('Are you sure you want to delete this transaction?')) {
-          this.$inertia.delete(this.route('mindoro-transactions.destroy', transactionId));
-          this.updateForm.transactions.splice(transactionIndex, 1);
-        }
+        this.updateForm.removed_transactions.push(transactionId);
+        this.updateForm.transactions.splice(transactionIndex, 1);
       } else{
         this.updateForm.transactions.splice(transactionIndex, 1);
       }
@@ -526,10 +542,8 @@ export default {
 
     deleteTransactionDetailForm(transactionIndex, detailIndex, transactionDetailId) {
       if (transactionDetailId) {
-        if (confirm('Are you sure you want to delete this row?')) {
-          this.$inertia.delete(this.route('mindoro-transaction-details.destroy', transactionDetailId));
-          this.updateForm.transactions[transactionIndex].details.splice(detailIndex, 1);
-        }
+        this.updateForm.removed_transaction_details.push(transactionDetailId);
+        this.updateForm.transactions[transactionIndex].details.splice(detailIndex, 1);
       } else{
         this.updateForm.transactions[transactionIndex].details.splice(detailIndex, 1);
       }
