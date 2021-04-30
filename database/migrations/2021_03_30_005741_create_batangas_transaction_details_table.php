@@ -17,7 +17,6 @@ class CreateBatangasTransactionDetailsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('batangas_transaction_id');
             $table->date('date');
-            $table->string('dr_no')->nullable();
             $table->bigInteger('client_id');
             $table->bigInteger('product_id');
             $table->decimal('quantity', 8, 0)->nullable();

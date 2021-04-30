@@ -148,17 +148,17 @@ class MonthlyBatangasTransactionController extends Controller
                     return [
                         'id' => $transaction->id,
                         'trip_no' => $transaction->trip_no,
-                        'tanker_id' => $transaction->tanker_id,
+                        'tanker' => $transaction->tanker ? $transaction->tanker->only('id', 'plate_no') : null,
                         'driver' => $transaction->driver ? $transaction->driver->only('id', 'name') : null,
-                        'helper_id' => $transaction->helper_id,
-                        'expense' => $transaction->expense,
+                        'helper' => $transaction->helper ? $transaction->helper->only('id', 'name') : null,
+                        'driver_salary' => $transaction->driver_salary,
+                        'helper_salary' => $transaction->helper_salary,
                         // 'selected_purchases' => $selectedPurchases,
                         'details' => $transaction->batangasTransactionDetails
                                 ->map(function ($detail) {
                                     return [
                                        'id' => $detail->id,
                                        'date' => $detail->date,
-                                       'dr_no' => $detail->dr_no,
                                        'quantity' => $detail->quantity,
                                        'unit_price' => $detail->unit_price,
                                        'batangas_transaction_id' => $detail->batangas_transaction_id,
@@ -231,10 +231,11 @@ class MonthlyBatangasTransactionController extends Controller
             $batangasTransaction = $monthlyBatangasTransaction->batangasTransactions()->findOrNew($transaction['id']);
 
             $batangasTransaction->trip_no = $transaction['trip_no'];
-            $batangasTransaction->tanker_id = $transaction['tanker_id'];
+            $batangasTransaction->tanker_id = $transaction['tanker']['id'];
             $batangasTransaction->driver_id = $transaction['driver']['id'];
-            $batangasTransaction->helper_id = $transaction['helper_id'];
-            $batangasTransaction->expense = $transaction['expense'];
+            $batangasTransaction->helper_id = $transaction['helper']['id'];
+            $batangasTransaction->driver_salary = $transaction['driver_salary'];
+            $batangasTransaction->helper_salary = $transaction['helper_salary'];
 
             $batangasTransaction->save();
 
@@ -243,7 +244,6 @@ class MonthlyBatangasTransactionController extends Controller
                 $transactionDetail = $batangasTransaction->batangasTransactionDetails()->findOrNew($detail['id']);
 
                 $transactionDetail->date = $detail['date'];
-                $transactionDetail->dr_no = $detail['dr_no'];
                 $transactionDetail->client_id = $detail['client_id'];
                 $transactionDetail->product_id = $detail['product_id'];
                 $transactionDetail->quantity = $detail['quantity'];
@@ -294,14 +294,14 @@ class MonthlyBatangasTransactionController extends Controller
                     'tanker' => $transaction->tanker ? $transaction->tanker->only('id', 'plate_no') : null,
                     'driver' => $transaction->driver ? $transaction->driver->only('id', 'name') : null,
                     'helper' => $transaction->helper ? $transaction->helper->only('id', 'name') : null,
-                    'expense' => $transaction->expense,
+                    'driver_salary' => $transaction->driver_salary,
+                    'helper_salary' => $transaction->helper_salary,
                     // 'selected_purchases' => $selectedPurchases,
                     'details' => $transaction->batangasTransactionDetails
                         ->map(function ($detail) {
                             return [
                                 'id' => $detail->id,
                                 'date' => $detail->date,
-                                'dr_no' => $detail->dr_no,
                                 'quantity' => $detail->quantity,
                                 'unit_price' => $detail->unit_price,
                                 'batangas_transaction_id' => $detail->batangas_transaction_id,

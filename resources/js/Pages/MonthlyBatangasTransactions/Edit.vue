@@ -60,11 +60,11 @@
                     <option :value="null" />
                     <option v-for="driver in drivers" :key="driver.id" :value="driver.id">{{ driver.name }}</option>
                   </select-input>
-                  <select-input v-model="transaction.helper_id" :error="errors.helper_id" class="pr-6 pb-4 w-full lg:w-1/4" label="Helper">
+                  <select-input v-model="transaction.helper.id" class="pr-6 pb-4 w-full lg:w-1/4" label="Helper">
                     <option :value="null" />
                     <option v-for="helper in helpers" :key="helper.id" :value="helper.id">{{ helper.name }}</option>
                   </select-input>
-                  <select-input v-model="transaction.tanker_id" :error="errors.tanker_id" class="pr-6 pb-4 w-full lg:w-1/4" label="Tanker">
+                  <select-input v-model="transaction.tanker.id" class="pr-6 pb-4 w-full lg:w-1/4" label="Tanker">
                     <option :value="null" />
                     <option v-for="tanker in tankers" :key="tanker.id" :value="tanker.id">{{ tanker.plate_no }}</option>
                   </select-input>
@@ -109,9 +109,6 @@
                        </th>
                        <th scope="col" class="px-6 text-center py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                          Amount
-                       </th>
-                       <th scope="col" class="px-6 text-center py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                         DR#
                        </th>
                        <th scope="col" class="px-6 text-center py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                          <button @click.prevent="addNewDetailForm(transactionIndex)">
@@ -163,11 +160,6 @@
                        <td class="text-sm text-gray-500">
                          <div class="text-sm font-medium text-gray-900 text-center">
                            {{ totalCurrency(detail.quantity, detail.unit_price) }}
-                         </div>
-                       </td>
-                       <td class="text-sm text-gray-500">
-                         <div class="text-sm font-medium text-gray-900">
-                           <text-input v-model="detail.dr_no"/>
                          </div>
                        </td>
                        <td class="text-sm text-gray-500">
@@ -293,12 +285,24 @@
                           </td>
                         </tr>
                         <tr>
-                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            Expenses:
+                          <td class="px-6 whitespace-nowrap text-sm text-gray-500">
+                            <!-- {{ transaction.driver.name }} Salary: -->
+                            Driver Salary:
                           </td>
-                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 font-semibold">
+                          <td class="px-6 whitespace-nowrap text-sm text-gray-700 font-semibold">
                             <div class="text-sm font-medium text-gray-900">
-                              <text-input type="number" step="any" v-model="transaction.expense" :error="errors.expense" />
+                              <text-input type="number" step="any" v-model="transaction.driver_salary" :error="errors.driver_salary" />
+                            </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="px-6 whitespace-nowrap text-sm text-gray-500">
+                            <!-- {{ transaction.helper.name }} Salary: -->
+                            Helper Salary:
+                          </td>
+                          <td class="px-6 whitespace-nowrap text-sm text-gray-700 font-semibold">
+                            <div class="text-sm font-medium text-gray-900">
+                              <text-input type="number" step="any" v-model="transaction.helper_salary" :error="errors.helper_salary" />
                             </div>
                           </td>
                         </tr>
@@ -310,7 +314,7 @@
                           </td>
                           <td>
                             <div class="px-6 py-4 whitespace-nowrap text-left text-sm font-semibold text-gray-500">
-                              {{ toPHP(transactionTotalAmt(transaction.id) - getLoadTotalAmt(transaction.id) - transaction.expense) }}
+                              {{ toPHP(transactionTotalAmt(transaction.id) - getLoadTotalAmt(transaction.id) - transaction.driver_salary - transaction.helper_salary) }}
                             </div>
                           </td>
                         </tr>
@@ -455,13 +459,20 @@ export default {
       this.updateForm.transactions.push({
         id: null,
         trip_no: null,
-        tanker_id: null,
+        tanker: {
+          id: null,
+          plate_no: null,
+        },
         driver: {
           id: null,
           name: null,
         },
-        helper_id: null,
-        expense: 0,
+        helper: {
+          id: null,
+          name: null,
+        },
+        driver_salary: 0,
+        helper_salary: 0,
         details: [
           {
             id: null,

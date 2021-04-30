@@ -42,7 +42,7 @@
 		</div>
 	</div>
 
-	<h2 style="font: 12px sans-serif; margin-bottom: 20px; color: red" align="center">{{ $monthlyBatangasTransaction->month }} {{ $monthlyBatangasTransaction->year }}</h2>
+	<h2 style="font: 12px sans-serif; margin-bottom: 20px; color: red" align="center">Batangas - {{ $monthlyBatangasTransaction->month }} {{ $monthlyBatangasTransaction->year }}</h2>
 
 	{{-- Lists --}}
 	<div style="font: 9px sans-serif;">
@@ -75,7 +75,7 @@
 				@endforeach
 			@endforeach
 
-			<?php $output = $total_transactions_amount - $total_load_amount - $transaction['expense'] ?>
+			<?php $output = $total_transactions_amount - $total_load_amount - $transaction['driver_salary'] - $transaction['helper_salary'] ?>
 			<table class='table' width="40%" cellspacing='0' style="margin-top: 5px">
 				<tr>
 					<td style="background-color: #fff; color: #000;">
@@ -141,7 +141,6 @@
 					<td align="right">{{ number_format($detail['quantity']) }}</td>
 					<td align="right">{{ $detail['unit_price'] }}</td>
 					<td align="right">{{ number_format($amount) }}</td>
-					<td align="right" style="color: red;"><b>{{ $detail['dr_no'] }}</b></td>
 				</tr>
 				@endforeach
 				<tr style="background-color: #eee;">
@@ -191,10 +190,13 @@
 							<td align="right"> {{ number_format($total_load_amount) }} </td>
 						</tr>
 						<tr>
-							<td align="right"> {{ number_format($transaction['expense']) }} </td>
+							<td align="right"> {{ number_format($transaction['driver_salary']) }} </td>
 						</tr>
 						<tr>
-							<td align="right" style="font-weight: bold; background-color: #eee;"> {{ number_format($total_transactions_amount - $total_load_amount - $transaction['expense']) }} </td>
+							<td align="right"> {{ number_format($transaction['helper_salary']) }} </td>
+						</tr>
+						<tr>
+							<td align="right" style="font-weight: bold; background-color: #eee;"> {{ number_format($total_transactions_amount - $total_load_amount - $transaction['driver_salary'] - $transaction['helper_salary']) }} </td>
 						</tr>
 					</table>
 				</div>

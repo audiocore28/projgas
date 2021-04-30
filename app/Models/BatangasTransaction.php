@@ -17,7 +17,7 @@ class BatangasTransaction extends Model
     use HasFactory;
 
      protected $dates = ['date'];
-	 protected $fillable = ['date', 'trip_no', 'driver_id', 'helper_id', 'tanker_id', 'monthly_batangas_transaction_id'];
+	 protected $fillable = ['date', 'trip_no', 'driver_id', 'helper_id', 'tanker_id', 'driver_salary', 'helper_salary', 'monthly_batangas_transaction_id'];
 
     public function monthlyBatangasTransaction()
     {
