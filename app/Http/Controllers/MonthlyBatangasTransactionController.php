@@ -146,6 +146,8 @@ class MonthlyBatangasTransactionController extends Controller
         $transactions = $monthlyBatangasTransaction->batangasTransactions
                 ->map(function ($transaction) {
                     return [
+                        'year' => $transaction->monthlyBatangasTransaction->year,
+                        'month' => $transaction->monthlyBatangasTransaction->month,
                         'id' => $transaction->id,
                         'trip_no' => $transaction->trip_no,
                         'tanker' => $transaction->tanker ? $transaction->tanker->only('id', 'plate_no') : null,
@@ -186,12 +188,37 @@ class MonthlyBatangasTransactionController extends Controller
                 ->toArray();
 
 
-       if (request()->wantsJson()) {
-         return [
-           // 'loadDetails' => $lD,
-           // 'batangasDetails' => $bD,
-           'batangasTransactions' => $transactions,
-         ];
+        if (request()->wantsJson()) {
+            // include existing transactions next month to selected transaction month
+            $nextTransactionId = $monthlyBatangasTransaction->where('id', '>', $monthlyBatangasTransaction->id)->min('id');
+
+            if ($nextTransactionId) {
+                $nextTransactions = $monthlyBatangasTransaction->find($nextTransactionId)->batangasTransactions
+                        ->map(function ($transaction) {
+                            return [
+                                'year' => $transaction->monthlyBatangasTransaction->year,
+                                'month' => $transaction->monthlyBatangasTransaction->month,
+                                'id' => $transaction->id,
+                                'trip_no' => $transaction->trip_no,
+                                'tanker' => $transaction->tanker ? $transaction->tanker->only('id', 'plate_no') : null,
+                                'driver' => $transaction->driver ? $transaction->driver->only('id', 'name') : null,
+                                'helper' => $transaction->helper ? $transaction->helper->only('id', 'name') : null,
+                                'driver_salary' => $transaction->driver_salary,
+                                'helper_salary' => $transaction->helper_salary,
+                                // 'selected_purchases' => $selectedPurchases,
+                            ];
+                        })
+                        ->toArray();
+
+                array_push($transactions, ...$nextTransactions);
+            }
+
+
+            return [
+               // 'loadDetails' => $lD,
+               // 'batangasDetails' => $bD,
+               'batangasTransactions' => $transactions,
+            ];
         }
 
         return Inertia::render('MonthlyBatangasTransactions/Edit', [

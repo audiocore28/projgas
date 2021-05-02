@@ -178,25 +178,28 @@
                   <col span="1" style="width: 50%;">
                   <col span="1" style="width: 50%;">
                 </colgroup>
- -->                <tr>
+ -->
+                <tr>
                   <td class="text-sm text-gray-500">
-                    <div class="text-sm font-medium text-gray-900">
+                    <div class="text-sm font-medium text-gray-900 mr-2">
                       <!-- <text-input v-model="load.trip_no" :error="errors.trip_no" class="pr-6" placeholder="Trip No.*" /> -->
 
                       <!-- BatangasTransaction trip no. -->
                       <div class="text-sm font-medium text-gray-900">
                         <select :id="`batangas-${loadIndex}`" class="form-select" v-model="form.batangasLoads[loadIndex].batangas_transaction_id">
                           <option :value="null" />
-                          <option v-for="transaction in form.batangas_transactions" :key="transaction.id" :value="transaction.id">{{ `${transaction.trip_no} - ${transaction.driver.name}` }}</option>
+                          <option v-for="transaction in form.batangas_transactions" :key="transaction.id" :value="transaction.id">{{ `${transaction.trip_no} - ${transaction.driver.name} (${transaction.month} ${transaction.year})` }}</option>
                         </select>
                       </div>
 
                     </div>
                   </td>
-<!--                   <td class="text-sm">
-                    <div class="text-sm font-medium text-blue-100">Driver's Name</div>
+                  <td class="text-sm">
+                    <button @click.prevent="addNewBatangasLoadDetailForm(loadIndex)">
+                      <icon name="plus" class="w-4 h-4 loadIr-2 fill-white"/>
+                    </button>
                   </td>
- -->
+
                 </tr>
               </table>
 
@@ -212,36 +215,13 @@
             <!-- /TankerLoad -->
 
             <!-- TankerLoadDetail table form -->
-            <div class="px-6 mt-8 mb-6 overflow-x-auto">
-              <table class="lg:w-4/6">
+            <div class="px-6 mt-8 mb-4 overflow-x-auto">
+              <table style="width: 260px">
                 <colgroup>
-                  <col span="1" style="width: 30%;">
-                  <col span="1" style="width: 25%;">
-                  <col span="1" style="width: 25%;">
-                  <col span="1" style="width: 20%;">
+                  <col span="1" style="width: 52%;">
+                  <col span="1" style="width: 42%;">
+                  <col span="1" style="width: 6%;">
                 </colgroup>
-                <thead class="bg-gray-50">
-                  <tr>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Product<span class="text-red-500">*</span>
-                    </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Quantity
-                    </th>
-                    <!-- <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Unit Price
-                    </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Amount
-                    </th>
-                    -->
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      <button @click.prevent="addNewBatangasLoadDetailForm(loadIndex)">
-                        <icon name="plus" class="w-4 h-4 loadIr-2 fill-green-600"/>
-                      </button>
-                    </th>
-                  </tr>
-                </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                   <tr v-for="(details, detailsIndex) in load.details" :key="detailsIndex">
                     <td>
@@ -334,14 +314,14 @@
                 </colgroup>
  -->                <tr>
                   <td class="text-sm text-gray-500">
-                    <div class="text-sm font-medium text-gray-900">
+                    <div class="text-sm font-medium text-gray-900 mr-2">
                       <!-- <text-input v-model="load.trip_no" :error="errors.trip_no" class="pr-6" placeholder="Trip No.*" /> -->
 
                       <!-- MindoroTransaction trip no. -->
                       <div class="text-sm font-medium text-gray-900">
                         <select :id="`mindoro-${loadIndex}`" class="form-select" v-model="form.mindoroLoads[loadIndex].mindoro_transaction_id">
                           <option :value="null" />
-                          <option v-for="transaction in form.mindoro_transactions" :key="transaction.id" :value="transaction.id">{{ `${transaction.trip_no} - ${transaction.driver.name}` }}</option>
+                          <option v-for="transaction in form.mindoro_transactions" :key="transaction.id" :value="transaction.id">{{ `${transaction.trip_no} - ${transaction.driver.name} (${transaction.month} ${transaction.year})` }}</option>
                         </select>
                       </div>
 
@@ -360,6 +340,11 @@
                     </div>
                   </td>
  -->
+                  <td class="text-sm">
+                     <button @click.prevent="addNewMindoroLoadDetailForm(loadIndex)">
+                       <icon name="plus" class="w-4 h-4 loadIr-2 fill-white"/>
+                     </button>
+                   </td>
                 </tr>
               </table>
 
@@ -374,36 +359,13 @@
             </div>
 
             <!-- TankerLoadDetail table form -->
-            <div class="px-6 mt-8 mb-6 overflow-x-auto">
-              <table class="lg:w-4/6">
+            <div class="px-6 mt-10 mb-4 overflow-x-auto">
+              <table style="width: 260px">
                 <colgroup>
-                  <col span="1" style="width: 30%;">
-                  <col span="1" style="width: 25%;">
-                  <col span="1" style="width: 25%;">
-                  <col span="1" style="width: 20%;">
+                  <col span="1" style="width: 52%;">
+                  <col span="1" style="width: 42%;">
+                  <col span="1" style="width: 6%;">
                 </colgroup>
-                <thead class="bg-gray-50">
-                  <tr>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Product<span class="text-red-500">*</span>
-                    </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Quantity
-                    </th>
-                <!-- <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Unit Price
-                    </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Amount
-                    </th>
-                    -->
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      <button @click.prevent="addNewMindoroLoadDetailForm(loadIndex)">
-                        <icon name="plus" class="w-4 h-4 loadIr-2 fill-green-600"/>
-                      </button>
-                    </th>
-                  </tr>
-                </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                   <tr v-for="(details, detailsIndex) in load.details" :key="detailsIndex">
                     <td>
