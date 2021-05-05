@@ -1,6 +1,17 @@
 <template>
   <div>
-    <h1 class="mb-8 font-bold text-3xl">Purchases</h1>
+    <div class="mb-6 flex justify-between items-center">
+      <h1 class="font-bold text-3xl">Purchases</h1>
+      <div>
+        <date-picker
+          v-model="form.range"
+          type="date"
+          range
+          placeholder="Select date range">
+        </date-picker>
+      </div>
+    </div>
+
     <div class="mb-6 flex justify-between items-center">
       <search-filter v-model="form.search" class="w-full max-w-md mr-4" @reset="reset">
 <!--         <label class="block text-gray-700">Trashed:</label>
@@ -23,8 +34,7 @@
           <th class="px-6 pt-6 pb-4">Purchase No.</th>
           <th class="px-6 pt-6 pb-4">Purchases</th>
         </tr>
-         <tr v-for="purchase in purchases.data" :key="purchase.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
-          <!-- table columns -->
+        <tr v-for="purchase in purchases.data" :key="purchase.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
           <td class="border-t">
             <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('purchases.edit', purchase.id)">
               {{ purchase.date }}
@@ -44,11 +54,11 @@
           </td>
           <td class="border-t">
             <inertia-link class="px-6 py-4 flex items-center" :href="route('purchases.edit', purchase.id)" tabindex="-1">
-              <div v-if="purchase.products" v-for="product in purchase.products">
+              <div v-if="purchase.purchase_details" v-for="detail in purchase.purchase_details">
                 <span class="px-2 py-2 text-sm leading-5 font-semibold rounded-full bg-grey-100 text-grey-800">
-                  {{ product.product.name }}
+                  {{ detail.product.name }}
                   <span class="p-1 rounded-full text-grey-800 text-sm bg-grey-400">
-                      {{ toFigure(product.quantity) }}
+                      {{ toFigure(detail.quantity) }}
                   </span>
                 </span>
               </div>
@@ -65,7 +75,7 @@
             </a>
           </td>
         </tr>
-         <tr v-if="purchases.data.length === 0">
+        <tr v-if="purchases.data.length === 0">
           <td class="border-t px-6 py-4" colspan="4">No purchases found.</td>
         </tr>
     </table>
@@ -79,8 +89,9 @@ import Icon from '@/Shared/Icon'
 import Layout from '@/Shared/Layout'
 import mapValues from 'lodash/mapValues'
 import Pagination from '@/Shared/Pagination'
-import pickBy from 'lodash/pickBy'
 import SearchFilter from '@/Shared/SearchFilter'
+import DatePicker from 'vue2-datepicker'
+import pickBy from 'lodash/pickBy'
 import throttle from 'lodash/throttle'
 
 export default {
@@ -99,6 +110,7 @@ export default {
     return {
       form: {
         search: this.filters.search,
+        range: this.filters.range,
         // trashed: this.filters.trashed,
       },
     }
@@ -124,3 +136,5 @@ export default {
   },
 }
 </script>
+
+<style src="vue2-datepicker/index.css"></style>

@@ -28,24 +28,26 @@ class PurchaseController extends Controller
      */
     public function index()
     {
-        $purchases = Purchase::filter(Request::only('search', 'trashed'))
-                ->orderBy('id', 'desc')
-                ->paginate()
-                ->transform(function ($purchase) {
-                    return [
-                        'id' => $purchase->id,
-                        'date' => $purchase->date,
-                        'purchase_no' => $purchase->purchase_no,
-                        'supplier' => $purchase->supplier ? $purchase->supplier->only('name') : null,
-                        'products' => $purchase->purchaseDetails->each(function ($detail) {
-                                return [ 'name' => $detail->product->name, ];
-                            }),
-                        ];
-                });
+        $query = Purchase::query();
+
+        if (request('range')) {
+            $dateRange = request('range');
+            $startDate = $dateRange[0];
+            $endDate = $dateRange[1];
+
+            $query->whereBetween('date', [$startDate, $endDate]);
+        }
+
+        if (request('search')) {
+            $query->where('purchase_no', 'like', '%'.request('search').'%');
+                    // ->orWhereHas('supplier', function ($query) {
+                    //     $query->where('name', 'like', '%'.request('search').'%');
+                    // });
+        }
 
         return Inertia::render('Purchases/Index', [
-            'filters' => Request::all('search', 'trashed'),
-            'purchases' => $purchases,
+            'filters' => Request::all('search', 'range', 'trashed'),
+            'purchases' => $query->with('supplier', 'purchaseDetails.product')->orderBy('id', 'desc')->paginate(),
         ]);
     }
 

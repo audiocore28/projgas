@@ -64,19 +64,6 @@ class Purchase extends Model
         return $this->belongsToMany(MindoroTransaction::class);
      }
 
-
-    public function scopeFilter($query, array $filters)
-    {
-        $query->when($filters['search'] ?? null, function ($query, $search) {
-            $query->where(function ($query) use ($search) {
-                $query->where('purchase_no', 'like', '%'.$search.'%')
-                		->orWhereHas('supplier', function ($query) use ($search) {
-	                        $query->where('name', 'like', '%'.$search.'%');
-	                    });
-            });
-        });
-    }
-
     // public function setDateAttribute($value)
     // {
     //     $this->attributes['date'] = Carbon::createFromFormat('MM-DD-YYYY', $value)->format('Y-m-d');
