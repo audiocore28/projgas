@@ -11,7 +11,7 @@
         <div class="overflow-hidden max-w-6xl mb-8 -mt-4">
           <form @submit.prevent="updateMindoroTransaction">
             <!-- Transaction -->
-            <div class="-mr-6 mb-4 flex flex-wrap w-full mt-8 px-4">
+            <div class="-mr-6 mb-4 flex space-between w-full mt-8 px-4">
               <div class="w-full flex flex-wrap justify-start">
                 <div class="-mt-6 mr-12">
                   <label class="form-label block">Month:<span class="text-red-500">*</span></label>
@@ -48,10 +48,13 @@
                 </div>
  -->
               </div>
+              <div>
+                <button class="btn-indigo" @click.prevent="toggleAllRow">Toggle All</button>
+              </div>
             </div>
 
             <div v-for="(transaction, transactionIndex) in updateForm.transactions" :key="transactionIndex" class="bg-white rounded shadow mb-8">
-              <div class="flex justify-between bg-gradient-to-r from-yellow-500 to-blue-600 rounded pl-6 pt-4 highlight-yellow">
+              <div @click="toggleRow(transactionIndex)" class="flex justify-between bg-gradient-to-r from-yellow-500 to-blue-600 rounded pl-6 pt-4 highlight-yellow">
                 <div class="flex flex-wrap">
                   <text-input v-model="transaction.trip_no" :error="errors.trip_no" class="pr-6 pb-4 w-full lg:w-1/6" label="Trip No.*" />
 
@@ -89,7 +92,7 @@
               </div>
 
                <!-- Details table form -->
-               <div class="mb-6 overflow-x-auto -mt-4 px-4 pb-4">
+               <div v-if="opened.includes(transactionIndex)" class="mb-6 overflow-x-auto -mt-4 px-4 pb-4">
                  <table class="min-w-full mt-8 shadow divide-y divide-gray-200">
                    <colgroup>
                      <col span="1" style="width: 10%;">
@@ -227,7 +230,7 @@
                <!-- /Details table form -->
 
                 <!-- TankerLoad -->
-                <div class="flex flex-wrap px-8">
+                <div v-if="opened.includes(transactionIndex)" class="flex flex-wrap px-8">
                   <div class="grid grid-cols-1 gap-1 bg-white rounded overflow-x-auto">
                     <div class="rounded overflow-x-auto mb-4" v-for="(load, loadIndex) in transaction.tanker_loads" :key="load.id" :value="load.id">
                       <p class="text-sm bg-blue-600 font-bold pl-4 mb-2 rounded text-center py-2 text-white">{{ load.purchase.purchase_no }}</p>
@@ -394,6 +397,7 @@ export default {
   remember: 'form',
   data() {
     return {
+      opened: [],
       sending: false,
       momentFormat: {
         //[optional] Date to String
@@ -423,6 +427,25 @@ export default {
     }
   },
   methods: {
+    toggleRow(id) {
+      const index = this.opened.indexOf(id);
+      if (index > -1) {
+        this.opened.splice(index, 1)
+      } else {
+        this.opened.push(id)
+      }
+    },
+
+    toggleAllRow() {
+      if (this.opened.length) {
+        this.opened = [];
+      } else {
+        this.updateForm.transactions.forEach((transaction, index) => {
+          this.opened.push(index);
+        });
+      }
+    },
+
     showDate (date) {
       this.updateForm.date = date;
     },
