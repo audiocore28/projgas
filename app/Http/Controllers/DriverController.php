@@ -68,18 +68,13 @@ class DriverController extends Controller
      */
     public function edit(Driver $driver)
     {
-        $trips = $driver->mindoroTransactions()
-            ->selectRaw('year(date) year, monthname(date) month, count(*) loaded')
-            ->groupBy('year', 'month')
-            ->orderByRaw('min(date)')
-            ->get()
-            ->toArray();
-
         $bD = $driver->batangasTransactions()
             ->latest()
             ->paginate()
             ->transform(function ($transaction) {
                 return [
+                    'month' => $transaction->monthlyBatangasTransaction->month,
+                    'year' => $transaction->monthlyBatangasTransaction->year,
                     'id' => $transaction->id,
                     'date' => $transaction->date,
                     'trip_no' => $transaction->trip_no,
@@ -100,6 +95,8 @@ class DriverController extends Controller
             ->paginate()
             ->transform(function ($transaction) {
                 return [
+                    'month' => $transaction->monthlyMindoroTransaction->month,
+                    'year' => $transaction->monthlyMindoroTransaction->year,
                     'id' => $transaction->id,
                     'date' => $transaction->date,
                     'trip_no' => $transaction->trip_no,
@@ -115,10 +112,11 @@ class DriverController extends Controller
                 ];
             });
 
+        $batangasTrips = $bD->groupBy(['year', 'month']);
+        $mindoroTrips = $mD->groupBy(['year', 'month']);
 
        if (request()->wantsJson()) {
          return [
-           // 'loadDetails' => $lD,
            'batangasDetails' => $bD,
            'mindoroDetails' => $mD,
          ];
@@ -134,10 +132,8 @@ class DriverController extends Controller
                 'contact_no' => $driver->contact_no,
                 'deleted_at' => $driver->deleted_at,
            ],
-           // 'loadDetails' => $lD,
-           'batangasDetails' => $bD,
-           'mindoroDetails' => $mD,
-           'trips' => $trips,
+           'mindoroTrips' => $mindoroTrips,
+           'batangasTrips' => $batangasTrips,
         ]);
     }
 
