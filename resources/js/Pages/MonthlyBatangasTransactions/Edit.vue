@@ -11,7 +11,7 @@
         <div class="overflow-hidden max-w-6xl mb-8 -mt-4">
           <form @submit.prevent="updateBatangasTransaction">
             <!-- Transaction -->
-            <div class="-mr-6 mb-4 flex flex-wrap w-full mt-8 px-4">
+            <div class="-mr-6 mb-4 flex space-between w-full mt-8 px-4">
               <div class="w-full flex flex-wrap justify-start">
                 <div class="-mt-6 mr-12">
                   <label class="form-label block">Month:<span class="text-red-500">*</span></label>
@@ -48,293 +48,321 @@
                 </div>
  -->
               </div>
+              <div class="px-4">
+                <button @click.prevent="toggleAllRow" type="button" tabindex="-1" class="text-xs font-bold">
+                  <!-- <span class="mr-2">Close</span> -->
+                  <icon v-if="opened.length" name="toggle-on" class="block w-10 h-10 fill-gray-600" />
+                  <icon v-else name="toggle-off" class="block w-10 h-10 fill-gray-600" />
+                  <!-- <span class="ml-2 ">Open</span> -->
+                </button>
+              </div>
             </div>
 
-            <div v-for="(transaction, transactionIndex) in updateForm.transactions" :key="transactionIndex" class="bg-white rounded shadow mb-8">
-              <div class="flex justify-between bg-gradient-to-r from-yellow-500 to-blue-600 rounded pl-6 pt-4 highlight-yellow">
-                <div class="flex flex-wrap">
-                  <text-input v-model="transaction.trip_no" :error="errors.trip_no" class="pr-6 pb-4 w-full lg:w-1/6" label="Trip No.*" />
+            <div class="bg-white rounded shadow overflow-x-auto">
+              <table width="100%" class="w-full whitespace-no-wrap" cellpadding="5">
+                <colgroup>
+                  <col span="1" style="width: 10%;">
+                  <col span="1" style="width: 20%;">
+                  <col span="1" style="width: 20%;">
+                  <col span="1" style="width: 20%;">
+                  <col span="1" style="width: 20%;">
+                  <col span="1" style="width: 10%;">
+                </colgroup>
+                <thead>
+                  <tr class="text-left font-bold">
+                    <th align="center" class="px-6 pt-6 pb-4">Trip No.</th>
+                    <th align="center" class="px-6 pt-6 pb-4">Driver</th>
+                    <th align="center" class="px-6 pt-6 pb-4">Helper</th>
+                    <th align="center" class="px-6 pt-6 pb-4">Tanker</th>
+                    <th align="center" class="px-6 pt-6 pb-4"></th>
+                    <th align="center" class="px-6 pt-6 pb-4"></th>
+                  </tr>
+                </thead>
+                <tbody v-for="(transaction, transactionIndex) in updateForm.transactions" :key="transactionIndex" class="bg-white rounded shadow mb-8 hover:bg-gray-100 focus-within:bg-gray-100">
+                  <tr class="bg-gradient-to-r from-yellow-500 to-blue-600">
+                    <td class="border-t">
+                      <text-input v-model="transaction.trip_no" :error="errors.trip_no" />
+                    </td>
+                    <td class="border-t">
+                      <select :id="`driver-${transactionIndex}`" v-model="transaction.driver.id" class="form-select">
+                        <option :value="null" />
+                        <option v-for="driver in drivers" :key="driver.id" :value="driver.id">{{ driver.name }}</option>
+                      </select>
+                    </td>
+                    <td class="border-t">
+                      <select :id="`helper-${transactionIndex}`" v-model="transaction.helper.id" class="form-select">
+                        <option :value="null" />
+                        <option v-for="helper in helpers" :key="helper.id" :value="helper.id">{{ helper.name }}</option>
+                      </select>
+                    </td>
+                    <td class="border-t">
+                      <select :id="`tanker-${transactionIndex}`" v-model="transaction.tanker.id" class="form-select">
+                        <option :value="null" />
+                        <option v-for="tanker in tankers" :key="tanker.id" :value="tanker.id">{{ tanker.plate_no }}</option>
+                      </select>
+                    </td>
+                    <td @click="toggleRow(transactionIndex)" class="border-t text-blue-100 font-semibold text-sm" align="right">
+                      {{ toPHP(transactionTotalAmt(transaction.id) - getLoadTotalAmt(transaction.id) - transaction.driver_salary - transaction.helper_salary) }}
+                    </td>
+                    <td class="border-t" align="right">
+                      <button @click.prevent="deleteTransactionForm(transactionIndex, transaction.id)" type="button" class="font-bold flex-shrink-0 leading-none" tabindex="-1">
+                        <!-- {{ transactionIndex + 1 }} -->
+                        <icon name="trash" class="w-4 h-4 mr-2 fill-red-600"/>
+                      </button>
+                    </td>
+                  </tr>
 
-                  <div class="pr-6 pb-4 w-full lg:w-1/4">
-                    <label class="form-label" :for="`driver-${transactionIndex}`">Driver:<span class="text-red-500">*</span></label>
-                    <select :id="`driver-${transactionIndex}`" v-model="transaction.driver.id" class="form-select">
-                      <option :value="null" />
-                      <option v-for="driver in drivers" :key="driver.id" :value="driver.id">{{ driver.name }}</option>
-                    </select>
-                  </div>
+                  <tr v-if="opened.includes(transactionIndex)">
+                    <!-- Details table form -->
+                    <td colspan="6">
+                       <div class="mb-6 overflow-x-auto -mt-4 px-4 pb-4">
+                         <table class="min-w-full mt-8 shadow divide-y divide-gray-200">
+                           <colgroup>
+                             <col span="1" style="width: 10%;">
+                             <col span="1" style="width: 38%;">
+                             <col span="1" style="width: 12%;">
+                             <col span="1" style="width: 10%;">
+                             <col span="1" style="width: 10%;">
+                             <col span="1" style="width: 10%;">
+                             <col span="1" style="width: 10%;">
+                           </colgroup>
+                           <thead class="bg-gray-50">
+                             <tr>
+                               <th scope="col" class="px-6 text-center py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                 Date<span class="text-red-500">*</span>
+                               </th>
+                               <th scope="col" class="px-6 text-center py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                 Client<span class="text-red-500">*</span>
+                               </th>
+                               <th scope="col" class="px-6 text-center py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                 Product<span class="text-red-500">*</span>
+                               </th>
+                               <th scope="col" class="px-6 text-center py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                 Quantity
+                               </th>
+                               <th scope="col" class="px-6 text-center py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                 U.Price
+                               </th>
+                               <th scope="col" class="px-6 text-center py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                 Amount
+                               </th>
+                               <th scope="col" class="px-6 text-center py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                 <button @click.prevent="addNewDetailForm(transactionIndex)">
+                                   <icon name="plus" class="w-4 h-4 mr-2 fill-green-600"/>
+                                 </button>
+                               </th>
+                             </tr>
+                           </thead>
+                           <tbody class="bg-white divide-y divide-gray-200">
+                             <tr v-for="(detail, detailIndex) in transaction.details" :key="detailIndex">
+                               <td>
+                                 <div class="text-sm font-medium text-gray-900">
+                                   <date-picker v-model="detail.date" lang="en" value-type="format" :formatter="momentFormat"></date-picker>
+                                 </div>
+                               </td>
+                               <td>
+                                 <div class="text-sm font-medium text-gray-900 -mt-3">
+                                   <multiselect :id="[transactionIndex, detailIndex]" v-model="detail.selected_client"
+                                     placeholder=""
+                                     class="mt-3 text-xs z-50"
+                                     :options="clients"
+                                     label="name"
+                                     track-by="id"
+                                     @search-change="onSearchClientChange"
+                                     @input="onSelectedClient"
+                                     :show-labels="false"
+                                     :allow-empty="false"
+                                   ></multiselect>
+                                 </div>
+                               </td>
+                               <td>
+                                 <div class="text-sm font-medium text-gray-900">
+                                   <select :id="`product-${detailIndex}`" v-model="detail.product_id" class="form-select" :class="{ error: errors[`detail.${detailIndex}.product_id`] }">
+                                     <option :value="null" />
+                                     <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
+                                   </select>
+                                 </div>
+                               </td>
+                               <td class="text-sm text-gray-500">
+                                 <div class="text-sm font-medium text-gray-900">
+                                   <text-input type="number" step="any" v-model="detail.quantity" :error="errors.quantity" />
+                                 </div>
+                               </td>
+                               <td class="text-sm text-gray-500">
+                                 <div class="text-sm font-medium text-gray-900">
+                                   <text-input type="number" step="any" v-model="detail.unit_price" :error="errors.unit_price" />
+                                 </div>
+                               </td>
+                               <td class="text-sm text-gray-500">
+                                 <div class="text-sm font-medium text-gray-900 text-center">
+                                   {{ totalCurrency(detail.quantity, detail.unit_price) }}
+                                 </div>
+                               </td>
+                               <td class="text-sm text-gray-500">
+                                 <div class=" px-5 text-sm font-medium text-gray-900">
+                                 <!-- <div class="px-5 py-4 whitespace-nowrap text-left text-xs font-medium text-gray-500 uppercase bg-white"> -->
+                                   <button @click.prevent="deleteTransactionDetailForm(transactionIndex, detailIndex, detail.id)" type="button" class="bg-white py-1 px-1 flex-shrink-0 text-sm leading-none" tabindex="-1">
+                                     <icon name="trash" class="w-4 h-4 mr-2 fill-red-600"/>
+                                   </button>
+                                 </div>
+                               </td>
+                             </tr>
 
-                  <div class="pr-6 pb-4 w-full lg:w-1/4">
-                    <label class="form-label" :for="`helper-${transactionIndex}`">Helper:<span class="text-red-500">*</span></label>
-                    <select :id="`helper-${transactionIndex}`" v-model="transaction.helper.id" class="form-select">
-                      <option :value="null" />
-                      <option v-for="helper in helpers" :key="helper.id" :value="helper.id">{{ helper.name }}</option>
-                    </select>
-                  </div>
+                             <!-- Total -->
+                             <tr class="bg-gray-200">
+                               <td>
+                                 <div class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium text-gray-500 uppercase">Total:</div>
+                               </td>
+                               <td>
+                                 <div class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium text-gray-500 uppercase"></div>
+                               </td>
+                               <td>
+                                 <div class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium text-gray-500 uppercase"></div>
+                               </td>
+                               <td>
+                                 <div class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium text-gray-500 uppercase">
+                                   {{ transactionTotalQty(transaction.id) }}
+                                 </div>
+                               </td>
+                               <td>
+                                 <div class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium text-gray-500 uppercase"></div>
+                               </td>
+                               <td>
+                                 <div class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium text-gray-500 uppercase">
+                                   {{ toPHP(transactionTotalAmt(transaction.id)) }}
+                                 </div>
+                               </td>
+                               <td>
+                                 <div class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium text-gray-500 uppercase"></div>
+                               </td>
+                               <td>
+                                 <div class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium text-gray-500 uppercase"></div>
+                               </td>
+                             </tr>
+                           </tbody>
+                         </table>
+                       </div>
+                       <!-- /Details table form -->
 
-                  <div class="pr-6 pb-4 w-full lg:w-1/4">
-                    <label class="form-label" :for="`tanker-${transactionIndex}`">Tanker:<span class="text-red-500">*</span></label>
-                    <select :id="`tanker-${transactionIndex}`" v-model="transaction.tanker.id" class="form-select">
-                      <option :value="null" />
-                      <option v-for="tanker in tankers" :key="tanker.id" :value="tanker.id">{{ tanker.plate_no }}</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="mr-5">
-                  <span class="p-1 rounded-full text-yellow-300 text-xs ml-2">
-                    <button @click.prevent="deleteTransactionForm(transactionIndex, transaction.id)" type="button" class="font-bold p-1 flex-shrink-0 leading-none" tabindex="-1">
-                      {{ transactionIndex + 1 }}
-                    </button>
-                  </span>
-                </div>
-              </div>
+                      <!-- TankerLoad -->
+                      <div class="flex flex-wrap px-8">
+                        <div class="grid grid-cols-1 gap-1 bg-white rounded overflow-x-auto">
+                          <div class="rounded overflow-x-auto mb-4" v-for="(load, loadIndex) in transaction.tanker_loads" :key="load.id" :value="load.id">
+                            <p class="text-sm bg-blue-600 font-bold pl-4 mb-2 rounded text-center py-2 text-white">{{ load.purchase.purchase_no }}</p>
 
-               <!-- Details table form -->
-               <div class="mb-6 overflow-x-auto -mt-4 px-4 pb-4">
-                 <table class="min-w-full mt-8 shadow divide-y divide-gray-200">
-                   <colgroup>
-                     <col span="1" style="width: 10%;">
-                     <col span="1" style="width: 38%;">
-                     <col span="1" style="width: 12%;">
-                     <col span="1" style="width: 10%;">
-                     <col span="1" style="width: 10%;">
-                     <col span="1" style="width: 10%;">
-                     <col span="1" style="width: 10%;">
-                   </colgroup>
-                   <thead class="bg-gray-50">
-                     <tr>
-                       <th scope="col" class="px-6 text-center py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                         Date<span class="text-red-500">*</span>
-                       </th>
-                       <th scope="col" class="px-6 text-center py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                         Client<span class="text-red-500">*</span>
-                       </th>
-                       <th scope="col" class="px-6 text-center py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                         Product<span class="text-red-500">*</span>
-                       </th>
-                       <th scope="col" class="px-6 text-center py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                         Quantity
-                       </th>
-                       <th scope="col" class="px-6 text-center py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                         U.Price
-                       </th>
-                       <th scope="col" class="px-6 text-center py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                         Amount
-                       </th>
-                       <th scope="col" class="px-6 text-center py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                         <button @click.prevent="addNewDetailForm(transactionIndex)">
-                           <icon name="plus" class="w-4 h-4 mr-2 fill-green-600"/>
-                         </button>
-                       </th>
-                     </tr>
-                   </thead>
-                   <tbody class="bg-white divide-y divide-gray-200">
-                     <tr v-for="(detail, detailIndex) in transaction.details" :key="detailIndex">
-                       <td>
-                         <div class="text-sm font-medium text-gray-900">
-                           <date-picker v-model="detail.date" lang="en" value-type="format" :formatter="momentFormat"></date-picker>
-                         </div>
-                       </td>
-                       <td>
-                         <div class="text-sm font-medium text-gray-900 -mt-3">
-                           <multiselect :id="[transactionIndex, detailIndex]" v-model="detail.selected_client"
-                             placeholder=""
-                             class="mt-3 text-xs z-50"
-                             :options="clients"
-                             label="name"
-                             track-by="id"
-                             @search-change="onSearchClientChange"
-                             @input="onSelectedClient"
-                             :show-labels="false"
-                             :allow-empty="false"
-                           ></multiselect>
-                         </div>
-                       </td>
-                       <td>
-                         <div class="text-sm font-medium text-gray-900">
-                           <select :id="`product-${detailIndex}`" v-model="detail.product_id" class="form-select" :class="{ error: errors[`detail.${detailIndex}.product_id`] }">
-                             <option :value="null" />
-                             <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
-                           </select>
-                         </div>
-                       </td>
-                       <td class="text-sm text-gray-500">
-                         <div class="text-sm font-medium text-gray-900">
-                           <text-input type="number" step="any" v-model="detail.quantity" :error="errors.quantity" />
-                         </div>
-                       </td>
-                       <td class="text-sm text-gray-500">
-                         <div class="text-sm font-medium text-gray-900">
-                           <text-input type="number" step="any" v-model="detail.unit_price" :error="errors.unit_price" />
-                         </div>
-                       </td>
-                       <td class="text-sm text-gray-500">
-                         <div class="text-sm font-medium text-gray-900 text-center">
-                           {{ totalCurrency(detail.quantity, detail.unit_price) }}
-                         </div>
-                       </td>
-                       <td class="text-sm text-gray-500">
-                         <div class=" px-5 text-sm font-medium text-gray-900">
-                         <!-- <div class="px-5 py-4 whitespace-nowrap text-left text-xs font-medium text-gray-500 uppercase bg-white"> -->
-                           <button @click.prevent="deleteTransactionDetailForm(transactionIndex, detailIndex, detail.id)" type="button" class="bg-white py-1 px-1 flex-shrink-0 text-sm leading-none" tabindex="-1">
-                             <icon name="trash" class="w-4 h-4 mr-2 fill-red-600"/>
-                           </button>
-                         </div>
-                       </td>
-                     </tr>
+                            <div class="mt-2 mb-1 rounded">
+                              <div>
+                                <!-- TankerLoadDetail Table -->
+                                <table class="min-w-full shadow divide-y divide-gray-200">
+                                  <colgroup>
+                                    <col span="1" style="width: 25%;">
+                                    <col span="1" style="width: 25%;">
+                                    <col span="1" style="width: 25%;">
+                                    <col span="1" style="width: 25%;">
+                                  </colgroup>
+                                  <thead>
+                                    <tr>
+                                      <th scope="col" class="px-6 text-center py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                        Product
+                                      </th>
+                                      <th scope="col" class="px-6 text-center py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                        Quantity
+                                      </th>
+                                      <th scope="col" class="px-6 text-center py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                        Unit Price
+                                      </th>
+                                      <th scope="col" class="px-6 text-center py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                        Amount
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody class="bg-white divide-y divide-gray-200">
+                                    <tr v-for="detail in load.tanker_load_details">
+                                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <div class="text-sm text-gray-900">{{ detail.product.name }}</div>
+                                      </td>
+                                      <td class="text-center px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <div class="text-sm text-gray-900">{{ quantityFormat(detail.quantity) }}</div>
+                                      </td>
+                                      <td class="text-sm text-gray-500 text-center">
+                                        <div class="text-sm font-medium text-gray-900">
+                                          <text-input type="number" step="any" v-model="detail.unit_price" :error="errors.unit_price" />
+                                        </div>
+                                      </td>
+                                      <td class="text-center px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <div class="text-sm text-gray-900">{{ totalCurrency(detail.quantity, detail.unit_price) }}</div>
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- /Tanker Load -->
 
-                     <!-- Total -->
-                     <tr class="bg-gray-200">
-                       <td>
-                         <div class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium text-gray-500 uppercase">Total:</div>
-                       </td>
-                       <td>
-                         <div class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium text-gray-500 uppercase"></div>
-                       </td>
-                       <td>
-                         <div class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium text-gray-500 uppercase"></div>
-                       </td>
-                       <td>
-                         <div class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium text-gray-500 uppercase">
-                           {{ transactionTotalQty(transaction.id) }}
-                         </div>
-                       </td>
-                       <td>
-                         <div class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium text-gray-500 uppercase"></div>
-                       </td>
-                       <td>
-                         <div class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium text-gray-500 uppercase">
-                           {{ toPHP(transactionTotalAmt(transaction.id)) }}
-                         </div>
-                       </td>
-                       <td>
-                         <div class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium text-gray-500 uppercase"></div>
-                       </td>
-                       <td>
-                         <div class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium text-gray-500 uppercase"></div>
-                       </td>
-                     </tr>
-                   </tbody>
-                 </table>
-               </div>
-               <!-- /Details table form -->
-
-                <!-- TankerLoad -->
-                <div class="flex flex-wrap px-8">
-                  <div class="grid grid-cols-1 gap-1 bg-white rounded overflow-x-auto">
-                    <div class="rounded overflow-x-auto mb-4" v-for="(load, loadIndex) in transaction.tanker_loads" :key="load.id" :value="load.id">
-                      <p class="text-sm bg-blue-600 font-bold pl-4 mb-2 rounded text-center py-2 text-white">{{ load.purchase.purchase_no }}</p>
-
-                      <div class="mt-2 mb-1 rounded">
-                        <div>
-                          <!-- TankerLoadDetail Table -->
-                          <table class="min-w-full shadow divide-y divide-gray-200">
-                            <colgroup>
-                              <col span="1" style="width: 25%;">
-                              <col span="1" style="width: 25%;">
-                              <col span="1" style="width: 25%;">
-                              <col span="1" style="width: 25%;">
-                            </colgroup>
-                            <thead>
-                              <tr>
-                                <th scope="col" class="px-6 text-center py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                                  Product
-                                </th>
-                                <th scope="col" class="px-6 text-center py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                                  Quantity
-                                </th>
-                                <th scope="col" class="px-6 text-center py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                                  Unit Price
-                                </th>
-                                <th scope="col" class="px-6 text-center py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                                  Amount
-                                </th>
-                              </tr>
-                            </thead>
+                        <div class="xl:ml-12 rounded">
+                          <table class="shadow divide-y divide-gray-200">
                             <tbody class="bg-white divide-y divide-gray-200">
-                              <tr v-for="detail in load.tanker_load_details">
+                              <tr>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                  <div class="text-sm text-gray-900">{{ detail.product.name }}</div>
+                                  Transaction:
                                 </td>
-                                <td class="text-center px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                  <div class="text-sm text-gray-900">{{ quantityFormat(detail.quantity) }}</div>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-yellow-600 font-semibold">
+                                 {{ toPHP(transactionTotalAmt(transaction.id)) }}
                                 </td>
-                                <td class="text-sm text-gray-500 text-center">
+                              </tr>
+                              <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                  Load:
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-blue-600 font-semibold">
+                                  {{ toPHP(getLoadTotalAmt(transaction.id)) }}
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="px-6 whitespace-nowrap text-sm text-gray-500">
+                                  <!-- {{ transaction.driver.name }} Salary: -->
+                                  Driver Salary:
+                                </td>
+                                <td class="px-6 whitespace-nowrap text-sm text-gray-700 font-semibold">
                                   <div class="text-sm font-medium text-gray-900">
-                                    <text-input type="number" step="any" v-model="detail.unit_price" :error="errors.unit_price" />
+                                    <text-input type="number" step="any" v-model="transaction.driver_salary" :error="errors.driver_salary" />
                                   </div>
                                 </td>
-                                <td class="text-center px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                  <div class="text-sm text-gray-900">{{ totalCurrency(detail.quantity, detail.unit_price) }}</div>
+                              </tr>
+                              <tr>
+                                <td class="px-6 whitespace-nowrap text-sm text-gray-500">
+                                  <!-- {{ transaction.helper.name }} Salary: -->
+                                  Helper Salary:
+                                </td>
+                                <td class="px-6 whitespace-nowrap text-sm text-gray-700 font-semibold">
+                                  <div class="text-sm font-medium text-gray-900">
+                                    <text-input type="number" step="any" v-model="transaction.helper_salary" :error="errors.helper_salary" />
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr class="bg-gray-200">
+                                <td>
+                                  <div class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium text-gray-500 uppercase">
+                                    <!-- Total: -->
+                                  </div>
+                                </td>
+                                <td>
+                                  <div class="px-6 py-4 whitespace-nowrap text-left text-sm font-semibold text-gray-500">
+                                    {{ toPHP(transactionTotalAmt(transaction.id) - getLoadTotalAmt(transaction.id) - transaction.driver_salary - transaction.helper_salary) }}
+                                  </div>
                                 </td>
                               </tr>
                             </tbody>
                           </table>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                  <!-- /Tanker Load -->
-
-                  <div class="xl:ml-12 rounded">
-                    <table class="shadow divide-y divide-gray-200">
-                      <tbody class="bg-white divide-y divide-gray-200">
-                        <tr>
-                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            Transaction:
-                          </td>
-                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-yellow-600 font-semibold">
-                           {{ toPHP(transactionTotalAmt(transaction.id)) }}
-                          </td>
-                        </tr>
-                        <tr>
-                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            Load:
-                          </td>
-                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-blue-600 font-semibold">
-                            {{ toPHP(getLoadTotalAmt(transaction.id)) }}
-                          </td>
-                        </tr>
-                        <tr>
-                          <td class="px-6 whitespace-nowrap text-sm text-gray-500">
-                            <!-- {{ transaction.driver.name }} Salary: -->
-                            Driver Salary:
-                          </td>
-                          <td class="px-6 whitespace-nowrap text-sm text-gray-700 font-semibold">
-                            <div class="text-sm font-medium text-gray-900">
-                              <text-input type="number" step="any" v-model="transaction.driver_salary" :error="errors.driver_salary" />
-                            </div>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td class="px-6 whitespace-nowrap text-sm text-gray-500">
-                            <!-- {{ transaction.helper.name }} Salary: -->
-                            Helper Salary:
-                          </td>
-                          <td class="px-6 whitespace-nowrap text-sm text-gray-700 font-semibold">
-                            <div class="text-sm font-medium text-gray-900">
-                              <text-input type="number" step="any" v-model="transaction.helper_salary" :error="errors.helper_salary" />
-                            </div>
-                          </td>
-                        </tr>
-                        <tr class="bg-gray-200">
-                          <td>
-                            <div class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium text-gray-500 uppercase">
-                              <!-- Total: -->
-                            </div>
-                          </td>
-                          <td>
-                            <div class="px-6 py-4 whitespace-nowrap text-left text-sm font-semibold text-gray-500">
-                              {{ toPHP(transactionTotalAmt(transaction.id) - getLoadTotalAmt(transaction.id) - transaction.driver_salary - transaction.helper_salary) }}
-                            </div>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-
 
             <div class="px-8 py-4 bg-gray-100 border-t border-gray-200 flex justify-end items-center">
               <button v-if="!monthly_batangas_transaction.deleted_at" class="text-red-600 hover:underline" tabindex="-1" type="button" @click="destroy">Delete Transaction</button>
@@ -398,6 +426,7 @@ export default {
   remember: 'form',
   data() {
     return {
+      opened: [],
       sending: false,
       momentFormat: {
         //[optional] Date to String
@@ -427,6 +456,25 @@ export default {
     }
   },
   methods: {
+    toggleRow(id) {
+      const index = this.opened.indexOf(id);
+      if (index > -1) {
+        this.opened.splice(index, 1)
+      } else {
+        this.opened.push(id)
+      }
+    },
+
+    toggleAllRow() {
+      if (this.opened.length) {
+        this.opened = [];
+      } else {
+        this.updateForm.transactions.forEach((transaction, index) => {
+          this.opened.push(index);
+        });
+      }
+    },
+
     showDate (date) {
       this.updateForm.date = date;
     },
