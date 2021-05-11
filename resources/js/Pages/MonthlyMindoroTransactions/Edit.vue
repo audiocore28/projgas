@@ -80,7 +80,7 @@
                     <th align="center" class="px-6 pt-6 pb-4"></th>
                   </tr>
                 </thead>
-                <tbody v-for="(transaction, transactionIndex) in updateForm.transactions" :key="transactionIndex" class="bg-white rounded shadow mb-8 hover:bg-gray-100 focus-within:bg-gray-100">
+                <tbody v-for="(transaction, transactionIndex) in updateForm.transactions" :key="transactionIndex" class="bg-white rounded shadow mb-8 hover:bg-gray-100 focus-within:bg-gray-100" :id="`transaction-${transaction.id}`">
                   <tr @click="toggleRow(transactionIndex)" class="bg-gradient-to-r from-yellow-500 to-blue-600">
                     <td class="border-t">
                       <text-input v-model="transaction.trip_no" :error="errors.trip_no" />
@@ -666,6 +666,8 @@ export default {
     // this.updateForm.selectedPurchases.forEach(purchase => {
     //   this.updateForm.purchases.push(purchase.id);
     // });
+
+    this.toggleAllRow();
 
     this.updateForm.transactions.forEach(transaction => {
       transaction.details.forEach(detail => {

@@ -294,6 +294,13 @@ class MindoroTransactionController extends Controller
                 })
                 ->toArray();
 
+        if (request()->wantsJson()) {
+            $monthlyMindoroTransactionId = $mindoroTransaction->monthlyMindoroTransaction ? $mindoroTransaction->monthlyMindoroTransaction->only('id') : null;
+
+            return [
+                'monthly_mindoro_transaction_id' => $monthlyMindoroTransactionId,
+            ];
+        }
 
         return Inertia::render('MindoroTransactions/Edit', [
             'mindoro_transaction' => [

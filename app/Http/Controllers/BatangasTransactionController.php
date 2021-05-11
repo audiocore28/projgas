@@ -294,6 +294,13 @@ class BatangasTransactionController extends Controller
                 })
                 ->toArray();
 
+        if (request()->wantsJson()) {
+            $monthlyBatangasTransactionId = $batangasTransaction->monthlyBatangasTransaction ? $batangasTransaction->monthlyBatangasTransaction->only('id') : null;
+
+            return [
+                'monthly_batangas_transaction_id' => $monthlyBatangasTransactionId,
+            ];
+        }
 
         return Inertia::render('BatangasTransactions/Edit', [
             'batangas_transaction' => [

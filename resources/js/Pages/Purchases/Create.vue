@@ -106,7 +106,7 @@
                 </td>
                 <td>
                   <div class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium text-gray-500 uppercase">
-                    {{ PurchaseTotalQty() }}
+                    {{ quantityFormat(PurchaseTotalQty()) }}
                   </div>
                 </td>
                 <td>
@@ -136,7 +136,9 @@
       <!-- Batangas -->
       <div class="mb-8 flex justify-between items-center">
         <div class="-mb-8 flex justify-start items-center">
-          <h1 class="my-8 font-bold text-2xl mr-4">To Batangas</h1>
+          <icon name="cheveron-down" class="block w-6 h-6 fill-gray-600 mr-2" v-if="batangasSelected == 0"/>
+          <icon name="cheveron-right" class="block w-6 h-6 fill-gray-600 mr-2" v-else/>
+          <h1 class="my-8 font-bold text-2xl mr-4 pointer" @click="batangasSelected !== 0 ? batangasSelected = 0 : batangasSelected = null">To Batangas</h1>
 
           <!-- MonthlyBatangasTransaction -->
           <div class="text-sm font-medium text-gray-900 mr-4">
@@ -153,25 +155,25 @@
           <span class="mr-2 px-2 py-2 text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
             Diesel
             <span class="p-1 rounded-full text-yellow-800 text-xs ml-2 bg-yellow-400">
-                {{ totalBatangasLoadQty('Diesel') }}
+              {{ totalBatangasLoadQty('Diesel') / 1000 }}
             </span>
           </span>
           <span class="mr-2 px-2 py-2 text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
             Regular
             <span class="p-1 rounded-full text-green-800 text-xs ml-2 bg-green-400">
-                {{ totalBatangasLoadQty('Regular') }}
+              {{ totalBatangasLoadQty('Regular') / 1000 }}
             </span>
           </span>
           <span class="mr-2 px-2 py-2 text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
             Premium
             <span class="p-1 rounded-full text-red-800 text-xs ml-2 bg-red-400">
-                {{ totalBatangasLoadQty('Premium') }}
+              {{ totalBatangasLoadQty('Premium') / 1000 }}
             </span>
           </span>
         </div>
       </div>
 
-      <div class="grid grid-cols-1 gap-3 xl:grid-cols-3">
+      <div class="grid grid-cols-1 gap-3 xl:grid-cols-3" v-show="batangasSelected == 0">
         <div class="rounded overflow-hidden max-w-6xl" v-for="(load, loadIndex) in form.batangasLoads" :key="loadIndex">
           <div class="bg-white rounded shadow overflow-hidden max-w-6xl">
             <!-- TankerLoad -->
@@ -188,7 +190,7 @@
 
                       <!-- BatangasTransaction trip no. -->
                       <div class="text-sm font-medium text-gray-900">
-                        <select :id="`batangas-${loadIndex}`" class="form-select" v-model="form.batangasLoads[loadIndex].batangas_transaction_id">
+                        <select :id="`batangas-${loadIndex}`" class="form-select" v-model="form.batangasLoads[loadIndex].batangas_transaction_id" @change="onBatangasTransactionChange($event, loadIndex)">
                           <option :value="null" />
                           <option v-for="transaction in form.batangas_transactions" :key="transaction.id" :value="transaction.id">{{ `${transaction.trip_no} - ${transaction.driver.name} (${transaction.month} ${transaction.year})` }}</option>
                         </select>
@@ -200,6 +202,11 @@
                     <button @click.prevent="addNewBatangasLoadDetailForm(loadIndex)">
                       <icon name="plus" class="w-4 h-4 loadIr-2 fill-white"/>
                     </button>
+
+                    <a v-if="form.monthly_batangas_transaction_id && load.batangas_transaction_id" target="_blank" :href="`/monthly-batangas-transactions/${load.monthly_batangas_transaction_id}/edit#transaction-${load.batangas_transaction_id}`" class="ml-2 inline-block">
+                      <icon name="open-link" class="w-4 h-4 loadIr-2 fill-white"/>
+                    </a>
+
                   </td>
 
                 </tr>
@@ -268,9 +275,11 @@
 
 
       <!-- Mindoro -->
-      <div class="mt-6 mb-8 flex justify-between items-center">
+      <div class="mt-6 mb-8 flex justify-between items-center border-t-2 border-gray-600">
         <div class="-mb-8 flex justify-start items-center">
-          <h1 class="my-8 font-bold text-2xl mr-4">To Mindoro</h1>
+          <icon name="cheveron-down" class="block w-6 h-6 fill-gray-600 mr-2" v-if="mindoroSelected == 1"/>
+          <icon name="cheveron-right" class="block w-6 h-6 fill-gray-600 mr-2" v-else/>
+          <h1 class="my-8 font-bold text-2xl mr-4 pointer" @click="mindoroSelected !== 1 ? mindoroSelected = 1 : mindoroSelected = null">To Mindoro</h1>
 
           <!-- MonthlyMindoroTransaction -->
           <div class="text-sm font-medium text-gray-900 mr-4">
@@ -287,25 +296,25 @@
           <span class="mr-2 px-2 py-2 text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
             Diesel
             <span class="p-1 rounded-full text-yellow-800 text-xs ml-2 bg-yellow-400">
-                {{ totalMindoroLoadQty('Diesel') }}
+              {{ totalMindoroLoadQty('Diesel') / 1000 }}
             </span>
           </span>
           <span class="mr-2 px-2 py-2 text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
             Regular
             <span class="p-1 rounded-full text-green-800 text-xs ml-2 bg-green-400">
-                {{ totalMindoroLoadQty('Regular') }}
+              {{ totalMindoroLoadQty('Regular') / 1000 }}
             </span>
           </span>
           <span class="mr-2 px-2 py-2 text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
             Premium
             <span class="p-1 rounded-full text-red-800 text-xs ml-2 bg-red-400">
-                {{ totalMindoroLoadQty('Premium') }}
+              {{ totalMindoroLoadQty('Premium') / 1000 }}
             </span>
           </span>
         </div>
       </div>
 
-      <div class="grid grid-cols-1 gap-3 xl:grid-cols-3">
+      <div class="grid grid-cols-1 gap-3 xl:grid-cols-3" v-show="mindoroSelected == 1">
         <div class="rounded overflow-hidden max-w-6xl" v-for="(load, loadIndex) in form.mindoroLoads" :key="loadIndex">
           <div class="bg-white rounded shadow overflow-hidden max-w-6xl">
             <!-- TankerLoad -->
@@ -322,7 +331,7 @@
 
                       <!-- MindoroTransaction trip no. -->
                       <div class="text-sm font-medium text-gray-900">
-                        <select :id="`mindoro-${loadIndex}`" class="form-select" v-model="form.mindoroLoads[loadIndex].mindoro_transaction_id">
+                        <select :id="`mindoro-${loadIndex}`" class="form-select" v-model="form.mindoroLoads[loadIndex].mindoro_transaction_id" @change="onMindoroTransactionChange($event, loadIndex)">
                           <option :value="null" />
                           <option v-for="transaction in form.mindoro_transactions" :key="transaction.id" :value="transaction.id">{{ `${transaction.trip_no} - ${transaction.driver.name} (${transaction.month} ${transaction.year})` }}</option>
                         </select>
@@ -334,6 +343,11 @@
                     <button @click.prevent="addNewMindoroLoadDetailForm(loadIndex)">
                       <icon name="plus" class="w-4 h-4 loadIr-2 fill-white"/>
                     </button>
+
+                    <a v-if="form.monthly_mindoro_transaction_id && load.mindoro_transaction_id" target="_blank" :href="`/monthly-mindoro-transactions/${load.monthly_mindoro_transaction_id}/edit#transaction-${load.mindoro_transaction_id}`" class="ml-2 inline-block">
+                      <icon name="open-link" class="w-4 h-4 loadIr-2 fill-white"/>
+                    </a>
+
                   </td>
 
                 </tr>
@@ -397,6 +411,35 @@
             </div>
             <!-- /TankerLoadDetail table form -->
           </div>
+        </div>
+      </div>
+
+
+      <!-- Total Load-->
+      <div class="pb-8 my-8 flex justify-between items-center border-t-2 border-gray-600 bg-white">
+        <div class="pl-10 -mb-8 flex justify-start items-center">
+          <!-- <icon name="cheveron-right" class="block w-6 h-6 fill-gray-600 mr-2"/> -->
+          <h1 class="my-8 font-bold text-2xl mr-4 pointer">Total Load</h1>
+        </div>
+        <div class="-mb-8 flex justify-end items-center">
+          <span class="mr-2 px-2 py-2 text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+            Diesel
+            <span class="p-1 rounded-full text-yellow-800 text-xs ml-2 bg-yellow-400">
+              {{ allLoadQty('Diesel') / 1000 }}
+            </span>
+          </span>
+          <span class="mr-2 px-2 py-2 text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+            Regular
+            <span class="p-1 rounded-full text-green-800 text-xs ml-2 bg-green-400">
+              {{ allLoadQty('Regular') / 1000 }}
+            </span>
+          </span>
+          <span class="mr-2 px-2 py-2 text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+            Premium
+            <span class="p-1 rounded-full text-red-800 text-xs ml-2 bg-red-400">
+              {{ allLoadQty('Premium') / 1000 }}
+            </span>
+          </span>
         </div>
       </div>
 
@@ -474,6 +517,7 @@ export default {
         ],
         batangasLoads: [
           {
+            monthly_batangas_transaction_id: null,
             batangas_transaction_id: null,
             remarks: null,
             details: [
@@ -490,6 +534,7 @@ export default {
         ],
         mindoroLoads: [
           {
+            monthly_mindoro_transaction_id: null,
             mindoro_transaction_id: null,
             remarks: null,
             details: [
@@ -505,6 +550,9 @@ export default {
           },
         ],
       },
+      // Accordion
+      batangasSelected: 0,
+      mindoroSelected: 1,
     }
   },
   methods: {
@@ -545,13 +593,14 @@ export default {
         return acc;
       }, 0);
 
-      return this.quantityFormat(totalQty);
+      return totalQty;
     },
 
 
     // Batangas - TankerLoad
     addNewBatangasLoadForm() {
       this.form.batangasLoads.push({
+        monthly_batangas_transaction_id: null,
         batangas_transaction_id: null,
         remarks: null,
         details: [
@@ -591,12 +640,21 @@ export default {
       this.form.batangasLoads[loadIndex].details[detailsIndex].product.name = product;
     },
 
+    onBatangasTransactionChange(event, loadIndex) {
+      const transactionId = event.target.value;
+
+      axios.get(`/batangas-transactions/${transactionId}/edit`)
+        .then(response => {
+          this.form.batangasLoads[loadIndex].monthly_batangas_transaction_id = response.data.monthly_batangas_transaction_id.id;
+        });
+    },
+
     // Batangas - TankerLoad Totals
     totalBatangasLoadQty(product) {
       var totalQty = this.form.batangasLoads.reduce(function (acc, load) {
         load.details.forEach(detail => {
           if(detail.product.name === product) {
-            acc += parseFloat(detail.quantity) / 1000;
+            acc += parseFloat(detail.quantity);
           }
         });
         return parseFloat(acc);
@@ -608,6 +666,7 @@ export default {
     // Mindoro - TankerLoad
     addNewMindoroLoadForm() {
       this.form.mindoroLoads.push({
+        monthly_mindoro_transaction_id: null,
         mindoro_transaction_id: null,
         remarks: null,
         details: [
@@ -647,17 +706,35 @@ export default {
       this.form.mindoroLoads[loadIndex].details[detailsIndex].product.name = product;
     },
 
+    onMindoroTransactionChange(event, loadIndex) {
+      const transactionId = event.target.value;
+
+      axios.get(`/mindoro-transactions/${transactionId}/edit`)
+        .then(response => {
+          this.form.mindoroLoads[loadIndex].monthly_mindoro_transaction_id = response.data.monthly_mindoro_transaction_id.id;
+        });
+    },
+
     // Mindoro - TankerLoad Totals
     totalMindoroLoadQty(product) {
       var totalQty = this.form.mindoroLoads.reduce(function (acc, load) {
         load.details.forEach(detail => {
           if(detail.product.name === product) {
-            acc += parseFloat(detail.quantity) / 1000;
+            acc += parseFloat(detail.quantity);
           }
         });
         return parseFloat(acc);
       }, 0);
       return totalQty;
+    },
+
+    // TankerLoad Quantity Overall Totals
+    allLoadQty(product) {
+      var batangasLoadQty = this.totalBatangasLoadQty(product);
+      var mindoroLoadQty = this.totalMindoroLoadQty(product);
+      var totalLoad = batangasLoadQty + mindoroLoadQty;
+
+      return totalLoad;
     },
 
   },
