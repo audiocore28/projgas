@@ -135,9 +135,6 @@ export default {
   remember: 'form',
   data() {
     return {
-      assignedDrivers: [],
-      driverSet: new Set(),
-      totalLoad: 0,
       sending: false,
       momentFormat: {
         //[optional] Date to String
@@ -197,13 +194,6 @@ export default {
       this.form.transactions.splice(index, 1);
     },
 
-  // watch: {
-  //   'form.transactions': {
-  //     handler: function (val, oldVal) {
-  //       //
-  //     },
-  //     deep: true,
-  //   },
   },
 }
 </script>
