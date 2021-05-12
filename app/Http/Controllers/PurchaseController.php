@@ -219,6 +219,7 @@ class PurchaseController extends Controller
                    'id' => $load->id,
                    'purchase_id' => $load->purchase_id,
                    'mindoro_transaction_id' => $load->mindoro_transaction_id,
+                   'monthly_batangas_transaction' => $load->batangasTransaction ? $load->batangasTransaction->monthlyBatangasTransaction->only('id') : null,
                    'batangas_transaction_id' => $load->batangas_transaction_id,
                    'remarks' => $load->remarks,
                    'details' => $load->tankerLoadDetails->map(function ($detail) {
@@ -239,6 +240,7 @@ class PurchaseController extends Controller
                 return [
                    'id' => $load->id,
                    'purchase_id' => $load->purchase_id,
+                   'monthly_mindoro_transaction' => $load->mindoroTransaction ? $load->mindoroTransaction->monthlyMindoroTransaction->only('id') : null,
                    'mindoro_transaction_id' => $load->mindoro_transaction_id,
                    'batangas_transaction_id' => $load->batangas_transaction_id,
                    'remarks' => $load->remarks,
