@@ -203,7 +203,7 @@
                       <icon name="plus" class="w-4 h-4 loadIr-2 fill-white"/>
                     </button>
 
-                    <a v-if="form.monthly_batangas_transaction_id && load.batangas_transaction_id" target="_blank" :href="`/monthly-batangas-transactions/${load.monthly_batangas_transaction_id}/edit#transaction-${load.batangas_transaction_id}`" class="ml-2 inline-block">
+                    <a v-if="form.monthly_batangas_transaction_id && load.batangas_transaction_id" target="_blank" :href="`/monthly-batangas-transactions/${load.monthly_batangas_transaction.id}/edit#transaction-${load.batangas_transaction_id}`" class="ml-2 inline-block">
                       <icon name="open-link" class="w-4 h-4 loadIr-2 fill-white"/>
                     </a>
 
@@ -344,7 +344,7 @@
                       <icon name="plus" class="w-4 h-4 loadIr-2 fill-white"/>
                     </button>
 
-                    <a v-if="form.monthly_mindoro_transaction_id && load.mindoro_transaction_id" target="_blank" :href="`/monthly-mindoro-transactions/${load.monthly_mindoro_transaction_id}/edit#transaction-${load.mindoro_transaction_id}`" class="ml-2 inline-block">
+                    <a v-if="form.monthly_mindoro_transaction_id && load.mindoro_transaction_id" target="_blank" :href="`/monthly-mindoro-transactions/${load.monthly_mindoro_transaction.id}/edit#transaction-${load.mindoro_transaction_id}`" class="ml-2 inline-block">
                       <icon name="open-link" class="w-4 h-4 loadIr-2 fill-white"/>
                     </a>
 
@@ -517,7 +517,9 @@ export default {
         ],
         batangasLoads: [
           {
-            monthly_batangas_transaction_id: null,
+            monthly_batangas_transaction: {
+              id: null,
+            },
             batangas_transaction_id: null,
             remarks: null,
             details: [
@@ -534,7 +536,9 @@ export default {
         ],
         mindoroLoads: [
           {
-            monthly_mindoro_transaction_id: null,
+            monthly_mindoro_transaction: {
+              id: null,
+            },
             mindoro_transaction_id: null,
             remarks: null,
             details: [
@@ -600,7 +604,9 @@ export default {
     // Batangas - TankerLoad
     addNewBatangasLoadForm() {
       this.form.batangasLoads.push({
-        monthly_batangas_transaction_id: null,
+        monthly_batangas_transaction: {
+          id: null,
+        },
         batangas_transaction_id: null,
         remarks: null,
         details: [
@@ -645,7 +651,7 @@ export default {
 
       axios.get(`/batangas-transactions/${transactionId}/edit`)
         .then(response => {
-          this.form.batangasLoads[loadIndex].monthly_batangas_transaction_id = response.data.monthly_batangas_transaction_id.id;
+          this.form.batangasLoads[loadIndex].monthly_batangas_transaction.id = response.data.monthly_batangas_transaction.id;
         });
     },
 
@@ -666,7 +672,9 @@ export default {
     // Mindoro - TankerLoad
     addNewMindoroLoadForm() {
       this.form.mindoroLoads.push({
-        monthly_mindoro_transaction_id: null,
+        monthly_mindoro_transaction: {
+          id: null,
+        },
         mindoro_transaction_id: null,
         remarks: null,
         details: [
@@ -711,7 +719,7 @@ export default {
 
       axios.get(`/mindoro-transactions/${transactionId}/edit`)
         .then(response => {
-          this.form.mindoroLoads[loadIndex].monthly_mindoro_transaction_id = response.data.monthly_mindoro_transaction_id.id;
+          this.form.mindoroLoads[loadIndex].monthly_mindoro_transaction.id = response.data.monthly_mindoro_transaction.id;
         });
     },
 

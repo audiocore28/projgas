@@ -298,7 +298,7 @@ class MindoroTransactionController extends Controller
             $monthlyMindoroTransactionId = $mindoroTransaction->monthlyMindoroTransaction ? $mindoroTransaction->monthlyMindoroTransaction->only('id') : null;
 
             return [
-                'monthly_mindoro_transaction_id' => $monthlyMindoroTransactionId,
+                'monthly_mindoro_transaction' => $monthlyMindoroTransactionId,
             ];
         }
 

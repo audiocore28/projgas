@@ -298,7 +298,7 @@ class BatangasTransactionController extends Controller
             $monthlyBatangasTransactionId = $batangasTransaction->monthlyBatangasTransaction ? $batangasTransaction->monthlyBatangasTransaction->only('id') : null;
 
             return [
-                'monthly_batangas_transaction_id' => $monthlyBatangasTransactionId,
+                'monthly_batangas_transaction' => $monthlyBatangasTransactionId,
             ];
         }
 
