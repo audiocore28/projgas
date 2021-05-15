@@ -2,13 +2,22 @@
   <div>
     <div class="mb-6 flex justify-between items-center">
       <h1 class="font-bold text-3xl">Purchases</h1>
-      <div>
+      <div class="flex">
         <date-picker
           v-model="form.range"
           type="date"
           range
+          value-type="format"
+          :formatter="momentFormat"
           placeholder="Select date range">
         </date-picker>
+        <a v-if="form.range !== null" class="px-4 flex items-center" target="_blank" :href="route('purchases.prints', {
+            start: form.range[0],
+            end: form.range[1],
+            search: form.search,
+          })" tabindex="-1">
+          <icon name="printer" class="block w-6 h-6 fill-gray-400"/>
+        </a>
       </div>
     </div>
 
@@ -93,6 +102,7 @@ import SearchFilter from '@/Shared/SearchFilter'
 import DatePicker from 'vue2-datepicker'
 import pickBy from 'lodash/pickBy'
 import throttle from 'lodash/throttle'
+import moment from 'moment'
 
 export default {
   metaInfo: { title: 'Purchases' },
@@ -108,6 +118,20 @@ export default {
   },
   data() {
     return {
+      momentFormat: {
+        //[optional] Date to String
+        stringify: (date) => {
+          return date ? moment(date).format('ll') : ''
+        },
+        //[optional]  String to Date
+        parse: (value) => {
+          return value ? moment(value, 'll').toDate() : null
+        },
+        // [optional] getWeekNumber
+        getWeek: (date) => {
+          return // a number
+        }
+      },
       form: {
         search: this.filters.search,
         range: this.filters.range,

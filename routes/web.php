@@ -69,6 +69,7 @@ Route::group(['middleware' => 'auth'], function() {
 	// Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 	// Purchases
+	Route::get('purchases/prints', [PurchaseController::class, 'prints'])->name('purchases.prints');
 	Route::resource('purchases', PurchaseController::class);
 
 	Route::get('purchases/{purchase}/print', [PurchaseController::class, 'print'])->name('purchases.print');

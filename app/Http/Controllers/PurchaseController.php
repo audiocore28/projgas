@@ -16,6 +16,7 @@ use App\Models\Delivery;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
+use Carbon\Carbon;
 use Inertia\Inertia;
 use PDF;
 
@@ -32,10 +33,10 @@ class PurchaseController extends Controller
 
         if (request('range')) {
             $dateRange = request('range');
-            $startDate = $dateRange[0];
-            $endDate = $dateRange[1];
+            $start = Carbon::parse($dateRange[0])->startOfDay();
+            $end = Carbon::parse($dateRange[1])->endOfDay();
 
-            $query->whereBetween('date', [$startDate, $endDate]);
+            $query->whereBetween('date', [$start, $end]);
         }
 
         if (request('search')) {
@@ -438,7 +439,36 @@ class PurchaseController extends Controller
 
         $pdf = PDF::loadView('print-purchase', compact('purchase', 'batangasLoads', 'mindoroLoads'));
         $pdf->setPaper(array(0, 0, 612.00, 792.0));
-        return $pdf->stream("print.pdf");
+
+        $fileName = "Purchase - ".$purchase->purchase_no.".pdf";
+        return $pdf->stream($fileName);
+    }
+
+    public function prints()
+    {
+        $query = Purchase::query();
+
+        if (request('start') && request('end')) {
+            $start = Carbon::parse(request('start'))->startOfDay();
+            $end = Carbon::parse(request('end'))->endOfDay();
+
+            $query->whereBetween('date', [$start, $end]);
+        }
+
+        if (request('search')) {
+            $query->where('purchase_no', 'like', '%'.request('search').'%');
+                    // ->orWhereHas('supplier', function ($query) {
+                    //     $query->where('name', 'like', '%'.request('search').'%');
+                    // });
+        }
+
+        $purchases = $query->get();
+
+        $pdf = PDF::loadView('print-purchases', compact('purchases'));
+        $pdf->setPaper(array(0, 0, 612.00, 792.0));
+
+        $fileName = "Purchases - ". Carbon::parse(request('start'))->format('m/d/Y') . " to " . Carbon::parse(request('end'))->format('m/d/Y') . ".pdf";
+        return $pdf->stream($fileName);
     }
 
 }
