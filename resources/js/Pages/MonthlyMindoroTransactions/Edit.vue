@@ -81,7 +81,7 @@
                   </tr>
                 </thead>
                 <tbody v-for="(transaction, transactionIndex) in updateForm.transactions" :key="transactionIndex" class="bg-white rounded shadow mb-8 hover:bg-gray-100 focus-within:bg-gray-100" :id="`transaction-${transaction.id}`">
-                  <tr @click="toggleRow(transactionIndex)" class="bg-gradient-to-r from-yellow-500 to-blue-600">
+                  <tr class="bg-gradient-to-r from-yellow-500 to-blue-600">
                     <td class="border-t">
                       <text-input v-model="transaction.trip_no" :error="errors.trip_no" />
                     </td>
@@ -103,7 +103,7 @@
                         <option v-for="tanker in tankers" :key="tanker.id" :value="tanker.id">{{ tanker.plate_no }}</option>
                       </select>
                     </td>
-                    <td class="border-t text-blue-100 font-semibold text-sm" align="right">
+                    <td @click="toggleRow(transactionIndex)" class="border-t text-blue-100 font-semibold text-sm" align="right">
                       {{ toPHP(transactionTotalAmt(transaction.id) - getLoadTotalAmt(transaction.id) - transaction.expense) }}
                     </td>
                     <td class="border-t" align="right">
@@ -258,7 +258,9 @@
                       <div class="flex flex-wrap px-8">
                         <div class="grid grid-cols-1 gap-1 bg-white rounded overflow-x-auto">
                           <div class="rounded overflow-x-auto mb-4" v-for="(load, loadIndex) in transaction.tanker_loads" :key="load.id" :value="load.id">
-                            <p class="text-sm bg-blue-600 font-bold pl-4 mb-2 rounded text-center py-2 text-white">{{ load.purchase.purchase_no }}</p>
+                            <a :href="`/purchases/${load.purchase.id}/edit#load-${load.id}`" target="_blank">
+                              <p class="text-sm bg-blue-600 font-bold pl-4 mb-2 rounded text-center py-2 text-white">{{ load.purchase.purchase_no }}</p>
+                            </a>
 
                             <div class="mt-2 mb-1 rounded">
                               <div>

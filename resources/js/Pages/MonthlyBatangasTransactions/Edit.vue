@@ -248,7 +248,9 @@
                       <div class="flex flex-wrap px-8">
                         <div class="grid grid-cols-1 gap-1 bg-white rounded overflow-x-auto">
                           <div class="rounded overflow-x-auto mb-4" v-for="(load, loadIndex) in transaction.tanker_loads" :key="load.id" :value="load.id">
-                            <p class="text-sm bg-blue-600 font-bold pl-4 mb-2 rounded text-center py-2 text-white">{{ load.purchase.purchase_no }}</p>
+                            <a :href="`/purchases/${load.purchase.id}/edit#load-${load.id}`" target="_blank">
+                              <p class="text-sm bg-blue-600 font-bold pl-4 mb-2 rounded text-center py-2 text-white">{{ load.purchase.purchase_no }}</p>
+                            </a>
 
                             <div class="mt-2 mb-1 rounded">
                               <div>
