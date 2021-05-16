@@ -139,7 +139,7 @@
 
           <!-- MonthlyBatangasTransaction -->
           <div class="text-sm font-medium text-gray-900 mr-4">
-            <select v-model="form.monthly_batangas_transaction_id" class="form-select">
+            <select v-model="form.monthly_batangas_transaction_id" class="form-select" @change="onMonthlyBatangasChange">
               <option :value="null" />
               <option v-for="monthlyTransaction in monthlyBatangasTransactions" :key="monthlyTransaction.id" :value="monthlyTransaction.id">{{ `${monthlyTransaction.year}, ${monthlyTransaction.month}` }}</option>
             </select>
@@ -171,7 +171,7 @@
       </div>
 
       <div class="grid grid-cols-1 gap-3 xl:grid-cols-3" v-show="batangasSelected == 0">
-        <div class="rounded overflow-hidden max-w-6xl" v-for="(load, loadIndex) in form.batangasLoads" :key="loadIndex">
+        <div class="rounded overflow-hidden max-w-6xl" v-for="(load, loadIndex) in form.batangasLoads" :key="loadIndex" :id="`load-${load.id}`">
           <div class="bg-white rounded shadow overflow-hidden max-w-6xl">
             <!-- TankerLoad -->
             <div class="p-2 -mr-6 -mb-6 flex justify-between bg-blue-600">
@@ -280,7 +280,7 @@
 
           <!-- MonthlyMindoroTransaction -->
           <div class="text-sm font-medium text-gray-900 mr-4">
-            <select v-model="form.monthly_mindoro_transaction_id" class="form-select">
+            <select v-model="form.monthly_mindoro_transaction_id" class="form-select" @change="onMonthlyMindoroChange">
               <option :value="null" />
               <option v-for="monthlyTransaction in monthlyMindoroTransactions" :key="monthlyTransaction.id" :value="monthlyTransaction.id">{{ `${monthlyTransaction.year}, ${monthlyTransaction.month}` }}</option>
             </select>
@@ -312,7 +312,7 @@
       </div>
 
       <div class="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3 rounded overflow-x-auto my-8" v-show="mindoroSelected == 1">
-        <div class="rounded overflow-hidden max-w-6xl" v-for="(load, loadIndex) in form.mindoroLoads" :key="loadIndex">
+        <div class="rounded overflow-hidden max-w-6xl" v-for="(load, loadIndex) in form.mindoroLoads" :key="loadIndex" :id="`load-${load.id}`">
           <div class="bg-white rounded shadow overflow-hidden max-w-6xl">
             <!-- TankerLoad -->
             <div class="p-2 -mr-6 -mb-8 flex justify-between bg-yellow-500">
@@ -658,6 +658,12 @@ export default {
         });
     },
 
+    onMonthlyBatangasChange() {
+      this.form.batangasLoads.forEach(load => {
+        load.batangas_transaction_id = null;
+      });
+    },
+
     // Batangas - TankerLoad Totals
     totalBatangasLoadQty(product) {
       var totalQty = this.form.batangasLoads.reduce(function (acc, load) {
@@ -728,7 +734,6 @@ export default {
       }
     },
 
-    //
     onMindoroChange(event, loadIndex, detailsIndex) {
       const product = event.target.options[event.target.options.selectedIndex].text;
       this.form.mindoroLoads[loadIndex].details[detailsIndex].product.name = product;
@@ -741,6 +746,12 @@ export default {
         .then(response => {
           this.form.mindoroLoads[loadIndex].monthly_mindoro_transaction.id = response.data.monthly_mindoro_transaction.id;
         });
+    },
+
+    onMonthlyMindoroChange() {
+      this.form.mindoroLoads.forEach(load => {
+        load.mindoro_transaction_id = null;
+      });
     },
 
     // Mindoro - TankerLoad Totals
