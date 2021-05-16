@@ -42,65 +42,138 @@
 		</div>
 	</div>
 
-	<h2 style="font: 12px sans-serif; margin-bottom: 20px; color: red" align="center">Batangas - {{ $monthlyBatangasTransaction->month }} {{ $monthlyBatangasTransaction->year }}</h2>
+	<h2 style="font: 13px sans-serif; margin-bottom: 20px; color: red; text-transform: uppercase;" align="center">Batangas - {{ $monthlyBatangasTransaction->month }} {{ $monthlyBatangasTransaction->year }}</h2>
 
 	{{-- Lists --}}
-	<div style="font: 9px sans-serif;">
-	<?php $overall = 0; ?>
+	<div style="font: 9px sans-serif;" class="row">
+		<div class="column">
+			<h2 style="font-size: 9px; line-height: .8; text-transform: uppercase;">Summary</h2>
+			<hr style="margin-right: 5px; margin-bottom: 25px;">
+			<?php $overall = 0; ?>
 
-		{{-- Transactions  --}}
-		@foreach ($transactions as $transaction)
-		<?php
-			$total_transactions_quantity = 0;
-			$total_transactions_amount = 0;
-		?>
+			{{-- Transactions  --}}
+			@foreach ($transactions as $transaction)
+			<?php
+				$total_transactions_quantity = 0;
+				$total_transactions_amount = 0;
+			?>
 
- 			@foreach($transaction['details'] as $detail)
- 			<?php
-	 			$amount = $detail['quantity'] * $detail['unit_price'];
-	 			$total_transactions_amount += $amount;
-	 			$total_transactions_quantity += $detail['quantity'];
- 			?>
- 			@endforeach
+	 			@foreach($transaction['details'] as $detail)
+	 			<?php
+		 			$amount = $detail['quantity'] * $detail['unit_price'];
+		 			$total_transactions_amount += $amount;
+		 			$total_transactions_quantity += $detail['quantity'];
+	 			?>
+	 			@endforeach
 
-	 		<?php $total_load_amount = 0; ?>
+		 		<?php $total_load_amount = 0; ?>
 
-			{{-- TankerLoad --}}
- 			@foreach($transaction['tanker_loads'] as $load)
- 				@foreach($load['tanker_load_details'] as $detail)
- 				<?php
-	 				$amount = $detail['quantity'] * $detail['unit_price'];
-	 				$total_load_amount += $amount;
- 				?>
+				{{-- TankerLoad --}}
+	 			@foreach($transaction['tanker_loads'] as $load)
+	 				@foreach($load['tanker_load_details'] as $detail)
+	 				<?php
+		 				$amount = $detail['quantity'] * $detail['unit_price'];
+		 				$total_load_amount += $amount;
+	 				?>
+					@endforeach
 				@endforeach
+
+				<?php $output = $total_transactions_amount - $total_load_amount - $transaction['driver_salary'] - $transaction['helper_salary'] ?>
+				<table class='table' width="60%" cellspacing='0' style="margin-top: 5px">
+					<tr>
+						<td style="background-color: #fff; color: #000;">
+							{{$transaction['trip_no']}}- {{$transaction['driver']['name']}}
+						</td>
+						<td align="right">
+							{{ number_format($output) }}
+						</td>
+					</tr>
+				</table>
+
+				<?php $overall += $output ?>
 			@endforeach
 
-			<?php $output = $total_transactions_amount - $total_load_amount - $transaction['driver_salary'] - $transaction['helper_salary'] ?>
-			<table class='table' width="40%" cellspacing='0' style="margin-top: 5px">
+			<table class='table' width="60%" cellspacing='0' cellpadding="4" style="margin-top: 30px;">
 				<tr>
-					<td style="background-color: #fff; color: #000;">
-						{{$transaction['trip_no']}}- {{$transaction['driver']['name']}}
+					<td>
+						<b>Total:</b>
 					</td>
-					<td align="right">
-						{{ number_format($output) }}
+					<td align="right" style="border-top: 1px solid #000; border-bottom: 1px solid #000; background-color: #eee;">
+						<b>{{ number_format($overall) }}</b>
 					</td>
 				</tr>
 			</table>
 
-			<?php $overall += $output ?>
-		@endforeach
+		</div>
+		<div class="column">
+			<h2 style="font-size: 9px; line-height: .8; text-transform: uppercase;">Trips</h2>
+			<hr>
+			{{-- Drivers --}}
+			<table class='table' width="100%" cellpadding='2' style="margin-top: 25px">
+				<?php
+					$total_trips = 0;
+				?>
+				<thead>
+					<tr>
+						<th>Driver</th>
+						<th>Trip No.</th>
+						<th>Total</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach ($driverTrips as $driver => $trip)
+					<?php
+						$total_trips += count($trip);
+					?>
+					<tr>
+						<td>{{ $driver }}</td>
+						<td>
+							{{ collect($trip)->implode('trip_no', '-') }}
+						</td>
+						<td align="center">{{ count($trip) }}</td>
+					</tr>
+					@endforeach
+					<tr>
+						<td></td>
+						<td></td>
+						<td align="center" style="font-weight: bold; border-top: 1px solid #000; border-bottom: 1px solid #000; background-color: #eee;">{{ $total_trips }}</td>
+					</tr>
+				</tbody>
+			</table>
 
-		<table class='table' width="40%" cellspacing='0' style="margin-top: 30px;">
-			<tr>
-				<td>
-					<b>Total:</b>
-				</td>
-				<td align="right" style="background-color: #fff; color: #000;">
-					<b>{{ number_format($overall) }}</b>
-				</td>
-			</tr>
-		</table>
-
+			{{-- Helpers --}}
+			<table class='table' width="100%" cellpadding='2' style="margin-top: 25px">
+				<?php
+					$total_trips = 0;
+				?>
+				<thead>
+					<tr>
+						<th>Helper</th>
+						<th>Trip No.</th>
+						<th>Total</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach ($helperTrips as $helper => $trip)
+					<?php
+						$total_trips += count($trip);
+					?>
+					<tr>
+						<td>{{ $helper }}</td>
+						<td>
+							{{ collect($trip)->implode('trip_no', '-') }}
+						</td>
+						<td align="center">{{ count($trip) }}</td>
+					</tr>
+					@endforeach
+					<tr>
+						<td></td>
+						<td></td>
+						<td align="center" style="font-weight: bold; border-top: 1px solid #000; border-bottom: 1px solid #000; background-color: #eee;">{{ $total_trips }}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 	</div>
 
 	<div class="page-break"></div>

@@ -18,6 +18,7 @@ use App\Models\Helper;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use PDF;
 
@@ -133,7 +134,12 @@ class MonthlyBatangasTransactionController extends Controller
         // Clients
         $clients = Client::when(request('term'), function($query, $term) {
             $query->where('name', 'like', "%$term%");
-        })->orderBy('name', 'asc')->get();
+        })->orderBy('name', 'asc')->get()->map(function ($client) {
+            return [
+                'id' => $client->id,
+                'name' => Str::limit($client->name, 22, '...'),
+            ];
+        });
 
         // Products
         $products = Product::orderBy('name', 'asc')
@@ -369,8 +375,21 @@ class MonthlyBatangasTransactionController extends Controller
             })
             ->toArray();
 
+        $queryTrips = $monthlyBatangasTransaction->batangasTransactions
+                    ->map(function ($transaction) {
+                        return [
+                            'id' => $transaction->id,
+                            'trip_no' => $transaction->trip_no,
+                            'tanker' => $transaction->tanker ? $transaction->tanker->only('id', 'plate_no') : null,
+                            'driver' => $transaction->driver ? $transaction->driver->only('id', 'name') : null,
+                            'helper' => $transaction->helper ? $transaction->helper->only('id', 'name') : null,
+                        ];
+                    });
 
-        $pdf = PDF::loadView('print-batangas-transactions', compact('monthlyBatangasTransaction', 'transactions'));
+        $driverTrips = $queryTrips->groupBy('driver.name');
+        $helperTrips = $queryTrips->groupBy('helper.name');
+
+        $pdf = PDF::loadView('print-batangas-transactions', compact('monthlyBatangasTransaction', 'transactions', 'driverTrips', 'helperTrips'));
         $pdf->setPaper(array(0, 0, 612.00, 792.0));
 
         $fileName = "Batangas - ".$monthlyBatangasTransaction->month." ".$monthlyBatangasTransaction->year.".pdf";
