@@ -2,16 +2,14 @@
   <div>
     <h1 class="mb-8 font-bold text-3xl">
       <inertia-link class="text-blue-600 hover:text-blue-800" :href="route('monthly-batangas-transactions.index')">Batangas Transaction</inertia-link>
-      <span class="text-blue-600 font-medium">/</span> {{ `${form.date.month}, ${form.date.year}`}}
+      <span class="text-blue-600 font-medium">/</span> {{ form.date }}
     </h1>
     <form @submit.prevent="submit">
       <div class="w-full mt-8 px-4">
         <div class="w-full flex flex-wrap justify-between">
           <div class="pr-6 pb-4 lg:w-1/2">
 
-            <!-- <month-picker @change="showDate"></month-picker> -->
-            <label class="form-label block">Month:<span class="text-red-500">*</span></label>
-            <month-picker-input @input="showDate" :no-default="true"></month-picker-input>
+            <date-picker v-model="form.date" type="month" placeholder="Select month" value-type="format" :formatter="momentFormat"></date-picker>
 
           </div>
         </div>
@@ -25,8 +23,8 @@
             <col span="1" style="width: 20%;">
             <col span="1" style="width: 20%;">
             <col span="1" style="width: 20%;">
-            <col span="1" style="width: 20%;">
-            <col span="1" style="width: 10%;">
+            <col span="1" style="width: 15%;">
+            <col span="1" style="width: 15%;">
           </colgroup>
           <thead>
             <tr class="text-left font-bold">
@@ -35,11 +33,14 @@
               <th align="center" class="px-6 pt-6 pb-4">Helper</th>
               <th align="center" class="px-6 pt-6 pb-4">Tanker</th>
               <th></th>
-              <th align="right">
+              <th align="center">
                 <div class="text-center whitespace-nowrap text-left text-xs font-medium text-gray-700 uppercase">
-                  <button @click.prevent="addNewDetailForm()">
-                    <icon name="plus" class="w-4 h-4 mr-2 fill-green-600"/>
-                  </button>
+                  <form @submit.prevent="addNewDetailForm" class="flex mr-6">
+                    <text-input type="number" step="any" v-model="num" min="1" max="100" class="mr-5"/>
+                    <button type="submit">
+                      <icon name="plus" class="w-4 h-4 mr-2 fill-green-600"/>
+                    </button>
+                  </form>
                 </div>
               </th>
             </tr>
@@ -106,8 +107,6 @@ import TextInput from '@/Shared/TextInput'
 import Icon from '@/Shared/Icon'
 import Multiselect from 'vue-multiselect'
 import DatePicker from 'vue2-datepicker'
-import { MonthPicker } from 'vue-month-picker'
-import { MonthPickerInput } from 'vue-month-picker'
 import moment from 'moment'
 import {throttle} from 'lodash'
 import { numberFormatsMixin } from '@/Mixins/numberFormatsMixin'
@@ -122,8 +121,6 @@ export default {
     TextInput,
     Multiselect,
     DatePicker,
-    MonthPicker,
-    MonthPickerInput,
     Icon,
   },
   props: {
@@ -135,11 +132,12 @@ export default {
   remember: 'form',
   data() {
     return {
+      num: "",
       sending: false,
       momentFormat: {
         //[optional] Date to String
         stringify: (date) => {
-          return date ? moment(date).format('ll') : ''
+          return date ? moment(date).format('MMMM, YYYY') : ''
         },
         //[optional]  String to Date
         parse: (value) => {
@@ -151,12 +149,7 @@ export default {
         }
       },
       form: {
-        date: {
-          // from: null,
-          // to: null,
-          month: null,
-          year: null,
-        },
+        date: null,
         transactions: [
           {
             trip_no: 'B',
@@ -182,13 +175,27 @@ export default {
 
     // BatangasTransactionDetail
     addNewDetailForm() {
-      this.form.transactions.push({
-        // trip_no: `M${this.form.transactions.length + 1}`,
-        trip_no: 'B',
-        tanker_id: null,
-        driver_id: null,
-        helper_id: null,
-      });
+      if (this.num === "") {
+        this.form.transactions.push({
+          // trip_no: `M${this.form.transactions.length + 1}`,
+          trip_no: 'B',
+          tanker_id: null,
+          driver_id: null,
+          helper_id: null,
+        });
+      }
+
+      for (let i = 0; i < this.num; i++) {
+        this.form.transactions.push({
+          // trip_no: `M${this.form.transactions.length + 1}`,
+          trip_no: 'B',
+          tanker_id: null,
+          driver_id: null,
+          helper_id: null,
+        });
+      }
+
+      this.num = "";
     },
     deleteDetailForm(index) {
       this.form.transactions.splice(index, 1);

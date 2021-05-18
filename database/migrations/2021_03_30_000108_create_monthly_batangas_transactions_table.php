@@ -17,6 +17,7 @@ class CreateMonthlyBatangasTransactionsTable extends Migration
             $table->id();
             $table->year('year');
             $table->string('month');
+            $table->tinyInteger('day')->default('1');
             $table->timestamps();
         });
     }

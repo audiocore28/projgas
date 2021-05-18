@@ -78,9 +78,13 @@ class MonthlyBatangasTransactionController extends Controller
      */
     public function store(StoreMonthlyBatangasTransactionRequest $request)
     {
+        $dateMonthArray = explode(', ', $request->date);
+        $month = $dateMonthArray[0];
+        $year = $dateMonthArray[1];
+
         $monthlyBatangasTransactionId = MonthlyBatangasTransaction::create([
-            'year' => $request->date['year'],
-            'month' => $request->date['month'],
+            'year' => $year,
+            'month' => $month,
         ])->id;
 
         foreach($request->transactions as $transaction)
@@ -253,10 +257,14 @@ class MonthlyBatangasTransactionController extends Controller
      */
     public function update(StoreMonthlyBatangasTransactionRequest $request, MonthlyBatangasTransaction $monthlyBatangasTransaction)
     {
+        $dateMonthArray = explode(', ', $request->date);
+        $month = $dateMonthArray[0];
+        $year = $dateMonthArray[1];
+
         // Batangas Transaction
         $monthlyBatangasTransaction->update([
-            'year' => $request->date['year'],
-            'month' => $request->date['month'],
+            'year' => $year,
+            'month' => $month,
         ]);
 
         foreach($request->transactions as $transaction)

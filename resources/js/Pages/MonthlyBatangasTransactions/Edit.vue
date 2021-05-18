@@ -2,7 +2,7 @@
   <div>
     <h1 class="mb-8 font-bold text-3xl">
       <inertia-link class="text-blue-600 hover:text-blue-800" :href="route('monthly-batangas-transactions.index')">Batangas Transaction</inertia-link>
-      <span class="text-blue-600 font-medium">/</span> {{ `${updateForm.date.year}, ${updateForm.date.month}`}}
+      <span class="text-blue-600 font-medium">/</span> {{ updateForm.date }}
     </h1>
 
     <div class="p-1">
@@ -14,8 +14,9 @@
             <div class="-mr-6 mb-4 flex space-between w-full mt-8 px-4">
               <div class="w-full flex flex-wrap justify-start">
                 <div class="-mt-6 mr-12">
-                  <label class="form-label block">Month:<span class="text-red-500">*</span></label>
-                  <month-picker-input @input="showDate" :no-default="true"></month-picker-input>
+
+                  <date-picker v-model="updateForm.date" type="month" placeholder="Select month" value-type="format" :formatter="momentFormat"></date-picker>
+
                 </div>
                 <div class="h-10">
                   <button class="btn-indigo" @click.prevent="addNewTransactionForm">Add ({{ updateForm.transactions.length }})</button>
@@ -386,8 +387,6 @@ import TextInput from '@/Shared/TextInput'
 import TrashedMessage from '@/Shared/TrashedMessage'
 import Multiselect from 'vue-multiselect'
 import DatePicker from 'vue2-datepicker'
-import { MonthPicker } from 'vue-month-picker'
-import { MonthPickerInput } from 'vue-month-picker'
 import moment from 'moment'
 import {throttle} from 'lodash'
 import { numberFormatsMixin } from '@/Mixins/numberFormatsMixin'
@@ -395,7 +394,7 @@ import { numberFormatsMixin } from '@/Mixins/numberFormatsMixin'
 export default {
   mixins: [numberFormatsMixin],
   metaInfo() {
-    return { title: `BAT ${this.updateForm.date.year}, ${this.updateForm.date.month}` }
+    return { title: `BAT ${this.updateForm.date}` }
   },
   layout: Layout,
   components: {
@@ -405,8 +404,6 @@ export default {
     TextInput,
     TrashedMessage,
     DatePicker,
-    MonthPicker,
-    MonthPickerInput,
     Multiselect,
   },
   props: {
@@ -433,7 +430,7 @@ export default {
       momentFormat: {
         //[optional] Date to String
         stringify: (date) => {
-          return date ? moment(date).format('ll') : ''
+          return date ? moment(date).format('MMMM, YYYY') : ''
         },
         //[optional]  String to Date
         parse: (value) => {
@@ -445,10 +442,7 @@ export default {
         }
       },
       updateForm: {
-        date: {
-          year: this.monthly_batangas_transaction.year,
-          month: this.monthly_batangas_transaction.month,
-        },
+        date: `${this.monthly_batangas_transaction.month}, ${this.monthly_batangas_transaction.year}`,
         transactions: this.monthly_batangas_transaction.transactions,
         removed_transactions: [],
         removed_transaction_details: [],

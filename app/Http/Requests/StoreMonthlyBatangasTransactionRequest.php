@@ -24,8 +24,7 @@ class StoreMonthlyBatangasTransactionRequest extends FormRequest
     public function rules()
     {
         return [
-            'date.year' => ['required', 'max:50'],
-            'date.month' => ['required', 'max:50'],
+            'date' => ['required', 'max:50'],
             //
             'transactions.*.trip_no.*' => ['required', 'max:50'],
             'transactions.*.tanker_id.*' => ['required', 'max:50'],
@@ -37,8 +36,7 @@ class StoreMonthlyBatangasTransactionRequest extends FormRequest
     public function messages()
     {
         return [
-            'date.year.required' => 'Year is required',
-            'date.month.required' => 'Month is required',
+            'date.required' => 'Date is required',
             //
             'transactions.*.trip_no.*.required' => 'Trip no. is required',
             'transactions.*.tanker_id.*.required' => 'Tanker is required',
