@@ -2,7 +2,7 @@
   <div>
     <h1 class="mb-8 font-bold text-3xl">
       <inertia-link class="text-blue-600 hover:text-blue-800" :href="route('monthly-mindoro-transactions.index')">Mindoro Transaction</inertia-link>
-      <span class="text-blue-600 font-medium">/</span> {{ `${form.date.month}, ${form.date.year}`}}
+      <span class="text-blue-600 font-medium">/</span> {{ form.date }}
     </h1>
     <form @submit.prevent="submit">
 
@@ -10,8 +10,8 @@
       <div class="w-full mt-8 px-4">
         <div class="w-full flex flex-wrap justify-between">
           <div class="pr-6 pb-4 lg:w-1/2">
-            <label class="form-label block">Month:<span class="text-red-500">*</span></label>
-            <month-picker-input @input="showDate" :no-default="true"></month-picker-input>
+
+            <date-picker v-model="form.date" type="month" placeholder="Select month" value-type="format" :formatter="momentFormat"></date-picker>
 
           </div>
         </div>
@@ -139,7 +139,7 @@ export default {
       momentFormat: {
         //[optional] Date to String
         stringify: (date) => {
-          return date ? moment(date).format('ll') : ''
+          return date ? moment(date).format('MMMM, YYYY') : ''
         },
         //[optional]  String to Date
         parse: (value) => {
@@ -151,12 +151,7 @@ export default {
         }
       },
       form: {
-        date: {
-          // from: null,
-          // to: null,
-          month: null,
-          year: null,
-        },
+        date: null,
         transactions: [
           {
             // trip_no: 'M1',
@@ -170,10 +165,6 @@ export default {
     }
   },
   methods: {
-    showDate (date) {
-      this.form.date = date;
-    },
-
     submit() {
       this.$inertia.post(this.route('monthly-mindoro-transactions.store'), this.form, {
         onStart: () => this.sending = true,

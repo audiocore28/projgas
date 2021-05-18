@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 use Inertia\Inertia;
 use PDF;
 
@@ -79,8 +80,8 @@ class MonthlyMindoroTransactionController extends Controller
     public function store(StoreMonthlyMindoroTransactionRequest $request)
     {
         $monthlyMindoroTransactionId = MonthlyMindoroTransaction::create([
-            'year' => $request->date['year'],
-            'month' => $request->date['month'],
+            'year' => Carbon::parse($request->date)->year,
+            'month' => Carbon::parse($request->date)->format('F'),
         ])->id;
 
         foreach($request->transactions as $transaction)
@@ -255,8 +256,8 @@ class MonthlyMindoroTransactionController extends Controller
     {
         // Mindoro Transaction
         $monthlyMindoroTransaction->update([
-            'year' => $request->date['year'],
-            'month' => $request->date['month'],
+            'year' => Carbon::parse($request->date)->year,
+            'month' => Carbon::parse($request->date)->format('F'),
         ]);
 
         foreach($request->transactions as $transaction)

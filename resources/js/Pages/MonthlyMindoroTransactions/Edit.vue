@@ -2,7 +2,7 @@
   <div>
     <h1 class="mb-8 font-bold text-3xl">
       <inertia-link class="text-blue-600 hover:text-blue-800" :href="route('monthly-mindoro-transactions.index')">Mindoro Transaction</inertia-link>
-      <span class="text-blue-600 font-medium">/</span> {{ `${updateForm.date.year}, ${updateForm.date.month}`}}
+      <span class="text-blue-600 font-medium">/</span> {{ updateForm.date }}
     </h1>
 
     <div class="p-1">
@@ -14,8 +14,9 @@
             <div class="-mr-6 mb-4 flex space-between w-full mt-8 px-4">
               <div class="w-full flex flex-wrap justify-start">
                 <div class="-mt-6 mr-12">
-                  <label class="form-label block">Month:<span class="text-red-500">*</span></label>
-                  <month-picker-input @input="showDate" :no-default="true"></month-picker-input>
+
+                  <date-picker v-model="updateForm.date" type="month" placeholder="Select month" value-type="format" :formatter="momentFormat"></date-picker>
+
                 </div>
                 <div class="h-10">
                   <button class="btn-indigo" @click.prevent="addNewTransactionForm">Add ({{ updateForm.transactions.length }})</button>
@@ -393,7 +394,7 @@ import { numberFormatsMixin } from '@/Mixins/numberFormatsMixin'
 export default {
   mixins: [numberFormatsMixin],
   metaInfo() {
-    return { title: `MDO ${this.updateForm.date.year}, ${this.updateForm.date.month}` }
+    return { title: `MDO ${this.updateForm.date}` }
   },
   layout: Layout,
   components: {
@@ -431,7 +432,7 @@ export default {
       momentFormat: {
         //[optional] Date to String
         stringify: (date) => {
-          return date ? moment(date).format('ll') : ''
+          return date ? moment(date).format('MMMM, YYYY') : ''
         },
         //[optional]  String to Date
         parse: (value) => {
@@ -443,10 +444,7 @@ export default {
         }
       },
       updateForm: {
-        date: {
-          year: this.monthly_mindoro_transaction.year,
-          month: this.monthly_mindoro_transaction.month,
-        },
+        date: `${this.monthly_mindoro_transaction.month}, ${this.monthly_mindoro_transaction.year}`,
         transactions: this.monthly_mindoro_transaction.transactions,
         removed_transactions: [],
         removed_transaction_details: [],
