@@ -79,9 +79,13 @@ class MonthlyMindoroTransactionController extends Controller
      */
     public function store(StoreMonthlyMindoroTransactionRequest $request)
     {
+        $dateMonthArray = explode(', ', $request->date);
+        $month = $dateMonthArray[0];
+        $year = $dateMonthArray[1];
+
         $monthlyMindoroTransactionId = MonthlyMindoroTransaction::create([
-            'year' => Carbon::parse($request->date)->year,
-            'month' => Carbon::parse($request->date)->format('F'),
+            'year' => $year,
+            'month' => $month,
         ])->id;
 
         foreach($request->transactions as $transaction)
@@ -254,10 +258,14 @@ class MonthlyMindoroTransactionController extends Controller
      */
     public function update(StoreMonthlyMindoroTransactionRequest $request, MonthlyMindoroTransaction $monthlyMindoroTransaction)
     {
+        $dateMonthArray = explode(', ', $request->date);
+        $month = $dateMonthArray[0];
+        $year = $dateMonthArray[1];
+
         // Mindoro Transaction
         $monthlyMindoroTransaction->update([
-            'year' => Carbon::parse($request->date)->year,
-            'month' => Carbon::parse($request->date)->format('F'),
+            'year' => $year,
+            'month' => $month,
         ]);
 
         foreach($request->transactions as $transaction)

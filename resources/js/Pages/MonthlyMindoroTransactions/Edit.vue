@@ -385,8 +385,6 @@ import TextInput from '@/Shared/TextInput'
 import TrashedMessage from '@/Shared/TrashedMessage'
 import Multiselect from 'vue-multiselect'
 import DatePicker from 'vue2-datepicker'
-import { MonthPicker } from 'vue-month-picker'
-import { MonthPickerInput } from 'vue-month-picker'
 import moment from 'moment'
 import {throttle} from 'lodash'
 import { numberFormatsMixin } from '@/Mixins/numberFormatsMixin'
@@ -404,8 +402,6 @@ export default {
     TextInput,
     TrashedMessage,
     DatePicker,
-    MonthPicker,
-    MonthPickerInput,
     Multiselect,
   },
   props: {
