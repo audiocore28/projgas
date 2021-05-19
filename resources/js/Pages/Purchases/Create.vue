@@ -749,16 +749,22 @@ export default {
   watch: {
     'form.monthly_mindoro_transaction_id': function (value) {
       axios.get(`/monthly-mindoro-transactions/${value}/edit`)
-        .then(response => {
-          this.form.mindoro_transactions = response.data.mindoroTransactions;
-        });
+        .then(response => this.form.mindoro_transactions = response.data.mindoroTransactions)
+        .catch(err => this.form.mindoro_transactions = []);
+
+      this.form.mindoroLoads.forEach(load => {
+        load.mindoro_transaction_id = null;
+      });
     },
 
     'form.monthly_batangas_transaction_id': function (value) {
       axios.get(`/monthly-batangas-transactions/${value}/edit`)
-        .then(response => {
-          this.form.batangas_transactions = response.data.batangasTransactions;
-        });
+        .then(response => this.form.batangas_transactions = response.data.batangasTransactions)
+        .catch(err => this.form.batangas_transactions = []);
+
+      this.form.batangasLoads.forEach(load => {
+        load.batangas_transaction_id = null;
+      });
     }
 
   },

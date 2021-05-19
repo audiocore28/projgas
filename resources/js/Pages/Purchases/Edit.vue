@@ -139,7 +139,7 @@
 
           <!-- MonthlyBatangasTransaction -->
           <div class="text-sm font-medium text-gray-900 mr-4">
-            <select v-model="form.monthly_batangas_transaction_id" class="form-select" @change="onMonthlyBatangasChange">
+            <select v-model="form.monthly_batangas_transaction_id" class="form-select">
               <option :value="null" />
               <option v-for="monthlyTransaction in monthlyBatangasTransactions" :key="monthlyTransaction.id" :value="monthlyTransaction.id">{{ `${monthlyTransaction.year}, ${monthlyTransaction.month}` }}</option>
             </select>
@@ -280,7 +280,7 @@
 
           <!-- MonthlyMindoroTransaction -->
           <div class="text-sm font-medium text-gray-900 mr-4">
-            <select v-model="form.monthly_mindoro_transaction_id" class="form-select" @change="onMonthlyMindoroChange">
+            <select v-model="form.monthly_mindoro_transaction_id" class="form-select">
               <option :value="null" />
               <option v-for="monthlyTransaction in monthlyMindoroTransactions" :key="monthlyTransaction.id" :value="monthlyTransaction.id">{{ `${monthlyTransaction.year}, ${monthlyTransaction.month}` }}</option>
             </select>
@@ -658,12 +658,6 @@ export default {
         });
     },
 
-    onMonthlyBatangasChange() {
-      this.form.batangasLoads.forEach(load => {
-        load.batangas_transaction_id = null;
-      });
-    },
-
     // Batangas - TankerLoad Totals
     totalBatangasLoadQty(product) {
       var totalQty = this.form.batangasLoads.reduce(function (acc, load) {
@@ -748,12 +742,6 @@ export default {
         });
     },
 
-    onMonthlyMindoroChange() {
-      this.form.mindoroLoads.forEach(load => {
-        load.mindoro_transaction_id = null;
-      });
-    },
-
     // Mindoro - TankerLoad Totals
     totalMindoroLoadQty(product) {
       var totalQty = this.form.mindoroLoads.reduce(function (acc, load) {
@@ -778,16 +766,14 @@ export default {
 
     getMindoroTransactions(value) {
       axios.get(`/monthly-mindoro-transactions/${value}/edit`)
-        .then(response => {
-          this.form.mindoro_transactions = response.data.mindoroTransactions;
-        });
+        .then(response => this.form.mindoro_transactions = response.data.mindoroTransactions)
+        .catch(err => this.form.mindoro_transactions = []);
     },
 
     getBatangasTransactions(value) {
       axios.get(`/monthly-batangas-transactions/${value}/edit`)
-        .then(response => {
-          this.form.batangas_transactions = response.data.batangasTransactions;
-        });
+        .then(response => this.form.batangas_transactions = response.data.batangasTransactions)
+        .catch(err => this.form.batangas_transactions = []);
     },
 
 
@@ -795,10 +781,18 @@ export default {
   watch: {
     'form.monthly_batangas_transaction_id': function (value) {
       this.getBatangasTransactions(value);
+
+      this.form.batangasLoads.forEach(load => {
+        load.batangas_transaction_id = null;
+      });
     },
 
     'form.monthly_mindoro_transaction_id': function (value) {
       this.getMindoroTransactions(value);
+
+      this.form.mindoroLoads.forEach(load => {
+        load.mindoro_transaction_id = null;
+      });
     },
 
   },
