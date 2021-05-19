@@ -115,7 +115,7 @@ export default {
   methods: {
     sort(field) {
       this.form.field = field;
-      this.form.direction = this.form.direction === 'asc' ? 'desc' : 'asc';
+      this.form.direction = this.form.direction === 'desc' ? 'asc' : 'desc';
     },
     reset() {
       this.form = mapValues(this.form, () => null)

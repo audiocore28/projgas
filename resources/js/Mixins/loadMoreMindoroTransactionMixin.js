@@ -5,8 +5,8 @@ export function loadMoreMindoroTransactionMixin (record) {
 		},
 		data() {
 			return {
-				localMindoroDetails: this.mindoroDetails.data,
-				mindoroPagination: this.mindoroDetails,
+				localMindoroDetails: this.mindoroDetails,
+				// mindoroPagination: this.mindoroDetails,
 			}
 		},
 		methods: {

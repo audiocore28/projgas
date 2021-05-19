@@ -5,8 +5,8 @@ export function loadMoreBatangasTransactionMixin (record) {
 		},
 		data() {
 			return {
-				localBatangasDetails: this.batangasDetails.data,
-				batangasPagination: this.batangasDetails,
+				localBatangasDetails: this.batangasDetails,
+				// batangasPagination: this.batangasDetails,
 			}
 		},
 		methods: {

@@ -97,6 +97,8 @@ class ClientController extends Controller
             ->paginate()
             ->transform(function ($detail) {
                 return [
+                    'month' => $detail->mindoroTransaction->monthlyMindoroTransaction ? $detail->mindoroTransaction->monthlyMindoroTransaction->month : null,
+                    'year' => $detail->mindoroTransaction->monthlyMindoroTransaction ? $detail->mindoroTransaction->monthlyMindoroTransaction->year : null,
                     'id' => $detail->id,
                     'date' => $detail->date,
                     'dr_no' => $detail->dr_no,
@@ -113,6 +115,8 @@ class ClientController extends Controller
             ->paginate()
             ->transform(function ($detail) {
                 return [
+                    'month' => $detail->batangasTransaction->monthlyBatangasTransaction ? $detail->batangasTransaction->monthlyBatangasTransaction->month : null,
+                    'year' => $detail->batangasTransaction->monthlyBatangasTransaction ? $detail->batangasTransaction->monthlyBatangasTransaction->year : null,
                     'id' => $detail->id,
                     'date' => $detail->date,
                     'dr_no' => $detail->dr_no,
@@ -123,6 +127,9 @@ class ClientController extends Controller
                     'product' => $detail->product ? $detail->product->only('id', 'name') : null,
                 ];
             });
+
+        $batangasDetails = $bD->groupBy(['year', 'month']);
+        $mindoroDetails = $mD->groupBy(['year', 'month']);
 
        if (request()->wantsJson()) {
          return [
@@ -141,8 +148,8 @@ class ClientController extends Controller
                 'email_address' => $client->email_address,
                 'deleted_at' => $client->deleted_at,
             ],
-            'batangasDetails' => $bD,
-            'mindoroDetails' => $mD,
+            'batangasDetails' => $batangasDetails,
+            'mindoroDetails' => $mindoroDetails,
         ]);
     }
 
