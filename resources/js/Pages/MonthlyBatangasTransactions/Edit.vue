@@ -14,7 +14,7 @@
             <div class="-mr-6 mb-4 flex space-between w-full mt-8 px-4">
               <div class="w-full flex flex-wrap justify-start">
                 <div class="mr-12">
-                  <date-picker v-model="updateForm.date" type="month" placeholder="Select month" value-type="format" :formatter="momentFormat"></date-picker>
+                  <date-picker v-model="updateForm.date" type="month" placeholder="Select month" value-type="format" :formatter="momentFormatMonth"></date-picker>
                   <button class="ml-2 btn-indigo" @click.prevent="addNewTransactionForm">Add ({{ updateForm.transactions.length }})</button>
                 </div>
               </div>
@@ -127,7 +127,7 @@
                              <tr v-for="(detail, detailIndex) in transaction.details" :key="detailIndex">
                                <td>
                                  <div class="text-sm font-medium text-gray-900">
-                                   <date-picker v-model="detail.date" lang="en" value-type="format" :formatter="momentFormat"></date-picker>
+                                   <date-picker v-model="detail.date" lang="en" value-type="format" :formatter="momentFormatDate"></date-picker>
                                  </div>
                                </td>
                                <td>
@@ -396,10 +396,24 @@ export default {
     return {
       opened: [],
       sending: false,
-      momentFormat: {
+      momentFormatMonth: {
         //[optional] Date to String
         stringify: (date) => {
           return date ? moment(date).format('MMMM, YYYY') : ''
+        },
+        //[optional]  String to Date
+        parse: (value) => {
+          return value ? moment(value, 'll').toDate() : null
+        },
+        // [optional] getWeekNumber
+        getWeek: (date) => {
+          return // a number
+        }
+      },
+      momentFormatDate: {
+        //[optional] Date to String
+        stringify: (date) => {
+          return date ? moment(date).format('ll') : ''
         },
         //[optional]  String to Date
         parse: (value) => {

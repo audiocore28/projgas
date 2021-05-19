@@ -9,7 +9,7 @@
         <div class="w-full flex flex-wrap justify-between">
           <div class="pr-6 pb-4 lg:w-1/2">
 
-            <date-picker v-model="form.date" type="month" placeholder="Select month" value-type="format" :formatter="momentFormat"></date-picker>
+            <date-picker v-model="form.date" type="month" placeholder="Select month" value-type="format" :formatter="momentFormatMonth"></date-picker>
 
           </div>
         </div>
@@ -134,7 +134,7 @@ export default {
     return {
       num: "",
       sending: false,
-      momentFormat: {
+      momentFormatMonth: {
         //[optional] Date to String
         stringify: (date) => {
           return date ? moment(date).format('MMMM, YYYY') : ''

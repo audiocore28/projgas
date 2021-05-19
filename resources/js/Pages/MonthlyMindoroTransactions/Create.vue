@@ -11,7 +11,7 @@
         <div class="w-full flex flex-wrap justify-between">
           <div class="pr-6 pb-4 lg:w-1/2">
 
-            <date-picker v-model="form.date" type="month" placeholder="Select month" value-type="format" :formatter="momentFormat"></date-picker>
+            <date-picker v-model="form.date" type="month" placeholder="Select month" value-type="format" :formatter="momentFormatMonth"></date-picker>
 
           </div>
         </div>
@@ -26,21 +26,24 @@
             <col span="1" style="width: 20%;">
             <col span="1" style="width: 20%;">
             <col span="1" style="width: 20%;">
-            <col span="1" style="width: 20%;">
-            <col span="1" style="width: 10%;">
+            <col span="1" style="width: 15%;">
+            <col span="1" style="width: 15%;">
           </colgroup>
-          <thead class="bg-gray-50">
+          <thead>
             <tr class="text-left font-bold">
               <th align="center" class="px-6 pt-6 pb-4">Trip #</th>
               <th align="center" class="px-6 pt-6 pb-4">Driver</th>
               <th align="center" class="px-6 pt-6 pb-4">Helper</th>
               <th align="center" class="px-6 pt-6 pb-4">Tanker</th>
               <th></th>
-              <th align="right">
+              <th align="center">
                 <div class="text-center whitespace-nowrap text-left text-xs font-medium text-gray-700 uppercase">
-                  <button @click.prevent="addNewDetailForm()">
-                    <icon name="plus" class="w-4 h-4 mr-2 fill-green-600"/>
-                  </button>
+                  <form @submit.prevent="addNewDetailForm" class="flex mr-6">
+                    <text-input type="number" step="any" v-model="num" min="1" max="100" class="mr-5"/>
+                    <button type="submit">
+                      <icon name="plus" class="w-4 h-4 mr-2 fill-green-600"/>
+                    </button>
+                  </form>
                 </div>
               </th>
             </tr>
@@ -131,8 +134,9 @@ export default {
   remember: 'form',
   data() {
     return {
+      num: "",
       sending: false,
-      momentFormat: {
+      momentFormatMonth: {
         //[optional] Date to String
         stringify: (date) => {
           return date ? moment(date).format('MMMM, YYYY') : ''
@@ -170,13 +174,27 @@ export default {
 
     // MindoroTransactionDetail
     addNewDetailForm() {
-      this.form.transactions.push({
-        // trip_no: `M${this.form.transactions.length + 1}`,
-        trip_no: 'M',
-        tanker_id: null,
-        driver_id: null,
-        helper_id: null,
-      });
+      if (this.num === "") {
+        this.form.transactions.push({
+          // trip_no: `M${this.form.transactions.length + 1}`,
+          trip_no: 'M',
+          tanker_id: null,
+          driver_id: null,
+          helper_id: null,
+        });
+      }
+
+      for (let i = 0; i < this.num; i++) {
+        this.form.transactions.push({
+          // trip_no: `M${this.form.transactions.length + 1}`,
+          trip_no: 'M',
+          tanker_id: null,
+          driver_id: null,
+          helper_id: null,
+        });
+      }
+
+      this.num = "";
     },
     deleteDetailForm(index) {
       this.form.transactions.splice(index, 1);
