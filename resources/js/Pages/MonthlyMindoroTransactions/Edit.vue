@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 class="mb-8 font-bold text-3xl">
+    <h1 class="font-bold text-3xl">
       <inertia-link class="text-blue-600 hover:text-blue-800" :href="route('monthly-mindoro-transactions.index')">Mindoro Transaction</inertia-link>
       <span class="text-blue-600 font-medium">/</span> {{ updateForm.date }}
     </h1>
@@ -13,41 +13,12 @@
             <!-- Transaction -->
             <div class="-mr-6 mb-4 flex space-between w-full mt-8 px-4">
               <div class="w-full flex flex-wrap justify-start">
-                <div class="-mt-6 mr-12">
+                <div class="mr-12">
 
                   <date-picker v-model="updateForm.date" type="month" placeholder="Select month" value-type="format" :formatter="momentFormat"></date-picker>
+                  <button class="ml-2 btn-indigo" @click.prevent="addNewTransactionForm">Add ({{ updateForm.transactions.length }})</button>
 
                 </div>
-                <div class="h-10">
-                  <button class="btn-indigo" @click.prevent="addNewTransactionForm">Add ({{ updateForm.transactions.length }})</button>
-                </div>
-
-<!--                 <div class="pr-6 pb-4 lg:w-1/2">
-                  <label class="form-label block">Purchase No.<span class="text-red-500">*</span></label>
-                  <multiselect
-                    id="purchase_id"
-                    name="purchases[]"
-                    v-model="updateForm.selectedPurchases"
-                    placeholder=""
-                    class="mt-3 text-xs z-20"
-                    :options="purchases"
-                    label="purchase_no"
-                    track-by="id"
-                    @search-change="onSearchPurchaseChange"
-                    @input="onSelectedPurchase"
-                    :show-labels="false"
-                    :multiple="true"
-                  ></multiselect>
-                </div>
-
-                <div class="lg:w-1/3">
-                  <label class="form-label block mr-5">Date:<span class="text-red-500">*</span></label>
-                  <div class="pr-6 pb-4 mt-3">
-                    <date-picker v-model="updateForm.date" :error="errors.date" lang="en" value-type="format" :formatter="momentFormat"></date-picker>
-                    <div v-if="errors.date" class="form-error">{{ errors.date }}</div>
-                  </div>
-                </div>
- -->
               </div>
               <div class="px-4">
                 <!-- <button class="btn-indigo" @click.prevent="toggleAllRow">Toggle All</button> -->
