@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreMonthlyMindoroTransactionRequest;
+use App\Http\Requests\UpdateMonthlyMindoroTransactionRequest;
 use App\Models\MonthlyMindoroTransaction;
 use App\Models\MindoroTransaction;
 use App\Models\MindoroTransactionDetail;
@@ -255,7 +256,7 @@ class MonthlyMindoroTransactionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(StoreMonthlyMindoroTransactionRequest $request, MonthlyMindoroTransaction $monthlyMindoroTransaction)
+    public function update(UpdateMonthlyMindoroTransactionRequest $request, MonthlyMindoroTransaction $monthlyMindoroTransaction)
     {
         $dateMonthArray = explode(', ', $request->date);
         $month = $dateMonthArray[0];

@@ -17,7 +17,7 @@
 
                   <date-picker v-model="updateForm.date" type="month" placeholder="Select month" value-type="format" :formatter="momentFormatMonth"></date-picker>
                   <button class="ml-2 btn-indigo" @click.prevent="addNewTransactionForm">Add ({{ updateForm.transactions.length }})</button>
-
+                  <div v-if="errors.date" class="form-error">{{ errors.date }}</div>
                 </div>
               </div>
               <div class="px-4">
@@ -55,22 +55,22 @@
                 <tbody v-for="(transaction, transactionIndex) in updateForm.transactions" :key="transactionIndex" class="bg-white rounded shadow mb-8 hover:bg-gray-100 focus-within:bg-gray-100" :id="`transaction-${transaction.id}`">
                   <tr class="bg-gradient-to-r from-yellow-500 to-blue-600">
                     <td class="border-t">
-                      <text-input v-model="transaction.trip_no" :error="errors.trip_no" />
+                      <text-input v-model="transaction.trip_no" :error="errors[`transactions.${transactionIndex}.trip_no`]"/>
                     </td>
                     <td class="border-t">
-                      <select :id="`driver-${transactionIndex}`" v-model="transaction.driver.id" class="form-select">
+                      <select :id="`driver-${transactionIndex}`" v-model="transaction.driver.id" class="form-select" :class="{ error: errors[`transactions.${transactionIndex}.driver.id`] }">
                         <option :value="null" />
                         <option v-for="driver in drivers" :key="driver.id" :value="driver.id">{{ driver.name }}</option>
                       </select>
                     </td>
                     <td class="border-t">
-                      <select :id="`helper-${transactionIndex}`" v-model="transaction.helper.id" class="form-select">
+                      <select :id="`helper-${transactionIndex}`" v-model="transaction.helper.id" class="form-select" :class="{ error: errors[`transactions.${transactionIndex}.helper.id`] }">
                         <option :value="null" />
                         <option v-for="helper in helpers" :key="helper.id" :value="helper.id">{{ helper.name }}</option>
                       </select>
                     </td>
                     <td class="border-t">
-                      <select :id="`tanker-${transactionIndex}`" v-model="transaction.tanker.id" class="form-select">
+                      <select :id="`tanker-${transactionIndex}`" v-model="transaction.tanker.id" class="form-select" :class="{ error: errors[`transactions.${transactionIndex}.tanker.id`] }">
                         <option :value="null" />
                         <option v-for="tanker in tankers" :key="tanker.id" :value="tanker.id">{{ tanker.plate_no }}</option>
                       </select>
@@ -154,7 +154,7 @@
                                </td>
                                <td>
                                  <div class="text-sm font-medium text-gray-900">
-                                   <select :id="`product-${detailIndex}`" v-model="detail.product_id" class="form-select" :class="{ error: errors[`detail.${detailIndex}.product_id`] }">
+                                   <select :id="`product-${detailIndex}`" v-model="detail.product_id" class="form-select" :class="{ error: errors[`transactions.${transactionIndex}.details.${detailIndex}.product_id`] }">
                                      <option :value="null" />
                                      <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
                                    </select>

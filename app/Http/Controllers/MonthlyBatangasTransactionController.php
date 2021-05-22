@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreMonthlyBatangasTransactionRequest;
+use App\Http\Requests\UpdateMonthlyBatangasTransactionRequest;
 use App\Models\MonthlyBatangasTransaction;
 use App\Models\BatangasTransaction;
 use App\Models\BatangasTransactionDetail;
@@ -255,7 +256,7 @@ class MonthlyBatangasTransactionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(StoreMonthlyBatangasTransactionRequest $request, MonthlyBatangasTransaction $monthlyBatangasTransaction)
+    public function update(UpdateMonthlyBatangasTransactionRequest $request, MonthlyBatangasTransaction $monthlyBatangasTransaction)
     {
         $dateMonthArray = explode(', ', $request->date);
         $month = $dateMonthArray[0];

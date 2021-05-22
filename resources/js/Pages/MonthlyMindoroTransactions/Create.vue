@@ -12,6 +12,7 @@
           <div class="pr-6 pb-4 lg:w-1/2">
 
             <date-picker v-model="form.date" type="month" placeholder="Select month" value-type="format" :formatter="momentFormatMonth"></date-picker>
+            <div v-if="errors.date" class="form-error">{{ errors.date }}</div>
 
           </div>
         </div>
@@ -52,12 +53,12 @@
             <tr v-for="(transaction, index) in form.transactions" :key="index" class="bg-gradient-to-r from-yellow-500 to-blue-600">
               <td>
                 <div class="text-sm font-medium text-gray-900">
-                  <text-input v-model="transaction.trip_no" :error="errors.trip_no"/>
+                  <text-input v-model="transaction.trip_no" :error="errors[`transactions.${index}.trip_no`]"/>
                 </div>
               </td>
               <td>
                 <div class="text-sm font-medium text-gray-900">
-                  <select :id="`driver-${index}`" v-model="transaction.driver_id" class="form-select" :class="{ error: errors[`driver_id.${index}`] }">
+                  <select :id="`driver-${index}`" v-model="transaction.driver_id" class="form-select" :class="{ error: errors[`transactions.${index}.driver_id`] }">
                     <option :value="null" />
                     <option v-for="driver in drivers" :key="driver.id" :value="driver.id">{{ driver.name }}</option>
                   </select>
@@ -65,7 +66,7 @@
               </td>
               <td>
                 <div class="text-sm font-medium text-gray-900">
-                  <select :id="`helper-${index}`" v-model="transaction.helper_id" class="form-select" :class="{ error: errors[`helper_id.${index}`] }">
+                  <select :id="`helper-${index}`" v-model="transaction.helper_id" class="form-select" :class="{ error: errors[`transactions.${index}.helper_id`] }">
                     <option :value="null" />
                     <option v-for="helper in helpers" :key="helper.id" :value="helper.id">{{ helper.name }}</option>
                   </select>
@@ -73,7 +74,7 @@
               </td>
               <td class="text-sm text-gray-500">
                 <div class="text-sm font-medium text-gray-900">
-                  <select :id="`tanker-${index}`" v-model="transaction.tanker_id" class="form-select" :class="{ error: errors[`tanker_id.${index}`] }">
+                  <select :id="`tanker-${index}`" v-model="transaction.tanker_id" class="form-select" :class="{ error: errors[`transactions.${index}.tanker_id`] }">
                     <option :value="null" />
                     <option v-for="tanker in tankers" :key="tanker.id" :value="tanker.id">{{ tanker.plate_no }}</option>
                   </select>
@@ -155,7 +156,7 @@ export default {
         transactions: [
           {
             // trip_no: 'M1',
-            trip_no: 'M',
+            trip_no: null,
             tanker_id: null,
             driver_id: null,
             helper_id: null,
@@ -177,7 +178,7 @@ export default {
       if (this.num === "") {
         this.form.transactions.push({
           // trip_no: `M${this.form.transactions.length + 1}`,
-          trip_no: 'M',
+          trip_no: null,
           tanker_id: null,
           driver_id: null,
           helper_id: null,
@@ -187,7 +188,7 @@ export default {
       for (let i = 0; i < this.num; i++) {
         this.form.transactions.push({
           // trip_no: `M${this.form.transactions.length + 1}`,
-          trip_no: 'M',
+          trip_no: null,
           tanker_id: null,
           driver_id: null,
           helper_id: null,

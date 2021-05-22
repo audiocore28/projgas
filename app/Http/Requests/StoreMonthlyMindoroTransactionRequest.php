@@ -24,24 +24,28 @@ class StoreMonthlyMindoroTransactionRequest extends FormRequest
     public function rules()
     {
         return [
+            // MonthlyMindoroTransaction
             'date' => ['required', 'max:50'],
-            //
-            'transactions.*.trip_no.*' => ['required', 'max:50'],
-            'transactions.*.tanker_id.*' => ['required', 'max:50'],
-            'transactions.*.driver_id.*' => ['required', 'max:50'],
-            'transactions.*.helper_id.*' => ['required', 'max:50'],
+
+            // MindoroTransaction
+            'transactions.*.trip_no' => ['required', 'max:50'],
+            'transactions.*.tanker_id' => ['required', 'max:50'],
+            'transactions.*.driver_id' => ['required', 'max:50'],
+            'transactions.*.helper_id' => ['required', 'max:50'],
         ];
     }
 
     public function messages()
     {
         return [
-            'date.required' => 'Date is required',
-            //
-            'transactions.*.trip_no.*.required' => 'Trip no. is required',
-            'transactions.*.tanker_id.*.required' => 'Tanker is required',
-            'transactions.*.driver_id.*.required' => 'Driver is required',
-            'transactions.*.helper_id.*.required' => 'Helper is required',
+            // MonthlyMindoroTransaction
+            'date.required' => 'Month is required',
+
+            // MindoroTransaction
+            'transactions.*.trip_no.required' => 'Trip no. is required',
+            'transactions.*.tanker_id.required' => 'Tanker is required',
+            'transactions.*.driver_id.required' => 'Driver is required',
+            'transactions.*.helper_id.required' => 'Helper is required',
         ];
     }
 }
