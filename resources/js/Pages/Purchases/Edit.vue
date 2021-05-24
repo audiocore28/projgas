@@ -139,7 +139,7 @@
 
           <!-- MonthlyBatangasTransaction -->
           <div class="text-sm font-medium text-gray-900 mr-4">
-            <select v-model="form.monthly_batangas_transaction_id" class="form-select">
+            <select v-model="form.monthly_batangas_transaction_id" class="form-select" :class="{ error: errors[`monthly_batangas_transaction_id`] }">
               <option :value="null" />
               <option v-for="monthlyTransaction in monthlyBatangasTransactions" :key="monthlyTransaction.id" :value="monthlyTransaction.id">{{ `${monthlyTransaction.year}, ${monthlyTransaction.month}` }}</option>
             </select>
@@ -188,7 +188,7 @@
 
                       <!-- BatangasTransaction trip no. -->
                       <div class="text-sm font-medium text-gray-900">
-                        <select :id="`batangas-${loadIndex}`" class="form-select" v-model="form.batangasLoads[loadIndex].batangas_transaction_id" @change="onBatangasTransactionChange($event, loadIndex)">
+                        <select :id="`batangas-${loadIndex}`" class="form-select" v-model="form.batangasLoads[loadIndex].batangas_transaction_id" @change="onBatangasTransactionChange($event, loadIndex)" :class="{ error: errors[`batangasLoads.${loadIndex}.batangas_transaction_id`] }">
                           <option :value="null" />
                           <option v-for="transaction in form.batangas_transactions" :key="transaction.id" :value="transaction.id">{{ `${transaction.trip_no} - ${transaction.driver.name} (${transaction.month} ${transaction.year})` }}</option>
                         </select>
@@ -233,7 +233,7 @@
                   <tr v-for="(details, detailsIndex) in load.details" :key="detailsIndex">
                     <td>
                       <div class="text-sm font-medium text-gray-900">
-                        <select :id="`product-${detailsIndex}`" v-model="details.product.id" class="form-select" :class="{ error: errors[`details.${detailsIndex}.product_id`] }" @change="onBatangasChange($event, loadIndex, detailsIndex)">
+                        <select :id="`product-${detailsIndex}`" v-model="details.product.id" class="form-select" @change="onBatangasChange($event, loadIndex, detailsIndex)" :class="{ error: errors[`batangasLoads.${loadIndex}.details.${detailsIndex}.product.id`] }">
                           <option :value="null" />
                           <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
                         </select>
@@ -280,7 +280,7 @@
 
           <!-- MonthlyMindoroTransaction -->
           <div class="text-sm font-medium text-gray-900 mr-4">
-            <select v-model="form.monthly_mindoro_transaction_id" class="form-select">
+            <select v-model="form.monthly_mindoro_transaction_id" class="form-select" :class="{ error: errors[`monthly_mindoro_transaction_id`] }">
               <option :value="null" />
               <option v-for="monthlyTransaction in monthlyMindoroTransactions" :key="monthlyTransaction.id" :value="monthlyTransaction.id">{{ `${monthlyTransaction.year}, ${monthlyTransaction.month}` }}</option>
             </select>
@@ -328,7 +328,7 @@
 
                       <!-- MindoroTransaction trip no. -->
                       <div class="text-sm font-medium text-gray-900">
-                        <select :id="`mindoro-${loadIndex}`" class="form-select" v-model="form.mindoroLoads[loadIndex].mindoro_transaction_id" @change="onMindoroTransactionChange($event, loadIndex)">
+                        <select :id="`mindoro-${loadIndex}`" class="form-select" v-model="form.mindoroLoads[loadIndex].mindoro_transaction_id" @change="onMindoroTransactionChange($event, loadIndex)" :class="{ error: errors[`mindoroLoads.${loadIndex}.mindoro_transaction_id`] }">
                           <option :value="null" />
                           <option v-for="transaction in form.mindoro_transactions" :key="transaction.id" :value="transaction.id">{{ `${transaction.trip_no} - ${transaction.driver.name} (${transaction.month} ${transaction.year})` }}</option>
                         </select>
@@ -384,7 +384,7 @@
                   <tr v-for="(details, detailsIndex) in load.details" :key="detailsIndex">
                     <td>
                       <div class="text-sm font-medium text-gray-900">
-                        <select :id="`product-${detailsIndex}`" v-model="details.product.id" class="form-select" :class="{ error: errors[`details.${detailsIndex}.product_id`] }" @change="onMindoroChange($event, loadIndex, detailsIndex)">
+                        <select :id="`product-${detailsIndex}`" v-model="details.product.id" class="form-select" @change="onMindoroChange($event, loadIndex, detailsIndex)" :class="{ error: errors[`mindoroLoads.${loadIndex}.details.${detailsIndex}.product.id`] }">
                           <option :value="null" />
                           <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
                         </select>
@@ -784,6 +784,7 @@ export default {
 
       this.form.batangasLoads.forEach(load => {
         load.batangas_transaction_id = null;
+        load.monthly_batangas_transaction.id = null;
       });
     },
 
@@ -792,6 +793,7 @@ export default {
 
       this.form.mindoroLoads.forEach(load => {
         load.mindoro_transaction_id = null;
+        load.monthly_mindoro_transaction.id = null;
       });
     },
 
