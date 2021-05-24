@@ -99,6 +99,8 @@ class ClientController extends Controller
                 return [
                     'month' => $detail->mindoroTransaction->monthlyMindoroTransaction ? $detail->mindoroTransaction->monthlyMindoroTransaction->month : null,
                     'year' => $detail->mindoroTransaction->monthlyMindoroTransaction ? $detail->mindoroTransaction->monthlyMindoroTransaction->year : null,
+                    'monthly_mindoro_transaction_id' => $detail->mindoroTransaction->monthlyMindoroTransaction ? $detail->mindoroTransaction->monthlyMindoroTransaction->id : null,
+                    'trip_no' => $detail->mindoroTransaction ? $detail->mindoroTransaction->trip_no : null,
                     'id' => $detail->id,
                     'date' => $detail->date,
                     'dr_no' => $detail->dr_no,
@@ -117,6 +119,8 @@ class ClientController extends Controller
                 return [
                     'month' => $detail->batangasTransaction->monthlyBatangasTransaction ? $detail->batangasTransaction->monthlyBatangasTransaction->month : null,
                     'year' => $detail->batangasTransaction->monthlyBatangasTransaction ? $detail->batangasTransaction->monthlyBatangasTransaction->year : null,
+                    'monthly_batangas_transaction_id' => $detail->batangasTransaction->monthlyBatangasTransaction ? $detail->batangasTransaction->monthlyBatangasTransaction->id : null,
+                    'trip_no' => $detail->batangasTransaction ? $detail->batangasTransaction->trip_no : null,
                     'id' => $detail->id,
                     'date' => $detail->date,
                     'dr_no' => $detail->dr_no,
