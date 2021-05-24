@@ -74,7 +74,10 @@
                   <h2>{{ month }}</h2>
                   <!-- <span class="mx-2 px-2 py-2 text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">{{ transactions.length }}</span> -->
                   <div>
-                    <span class="text-xs px-3 bg-white text-blue-600 rounded-full">{{ transactionDetails.length }}</span>
+                    <span class="text-xs px-3 bg-yellow-500 text-white rounded-full">{{ `Dsl: ${totalBatangasQty(year, month, 'Diesel')}` }}</span>
+                    <span class="text-xs px-3 bg-green-500 text-white rounded-full">{{ `Reg: ${totalBatangasQty(year, month, 'Regular')}` }}</span>
+                    <span class="text-xs px-3 bg-red-500 text-white rounded-full">{{ `Prem: ${totalBatangasQty(year, month, 'Premium')}` }}</span>
+                    <span class="text-xs px-3 bg-white text-blue-600 rounded-full">{{ `Amt: ${totalBatangasAmt(year, month)}` }}</span>
                   </div>
                 </div>
                 <table class="min-w-full divide-y divide-gray-200">
@@ -174,7 +177,12 @@
                 <div class="text-sm font-bold bg-gradient-to-r from-yellow-500 to-blue-600 text-white px-4 py-1 flex justify-between">
                   <h2>{{ month }}</h2>
                   <!-- <span class="mx-2 px-2 py-2 text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">{{ transactions.length }}</span> -->
-                  <span class="text-xs px-3 bg-white text-blue-600 rounded-full">{{ transactionDetails.length }}</span>
+                  <div>
+                    <span class="text-xs px-3 bg-yellow-500 text-white rounded-full">{{ `Dsl: ${totalMindoroQty(year, month, 'Diesel')}` }}</span>
+                    <span class="text-xs px-3 bg-green-500 text-white rounded-full">{{ `Reg: ${totalMindoroQty(year, month, 'Regular')}` }}</span>
+                    <span class="text-xs px-3 bg-red-500 text-white rounded-full">{{ `Prem: ${totalMindoroQty(year, month, 'Premium')}` }}</span>
+                    <span class="text-xs px-3 bg-white text-blue-600 rounded-full">{{ `Amt: ${totalMindoroAmt(year, month)}` }}</span>
+                  </div>
                 </div>
                 <div>
                   <table class="min-w-full divide-y divide-gray-200">
@@ -348,6 +356,80 @@ export default {
       if (confirm('Are you sure you want to restore this client?')) {
         this.$inertia.put(this.route('clients.restore', this.client.id))
       }
+    },
+
+    // BatangasTransactionDetail
+    totalBatangasQty(yr, mo, product) {
+      var totalQty = Object.entries(this.localBatangasDetails).reduce((acc, [year, months]) => {
+        if(year === yr) {
+          for (let [month, details] of Object.entries(months)) {
+            if(month === mo) {
+              for (let [key, detail] of Object.entries(details)) {
+                if(detail.product.name === product) {
+                  acc += parseFloat(detail.quantity);
+                }
+              }
+            }
+          }
+        }
+        return parseFloat(acc);
+      }, 0);
+
+      return this.quantityFormat(totalQty);
+    },
+
+    totalBatangasAmt(yr, mo) {
+      var totalAmt = Object.entries(this.localBatangasDetails).reduce((acc, [year, months]) => {
+        if(year === yr) {
+          for (let [month, details] of Object.entries(months)) {
+            if(month === mo) {
+              for (let [key, detail] of Object.entries(details)) {
+                acc += parseFloat(detail.quantity * detail.unit_price);
+              }
+            }
+          }
+        }
+        return parseFloat(acc);
+      }, 0);
+
+      return this.toPHP(totalAmt);
+    },
+
+    // MindoroTransactionDetail
+    totalMindoroQty(yr, mo, product) {
+      var totalQty = Object.entries(this.localMindoroDetails).reduce((acc, [year, months]) => {
+        if(year === yr) {
+          for (let [month, details] of Object.entries(months)) {
+            if(month === mo) {
+              for (let [key, detail] of Object.entries(details)) {
+                if(detail.product.name === product) {
+                  acc += parseFloat(detail.quantity);
+                }
+              }
+            }
+          }
+        }
+        return parseFloat(acc);
+      }, 0);
+
+      return this.quantityFormat(totalQty);
+    },
+
+    totalMindoroAmt(yr, mo) {
+      var totalAmt = Object.entries(this.localMindoroDetails).reduce((acc, [year, months]) => {
+        if(year === yr) {
+          for (let [month, details] of Object.entries(months)) {
+            if(month === mo) {
+              for (let [key, detail] of Object.entries(details)) {
+                acc += parseFloat(detail.quantity * detail.unit_price);
+              }
+            }
+          }
+        }
+        return parseFloat(acc);
+      }, 0);
+
+      return this.toPHP(totalAmt);
     },
 
     // SOA
