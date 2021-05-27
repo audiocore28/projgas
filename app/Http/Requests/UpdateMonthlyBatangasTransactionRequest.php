@@ -38,6 +38,7 @@ class UpdateMonthlyBatangasTransactionRequest extends FormRequest
             // BatangasTransactionDetail
             'transactions.*.details.*.date' => ['required', 'max:50'],
             'transactions.*.details.*.client_id' => ['required', 'max:50'],
+            'transactions.*.details.*.remarks' => ['nullable', 'max:50'],
             'transactions.*.details.*.product_id' => ['required', 'max:50'],
             'transactions.*.details.*.quantity' => ['nullable', 'max:50'],
             'transactions.*.details.*.unit_price' => ['nullable', 'max:50'],

@@ -8,7 +8,7 @@
     <div class="p-1">
       <div class="w-full pt-4">
         <!-- Update Existing Transaction -->
-        <div class="overflow-hidden max-w-6xl mb-8 -mt-4">
+        <div class="overflow-hidden w-full mb-8 -mt-4">
           <form @submit.prevent="updateMindoroTransaction">
             <!-- Transaction -->
             <div class="-mr-6 mb-4 flex space-between w-full mt-8 px-4">
@@ -89,12 +89,13 @@
                   <tr v-if="opened.includes(transactionIndex)">
                      <!-- Details table form -->
                     <td colspan="6">
-                       <div class="mb-6 overflow-x-auto -mt-4 px-4 pb-4">
+                       <div class="mb-6 overflow-x-auto -mt-4 pb-4">
                          <table class="min-w-full mt-8 shadow divide-y divide-gray-200">
                            <colgroup>
-                             <col span="1" style="width: 10%;">
-                             <col span="1" style="width: 38%;">
+                             <col span="1" style="width: 15%;">
+                             <col span="1" style="width: 23%;">
                              <col span="1" style="width: 12%;">
+                             <col span="1" style="width: 10%;">
                              <col span="1" style="width: 10%;">
                              <col span="1" style="width: 10%;">
                              <col span="1" style="width: 10%;">
@@ -107,6 +108,9 @@
                                </th>
                                <th scope="col" class="px-6 text-center py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                  Client<span class="text-red-500">*</span>
+                               </th>
+                               <th scope="col" class="px-6 text-center py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                  Remarks
                                </th>
                                <th scope="col" class="px-6 text-center py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                  Product<span class="text-red-500">*</span>
@@ -134,7 +138,7 @@
                              <tr v-for="(detail, detailIndex) in transaction.details" :key="detailIndex">
                                <td>
                                  <div class="text-sm font-medium text-gray-900">
-                                   <date-picker v-model="detail.date" lang="en" value-type="format" :formatter="momentFormatDate"></date-picker>
+                                   <date-picker style="width: 160px" v-model="detail.date" lang="en" value-type="format" :formatter="momentFormatDate"></date-picker>
                                  </div>
                                </td>
                                <td>
@@ -150,6 +154,11 @@
                                      :show-labels="false"
                                      :allow-empty="false"
                                    ></multiselect>
+                                 </div>
+                               </td>
+                               <td class="text-sm text-gray-500">
+                                 <div class="text-sm font-medium text-gray-900">
+                                    <text-input v-model="detail.remarks" />
                                  </div>
                                </td>
                                <td>
@@ -194,6 +203,9 @@
                              <tr class="bg-gray-200">
                                <td>
                                  <div class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium text-gray-500 uppercase">Total:</div>
+                               </td>
+                               <td>
+                                 <div class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium text-gray-500 uppercase"></div>
                                </td>
                                <td>
                                  <div class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium text-gray-500 uppercase"></div>
@@ -522,6 +534,7 @@ export default {
             product_id: null,
             selected_client: null,
             client_id: null,
+            remarks: null,
           }
         ],
         tanker_loads: [
@@ -568,6 +581,7 @@ export default {
         mindoro_transaction_id: null,
         product_id: null,
         client_id: null,
+        remarks: null,
       });
     },
 

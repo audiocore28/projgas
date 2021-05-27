@@ -210,6 +210,7 @@
  				<tr>
 					<td align="left">{{ $detail['date'] }}</td>
 					<td align="left">{{ $detail['client']['name'] }}</td>
+					<td align="left">{{ $detail['remarks'] }}</td>
 					<td align="left">{{ $detail['product']['name'] }}</td>
 					<td align="right">{{ number_format($detail['quantity']) }}</td>
 					<td align="right">{{ $detail['unit_price'] }}</td>
@@ -217,6 +218,7 @@
 				</tr>
 				@endforeach
 				<tr style="background-color: #eee;">
+					<td></td>
 					<td></td>
 					<td></td>
 					<td></td>

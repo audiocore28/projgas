@@ -178,6 +178,7 @@ class MonthlyMindoroTransactionController extends Controller
                                        'product_id' => $detail->product_id,
                                        'client_id' => $detail->client_id,
                                        'selected_client' => $detail->client_id,
+                                       'remarks' => $detail->remarks,
                                     ];
                         }),
                         'tanker_loads' => $transaction->tankerLoads->each(function ($load) {
@@ -287,6 +288,7 @@ class MonthlyMindoroTransactionController extends Controller
                 $transactionDetail->date = $detail['date'];
                 $transactionDetail->dr_no = $detail['dr_no'];
                 $transactionDetail->client_id = $detail['client_id'];
+                $transactionDetail->remarks = $detail['remarks'];
                 $transactionDetail->product_id = $detail['product_id'];
                 $transactionDetail->quantity = $detail['quantity'];
                 $transactionDetail->unit_price = $detail['unit_price'];
@@ -362,6 +364,7 @@ class MonthlyMindoroTransactionController extends Controller
                                        'product' => $detail->product ? $detail->product->only('id', 'name') : null,
                                        'client' => $detail->client ? $detail->client->only('id', 'name') : null,
                                        'selected_client' => $detail->client_id,
+                                       'remarks' => $detail->remarks,
                                     ];
                         }),
                         'tanker_loads' => $transaction->tankerLoads

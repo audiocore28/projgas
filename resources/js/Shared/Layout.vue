@@ -15,8 +15,9 @@
               </div>
             </dropdown>
           </div>
-          <div class="bg-white border-b w-full p-4 md:py-0 md:px-12 text-sm md:text-md flex justify-between items-center">
-            <div class="mt-1 mr-4">
+          <div class="bg-white border-b w-full p-4 md:py-0 text-sm md:text-md flex justify-between items-center">
+            <div class="mt-1 mr-4 cursor-pointer" @click="menuOpened !== 0 ? menuOpened = 0 : menuOpened = null">
+              <svg class="invisible md:visible fill-gray-600 w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" /></svg>
               <!-- {{ $page.auth.user.id }} -->
             </div>
             <dropdown class="mt-1" placement="bottom-end">
@@ -37,8 +38,8 @@
           </div>
         </div>
         <div class="md:flex md:flex-grow md:overflow-hidden">
-          <main-menu :url="url()" class="hidden md:block bg-blue-800 flex-shrink-0 w-56 p-12 overflow-y-auto" />
-          <div class="md:flex-1 px-4 py-8 md:px-4 py-12 md:overflow-y-auto" scroll-region>
+          <main-menu :url="url()" class="hidden md:block bg-blue-800 flex-shrink-0 w-56 p-12 overflow-y-auto" v-show="menuOpened == 0"/>
+          <div class="md:flex-1 px-4 py-8 md:px-2 py-12 md:overflow-y-auto" scroll-region>
             <flash-messages />
             <slot />
           </div>
@@ -66,6 +67,8 @@ export default {
   data() {
     return {
       showUserMenu: false,
+      // sidebar toggle
+      menuOpened: 0,
       // accounts: null,
     }
   },

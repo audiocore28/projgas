@@ -178,6 +178,7 @@ class MonthlyBatangasTransactionController extends Controller
                                        'product_id' => $detail->product_id,
                                        'client_id' => $detail->client_id,
                                        'selected_client' => $detail->client_id,
+                                       'remarks' => $detail->remarks,
                                     ];
                         }),
                         'tanker_loads' => $transaction->tankerLoads->each(function ($load) {
@@ -287,6 +288,7 @@ class MonthlyBatangasTransactionController extends Controller
 
                 $transactionDetail->date = $detail['date'];
                 $transactionDetail->client_id = $detail['client_id'];
+                $transactionDetail->remarks = $detail['remarks'];
                 $transactionDetail->product_id = $detail['product_id'];
                 $transactionDetail->quantity = $detail['quantity'];
                 $transactionDetail->unit_price = $detail['unit_price'];
@@ -363,6 +365,7 @@ class MonthlyBatangasTransactionController extends Controller
                                 'product' => $detail->product ? $detail->product->only('id', 'name') : null,
                                 'client' => $detail->client ? $detail->client->only('id', 'name') : null,
                                 'selected_client' => $detail->client_id,
+                                'remarks' => $detail->remarks,
                             ];
                         }),
                     'tanker_loads' => $transaction->tankerLoads
