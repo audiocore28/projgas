@@ -94,6 +94,12 @@
                         Code
                       </th>
                       <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Client
+                      </th>
+                      <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Remarks
+                      </th>
+                      <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Product
                       </th>
                       <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -124,6 +130,16 @@
                         <a class="text-sm font-medium text-blue-600" target="_blank" :href="`/monthly-batangas-transactions/${detail.monthly_batangas_transaction_id}/edit#transaction-${detail.batangas_transaction_id}`">
                           {{ detail.trip_no }}
                         </a>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-medium text-gray-900">
+                          {{ detail.client.name }}
+                        </div>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-medium text-gray-900">
+                          {{ detail.remarks }}
+                        </div>
                       </td>
                       <td class="px-6 py-4 whitespace-nowrap">
                         <div class="text-sm font-medium text-gray-900">
@@ -207,6 +223,12 @@
                           Code
                         </th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Client
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Remarks
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Product
                         </th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -240,6 +262,16 @@
                           <a class="text-sm font-medium text-blue-600" target="_blank" :href="`/monthly-mindoro-transactions/${detail.monthly_mindoro_transaction_id}/edit#transaction-${detail.mindoro_transaction_id}`">
                               {{ detail.trip_no }}
                           </a>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <div class="text-sm font-medium text-gray-900">
+                            {{ detail.client.name }}
+                          </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <div class="text-sm font-medium text-gray-900">
+                            {{ detail.remarks }}
+                          </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                           <div class="text-sm font-medium text-gray-900">

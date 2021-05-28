@@ -108,6 +108,7 @@ class ClientController extends Controller
                     'quantity' => $detail->quantity,
                     'unit_price' => $detail->unit_price,
                     'client' => $detail->client ? $detail->client->only('id', 'name') : null,
+                    'remarks' => $detail->remarks,
                     'product' => $detail->product ? $detail->product->only('id', 'name') : null,
                 ];
             });
@@ -128,6 +129,7 @@ class ClientController extends Controller
                     'quantity' => $detail->quantity,
                     'unit_price' => $detail->unit_price,
                     'client' => $detail->client ? $detail->client->only('id', 'name') : null,
+                    'remarks' => $detail->remarks,
                     'product' => $detail->product ? $detail->product->only('id', 'name') : null,
                 ];
             });
