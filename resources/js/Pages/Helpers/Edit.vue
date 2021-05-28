@@ -14,14 +14,11 @@
         <li @click="openTab = 1" :class="{ '-mb-px': openTab === 1 }" class="-mb-px mr-1">
           <a :class="openTab === 1 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold">Info</a>
         </li>
-        <li @click="openTab = 2" :class="{ '-mb-px': openTab === 2 }" class="mr-1" v-show="batangasDetails.data.length">
+        <li @click="openTab = 2" :class="{ '-mb-px': openTab === 2 }" class="mr-1" v-show="batangasTrips">
           <a :class="openTab === 2 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold">Batangas</a>
         </li>
-        <li @click="openTab = 3" :class="{ '-mb-px': openTab === 3 }" class="mr-1" v-show="mindoroDetails.data.length">
+        <li @click="openTab = 3" :class="{ '-mb-px': openTab === 3 }" class="mr-1" v-show="mindoroTrips">
           <a :class="openTab === 3 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold">Mindoro</a>
-        </li>
-        <li @click="openTab = 4" :class="{ '-mb-px': openTab === 4 }" class="mr-1">
-          <a :class="openTab === 4 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold">Salaries (M)</a>
         </li>
       </ul>
 
@@ -37,7 +34,7 @@
                 <text-input v-model="form.contact_no" :error="errors.contact_no" class="pr-6 pb-8 w-full lg:w-1/2" label="Contact No" />
               </div>
               <div class="px-8 py-4 bg-gray-100 border-t border-gray-200 flex justify-end items-center">
-                <button v-if="!batangasDetails.data.length && !mindoroDetails.data.length && !helper.deleted_at" class="text-red-600 hover:underline" tabindex="-1" type="button" @click="destroy">Delete Helper</button>
+                <button v-if="!batangasTrips && !mindoroTrips && !helper.deleted_at" class="text-red-600 hover:underline" tabindex="-1" type="button" @click="destroy">Delete Helper</button>
                 <loading-button :loading="sending" class="btn-indigo ml-auto" type="submit">Update Helper</loading-button>
               </div>
             </form>
@@ -47,7 +44,7 @@
         <!-- Tab 2 -->
         <div v-show="openTab === 2">
           <batangas-transactions
-            :transactionDetails="batangasDetails"
+            :transactionDetails="batangasTrips"
             record="helpers">
           </batangas-transactions>
         </div>
@@ -55,19 +52,10 @@
         <!-- Tab 3 -->
         <div v-show="openTab === 3">
           <mindoro-transactions
-            :transactionDetails="mindoroDetails"
+            :transactionDetails="mindoroTrips"
             record="helpers">
           </mindoro-transactions>
         </div>
-
-        <!-- Tab 4 -->
-        <div v-show="openTab === 4" class="bg-white -mt-4">
-          <salary
-            :trips="trips"
-            :rate="1500">
-          </salary>
-        </div>
-
       </div>
     </div>
   </div>
@@ -82,7 +70,6 @@ import TextInput from '@/Shared/TextInput'
 import TrashedMessage from '@/Shared/TrashedMessage'
 import BatangasTransactions from '@/Shared/BatangasTransactions'
 import MindoroTransactions from '@/Shared/MindoroTransactions'
-import Salary from '@/Shared/Salary'
 import moment from 'moment'
 import { numberFormatsMixin } from '@/Mixins/numberFormatsMixin'
 
@@ -100,14 +87,12 @@ export default {
     TrashedMessage,
     BatangasTransactions,
     MindoroTransactions,
-    Salary,
   },
   props: {
     errors: Object,
     helper: Object,
-    batangasDetails: Object,
-    mindoroDetails: Object,
-    trips: Array,
+    batangasTrips: Object,
+    mindoroTrips: Object,
   },
   remember: 'form',
   data() {

@@ -1,24 +1,25 @@
 <template>
   <div>
     <div class="bg-white rounded shadow overflow-x-auto mb-8 -mt-4">
-      <div class="rounded shadow overflow-x-auto mx-4 mt-8" v-for="(months, year) in localTransactionDetails">
-        <h1 class="font-semibold">{{ year }}</h1>
+      <div class="rounded shadow overflow-x-auto mx-4 my-8" v-for="(months, year) in localTransactionDetails">
+        <h1 class="font-semibold text-center">{{ year }}</h1>
         <div class="mt-6 mb-1" v-for="(transactions, month) in months">
-          <div class="text-sm font-bold bg-blue-600 text-white px-4 py-1 flex justify-between">
+          <div class="text-sm font-bold bg-gradient-to-r from-yellow-500 to-blue-600 text-white px-4 py-1 flex justify-between">
             <h2>{{ month }}</h2>
             <!-- <span class="mx-2 px-2 py-2 text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">{{ transactions.length }}</span> -->
             <span class="text-xs px-3 bg-white text-blue-600 rounded-full">{{ transactions.length }}</span>
           </div>
-          <div class="ml-4 mt-6 mb-1" v-for="transaction in transactions">
+          <div class="ml-4 mt-6 mb-1" v-for="(transaction, transactionIndex) in transactions">
             <inertia-link :href="route(`mindoro-transactions.edit`, transaction.id)" tabindex="-1">
               <p class="text-sm font-bold text-blue-700 mb-2">{{ transaction.trip_no }}. {{ transaction.driver.name }} & {{ transaction.helper.name }} ({{ transaction.tanker.plate_no }})</p>
 
-              <div class="text-xs font-medium text-gray-600">
+<!--                 <div class="text-xs font-medium text-gray-600">
                 <span class="mb-4">{{ transaction.date }}</span> -
                 <span class="-ml-2 px-2 rounded-full" v-if="transaction.purchases" v-for="purchase in transaction.purchases">
                   {{ purchase.purchase_no }}
                 </span>
               </div>
+-->
             </inertia-link>
             <table class="min-w-full divide-y divide-gray-200 mt-4">
               <thead class="bg-gray-50">
@@ -28,6 +29,9 @@
                   </th>
                   <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Client
+                  </th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Remarks
                   </th>
                   <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Product
@@ -53,6 +57,11 @@
                   <td class="px-6 py-4 whitespace-nowrap">
                     <div class="text-sm font-medium text-gray-900">
                       {{ detail.client.name  }}
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm font-medium text-gray-900">
+                      {{ detail.remarks }}
                     </div>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">
@@ -88,13 +97,16 @@
                     <div class="text-sm text-gray-900"></div>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="text-sm text-gray-900">{{ totalTransactionsQty(transaction.id) }}</div>
+                    <div class="text-sm text-gray-900"></div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm text-gray-900">{{ totalTransactionsQty(year, month, transaction.id) }}</div>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">
                     <div class="text-sm text-gray-900"></div>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="text-sm text-gray-900">{{ totalTransactionsAmount(transaction.id) }}</div>
+                    <div class="text-sm text-gray-900">{{ totalTransactionsAmount(year, month, transaction.id) }}</div>
                   </td>
                 </tr>
               </tbody>
@@ -125,32 +137,46 @@ export default {
     }
   },
   methods: {
-    totalTransactionsAmount(transactionId) {
-      for (var i = 0; i < this.localTransactionDetails.length; i++) {
-        if (this.localTransactionDetails[i].id === transactionId) {
-
-          var totalAmt = this.localTransactionDetails[i].details.reduce(function (acc, detail) {
-            acc += parseFloat(detail.quantity) * parseFloat(detail.unit_price);
-            return acc;
-          }, 0);
-
-          return this.toPHP(totalAmt);
+    totalTransactionsAmount(yr, mo, transactionId) {
+      var totalAmt = Object.entries(this.localTransactionDetails).reduce((acc, [year, months]) => {
+        if(year === yr) {
+          for (let [month, transactions] of Object.entries(months)) {
+            if(month === mo) {
+              transactions.map(transaction => {
+                if(transaction.id === transactionId) {
+                  transaction.details.forEach(detail => {
+                    acc += parseFloat(detail.quantity) * parseFloat(detail.unit_price);
+                  });
+                }
+              });
+            }
+          }
         }
-      }
+        return parseFloat(acc);
+      }, 0);
+
+      return this.toPHP(totalAmt);
     },
 
-    totalTransactionsQty(transactionId) {
-      for (var i = 0; i < this.localTransactionDetails.length; i++) {
-        if (this.localTransactionDetails[i].id === transactionId) {
-
-          var totalQty = this.localTransactionDetails[i].details.reduce(function (acc, detail) {
-            acc += parseFloat(detail.quantity);
-            return acc;
-          }, 0);
-
-          return this.quantityFormat(totalQty);
+    totalTransactionsQty(yr, mo, transactionId) {
+      var totalQty = Object.entries(this.localTransactionDetails).reduce((acc, [year, months]) => {
+        if(year === yr) {
+          for (let [month, transactions] of Object.entries(months)) {
+            if(month === mo) {
+              transactions.map(transaction => {
+                if(transaction.id === transactionId) {
+                  transaction.details.forEach(detail => {
+                    acc += parseFloat(detail.quantity);
+                  });
+                }
+              });
+            }
+          }
         }
-      }
+        return parseFloat(acc);
+      }, 0);
+
+      return this.quantityFormat(totalQty);
     },
 
     // loadMoreTransactions() {
