@@ -266,7 +266,17 @@ class PurchaseController extends Controller
                 'supplier_id' => $purchase->supplier_id,
                 'monthly_mindoro_transaction_id' => $purchase->monthly_mindoro_transaction_id,
                 'monthly_batangas_transaction_id' => $purchase->monthly_batangas_transaction_id,
-                'details' => $purchase->purchaseDetails,
+                'details' => $purchase->purchaseDetails
+                        ->map(function ($detail) {
+                            return [
+                                'id' => $detail->id,
+                                'quantity' => $detail->quantity,
+                                'unit_price' => $detail->unit_price,
+                                'remarks' => $detail->remarks,
+                                'purchase_id' => $detail->purchase_id,
+                                'product' => $detail->product ? $detail->product->only('id', 'name') : null,
+                            ];
+                        }),
                 'batangasLoads' => $batangasLoads,
                 'mindoroLoads' => $mindoroLoads,
             ],

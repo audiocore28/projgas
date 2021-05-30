@@ -64,7 +64,7 @@
               <tr v-for="(details, purchaseIndex) in form.details" :key="purchaseIndex">
                 <td>
                   <div class="text-sm font-medium text-gray-900">
-                    <select :id="`product-${purchaseIndex}`" v-model="details.product_id" class="form-select" :class="{ error: errors[`details.${purchaseIndex}.product_id`] }">
+                    <select @change="onPurchaseChange($event, purchaseIndex)" :id="`product-${purchaseIndex}`" v-model="details.product.id" class="form-select" :class="{ error: errors[`details.${purchaseIndex}.product.id`] }">
                       <option :value="null" />
                       <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
                     </select>
@@ -136,9 +136,9 @@
       <!-- Batangas -->
       <div class="mb-8 flex justify-between items-center">
         <div class="-mb-8 flex justify-start items-center">
-          <icon name="cheveron-down" class="block w-6 h-6 fill-gray-600 mr-2" v-if="batangasSelected == 0"/>
-          <icon name="cheveron-right" class="block w-6 h-6 fill-gray-600 mr-2" v-else/>
-          <h1 class="my-8 font-bold text-2xl mr-4 pointer" @click="batangasSelected !== 0 ? batangasSelected = 0 : batangasSelected = null">To Batangas</h1>
+          <icon name="cheveron-down" class="block w-6 h-6 fill-blue-600 mr-2" v-if="batangasSelected == 0"/>
+          <icon name="cheveron-right" class="block w-6 h-6 fill-blue-600 mr-2" v-else/>
+          <h1 class="text-blue-600 my-8 font-bold text-xl mr-4 pointer" @click="batangasSelected !== 0 ? batangasSelected = 0 : batangasSelected = null">To Batangas</h1>
 
           <!-- MonthlyBatangasTransaction -->
           <div class="text-sm font-medium text-gray-900 mr-4">
@@ -277,9 +277,9 @@
       <!-- Mindoro -->
       <div class="mt-6 mb-8 flex justify-between items-center border-t-2 border-gray-600">
         <div class="-mb-8 flex justify-start items-center">
-          <icon name="cheveron-down" class="block w-6 h-6 fill-gray-600 mr-2" v-if="mindoroSelected == 1"/>
-          <icon name="cheveron-right" class="block w-6 h-6 fill-gray-600 mr-2" v-else/>
-          <h1 class="my-8 font-bold text-2xl mr-4 pointer" @click="mindoroSelected !== 1 ? mindoroSelected = 1 : mindoroSelected = null">To Mindoro</h1>
+          <icon name="cheveron-down" class="block w-6 h-6 fill-yellow-600 mr-2" v-if="mindoroSelected == 1"/>
+          <icon name="cheveron-right" class="block w-6 h-6 fill-yellow-600 mr-2" v-else/>
+          <h1 class="text-yellow-600 my-8 font-bold text-xl mr-4 pointer" @click="mindoroSelected !== 1 ? mindoroSelected = 1 : mindoroSelected = null">To Mindoro</h1>
 
           <!-- MonthlyMindoroTransaction -->
           <div class="text-sm font-medium text-gray-900 mr-4">
@@ -416,10 +416,10 @@
 
 
       <!-- Total Load-->
-      <div class="pb-8 my-8 flex justify-between items-center border-t-2 border-gray-600 bg-white">
+      <div class="mt-6 pb-8 flex justify-between items-center border-t-2 border-gray-600 bg-gray-600">
         <div class="pl-10 -mb-8 flex justify-start items-center">
           <!-- <icon name="cheveron-right" class="block w-6 h-6 fill-gray-600 mr-2"/> -->
-          <h1 class="my-8 font-bold text-2xl mr-4 pointer">Total Load</h1>
+          <h1 class="text-white my-8 font-bold text-xl mr-4 pointer">Total Load</h1>
         </div>
         <div class="-mb-8 flex justify-end items-center">
           <span class="mr-2 px-2 py-2 text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
@@ -438,6 +438,34 @@
             Premium
             <span class="p-1 rounded-full text-red-800 text-xs ml-2 bg-red-400">
               {{ allLoadQty('Premium') / 1000 }}
+            </span>
+          </span>
+        </div>
+      </div>
+
+      <!-- Unlifted -->
+      <div class="pb-8 flex justify-between items-center border-t-2 border-gray-600 bg-white">
+        <div class="pl-10 -mb-8 flex justify-start items-center">
+          <!-- <icon name="cheveron-right" class="block w-6 h-6 fill-gray-600 mr-2"/> -->
+          <h1 class="text-red-600 my-8 font-bold text-xl mr-4 pointer">Unlifted</h1>
+        </div>
+        <div class="-mb-8 flex justify-end items-center">
+          <span class="mr-2 px-2 py-2 text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+            Diesel
+            <span class="p-1 rounded-full text-yellow-800 text-xs ml-2 bg-yellow-400">
+              {{ unliftedQty('Diesel') / 1000 }}
+            </span>
+          </span>
+          <span class="mr-2 px-2 py-2 text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+            Regular
+            <span class="p-1 rounded-full text-green-800 text-xs ml-2 bg-green-400">
+              {{ unliftedQty('Regular') / 1000 }}
+            </span>
+          </span>
+          <span class="mr-2 px-2 py-2 text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+            Premium
+            <span class="p-1 rounded-full text-red-800 text-xs ml-2 bg-red-400">
+              {{ unliftedQty('Premium') / 1000 }}
             </span>
           </span>
         </div>
@@ -509,7 +537,10 @@ export default {
         batangas_transactions: [],
         details: [
           {
-            product_id: null,
+            product: {
+              id: null,
+              name: null,
+            },
             quantity: 0,
             unit_price: 0,
             remarks: null,
@@ -572,7 +603,10 @@ export default {
     addNewPurchaseDetailForm() {
       this.form.details.push({
         // purchase_id: null,
-        product_id: null,
+        product: {
+          id: null,
+          name: null,
+        },
         quantity: 0,
         unit_price: 0,
         remarks: null,
@@ -743,6 +777,29 @@ export default {
       var totalLoad = batangasLoadQty + mindoroLoadQty;
 
       return totalLoad;
+    },
+
+    onPurchaseChange(event, purchaseIndex) {
+      const product = event.target.options[event.target.options.selectedIndex].text;
+      this.form.details[purchaseIndex].product.name = product;
+    },
+
+    unliftedQty(product) {
+      // Purchase Qty
+      var totalPurchaseQty = this.form.details.reduce((acc, detail) => {
+        if (detail.product.name === product) {
+          acc += parseFloat(detail.quantity);
+        }
+        return parseFloat(acc);
+      }, 0);
+
+      // Load Qty
+      var totalLoadQty = this.allLoadQty(product);
+
+      // Unlifted Qty
+      var unliftedQty = totalPurchaseQty - totalLoadQty;
+      return unliftedQty;
+
     },
 
   },
