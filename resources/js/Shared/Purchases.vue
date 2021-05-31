@@ -3,10 +3,10 @@
     <div class="bg-white rounded shadow overflow-x-auto mb-8 -mt-4">
       <div class="rounded shadow overflow-x-auto m-4 lg:w-2/3" v-for="purchase in localPurchaseDetails">
         <div class="ml-5 mr-5 mt-5">
-          <inertia-link :href="route('purchases.edit', purchase.id)" tabindex="-1">
-            <p class="text-md font-bold text-blue-700 mb-2">{{ purchase.purchase_no }}</p>
-          </inertia-link>
-          <p class="text-xs font-medium text-gray-600 mb-4">{{ purchase.date }}</p>
+          <a  class="text-md font-bold text-blue-700 mb-2" target="_blank" :href="`/purchases/${purchase.id}/edit`" tabindex="-1">
+            {{ purchase.purchase_no }}
+          </a>
+          <p class="mt-2 text-xs font-medium text-gray-600 mb-4">{{ purchase.date }}</p>
         </div>
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-gray-50">
@@ -67,7 +67,7 @@
         </table>
       </div>
     </div>
-    <button @click="loadMorePurchase">Load more...</button>
+    <!-- <button @click="loadMorePurchase">Load more...</button> -->
   </div>
 </template>
 
@@ -117,27 +117,27 @@ export default {
       }
     },
 
-    loadMorePurchase() {
-      var currentPage = this.purchasePagination.links[0].current_page;
-      var id = window.location.href.split('/');
+    // loadMorePurchase() {
+    //   var currentPage = this.purchasePagination.links[0].current_page;
+    //   var id = window.location.href.split('/');
 
-      // if (this.loadingMore) return;
+    //   // if (this.loadingMore) return;
 
-      // this.loadingMore = true;
+    //   // this.loadingMore = true;
 
-      axios.get(`/${this.record}/${id[4]}?page=${currentPage + 1}`)
-        .then(({ data }) => {
-          // Prepending the old messages to the list.
-          this.localPurchaseDetails = [
-            ...this.localPurchaseDetails,
-            ...data.purchaseDetails.data,
-          ];
+    //   axios.get(`/${this.record}/${id[4]}?page=${currentPage + 1}`)
+    //     .then(({ data }) => {
+    //       // Prepending the old messages to the list.
+    //       this.localPurchaseDetails = [
+    //         ...this.localPurchaseDetails,
+    //         ...data.purchaseDetails.data,
+    //       ];
 
-          // Update our pagination meta information.
-          this.purchasePagination = data.purchaseDetails;
-        });
-        // .finally(() => this.loadingMore = false);
-    },
+    //       // Update our pagination meta information.
+    //       this.purchasePagination = data.purchaseDetails;
+    //     });
+    //     // .finally(() => this.loadingMore = false);
+    // },
 
   },
 }
