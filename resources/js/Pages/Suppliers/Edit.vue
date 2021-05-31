@@ -14,9 +14,6 @@
         <li @click="openTab = 1" :class="{ '-mb-px': openTab === 1 }" class="-mb-px mr-1">
           <a :class="openTab === 1 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold">Info</a>
         </li>
-        <li @click="openTab = 2" :class="{ '-mb-px': openTab === 2 }" class="mr-1" v-show="purchaseDetails.data.length">
-          <a :class="openTab === 2 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold">Purchases</a>
-        </li>
       </ul>
 
       <div class="w-full pt-4">
@@ -32,16 +29,11 @@
                 <text-input v-model="form.email_address" :error="errors.email_address" class="pr-6 pb-8 w-full lg:w-1/2" label="Email Address" />
               </div>
               <div class="px-8 py-4 bg-gray-100 border-t border-gray-200 flex justify-end items-center">
-                <button v-if="!purchaseDetails.data.length && !supplier.deleted_at" class="text-red-600 hover:underline" tabindex="-1" type="button" @click="destroy">Delete Supplier</button>
+                <button v-if="!supplier.deleted_at" class="text-red-600 hover:underline" tabindex="-1" type="button" @click="destroy">Delete Supplier</button>
                 <loading-button :loading="sending" class="btn-indigo ml-auto" type="submit">Update Supplier</loading-button>
               </div>
             </form>
           </div>
-        </div>
-
-        <!-- Tab 2 -->
-        <div v-show="openTab === 2">
-          <purchases :purchaseDetails="purchaseDetails" record="suppliers"></purchases>
         </div>
 
       </div>
@@ -56,7 +48,6 @@ import LoadingButton from '@/Shared/LoadingButton'
 import SelectInput from '@/Shared/SelectInput'
 import TextInput from '@/Shared/TextInput'
 import TrashedMessage from '@/Shared/TrashedMessage'
-import Purchases from '@/Shared/Purchases'
 
 export default {
   metaInfo() {
@@ -69,31 +60,15 @@ export default {
     SelectInput,
     TextInput,
     TrashedMessage,
-    Purchases,
   },
   props: {
     errors: Object,
     supplier: Object,
-    purchaseDetails: Object,
   },
   remember: 'form',
   data() {
     return {
       sending: false,
-      momentFormat: {
-        //[optional] Date to String
-        stringify: (date) => {
-          return date ? moment(date).format('ll') : ''
-        },
-        //[optional]  String to Date
-        parse: (value) => {
-          return value ? moment(value, 'll').toDate() : null
-        },
-        // [optional] getWeekNumber
-        getWeek: (date) => {
-          return // a number
-        }
-      },
       form: {
         id: this.supplier.id,
         name: this.supplier.name,

@@ -56,18 +56,7 @@ class SupplierController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Supplier $supplier)
+    public function show(Supplier $supplier)
     {
         $pD = $supplier->purchases()
             ->latest()
@@ -89,7 +78,7 @@ class SupplierController extends Controller
          ];
        }
 
-        return Inertia::render('Suppliers/Edit', [
+        return Inertia::render('Suppliers/Show', [
             'supplier' => [
                 'id' => $supplier->id,
                 'name' => $supplier->name,
@@ -100,6 +89,27 @@ class SupplierController extends Controller
                 'deleted_at' => $supplier->deleted_at,
             ],
             'purchaseDetails' => $pD,
+        ]);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Supplier $supplier)
+    {
+        return Inertia::render('Suppliers/Edit', [
+            'supplier' => [
+                'id' => $supplier->id,
+                'name' => $supplier->name,
+                'office' => $supplier->office,
+                'email_address' => $supplier->email_address,
+                'contact_person' => $supplier->contact_person,
+                'contact_no' => $supplier->contact_no,
+                'deleted_at' => $supplier->deleted_at,
+            ],
         ]);
     }
 
