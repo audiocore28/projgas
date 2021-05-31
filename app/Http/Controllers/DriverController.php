@@ -62,6 +62,7 @@ class DriverController extends Controller
             ->paginate()
             ->transform(function ($transaction) {
                 return [
+                    'monthly_batangas_transaction_id' => $transaction->monthlyBatangasTransaction->id,
                     'month' => $transaction->monthlyBatangasTransaction->month,
                     'year' => $transaction->monthlyBatangasTransaction->year,
                     'id' => $transaction->id,
@@ -84,6 +85,7 @@ class DriverController extends Controller
             ->paginate()
             ->transform(function ($transaction) {
                 return [
+                    'monthly_mindoro_transaction_id' => $transaction->monthlyMindoroTransaction->id,
                     'month' => $transaction->monthlyMindoroTransaction->month,
                     'year' => $transaction->monthlyMindoroTransaction->year,
                     'id' => $transaction->id,
