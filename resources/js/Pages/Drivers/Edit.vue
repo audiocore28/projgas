@@ -14,12 +14,6 @@
         <li @click="openTab = 1" :class="{ '-mb-px': openTab === 1 }" class="-mb-px mr-1">
           <a :class="openTab === 1 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold">Info</a>
         </li>
-        <li @click="openTab = 2" :class="{ '-mb-px': openTab === 2 }" class="mr-1" v-show="batangasTrips">
-          <a :class="openTab === 2 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold">Batangas</a>
-        </li>
-        <li @click="openTab = 3" :class="{ '-mb-px': openTab === 3 }" class="mr-1" v-show="mindoroTrips">
-          <a :class="openTab === 3 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold">Mindoro</a>
-        </li>
       </ul>
 
       <!-- Tab 1 -->
@@ -42,22 +36,6 @@
           </div>
         </div>
 
-        <!-- Tab 2 -->
-        <div v-show="openTab === 2">
-          <batangas-transactions
-            :transactionDetails="batangasTrips"
-            record="drivers">
-          </batangas-transactions>
-        </div>
-
-        <!-- Tab 3 -->
-        <div v-show="openTab === 3">
-          <mindoro-transactions
-            :transactionDetails="mindoroTrips"
-            record="drivers">
-          </mindoro-transactions>
-        </div>
-
       </div>
     </div>
   </div>
@@ -70,13 +48,8 @@ import LoadingButton from '@/Shared/LoadingButton'
 import SelectInput from '@/Shared/SelectInput'
 import TextInput from '@/Shared/TextInput'
 import TrashedMessage from '@/Shared/TrashedMessage'
-import BatangasTransactions from '@/Shared/BatangasTransactions'
-import MindoroTransactions from '@/Shared/MindoroTransactions'
-import moment from 'moment'
-import { numberFormatsMixin } from '@/Mixins/numberFormatsMixin'
 
 export default {
-  mixins: [numberFormatsMixin],
   metaInfo() {
     return { title: this.form.name }
   },
@@ -87,33 +60,15 @@ export default {
     SelectInput,
     TextInput,
     TrashedMessage,
-    BatangasTransactions,
-    MindoroTransactions,
   },
   props: {
     errors: Object,
     driver: Object,
-    batangasTrips: Object,
-    mindoroTrips: Object,
   },
   remember: 'form',
   data() {
     return {
       sending: false,
-      momentFormat: {
-        //[optional] Date to String
-        stringify: (date) => {
-          return date ? moment(date).format('ll') : ''
-        },
-        //[optional]  String to Date
-        parse: (value) => {
-          return value ? moment(value, 'll').toDate() : null
-        },
-        // [optional] getWeekNumber
-        getWeek: (date) => {
-          return // a number
-        }
-      },
       form: {
         id: this.driver.id,
         name: this.driver.name,

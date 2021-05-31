@@ -57,17 +57,6 @@ class DriverController extends Controller
      */
     public function show(Driver $driver)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Driver  $driver
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Driver $driver)
-    {
         $bD = $driver->batangasTransactions()
             ->latest()
             ->paginate()
@@ -122,7 +111,7 @@ class DriverController extends Controller
          ];
        }
 
-        return Inertia::render('Drivers/Edit', [
+        return Inertia::render('Drivers/Show', [
            'driver' => [
                 'id' => $driver->id,
                 'name' => $driver->name,
@@ -134,6 +123,27 @@ class DriverController extends Controller
            ],
            'mindoroTrips' => $mindoroTrips,
            'batangasTrips' => $batangasTrips,
+        ]);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\Models\Driver  $driver
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Driver $driver)
+    {
+        return Inertia::render('Drivers/Edit', [
+           'driver' => [
+                'id' => $driver->id,
+                'name' => $driver->name,
+                'nickname' => $driver->nickname,
+                'address' => $driver->address,
+                'license_no' => $driver->license_no,
+                'contact_no' => $driver->contact_no,
+                'deleted_at' => $driver->deleted_at,
+           ],
         ]);
     }
 

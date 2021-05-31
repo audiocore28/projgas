@@ -187,7 +187,7 @@ export default {
 
     //     // this.loadingMore = true;
 
-    //     axios.get(`/${this.record}/${id[4]}/edit?page=${currentPage + 1}`)
+    //     axios.get(`/${this.record}/${id[4]}?page=${currentPage + 1}`)
     //       .then(({ data }) => {
     //         // Prepending the old messages to the list.
     //         this.localTransactionDetails = [

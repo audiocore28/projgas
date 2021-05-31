@@ -56,18 +56,7 @@ class HelperController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Helper $helper)
+    public function show(Helper $helper)
     {
         $bD = $helper->batangasTransactions()
             ->latest()
@@ -123,7 +112,7 @@ class HelperController extends Controller
          ];
        }
 
-        return Inertia::render('Helpers/Edit', [
+        return Inertia::render('Helpers/Show', [
             'helper' => [
                 'id' => $helper->id,
                 'name' => $helper->name,
@@ -134,6 +123,26 @@ class HelperController extends Controller
             ],
            'batangasTrips' => $batangasTrips,
            'mindoroTrips' => $mindoroTrips,
+        ]);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Helper $helper)
+    {
+        return Inertia::render('Helpers/Edit', [
+            'helper' => [
+                'id' => $helper->id,
+                'name' => $helper->name,
+                'nickname' => $helper->nickname,
+                'address' => $helper->address,
+                'contact_no' => $helper->contact_no,
+                'deleted_at' => $helper->deleted_at,
+            ],
         ]);
     }
 
