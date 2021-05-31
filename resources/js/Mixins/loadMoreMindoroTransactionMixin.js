@@ -18,7 +18,7 @@ export function loadMoreMindoroTransactionMixin (record) {
 
 		      // this.loadingMore = true;
 
-		      axios.get(`/${record}/${id[4]}/edit?page=${currentPage + 1}`)
+		      axios.get(`/${record}/${id[4]}?page=${currentPage + 1}`)
 		      	.then(({ data }) => {
 		            // Prepending the old messages to the list.
 		            this.localMindoroDetails = [

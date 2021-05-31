@@ -79,18 +79,7 @@ class ClientController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Client $client)
+    public function show(Client $client)
     {
         $mD = $client->mindoroTransactionDetails()
             ->latest()
@@ -144,7 +133,7 @@ class ClientController extends Controller
          ];
        }
 
-        return Inertia::render('Clients/Edit', [
+        return Inertia::render('Clients/Show', [
             'client' => [
                 'id' => $client->id,
                 'name' => $client->name,
@@ -156,6 +145,27 @@ class ClientController extends Controller
             ],
             'batangasDetails' => $batangasDetails,
             'mindoroDetails' => $mindoroDetails,
+        ]);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Client $client)
+    {
+        return Inertia::render('Clients/Edit', [
+            'client' => [
+                'id' => $client->id,
+                'name' => $client->name,
+                'office' => $client->office,
+                'contact_person' => $client->contact_person,
+                'contact_no' => $client->contact_no,
+                'email_address' => $client->email_address,
+                'deleted_at' => $client->deleted_at,
+            ],
         ]);
     }
 

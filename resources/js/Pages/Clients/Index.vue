@@ -32,34 +32,41 @@
           </th>
           <th class="px-6 pt-6 pb-4">Office</th>
           <th class="px-6 pt-6 pb-4">Contact No</th>
+          <th class="px-6 pt-6 pb-4"></th>
+          <th class="px-6 pt-6 pb-4"></th>
           <!-- <th class="px-6 pt-6 pb-4" colspan="2">client No.</th> -->
         </tr>
          <tr v-for="client in clients.data" :key="client.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
           <!-- table columns -->
           <td class="border-t">
-            <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('clients.edit', client.id)">
+            <div class="px-6 py-4 flex items-center focus:text-indigo-500">
               {{ client.id }}
-            </inertia-link>
+            </div>
           </td>
           <td class="border-t">
-            <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('clients.edit', client.id)">
+            <div class="px-6 py-4 flex items-center focus:text-indigo-500">
               {{ client.name }}
               <icon v-if="client.deleted_at" name="trash" class="flex-shrink-0 w-3 h-3 fill-gray-400 ml-2" />
-            </inertia-link>
+            </div>
           </td>
           <td class="border-t">
-            <inertia-link class="px-6 py-4 flex items-center" :href="route('clients.edit', client.id)" tabindex="-1">
+            <div class="px-6 py-4 flex items-center focus:text-indigo-500">
               {{ client.office }}
-            </inertia-link>
+            </div>
           </td>
           <td class="border-t">
-            <inertia-link class="px-6 py-4 flex items-center" :href="route('clients.edit', client.id)" tabindex="-1">
+            <div class="px-6 py-4 flex items-center focus:text-indigo-500">
               {{ client.contact_no }}
+            </div>
+          </td>
+          <td class="border-t w-px">
+            <inertia-link class="px-4 flex items-center focus:text-indigo-500" :href="route('clients.show', client.id)" tabindex="-1">
+              <icon name="view" class="block w-6 h-6 fill-gray-400" />
             </inertia-link>
           </td>
           <td class="border-t w-px">
-            <inertia-link class="px-4 flex items-center" :href="route('clients.edit', client.id)" tabindex="-1">
-              <icon name="cheveron-right" class="block w-6 h-6 fill-gray-400" />
+            <inertia-link class="px-4 flex items-center focus:text-indigo-500" :href="route('clients.edit', client.id)" tabindex="-1">
+              <icon name="edit" class="block w-6 h-6 fill-gray-400" />
             </inertia-link>
           </td>
         </tr>
