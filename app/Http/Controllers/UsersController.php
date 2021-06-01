@@ -15,18 +15,20 @@ class UsersController extends Controller
     public function index()
     {
         return Inertia::render('Users/Index', [
-            'filters' => Request::all('search', 'role', 'trashed'),
-            'users' => User::paginate(5)
-                // ->orderByName()
-                // ->filter(Request::only('search', 'role', 'trashed'))
-                // ->get()
+            // 'filters' => Request::all('search', 'role', 'trashed'),
+            // 'users' => User::filter(Request::only('search', 'role', 'trashed'))
+            'filters' => Request::all('search', 'trashed'),
+            'users' => User::filter(Request::only('search', 'trashed'))
+                ->orderByName()
+                ->paginate()
                 // ->transform(function ($user) {
                 //     return [
                 //         'id' => $user->id,
-                //         'name' => $user->name,
+                //         'first_name' => $user->first_name,
+                //         'last_name' => $user->last_name,
                 //         'email' => $user->email,
-                //         'owner' => $user->owner,
-                //         'photo' => $user->photoUrl(['w' => 40, 'h' => 40, 'fit' => 'crop']),
+                //         // 'owner' => $user->owner,
+                //         // 'photo' => $user->photoUrl(['w' => 40, 'h' => 40, 'fit' => 'crop']),
                 //         'deleted_at' => $user->deleted_at,
                 //     ];
                 // }),
@@ -42,7 +44,8 @@ class UsersController extends Controller
     {
         User::create(
             request()->validate([
-                'name' => ['required', 'max:50'],
+                'first_name' => ['required', 'max:50'],
+                'last_name' => ['required', 'max:50'],
                 'email' => ['required', 'max:50', 'email', Rule::unique('users')],
                 'password' => ['nullable'],
                 // 'owner' => ['required', 'boolean'],
@@ -58,13 +61,12 @@ class UsersController extends Controller
         return Inertia::render('Users/Edit', [
             'user' => [
                 'id' => $user->id,
-                'name' => $user->name,
-                // 'last_name' => $user->last_name,
+                'first_name' => $user->first_name,
+                'last_name' => $user->last_name,
                 'email' => $user->email,
-                'password' => $user->password,
                 // 'owner' => $user->owner,
                 // 'photo' => $user->photoUrl(['w' => 60, 'h' => 60, 'fit' => 'crop']),
-                // 'deleted_at' => $user->deleted_at,
+                'deleted_at' => $user->deleted_at,
             ],
         ]);
     }
@@ -75,13 +77,16 @@ class UsersController extends Controller
         //     return Redirect::back()->with('error', 'Updating the demo user is not allowed.');
         // }
 
-        $user->update(
-            request()->validate([
-                'name' => ['max:50'],
-                'email' => ['max:50', 'email', Rule::unique('users')],
-                'password' => ['nullable'],
-            ])
-        );
+        Request::validate([
+            'first_name' => ['required', 'max:50'],
+            'last_name' => ['required', 'max:50'],
+            'email' => ['required', 'max:50', 'email', Rule::unique('users')->ignore($user->id)],
+            'password' => ['nullable'],
+            // 'owner' => ['required', 'boolean'],
+            // 'photo' => ['nullable', 'image'],
+        ]);
+
+        $user->update(Request::only('first_name', 'last_name', 'email'));
 
         // if (Request::file('photo')) {
         //     $user->update(['photo_path' => Request::file('photo')->store('users')]);

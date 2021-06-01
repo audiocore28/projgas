@@ -130,8 +130,8 @@ Route::group(['middleware' => 'auth'], function() {
 	// Route::resource('statements', StatementController::class);
 
 	// // Users
-	// Route::put('users/{user}/restore', [UsersController::class, 'restore'])->name('users.restore');
-	// Route::resource('users', UsersController::class);
+	Route::put('users/{user}/restore', [UsersController::class, 'restore'])->name('users.restore');
+	Route::resource('users', UsersController::class);
 
 	// Products
 	Route::put('products/{product}/restore', [ProductController::class, 'restore'])->name('products.restore');
