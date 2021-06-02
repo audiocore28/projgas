@@ -2,8 +2,8 @@
   <div>
     <div class="mb-8 flex justify-start max-w-3xl">
       <h1 class="font-bold text-3xl">
-        <inertia-link class="text-indigo-400 hover:text-indigo-600" :href="route('users.index')">Users</inertia-link>
-        <span class="text-indigo-400 font-medium">/</span>
+        <inertia-link class="text-blue-600 hover:text-blue-800" :href="route('users.index')">Users</inertia-link>
+        <span class="text-blue-600 font-medium">/</span>
         {{ form.first_name }} {{ form.last_name }}
       </h1>
       <!-- <img v-if="user.photo" class="block w-8 h-8 rounded-full ml-4" :src="user.photo"> -->

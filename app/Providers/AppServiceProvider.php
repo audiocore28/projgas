@@ -22,7 +22,11 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->registerGlide();
         $this->registerLengthAwarePaginator();
+        $this->registerInertia();
+    }
 
+    public function registerInertia()
+    {
         Inertia::share('app.name', config('app.name'));
 
         Inertia::share('errors', function() {
@@ -35,14 +39,20 @@ class AppServiceProvider extends ServiceProvider
             ];
         });
 
-        Inertia::share('auth.user', function (){
-            return[
-                'loggedIn' => auth()->check(),
-                'id' => auth()->user()->id,
-                'name' => auth()->user()->name,
-                'email' => auth()->user()->email,
-            ];
-        });
+        Inertia::share([
+            'auth' => function () {
+              return [
+                'user' => auth()->user() ? [
+                  'loggedIn' => auth()->check(),
+                  'id' => auth()->user()->id,
+                  'name' => auth()->user()->name,
+                  'email' => auth()->user()->email,
+                  'first_name' => auth()->user()->first_name,
+                  'last_name' => auth()->user()->last_name,
+                ] : null,
+              ];
+            },
+          ]);
     }
 
     protected function registerGlide()

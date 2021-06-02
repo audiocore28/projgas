@@ -23,16 +23,17 @@
             <dropdown class="mt-1" placement="bottom-end">
               <div class="flex items-center cursor-pointer select-none group">
                 <div class="text-gray-700 group-hover:text-blue-600 focus:text-blue-600 mr-1 whitespace-no-wrap">
-                  <span>{{ $page.auth.user.name }}</span>
+                  <span>{{ $page.auth.user.first_name }} {{ $page.auth.user.last_name }}</span>
                   <!-- <span class="hidden md:inline">{{ $page.auth.user.email }}</span> -->
                 </div>
                 <icon class="w-5 h-5 group-hover:fill-blue-600 fill-gray-700 focus:fill-blue-600" name="cheveron-down" />
               </div>
               <div slot="dropdown" class="mt-2 py-2 shadow-xl bg-white rounded text-sm">
-                <!-- <inertia-link class="block px-6 py-2 hover:bg-blue-600 hover:text-white" :href="route('users.edit', $page.auth.user.id)">My Profile</inertia-link> -->
                 <inertia-link class="block px-6 py-2 hover:bg-blue-600 hover:text-white" :href="route('profile.show')">Profile</inertia-link>
+                <inertia-link class="block px-6 py-2 hover:bg-blue-600 hover:text-white" :href="route('users.edit', $page.auth.user.id)">My Profile</inertia-link>
                 <inertia-link class="block px-6 py-2 hover:bg-blue-600 hover:text-white" :href="route('users.index')">Manage Users</inertia-link>
-                <inertia-link class="block px-6 py-2 hover:bg-blue-600 hover:text-white" :href="route('logout')" method="post">Logout</inertia-link>
+                <!-- <inertia-link class="block px-6 py-2 hover:bg-blue-600 hover:text-white" :href="route('logout')" method="post">Logout</inertia-link> -->
+                <a class="block px-6 py-2 hover:bg-blue-600 hover:text-white" href="#" @click="handleLogout">Logout</a>
               </div>
             </dropdown>
           </div>
@@ -78,6 +79,10 @@ export default {
     },
     hideDropdownMenus() {
       this.showUserMenu = false
+    },
+    async handleLogout() {
+      await axios.post('/logout', {});
+      window.location.href = "/purchases";
     },
   },
 }

@@ -1,7 +1,8 @@
 <x-guest-layout>
     <x-jet-authentication-card>
         <x-slot name="logo">
-            <x-jet-authentication-card-logo />
+            {{-- <x-jet-authentication-card-logo /> --}}
+            <img src="img/ibbtrading_logo.png" style="display: block; max-width:300px; max-height:225px; width: auto; height: auto;">
         </x-slot>
 
         <x-jet-validation-errors class="mb-4" />
@@ -12,7 +13,7 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('login') }}">
+        <form method="POST" action="{{ route('login') }}" style="margin-top: -10px;">
             @csrf
 
             <div>

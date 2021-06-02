@@ -2,6 +2,7 @@
 
 // use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ClientController;
 // use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DriverController;
@@ -62,6 +63,18 @@ use App\Http\Controllers\UsersController;
 
 // Route::post('logout', [LoginController::class, 'logout'])
 //     ->name('logout');
+
+ // Auth
+ Route::get('login', [AuthenticatedSessionController::class, 'create'])
+     ->name('login');
+     // ->middleware('guest');
+
+ Route::post('login', [AuthenticatedSessionController::class, 'store'])
+     ->name('login.store');
+     // ->middleware('guest');
+
+ Route::delete('logout', [AuthenticatedSessionController::class, 'destroy'])
+     ->name('logout');
 
 
 Route::group(['middleware' => 'auth'], function() {
