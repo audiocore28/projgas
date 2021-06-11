@@ -48,8 +48,7 @@
                     <th align="center" class="px-6 pt-6 pb-4">Driver</th>
                     <th align="center" class="px-6 pt-6 pb-4">Helper</th>
                     <th align="center" class="px-6 pt-6 pb-4">Tanker</th>
-                    <th align="center" class="px-6 pt-6 pb-4"></th>
-                    <th align="center" class="px-6 pt-6 pb-4"></th>
+                    <th align="right" colspan="2" class="text-green-600 px-6 pt-6 pb-4">Total: {{ toPHP(getNetTotal()) }}</th>
                   </tr>
                 </thead>
                 <tbody v-for="(transaction, transactionIndex) in updateForm.transactions" :key="transactionIndex" class="bg-white rounded shadow mb-8 hover:bg-gray-100 focus-within:bg-gray-100" :id="`transaction-${transaction.id}`">
@@ -75,7 +74,7 @@
                         <option v-for="tanker in tankers" :key="tanker.id" :value="tanker.id">{{ tanker.plate_no }}</option>
                       </select>
                     </td>
-                    <td @click="toggleRow(transactionIndex)" class="border-t text-blue-100 font-semibold text-sm" align="right">
+                    <td @click="toggleRow(transactionIndex)" class="border-t text-blue-100 font-semibold text-sm" align="center">
                       {{ toPHP(transactionTotalAmt(transaction.id) - getLoadTotalAmt(transaction.id) - transaction.expense) }}
                     </td>
                     <td class="border-t" align="right">
@@ -329,7 +328,7 @@
                               <tr class="bg-gray-200">
                                 <td>
                                   <div class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium text-gray-500 uppercase">
-                                    <!-- Total: -->
+                                    Net:
                                   </div>
                                 </td>
                                 <td>
@@ -640,8 +639,36 @@ export default {
           return totalAmt;
         }
       }
-    }
+    },
 
+    // Total Net
+    getNetTotal() {
+      var netTotal = 0;
+
+      for (var i = 0; i < this.updateForm.transactions.length; i++) {
+
+        // TransactionDetail
+        var transactionTotalAmt = this.updateForm.transactions[i].details.reduce((transactionDetailAcc, detail) => {
+          transactionDetailAcc += parseFloat(detail.quantity) * parseFloat(detail.unit_price);
+          return transactionDetailAcc;
+        }, 0);
+
+        // TankerLoadDetail
+        const loadDetailsArray = this.updateForm.transactions[i].tanker_loads.map(load => load.tanker_load_details);
+        const loadDetails = [].concat.apply([], loadDetailsArray);
+
+        var loadTotalAmt = loadDetails.reduce(function (loadDetailAcc, detail) {
+          loadDetailAcc += parseFloat(detail.quantity) * parseFloat(detail.unit_price);
+          return loadDetailAcc;
+        }, 0);
+
+        // Net
+        netTotal += transactionTotalAmt - loadTotalAmt - this.updateForm.transactions[i].expense;
+
+      }
+      return netTotal;
+
+    },
   },
   watch: {
     // 'updateForm.selectedPurchases': {
