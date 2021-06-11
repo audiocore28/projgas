@@ -77,5 +77,12 @@ export default {
       inactiveClasses: 'text-blue-500 hover:text-blue-800',
     }
   },
+  methods: {
+    restore() {
+      if (confirm('Are you sure you want to restore this Supplier?')) {
+        this.$inertia.put(this.route('suppliers.restore', this.supplier.id))
+      }
+    },
+  },
 }
 </script>

@@ -98,5 +98,12 @@ export default {
       inactiveClasses: 'text-blue-500 hover:text-blue-800',
     }
   },
+  methods: {
+    restore() {
+      if (confirm('Are you sure you want to restore this driver?')) {
+        this.$inertia.put(this.route('drivers.restore', this.driver.id))
+      }
+    },
+  },
 }
 </script>

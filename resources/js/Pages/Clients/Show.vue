@@ -361,6 +361,11 @@ export default {
     }
   },
   methods: {
+    restore() {
+      if (confirm('Are you sure you want to restore this client?')) {
+        this.$inertia.put(this.route('clients.restore', this.client.id))
+      }
+    },
     // BatangasTransactionDetail
     totalBatangasQty(yr, mo, product) {
       var totalQty = Object.entries(this.localBatangasDetails).reduce((acc, [year, months]) => {
