@@ -39,7 +39,7 @@ class StorePurchaseRequest extends FormRequest
             'details.*.quantity' => ['nullable', 'max:50'],
             'details.*.unit_price' => ['nullable', 'max:50'],
             'details.*.remarks' => ['nullable', 'max:100'],
-            'details.*.product_id' => ['required', 'max:50'],
+            'details.*.product.id' => ['required', 'max:50'],
 
             // TankerLoad - Batangas
             'batangasLoads.*.batangas_transaction_id' => ['required', 'max:50'],

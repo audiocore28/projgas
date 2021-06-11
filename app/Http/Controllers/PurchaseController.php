@@ -106,7 +106,7 @@ class PurchaseController extends Controller
         {
             $purchaseDetail = PurchaseDetail::create([
                 'purchase_id' => $purchaseId,
-                'product_id' => $detail['product_id'],
+                'product_id' => $detail['product']['id'],
                 'quantity' => $detail['quantity'],
                 'unit_price' => $detail['unit_price'],
                 'remarks' => $detail['remarks'],
@@ -318,7 +318,7 @@ class PurchaseController extends Controller
             $purchaseDetail = $purchase->purchaseDetails()->findOrNew($detail['id']);
 
             $purchaseDetail->purchase_id = $detail['purchase_id'];
-            $purchaseDetail->product_id = $detail['product_id'];
+            $purchaseDetail->product_id = $detail['product']['id'];
             $purchaseDetail->quantity = $detail['quantity'];
             $purchaseDetail->unit_price = $detail['unit_price'];
             $purchaseDetail->remarks = $detail['remarks'];
