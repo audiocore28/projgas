@@ -10,7 +10,7 @@
           <option value="only">Only Trashed</option>
         </select>
       </search-filter>
-      <inertia-link class="btn-indigo" :href="route('products.create')">
+      <inertia-link class="btn-indigo" :href="route('products.create')" v-if="$page.auth.user.can.product.create">
         <span>Add</span>
         <span class="hidden md:inline">Product</span>
       </inertia-link>
@@ -18,36 +18,24 @@
     <div class="bg-white rounded shadow overflow-x-auto">
       <table class="w-full whitespace-no-wrap">
         <tr class="text-left font-bold">
-<!--           <th @click="sort('id')" class="px-6 pt-6 pb-4">ID</th>
-          <th @click="sort('name')" class="px-6 pt-6 pb-4">Name</th>
-          <th @click="sort('description')" class="px-6 pt-6 pb-4">Description</th>
- -->
-          <th class="px-6 pt-6 pb-4">ID</th>
           <th class="px-6 pt-6 pb-4">Name</th>
           <th class="px-6 pt-6 pb-4">Description</th>
         </tr>
          <tr v-for="product in products.data" :key="product.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
-         <!-- sortedDatas  -->
-          <!-- table columns -->
           <td class="border-t">
-            <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('products.edit', product.id)">
-              {{ product.id }}
-            </inertia-link>
-          </td>
-          <td class="border-t">
-            <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('products.edit', product.id)">
+            <div class="px-6 py-4 flex items-center">
               {{ product.name }}
               <icon v-if="product.deleted_at" name="trash" class="flex-shrink-0 w-3 h-3 fill-gray-400 ml-2" />
-            </inertia-link>
+            </div>
           </td>
           <td class="border-t">
-            <inertia-link class="px-6 py-4 flex items-center" :href="route('products.edit', product.id)" tabindex="-1">
+            <div class="px-6 py-4 flex items-center">
               {{ product.description }}
-            </inertia-link>
+            </div>
           </td>
           <td class="border-t w-px">
-            <inertia-link class="px-4 flex items-center" :href="route('products.edit', product.id)" tabindex="-1">
-              <icon name="cheveron-right" class="block w-6 h-6 fill-gray-400" />
+            <inertia-link class="px-4 flex items-center" :href="route('products.edit', product.id)" tabindex="-1" v-if="$page.auth.user.can.product.update">
+              <icon name="edit" class="block w-6 h-6 fill-gray-400" />
             </inertia-link>
           </td>
         </tr>
@@ -68,10 +56,8 @@ import Pagination from '@/Shared/Pagination'
 import pickBy from 'lodash/pickBy'
 import SearchFilter from '@/Shared/SearchFilter'
 import throttle from 'lodash/throttle'
-// import { sortingMixin } from '@/Mixins/sortingMixin'
 
 export default {
-  // mixins: [sortingMixin],
   metaInfo: { title: 'Products' },
   layout: Layout,
   components: {

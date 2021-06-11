@@ -10,7 +10,7 @@
           <option value="only">Only Trashed</option>
         </select>
  -->      </search-filter>
-      <inertia-link class="btn-indigo" :href="route('monthly-mindoro-transactions.create')">
+      <inertia-link class="btn-indigo" :href="route('monthly-mindoro-transactions.create')" v-if="$page.auth.user.can.mindoroTransaction.create">
         <span>Add</span>
         <span class="hidden md:inline">Monthly Transaction</span>
       </inertia-link>
@@ -23,22 +23,22 @@
         </tr>
          <tr v-for="mindoroTransaction in monthly_mindoro_transactions.data" :key="mindoroTransaction.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
           <td class="border-t">
-            <inertia-link class="px-6 py-4 flex items-center" :href="route('monthly-mindoro-transactions.edit', mindoroTransaction.id)" tabindex="-1">
+            <div class="px-6 py-4 flex items-center">
               {{ mindoroTransaction.year }}
-            </inertia-link>
+            </div>
           </td>
           <td class="border-t">
-            <inertia-link class="px-6 py-4 flex items-center" :href="route('monthly-mindoro-transactions.edit', mindoroTransaction.id)" tabindex="-1">
+            <div class="px-6 py-4 flex items-center">
               {{ mindoroTransaction.month }}
-            </inertia-link>
+            </div>
           </td>
           <td class="border-t w-px">
-            <inertia-link class="px-4 flex items-center" :href="route('monthly-mindoro-transactions.edit', mindoroTransaction.id)" tabindex="-1">
+            <inertia-link class="px-4 flex items-center" :href="route('monthly-mindoro-transactions.edit', mindoroTransaction.id)" tabindex="-1" v-if="$page.auth.user.can.mindoroTransaction.update">
               <icon name="edit" class="block w-6 h-6 fill-gray-400" />
             </inertia-link>
           </td>
           <td class="border-t w-px">
-            <a class="px-4 flex items-center" target="_blank" :href="route('monthly-mindoro-transactions.print', mindoroTransaction.id)" tabindex="-1">
+            <a class="px-4 flex items-center" target="_blank" :href="route('monthly-mindoro-transactions.print', mindoroTransaction.id)" tabindex="-1" v-if="$page.auth.user.can.mindoroTransaction.print">
               <icon name="printer" class="block w-6 h-6 fill-gray-400" />
             </a>
           </td>

@@ -10,7 +10,7 @@
           <option value="only">Only Trashed</option>
         </select>
  -->      </search-filter>
-      <inertia-link class="btn-indigo" :href="route('monthly-batangas-transactions.create')">
+      <inertia-link class="btn-indigo" :href="route('monthly-batangas-transactions.create')" v-if="$page.auth.user.can.batangasTransaction.create">
         <span>Add</span>
         <span class="hidden md:inline">Monthly Transaction</span>
       </inertia-link>
@@ -23,22 +23,22 @@
         </tr>
         <tr v-for="batangasTransaction in monthly_batangas_transactions.data" :key="batangasTransaction.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
           <td class="border-t">
-            <inertia-link class="px-6 py-4 flex items-center" :href="route('monthly-batangas-transactions.edit', batangasTransaction.id)" tabindex="-1">
+            <div class="px-6 py-4 flex items-center">
               {{ batangasTransaction.year }}
-            </inertia-link>
+            </div>
           </td>
           <td class="border-t">
-            <inertia-link class="px-6 py-4 flex items-center" :href="route('monthly-batangas-transactions.edit', batangasTransaction.id)" tabindex="-1">
+            <div class="px-6 py-4 flex items-center">
               {{ batangasTransaction.month }}
-            </inertia-link>
+            </div>
           </td>
           <td class="border-t w-px">
-            <inertia-link class="px-4 flex items-center" :href="route('monthly-batangas-transactions.edit', batangasTransaction.id)" tabindex="-1">
+            <inertia-link class="px-4 flex items-center" :href="route('monthly-batangas-transactions.edit', batangasTransaction.id)" tabindex="-1" v-if="$page.auth.user.can.batangasTransaction.update">
               <icon name="edit" class="block w-6 h-6 fill-gray-400" />
             </inertia-link>
           </td>
           <td class="border-t w-px">
-            <a class="px-4 flex items-center" target="_blank" :href="route('monthly-batangas-transactions.print', batangasTransaction.id)" tabindex="-1">
+            <a class="px-4 flex items-center" target="_blank" :href="route('monthly-batangas-transactions.print', batangasTransaction.id)" tabindex="-1" v-if="$page.auth.user.can.batangasTransaction.print">
               <icon name="printer" class="block w-6 h-6 fill-gray-400" />
             </a>
           </td>

@@ -10,7 +10,7 @@
           <option value="only">Only Trashed</option>
         </select>
       </search-filter>
-      <inertia-link class="btn-indigo" :href="route('drivers.create')">
+      <inertia-link class="btn-indigo" :href="route('drivers.create')" v-if="$page.auth.user.can.driver.create">
         <span>Add</span>
         <span class="hidden md:inline">Driver</span>
       </inertia-link>
@@ -50,12 +50,12 @@
             </div>
           </td>
           <td class="border-t w-px">
-            <inertia-link class="px-4 flex items-center focus:text-indigo-500" :href="route('drivers.show', driver.id)" tabindex="-1">
+            <inertia-link class="px-4 flex items-center focus:text-indigo-500" :href="route('drivers.show', driver.id)" tabindex="-1" v-if="$page.auth.user.can.driver.view">
               <icon name="view" class="block w-6 h-6 fill-gray-400" />
             </inertia-link>
           </td>
           <td class="border-t w-px">
-            <inertia-link class="px-4 flex items-center focus:text-indigo-500" :href="route('drivers.edit', driver.id)" tabindex="-1">
+            <inertia-link class="px-4 flex items-center focus:text-indigo-500" :href="route('drivers.edit', driver.id)" tabindex="-1" v-if="$page.auth.user.can.driver.update">
               <icon name="edit" class="block w-6 h-6 fill-gray-400" />
             </inertia-link>
           </td>

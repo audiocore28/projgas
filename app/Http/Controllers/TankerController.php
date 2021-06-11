@@ -14,6 +14,11 @@ use Inertia\Inertia;
 
 class TankerController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Tanker::class, 'tanker');
+    }
+
     /**
      * Display a listing of the resource.
      *

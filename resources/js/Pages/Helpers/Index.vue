@@ -10,7 +10,7 @@
           <option value="only">Only Trashed</option>
         </select>
       </search-filter>
-      <inertia-link class="btn-indigo" :href="route('helpers.create')">
+      <inertia-link class="btn-indigo" :href="route('helpers.create')" v-if="$page.auth.user.can.helper.create">
         <span>Add</span>
         <span class="hidden md:inline">Helper</span>
       </inertia-link>
@@ -43,12 +43,12 @@
             </div>
           </td>
           <td class="border-t w-px">
-            <inertia-link class="px-4 flex items-center focus:text-indigo-500" :href="route('helpers.show', helper.id)" tabindex="-1">
+            <inertia-link class="px-4 flex items-center focus:text-indigo-500" :href="route('helpers.show', helper.id)" tabindex="-1" v-if="$page.auth.user.can.helper.view">
               <icon name="view" class="block w-6 h-6 fill-gray-400" />
             </inertia-link>
           </td>
           <td class="border-t w-px">
-            <inertia-link class="px-4 flex items-center focus:text-indigo-500" :href="route('helpers.edit', helper.id)" tabindex="-1">
+            <inertia-link class="px-4 flex items-center focus:text-indigo-500" :href="route('helpers.edit', helper.id)" tabindex="-1" v-if="$page.auth.user.can.helper.update">
               <icon name="edit" class="block w-6 h-6 fill-gray-400" />
             </inertia-link>
           </td>

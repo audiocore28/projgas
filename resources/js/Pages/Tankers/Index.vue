@@ -10,7 +10,7 @@
           <option value="only">Only Trashed</option>
         </select>
       </search-filter>
-      <inertia-link class="btn-indigo" :href="route('tankers.create')">
+      <inertia-link class="btn-indigo" :href="route('tankers.create')" v-if="$page.auth.user.can.tanker.create">
         <span>Add</span>
         <span class="hidden md:inline">Tanker</span>
       </inertia-link>
@@ -18,31 +18,24 @@
     <div class="bg-white rounded shadow overflow-x-auto">
       <table class="w-full whitespace-no-wrap">
         <tr class="text-left font-bold">
-          <th class="px-6 pt-6 pb-4">ID</th>
           <th class="px-6 pt-6 pb-4">Plate No.</th>
           <th class="px-6 pt-6 pb-4">Compartment</th>
         </tr>
          <tr v-for="tanker in tankers.data" :key="tanker.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
-          <!-- table columns -->
           <td class="border-t">
-            <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('tankers.edit', tanker.id)">
-              {{ tanker.id }}
-            </inertia-link>
-          </td>
-          <td class="border-t">
-            <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('tankers.edit', tanker.id)">
+            <div class="px-6 py-4 flex items-center">
               {{ tanker.plate_no }}
               <icon v-if="tanker.deleted_at" name="trash" class="flex-shrink-0 w-3 h-3 fill-gray-400 ml-2" />
-            </inertia-link>
+            </div>
           </td>
           <td class="border-t">
-            <inertia-link class="px-6 py-4 flex items-center" :href="route('tankers.edit', tanker.id)" tabindex="-1">
+            <div class="px-6 py-4 flex items-center">
               {{ tanker.compartment }}
-            </inertia-link>
+            </div>
           </td>
           <td class="border-t w-px">
-            <inertia-link class="px-4 flex items-center" :href="route('tankers.edit', tanker.id)" tabindex="-1">
-              <icon name="cheveron-right" class="block w-6 h-6 fill-gray-400" />
+            <inertia-link class="px-4 flex items-center" :href="route('tankers.edit', tanker.id)" tabindex="-1" v-if="$page.auth.user.can.tanker.update">
+              <icon name="edit" class="block w-6 h-6 fill-gray-400" />
             </inertia-link>
           </td>
         </tr>

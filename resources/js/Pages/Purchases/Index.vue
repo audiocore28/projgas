@@ -30,7 +30,7 @@
           <option value="only">Only Trashed</option>
         </select>
  -->      </search-filter>
-      <inertia-link class="btn-indigo" :href="route('purchases.create')">
+      <inertia-link class="btn-indigo" :href="route('purchases.create')" v-if="$page.auth.user.can.purchase.create">
         <span>Add</span>
         <span class="hidden md:inline">Purchase</span>
       </inertia-link>
@@ -45,24 +45,24 @@
         </tr>
         <tr v-for="purchase in purchases.data" :key="purchase.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
           <td class="border-t">
-            <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('purchases.edit', purchase.id)">
+            <div class="px-6 py-4 flex items-center">
               {{ purchase.date }}
-            </inertia-link>
+            </div>
           </td>
           <td class="border-t">
-            <inertia-link class="px-6 py-4 flex items-center" :href="route('purchases.edit', purchase.id)" tabindex="-1">
+            <div class="px-6 py-4 flex items-center">
               <div v-if="purchase.supplier">
                 {{ purchase.supplier.name }}
               </div>
-            </inertia-link>
+            </div>
           </td>
           <td class="border-t">
-            <inertia-link class="px-6 py-4 flex items-center" :href="route('purchases.edit', purchase.id)" tabindex="-1">
+            <div class="px-6 py-4 flex items-center">
               {{ purchase.purchase_no }}
-            </inertia-link>
+            </div>
           </td>
           <td class="border-t">
-            <inertia-link class="px-6 py-4 flex items-center" :href="route('purchases.edit', purchase.id)" tabindex="-1">
+            <div class="px-6 py-4 flex items-center">
               <div v-if="purchase.purchase_details" v-for="detail in purchase.purchase_details">
                 <span class="px-2 py-2 text-sm leading-5 font-semibold rounded-full bg-grey-100 text-grey-800">
                   {{ detail.product.name }}
@@ -71,15 +71,15 @@
                   </span>
                 </span>
               </div>
-            </inertia-link>
+            </div>
           </td>
           <td class="border-t w-px">
-            <inertia-link class="px-4 flex items-center" :href="route('purchases.edit', purchase.id)" tabindex="-1">
+            <inertia-link class="px-4 flex items-center" :href="route('purchases.edit', purchase.id)" tabindex="-1" v-if="$page.auth.user.can.purchase.update">
               <icon name="edit" class="block w-6 h-6 fill-gray-400" />
             </inertia-link>
           </td>
           <td class="border-t w-px">
-            <a class="px-4 flex items-center" target="_blank" :href="route('purchases.print', purchase.id)" tabindex="-1">
+            <a class="px-4 flex items-center" target="_blank" :href="route('purchases.print', purchase.id)" tabindex="-1" v-if="$page.auth.user.can.purchase.print">
               <icon name="printer" class="block w-6 h-6 fill-gray-400" />
             </a>
           </td>

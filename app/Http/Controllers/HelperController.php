@@ -12,6 +12,11 @@ use Inertia\Inertia;
 
 class HelperController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Helper::class, 'helper');
+    }
+
     /**
      * Display a listing of the resource.
      *

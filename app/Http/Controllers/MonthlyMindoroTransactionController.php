@@ -25,6 +25,10 @@ use PDF;
 
 class MonthlyMindoroTransactionController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(MonthlyMindoroTransaction::class);
+    }
     /**
      * Display a listing of the resource.
      *

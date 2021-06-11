@@ -1,0 +1,95 @@
+<?php
+
+namespace App\Policies;
+
+use App\Models\Helper;
+use App\Models\User;
+use Illuminate\Auth\Access\HandlesAuthorization;
+
+class HelperPolicy
+{
+    use HandlesAuthorization;
+
+    /**
+     * Determine whether the user can view any models.
+     *
+     * @param  \App\Models\User  $user
+     * @return mixed
+     */
+    public function viewAny(User $user)
+    {
+        if ($user->can('view any helper')) {
+            return true;
+        }
+    }
+
+    /**
+     * Determine whether the user can view the model.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Helper  $helper
+     * @return mixed
+     */
+    public function view(User $user, Helper $helper)
+    {
+        if ($user->can('view helper')) {
+            return true;
+        }
+    }
+
+    /**
+     * Determine whether the user can create models.
+     *
+     * @param  \App\Models\User  $user
+     * @return mixed
+     */
+    public function create(User $user)
+    {
+        if ($user->can('create helper')) {
+            return true;
+        }
+    }
+
+    /**
+     * Determine whether the user can update the model.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Helper  $helper
+     * @return mixed
+     */
+    public function update(User $user, Helper $helper)
+    {
+        if ($user->can('update helper')) {
+            return true;
+        }
+    }
+
+    /**
+     * Determine whether the user can delete the model.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Helper  $helper
+     * @return mixed
+     */
+    public function delete(User $user, Helper $helper)
+    {
+        if ($user->can('delete helper')) {
+            return true;
+        }
+    }
+
+    /**
+     * Determine whether the user can restore the model.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Helper  $helper
+     * @return mixed
+     */
+    public function restore(User $user, Helper $helper)
+    {
+        if ($user->can('restore helper')) {
+            return true;
+        }
+    }
+
+}

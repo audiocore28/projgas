@@ -11,6 +11,11 @@ use Inertia\Inertia;
 
 class DriverController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Driver::class, 'driver');
+    }
+
     /**
      * Display a listing of the resource.
      *

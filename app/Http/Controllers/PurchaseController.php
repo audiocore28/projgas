@@ -22,6 +22,11 @@ use PDF;
 
 class PurchaseController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Purchase::class, 'purchase');
+    }
+
     /**
      * Display a listing of the resource.
      *
