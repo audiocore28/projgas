@@ -1,7 +1,10 @@
 <template>
   <div>
-    <h4 @click="truckingSelected !== 0 ? truckingSelected = 0 : truckingSelected = null"
-    class="text-blue-300 text-xs cursor-pointer py-3 hover:text-white opacity-75 rounded-t">Trucking</h4>
+    <div class="-ml-6 flex justify-start items-center cursor-pointer" @click="truckingSelected !== 0 ? truckingSelected = 0 : truckingSelected = null">
+      <icon name="cheveron-down" class="block w-4 h-4 fill-blue-400 mr-2" v-if="truckingSelected == 0"/>
+      <icon name="cheveron-right" class="block w-4 h-4 fill-blue-400 mr-2" v-else/>
+      <h4 class="text-blue-300 text-xs py-3 hover:text-white opacity-75 rounded-t">Trucking</h4>
+    </div>
     <div v-show="truckingSelected == 0" class="py-4 text-sm">
       <div class="mb-4" v-for="link in truckingLinks">
         <inertia-link class="flex items-center group py-3" :href="route(link.route)">
@@ -11,8 +14,11 @@
       </div>
     </div>
 
-    <h4 @click="recordSelected !== 1 ? recordSelected = 1 : recordSelected = null"
-    class="text-blue-300 text-xs cursor-pointer py-3 hover:text-white opacity-75 rounded-t">Records</h4>
+    <div class="-ml-6 flex justify-start items-center cursor-pointer" @click="recordSelected !== 1 ? recordSelected = 1 : recordSelected = null">
+      <icon name="cheveron-down" class="block w-4 h-4 fill-blue-400 mr-2" v-if="recordSelected == 1"/>
+      <icon name="cheveron-right" class="block w-4 h-4 fill-blue-400 mr-2" v-else/>
+      <h4 class="text-blue-300 text-xs py-3 hover:text-white opacity-75 rounded-t">Records</h4>
+    </div>
     <div v-show="recordSelected == 1" class="py-4 text-sm">
       <div class="mb-4" v-for="link in recordLinks">
         <inertia-link class="flex items-center group py-3" :href="route(link.route)">
@@ -22,8 +28,11 @@
       </div>
     </div>
 
-<!--     <h4 @click="reportSelected !== 2 ? reportSelected = 2 : reportSelected = null"
-    class="text-blue-300 text-xs cursor-pointer py-3 hover:text-white opacity-75 rounded-t">Reports</h4>
+<!--     <div class="-ml-6 flex justify-start items-center cursor-pointer" @click="reportSelected !== 2 ? reportSelected = 2 : reportSelected = null">
+      <icon name="cheveron-down" class="block w-4 h-4 fill-blue-400 mr-2" v-if="reportSelected == 2"/>
+      <icon name="cheveron-right" class="block w-4 h-4 fill-blue-400 mr-2" v-else/>
+      <h4 class="text-blue-300 text-xs py-3 hover:text-white opacity-75 rounded-t">Reports</h4>
+    </div>
     <div v-show="reportSelected == 2" class="py-4 text-sm">
       <div class="mb-4" v-for="link in reportLinks">
         <inertia-link class="flex items-center group py-3" :href="route(link.route)">
@@ -33,8 +42,11 @@
       </div>
     </div>
  -->
-    <h4 @click="employeeSelected !== 3 ? employeeSelected = 3 : employeeSelected = null"
-    class="text-blue-300 text-xs cursor-pointer py-3 hover:text-white opacity-75 rounded-t">Employees</h4>
+    <div class="-ml-6 flex justify-start items-center cursor-pointer" @click="employeeSelected !== 3 ? employeeSelected = 3 : employeeSelected = null">
+      <icon name="cheveron-down" class="block w-4 h-4 fill-blue-400 mr-2" v-if="employeeSelected == 3"/>
+      <icon name="cheveron-right" class="block w-4 h-4 fill-blue-400 mr-2" v-else/>
+      <h4 class="text-blue-300 text-xs py-3 hover:text-white opacity-75 rounded-t">Employees</h4>
+    </div>
     <div v-show="employeeSelected == 3" class="py-4 text-sm">
       <div class="mb-4" v-for="link in employeeLinks">
         <inertia-link class="flex items-center group py-3" :href="route(link.route)">
@@ -44,8 +56,11 @@
       </div>
     </div>
 
-    <h4 @click="assetSelected !== 4 ? assetSelected = 4 : assetSelected = null"
-    class="text-blue-300 text-xs cursor-pointer py-3 hover:text-white opacity-75 rounded-t">Assets</h4>
+    <div class="-ml-6 flex justify-start items-center cursor-pointer" @click="assetSelected !== 4 ? assetSelected = 4 : assetSelected = null">
+      <icon name="cheveron-down" class="block w-4 h-4 fill-blue-400 mr-2" v-if="assetSelected == 4"/>
+      <icon name="cheveron-right" class="block w-4 h-4 fill-blue-400 mr-2" v-else/>
+      <h4 class="text-blue-300 text-xs py-3 hover:text-white opacity-75 rounded-t">Assets</h4>
+    </div>
     <div v-show="assetSelected == 4" class="py-4 text-sm">
       <div class="mb-4" v-for="link in assetLinks">
         <inertia-link class="flex items-center group py-3" :href="route(link.route)">
@@ -55,9 +70,26 @@
       </div>
     </div>
 
-    <h4 @click="utilitySelected !== 5 ? utilitySelected = 5 : utilitySelected = null"
-    class="text-blue-300 text-xs cursor-pointer py-3 hover:text-white opacity-75 rounded-t">Utilities</h4>
-    <div v-show="utilitySelected == 5" class="py-4 text-sm">
+    <div class="-ml-6 flex justify-start items-center cursor-pointer" @click="userSelected !== 5 ? userSelected = 5 : userSelected = null">
+      <icon name="cheveron-down" class="block w-4 h-4 fill-blue-400 mr-2" v-if="userSelected == 5"/>
+      <icon name="cheveron-right" class="block w-4 h-4 fill-blue-400 mr-2" v-else/>
+      <h4 class="text-blue-300 text-xs py-3 hover:text-white opacity-75 rounded-t">Manage Users</h4>
+    </div>
+    <div v-show="userSelected == 5" class="py-4 text-sm">
+      <div class="mb-4" v-for="link in userLinks">
+        <inertia-link class="flex items-center group py-3" :href="route(link.route)">
+          <icon :name="link.icon" class="w-4 h-4 mr-2" :class="isUrl(link.isUrl) ? 'fill-white' : 'fill-blue-400 group-hover:fill-white'" />
+          <div :class="isUrl(link.isUrl) ? 'text-white' : 'text-blue-300 group-hover:text-white'">{{ link.name }}</div>
+        </inertia-link>
+      </div>
+    </div>
+
+    <div class="-ml-6 flex justify-start items-center cursor-pointer" @click="utilitySelected !== 6 ? utilitySelected = 6 : utilitySelected = null">
+      <icon name="cheveron-down" class="block w-4 h-4 fill-blue-400 mr-2" v-if="utilitySelected == 6"/>
+      <icon name="cheveron-right" class="block w-4 h-4 fill-blue-400 mr-2" v-else/>
+      <h4 class="text-blue-300 text-xs py-3 hover:text-white opacity-75 rounded-t">Utilities</h4>
+    </div>
+    <div v-show="utilitySelected == 6" class="py-4 text-sm">
       <div class="mb-4" v-for="link in utilityLinks">
         <inertia-link class="flex items-center group py-3" :href="route(link.route)">
           <icon :name="link.icon" class="w-4 h-4 mr-2" :class="isUrl(link.isUrl) ? 'fill-white' : 'fill-blue-400 group-hover:fill-white'" />
@@ -108,6 +140,11 @@ export default {
         // { route: 'companies.index', icon: 'office', isUrl: 'companies', name: 'B. Company'},
         { route: 'products.index', icon: 'store-front', isUrl: 'products', name: 'Products'},
       ],
+      userLinks: [
+        { route: 'users.index', icon: 'users', isUrl: 'users', name: 'Users'},
+        { route: 'roles.index', icon: 'users', isUrl: 'roles', name: 'Roles'},
+        { route: 'permissions.index', icon: 'users', isUrl: 'permissions', name: 'Permissions'},
+      ],
       utilityLinks: [
         { route: 'backup', icon: 'book', isUrl: 'backup', name: 'Backup DB'},
       ],
@@ -116,7 +153,8 @@ export default {
       // reportSelected: 2,
       employeeSelected: 3,
       assetSelected: 4,
-      utilitySelected: 5,
+      userSelected: 5,
+      utilitySelected: 6,
     }
   },
   methods: {

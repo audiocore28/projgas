@@ -51,10 +51,19 @@
           </td>
           <td class="border-t">
             <inertia-link class="px-6 py-4 flex items-center" :href="route('users.edit', user.id)" tabindex="-1">
-              <!-- {{ user.owner ? 'Owner' : 'User' }} -->
+              <div v-if="user.roles" v-for="role in user.roles">
+                <span class="px-2 py-2 text-sm leading-5 font-semibold rounded-full bg-grey-100 text-grey-800">
+                  {{ role.name }}
+                </span>
+              </div>
             </inertia-link>
           </td>
-          <td class="border-t w-px">
+<!--           <td class="border-t">
+            <inertia-link class="px-6 py-4 flex items-center" :href="route('users.edit', user.id)" tabindex="-1">
+              {{ user.owner ? 'Owner' : 'User' }}
+            </inertia-link>
+          </td>
+ -->          <td class="border-t w-px">
             <inertia-link class="px-4 flex items-center" :href="route('users.edit', user.id)" tabindex="-1">
               <icon name="cheveron-right" class="block w-6 h-6 fill-gray-400" />
             </inertia-link>

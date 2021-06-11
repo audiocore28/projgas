@@ -24,7 +24,47 @@
           </select-input>
           <file-input v-model="form.photo" :error="errors.photo" class="pr-6 pb-8 w-full lg:w-1/2" type="file" accept="image/*" label="Photo" />
  -->
+
+          <div class="pr-6 pb-8 w-full">
+            <label class="form-label block">Roles:</label>
+            <multiselect
+              id="role_id"
+              name="roles[]"
+              v-model="form.selectedRoles"
+              placeholder=""
+              class="mt-3 text-xs"
+              :options="roles"
+              label="name"
+              track-by="id"
+              @search-change="onSearchRoleChange"
+              @input="onSelectedRole"
+              :show-labels="false"
+              :multiple="true"
+            ></multiselect>
+            <!-- :allow-empty="false" -->
+          </div>
+
+          <div class="pr-6 pb-8 w-full">
+            <label class="form-label block">Permissions:</label>
+            <multiselect
+              id="permission_id"
+              name="permissions[]"
+              v-model="form.selectedPermissions"
+              placeholder=""
+              class="mt-3 text-xs"
+              :options="permissions"
+              label="name"
+              track-by="id"
+              @search-change="onSearchPermissionChange"
+              @input="onSelectedPermission"
+              :show-labels="false"
+              :multiple="true"
+            ></multiselect>
+            <!-- :allow-empty="false" -->
+          </div>
         </div>
+
+
         <div class="px-8 py-4 bg-gray-100 border-t border-gray-200 flex items-center">
           <button v-if="!user.deleted_at" class="text-red-600 hover:underline" tabindex="-1" type="button" @click="destroy">Delete User</button>
           <loading-button :loading="sending" class="btn-indigo ml-auto" type="submit">Update User</loading-button>
@@ -41,6 +81,8 @@ import SelectInput from '@/Shared/SelectInput'
 import TextInput from '@/Shared/TextInput'
 import FileInput from '@/Shared/FileInput'
 import TrashedMessage from '@/Shared/TrashedMessage'
+import Multiselect from 'vue-multiselect'
+import {throttle} from 'lodash'
 
 export default {
   metaInfo() {
@@ -55,22 +97,36 @@ export default {
     TextInput,
     FileInput,
     TrashedMessage,
+    Multiselect,
   },
   props: {
     errors: Object,
     user: Object,
+    roles: {
+      type: Array,
+      default: () => [],
+    },
+    permissions: {
+      type: Array,
+      default: () => [],
+    },
   },
   remember: 'form',
   data() {
     return {
       sending: false,
       form: {
+        id: this.user.id,
         first_name: this.user.first_name,
         last_name: this.user.last_name,
         email: this.user.email,
         password: null,
         // owner: this.user.owner,
         // photo: null,
+        roles: [],
+        selectedRoles: this.user.selected_roles,
+        permissions: [],
+        selectedPermissions: this.user.selected_permissions,
       },
     }
   },
@@ -97,6 +153,66 @@ export default {
         this.$inertia.put(this.route('users.restore', this.user.id))
       }
     },
+
+    // Multiselect
+    onSearchRoleChange: throttle(function(term) {
+      this.$inertia.get(this.route('users.edit'), {term}, {
+        preserveState: true,
+        preserveScroll: true,
+        replace: true,
+      })
+    }, 300),
+    onSelectedRole(roles) {
+      this.form.roles = roles.map(role => role.id);
+    },
+    onSearchPermissionChange: throttle(function(term) {
+      this.$inertia.get(this.route('users.edit'), {term}, {
+        preserveState: true,
+        preserveScroll: true,
+        replace: true,
+      })
+    }, 300),
+    onSelectedPermission(permissions) {
+      this.form.permissions = permissions.map(permission => permission.id);
+    },
   },
+  mounted() {
+    this.form.selectedPermissions.forEach(permission => {
+      this.form.permissions.push(permission.id);
+    });
+
+    this.form.selectedRoles.forEach(role => {
+      this.form.roles.push(role.id);
+    });
+  }
 }
 </script>
+
+<style>
+  .multiselect__single, .multiselect__option {
+    font-size: 0.875rem;
+  }
+
+  .multiselect__tag {
+    @apply bg-blue-500;
+  }
+
+  .multiselect__tag-icon:after {
+    @apply text-white;
+  }
+
+  .multiselect__tag-icon:hover {
+    @apply bg-blue-600;
+  }
+
+  .multiselect__option--highlight {
+    @apply bg-blue-500;
+  }
+
+  /*.multiselect__element span {}*/
+
+  .multiselect--active {
+    position: relative;
+    z-index: 100;
+  }
+</style>

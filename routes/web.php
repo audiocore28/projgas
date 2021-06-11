@@ -35,6 +35,8 @@ use App\Http\Controllers\SupplierController;
 // use App\Http\Controllers\DiscountController;
 use App\Http\Controllers\TankerController;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\PermissionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -142,9 +144,17 @@ Route::group(['middleware' => 'auth'], function() {
 	// Route::put('statements/{statement}/restore', [StatementController::class, 'restore'])->name('statements.restore');
 	// Route::resource('statements', StatementController::class);
 
-	// // Users
+	// Users
 	Route::put('users/{user}/restore', [UsersController::class, 'restore'])->name('users.restore');
 	Route::resource('users', UsersController::class);
+
+	// Roles
+	Route::put('roles/{role}/restore', [RoleController::class, 'restore'])->name('roles.restore');
+	Route::resource('roles', RoleController::class);
+
+	// Permissions
+	Route::put('permissions/{permission}/restore', [PermissionController::class, 'restore'])->name('permissions.restore');
+	Route::resource('permissions', PermissionController::class);
 
 	// Products
 	Route::put('products/{product}/restore', [ProductController::class, 'restore'])->name('products.restore');
