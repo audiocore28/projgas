@@ -8,6 +8,10 @@
       <form @submit.prevent="submit">
         <div class="p-8 -mr-6 -mb-8 flex flex-wrap">
           <text-input v-model="form.name" :error="errors.name" class="pr-6 pb-8 w-full lg:w-1/2" label="Name" />
+          <select-input v-model="form.group" :error="errors.group" class="pr-6 pb-4 w-full lg:w-1/2" label="Group">
+            <option :value="null" />
+            <option v-for="(group, index) in groups" :key="index" :value="group">{{ group }}</option>
+          </select-input>
         </div>
         <div class="px-8 py-4 bg-gray-100 border-t border-gray-200 flex justify-end items-center">
           <loading-button :loading="sending" class="btn-indigo" type="submit">Save</loading-button>
@@ -38,8 +42,10 @@ export default {
   data() {
     return {
       sending: false,
+      groups: ['Purchases', 'Batangas Transactions', 'Mindoro Transactions', 'Suppliers', 'Clients', 'Drivers', 'Helpers', 'Tankers', 'Products'],
       form: {
         name: null,
+        group: null,
       },
     }
   },

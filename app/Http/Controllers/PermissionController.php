@@ -71,6 +71,7 @@ class PermissionController extends Controller
             'permission' => [
                 'id' => $permission->id,
                 'name' => $permission->name,
+                'group' => $permission->group,
             ]
         ]);
     }
