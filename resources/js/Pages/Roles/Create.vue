@@ -6,29 +6,34 @@
     </h1>
     <div class="bg-white rounded shadow overflow-hidden max-w-3xl">
       <form @submit.prevent="submit">
-        <div class="p-8 -mr-6 -mb-8 flex flex-wrap">
+        <div class="p-8 -mr-6 -mb-8">
           <text-input v-model="form.name" :error="errors.name" class="pr-6 pb-8 w-full lg:w-1/2" label="Name" />
 
-          <div class="pr-6 pb-8 w-full">
-            <label class="form-label block">Permissions:</label>
-            <multiselect
-              id="permission_id"
-              name="permissions[]"
-              v-model="form.selectedPermissions"
-              placeholder=""
-              class="mt-3 text-xs"
-              :options="permissions"
-              label="name"
-              track-by="id"
-              @search-change="onSearchPermissionChange"
-              @input="onSelectedPermission"
-              :show-labels="false"
-              :multiple="true"
-            ></multiselect>
-            <!-- :allow-empty="false" -->
-          </div>
-        </div>
+          <label class="font-bold text-md inline-flex items-center mt-3 mb-6">
+            <input type="checkbox" class="form-checkbox h-4 w-4 text-gray-600" v-model="selectAll" @click="selectAllPermissions()"><span class="ml-2 text-gray-700">Permissions</span>
+          </label>
 
+          <ul class="text-sm font-medium text-gray-900 w-full grid grid-cols-1 gap-3 xl:grid-cols-3">
+
+            <li v-for="(lists, group) in permissions" class="mb-6">
+              <div class="text-sm font-bold mb-2">
+                <label class="inline-flex items-center mt-3">
+                  <input type="checkbox" class="form-checkbox h-4 w-4 text-gray-600" :value="group" v-model="selectedGroups" @click="selectGroup(lists, group)"><span class="ml-2 text-gray-700">{{ group }}</span>
+                </label>
+              </div>
+              <div class="ml-4">
+                <ul v-for="list in lists" :key="list.id">
+                  <li>
+                    <label class="inline-flex items-center mt-3 text-xs">
+                      <input type="checkbox" class="form-checkbox h-4 w-4 text-gray-600" :value="list.id" v-model="form.selectedPermissions"><span class="ml-2 text-gray-700">{{ list.name }}</span>
+                    </label>
+                  </li>
+                </ul>
+              </div>
+            </li>
+
+          </ul>
+        </div>
 
         <div class="px-8 py-4 bg-gray-100 border-t border-gray-200 flex justify-end items-center">
           <loading-button :loading="sending" class="btn-indigo" type="submit">Save</loading-button>
@@ -58,7 +63,7 @@ export default {
   props: {
     errors: Object,
     permissions: {
-      type: Array,
+      type: Object,
       default: () => [],
     },
   },
@@ -66,9 +71,10 @@ export default {
   data() {
     return {
       sending: false,
+      selectAll: false,
+      selectedGroups: [],
       form: {
         name: null,
-        permissions: [],
         selectedPermissions: [],
       },
     }
@@ -81,17 +87,34 @@ export default {
       })
     },
 
-    // Multiselect
-    onSearchPermissionChange: throttle(function(term) {
-      this.$inertia.get(this.route('roles.create'), {term}, {
-        preserveState: true,
-        preserveScroll: true,
-        replace: true,
-        only: ['permissions'],
-      })
-    }, 300),
-    onSelectedPermission(permissions) {
-      this.form.permissions = permissions.map(permission => permission.id);
+    selectGroup(lists, group) {
+      var selectedPermissionIds = lists.map(list => list.id);
+
+      selectedPermissionIds.forEach(id => {
+        if (!this.selectedGroups.includes(group)) {
+          if (!this.form.selectedPermissions.includes(id)) {
+            this.form.selectedPermissions.push(id);
+          }
+        } else {
+          const index = this.form.selectedPermissions.indexOf(id);
+          if (index > -1) {
+            this.form.selectedPermissions.splice(index, 1);
+          }
+        }
+      });
+    },
+
+    selectAllPermissions() {
+      this.form.selectedPermissions = [];
+
+      var permissionsArray = Object.entries(this.permissions).map(permission => permission[1]);
+      const permissions = [].concat.apply([], permissionsArray);
+
+      if (!this.selectAll) {
+        permissions.forEach(permission => {
+          this.form.selectedPermissions.push(permission.id);
+        });
+      }
     },
   },
 }

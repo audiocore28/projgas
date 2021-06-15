@@ -33,9 +33,7 @@ class RoleController extends Controller
      */
     public function create()
     {
-        $permissions = Permission::when(request('term'), function($query, $term) {
-            $query->where('name', 'like', "%$term%");
-        })->orderBy('name', 'desc')->get();
+        $permissions = Permission::all()->groupBy('group');
 
         return Inertia::render('Roles/Create', [
             'permissions' => $permissions,
@@ -52,8 +50,8 @@ class RoleController extends Controller
     {
         $role = Role::create($request->all());
 
-        if ($request->has('permissions')) {
-            $role->givePermissionTo($request->permissions);
+        if ($request->has('selectedPermissions')) {
+            $role->givePermissionTo($request->selectedPermissions);
         }
 
         return redirect()->route('roles.index')->with('success', 'Role was successfully added.');
@@ -78,15 +76,13 @@ class RoleController extends Controller
      */
     public function edit(Role $role)
     {
-        $permissions = Permission::when(request('term'), function($query, $term) {
-            $query->where('name', 'like', "%$term%");
-        })->orderBy('name', 'desc')->get();
+        $permissions = Permission::all()->groupBy('group');
 
         return Inertia::render('Roles/Edit', [
             'role' => [
                 'id' => $role->id,
                 'name' => $role->name,
-                'selected_permissions' => $role->permissions,
+                'selectedPermissions' => $role->permissions->pluck('id'),
             ],
             'permissions' => $permissions,
         ]);
@@ -103,8 +99,8 @@ class RoleController extends Controller
     {
         $role->update($request->all());
 
-        if ($request->has('permissions')) {
-            $role->syncPermissions($request->permissions);
+        if ($request->has('selectedPermissions')) {
+            $role->syncPermissions($request->selectedPermissions);
         }
 
         return redirect()->route('roles.index')->with('success', 'Role updated.');
