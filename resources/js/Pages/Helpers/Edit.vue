@@ -5,7 +5,7 @@
       <span class="text-blue-600 font-medium">/</span> {{ form.name }}
     </h1>
 
-    <trashed-message v-if="helper.deleted_at" class="mb-6" @restore="restore">
+    <trashed-message v-if="helper.deleted_at" class="mb-6" @restore="restore" :canRestore="$page.auth.user.can.helper.restore">
       This helper has been deleted.
     </trashed-message>
 
@@ -28,7 +28,7 @@
                 <text-input v-model="form.contact_no" :error="errors.contact_no" class="pr-6 pb-8 w-full lg:w-1/2" label="Contact No" />
               </div>
               <div class="px-8 py-4 bg-gray-100 border-t border-gray-200 flex justify-end items-center">
-                <button v-if="!batangasTrips && !mindoroTrips && !helper.deleted_at" class="text-red-600 hover:underline" tabindex="-1" type="button" @click="destroy">Delete Helper</button>
+                <button v-if="!batangasTrips && !mindoroTrips && !helper.deleted_at && $page.auth.user.can.helper.delete" class="text-red-600 hover:underline" tabindex="-1" type="button" @click="destroy">Delete Helper</button>
                 <loading-button :loading="sending" class="btn-indigo ml-auto" type="submit">Update Helper</loading-button>
               </div>
             </form>

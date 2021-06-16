@@ -6,7 +6,7 @@
         <slot />
       </div>
     </div>
-    <button class="text-sm text-yellow-800 hover:underline" tabindex="-1" type="button" @click="$emit('restore')">Restore</button>
+    <button class="text-sm text-yellow-800 hover:underline" tabindex="-1" type="button" @click="$emit('restore')" v-if="canRestore">Restore</button>
   </div>
 </template>
 
@@ -16,6 +16,9 @@ import Icon from '@/Shared/Icon'
 export default {
   components: {
     Icon,
+  },
+  props: {
+    canRestore: Boolean,
   },
 }
 </script>

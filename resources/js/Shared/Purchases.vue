@@ -3,9 +3,14 @@
     <div class="bg-white rounded shadow overflow-x-auto mb-8 -mt-4">
       <div class="rounded shadow overflow-x-auto m-4 lg:w-2/3" v-for="purchase in localPurchaseDetails">
         <div class="ml-5 mr-5 mt-5">
-          <a  class="text-md font-bold text-blue-700 mb-2" target="_blank" :href="`/purchases/${purchase.id}/edit`" tabindex="-1">
+
+          <a  class="text-md font-bold text-blue-700 mb-2" target="_blank" :href="`/purchases/${purchase.id}/edit`" tabindex="-1" v-if="$page.auth.user.can.purchase.update">
             {{ purchase.purchase_no }}
           </a>
+          <span class="text-md font-bold mb-2" v-else>
+            {{ purchase.purchase_no }}
+          </span>
+
           <p class="mt-2 text-xs font-medium text-gray-600 mb-4">{{ purchase.date }}</p>
         </div>
         <table class="min-w-full divide-y divide-gray-200">

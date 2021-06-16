@@ -9,7 +9,7 @@
             <span class="text-xs px-3 bg-white text-blue-600 rounded-full">{{ transactions.length }}</span>
           </div>
           <div class="ml-4 mt-6 mb-1" v-for="(transaction, transactionIndex) in transactions">
-            <a target="_blank" :href="`/monthly-batangas-transactions/${transaction.monthly_batangas_transaction_id}/edit#transaction-${transaction.id}`" tabindex="-1">
+            <a target="_blank" :href="`/monthly-batangas-transactions/${transaction.monthly_batangas_transaction_id}/edit#transaction-${transaction.id}`" tabindex="-1" v-if="$page.auth.user.can.batangasTransaction.update">
               <p class="text-sm font-bold text-blue-700 mb-2">{{ transaction.trip_no }}. {{ transaction.driver.name }} & {{ transaction.helper.name }} ({{ transaction.tanker.plate_no }})</p>
 
 <!--                 <div class="text-xs font-medium text-gray-600">
@@ -20,6 +20,10 @@
               </div>
 -->
             </a>
+            <span v-else>
+              <p class="text-sm font-bold mb-2">{{ transaction.trip_no }}. {{ transaction.driver.name }} & {{ transaction.helper.name }} ({{ transaction.tanker.plate_no }})</p>
+            </span>
+
             <table class="min-w-full divide-y divide-gray-200 mt-4">
               <thead class="bg-gray-50">
                 <tr>

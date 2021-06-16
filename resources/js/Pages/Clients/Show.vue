@@ -5,7 +5,7 @@
       <span class="text-blue-600 font-medium">/</span> {{ client.name }}
     </h1>
 
-    <trashed-message v-if="client.deleted_at" class="mb-6" @restore="restore">
+    <trashed-message v-if="client.deleted_at" class="mb-6" @restore="restore" :canRestore="$page.auth.user.can.client.restore">
       This client has been deleted.
     </trashed-message>
 
@@ -106,9 +106,12 @@
                         </div>
                       </td>
                       <td class="px-6 py-4 whitespace-nowrap">
-                        <a class="text-sm font-medium text-blue-600" target="_blank" :href="`/monthly-batangas-transactions/${detail.monthly_batangas_transaction_id}/edit#transaction-${detail.batangas_transaction_id}`">
+                        <a class="text-sm font-medium text-blue-600" target="_blank" :href="`/monthly-batangas-transactions/${detail.monthly_batangas_transaction_id}/edit#transaction-${detail.batangas_transaction_id}`" v-if="$page.auth.user.can.batangasTransaction.update">
                           {{ detail.trip_no }}
                         </a>
+                        <span class="text-sm font-medium text-gray-900" v-else>
+                          {{ detail.trip_no }}
+                        </span>
                       </td>
                       <td class="px-6 py-4 whitespace-nowrap">
                         <div class="text-sm font-medium text-gray-900">
@@ -238,9 +241,12 @@
                           </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                          <a class="text-sm font-medium text-blue-600" target="_blank" :href="`/monthly-mindoro-transactions/${detail.monthly_mindoro_transaction_id}/edit#transaction-${detail.mindoro_transaction_id}`">
+                          <a class="text-sm font-medium text-blue-600" target="_blank" :href="`/monthly-mindoro-transactions/${detail.monthly_mindoro_transaction_id}/edit#transaction-${detail.mindoro_transaction_id}`" v-if="$page.auth.user.can.mindoroTransaction.update">
                               {{ detail.trip_no }}
                           </a>
+                          <span class="text-sm font-medium text-gray-900" v-else>
+                              {{ detail.trip_no }}
+                          </span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                           <div class="text-sm font-medium text-gray-900">

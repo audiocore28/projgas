@@ -5,7 +5,7 @@
       <span class="text-blue-600 font-medium">/</span> {{ form.name }}
     </h1>
 
-    <trashed-message v-if="supplier.deleted_at" class="mb-6" @restore="restore">
+    <trashed-message v-if="supplier.deleted_at" class="mb-6" @restore="restore" :canRestore="$page.auth.user.can.supplier.restore">
       This supplier has been deleted.
     </trashed-message>
 
@@ -29,7 +29,7 @@
                 <text-input v-model="form.email_address" :error="errors.email_address" class="pr-6 pb-8 w-full lg:w-1/2" label="Email Address" />
               </div>
               <div class="px-8 py-4 bg-gray-100 border-t border-gray-200 flex justify-end items-center">
-                <button v-if="!supplier.deleted_at" class="text-red-600 hover:underline" tabindex="-1" type="button" @click="destroy">Delete Supplier</button>
+                <button v-if="!supplier.deleted_at && $page.auth.user.can.supplier.delete" class="text-red-600 hover:underline" tabindex="-1" type="button" @click="destroy">Delete Supplier</button>
                 <loading-button :loading="sending" class="btn-indigo ml-auto" type="submit">Update Supplier</loading-button>
               </div>
             </form>

@@ -5,7 +5,7 @@
       <span class="text-blue-600 font-medium">/</span> {{ supplier.name }}
     </h1>
 
-    <trashed-message v-if="supplier.deleted_at" class="mb-6" @restore="restore">
+    <trashed-message v-if="supplier.deleted_at" class="mb-6" @restore="restore" :canRestore="$page.auth.user.can.supplier.restore">
       This supplier has been deleted.
     </trashed-message>
 

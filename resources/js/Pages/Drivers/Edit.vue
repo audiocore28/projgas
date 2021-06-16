@@ -5,7 +5,7 @@
       <span class="text-blue-600 font-medium">/</span> {{ form.name }}
     </h1>
 
-    <trashed-message v-if="driver.deleted_at" class="mb-6" @restore="restore">
+    <trashed-message v-if="driver.deleted_at" class="mb-6" @restore="restore" :canRestore="$page.auth.user.can.driver.restore">
       This driver has been deleted.
     </trashed-message>
 
@@ -29,7 +29,7 @@
                 <text-input v-model="form.contact_no" :error="errors.contact_no" class="pr-6 pb-8 w-full lg:w-1/2" label="Contact No" />
               </div>
               <div class="px-8 py-4 bg-gray-100 border-t border-gray-200 flex justify-end items-center">
-                <button v-if="!batangasTrips && !mindoroTrips && !driver.deleted_at" class="text-red-600 hover:underline" tabindex="-1" type="button" @click="destroy">Delete Driver</button>
+                <button v-if="!batangasTrips && !mindoroTrips && !driver.deleted_at && $page.auth.user.can.driver.delete" class="text-red-600 hover:underline" tabindex="-1" type="button" @click="destroy">Delete Driver</button>
                 <loading-button :loading="sending" class="btn-indigo ml-auto" type="submit">Update Driver</loading-button>
               </div>
             </form>

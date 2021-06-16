@@ -5,7 +5,7 @@
       <span class="text-blue-600 font-medium">/</span> {{ helper.name }}
     </h1>
 
-    <trashed-message v-if="helper.deleted_at" class="mb-6" @restore="restore">
+    <trashed-message v-if="helper.deleted_at" class="mb-6" @restore="restore" :canRestore="$page.auth.user.can.helper.restore">
       This helper has been deleted.
     </trashed-message>
 

@@ -121,7 +121,7 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::get('monthly-batangas-transactions/{monthlyBatangasTransaction}/print', [MonthlyBatangasTransactionController::class, 'print'])->name('monthly-batangas-transactions.print');
 
 	// Suppliers
-	Route::put('suppliers/{supplier}/restore', [SupplierController::class, 'restore'])->name('suppliers.restore');
+	Route::put('suppliers/{supplier}/restore', [SupplierController::class, 'restore'])->name('suppliers.restore')->middleware('can:restore,supplier');
 	Route::resource('suppliers', SupplierController::class);
 
 	// // Stations
@@ -137,7 +137,7 @@ Route::group(['middleware' => 'auth'], function() {
 	// Route::resource('companies', CompanyController::class);
 
 	// Clients
-	Route::put('clients/{client}/restore', [ClientController::class, 'restore'])->name('clients.restore');
+	Route::put('clients/{client}/restore', [ClientController::class, 'restore'])->name('clients.restore')->middleware('can:restore,client');
 	Route::resource('clients', ClientController::class);
 
 	// Statements
@@ -165,11 +165,11 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::resource('tankers', TankerController::class);
 
 	// Drivers
-	Route::put('drivers/{driver}/restore', [DriverController::class, 'restore'])->name('drivers.restore');
+	Route::put('drivers/{driver}/restore', [DriverController::class, 'restore'])->name('drivers.restore')->middleware('can:restore,driver');
 	Route::resource('drivers', DriverController::class);
 
 	// Helpers
-	Route::put('helpers/{helper}/restore', [HelperController::class, 'restore'])->name('helpers.restore');
+	Route::put('helpers/{helper}/restore', [HelperController::class, 'restore'])->name('helpers.restore')->middleware('can:restore,helper');
 	Route::resource('helpers', HelperController::class);
 
 	// // Cashiers

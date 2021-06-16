@@ -5,7 +5,7 @@
       <span class="text-blue-600 font-medium">/</span> {{ driver.name }}
     </h1>
 
-    <trashed-message v-if="driver.deleted_at" class="mb-6" @restore="restore">
+    <trashed-message v-if="driver.deleted_at" class="mb-6" @restore="restore" :canRestore="$page.auth.user.can.driver.restore">
       This driver has been deleted.
     </trashed-message>
 
