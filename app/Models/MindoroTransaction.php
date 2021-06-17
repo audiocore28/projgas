@@ -3,6 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\TankerLoad;
+use App\Models\Driver;
+use App\Models\Helper;
+use App\Models\Tanker;
+use App\Models\MonthlyMindoroTransaction;
 use App\Models\MindoroTransactionDetail;
 use App\Models\Purchase;
 use Carbon\Carbon;
@@ -12,7 +17,12 @@ class MindoroTransaction extends Model
     use HasFactory;
 
      protected $dates = ['date'];
-	 protected $fillable = ['date', 'trip_no', 'driver_id', 'helper_id', 'tanker_id'];
+	 protected $fillable = ['date', 'trip_no', 'driver_id', 'helper_id', 'tanker_id', 'expense', 'monthly_mindoro_transaction_id'];
+
+     public function monthlyMindoroTransaction()
+     {
+        return $this->belongsTo(MonthlyMindoroTransaction::class);
+     }
 
 	 public function purchases()
 	 {
@@ -38,6 +48,11 @@ class MindoroTransaction extends Model
 	 {
 	 	return $this->hasMany(MindoroTransactionDetail::class);
 	 }
+
+     public function tankerLoads()
+     {
+        return $this->hasMany(TankerLoad::class);
+     }
 
     public function scopeFilter($query, array $filters)
     {

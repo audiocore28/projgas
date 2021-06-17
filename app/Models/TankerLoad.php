@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\BatangasTransaction;
+use App\Models\MindoroTransaction;
 use App\Models\Purchase;
 use App\Models\Delivery;
 use App\Models\Tanker;
@@ -15,7 +17,7 @@ class TankerLoad extends Model
 {
     use HasFactory;
 
-	 protected $fillable = ['trip_no', 'remarks', 'purchase_id'];
+	 protected $fillable = ['mindoro_transaction_id', 'batangas_transaction_id', 'remarks', 'purchase_id'];
 
 
 	 public function purchase()
@@ -23,9 +25,14 @@ class TankerLoad extends Model
 	 	return $this->belongsTo(Purchase::class);
 	 }
 
-	 public function deliveries()
+	 public function mindoroTransaction()
 	 {
-	 	return $this->hasMany(Delivery::class);
+	 	return $this->belongsTo(MindoroTransaction::class);
+	 }
+
+	 public function batangasTransaction()
+	 {
+	 	return $this->belongsTo(BatangasTransaction::class);
 	 }
 
 	 public function tankerLoadDetails()

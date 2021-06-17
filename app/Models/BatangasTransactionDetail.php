@@ -13,7 +13,7 @@ class BatangasTransactionDetail extends Model
     use HasFactory;
 
 	 protected $dates = ['date'];
-	 protected $fillable = ['date', 'dr_no', 'quantity', 'unit_price', 'batangas_transaction_id', 'product_id', 'client_id'];
+	 protected $fillable = ['date', 'quantity', 'unit_price', 'remarks', 'batangas_transaction_id', 'product_id', 'client_id'];
 
 	 public function batangasTransaction()
 	 {

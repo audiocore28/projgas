@@ -5,8 +5,8 @@ export function loadMoreMindoroTransactionMixin (record) {
 		},
 		data() {
 			return {
-				localMindoroDetails: this.mindoroDetails.data,
-				mindoroPagination: this.mindoroDetails,
+				localMindoroDetails: this.mindoroDetails,
+				// mindoroPagination: this.mindoroDetails,
 			}
 		},
 		methods: {
@@ -18,7 +18,7 @@ export function loadMoreMindoroTransactionMixin (record) {
 
 		      // this.loadingMore = true;
 
-		      axios.get(`/${record}/${id[4]}/edit?page=${currentPage + 1}`)
+		      axios.get(`/${record}/${id[4]}?page=${currentPage + 1}`)
 		      	.then(({ data }) => {
 		            // Prepending the old messages to the list.
 		            this.localMindoroDetails = [

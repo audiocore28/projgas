@@ -12,6 +12,11 @@ use Inertia\Inertia;
 
 class ClientController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Client::class, 'client');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -19,11 +24,34 @@ class ClientController extends Controller
      */
     public function index()
     {
+        request()->validate([
+            'direction' => ['in:asc,desc'],
+            'field' => ['in:id,name'],
+        ]);
+
+        $query = Client::query();
+
+        if (request('search')) {
+            $query->where('name', 'like', '%'.request('search').'%')
+                ->orWhere('office', 'like', '%'.request('search').'%')
+                ->orWhere('contact_no', 'like', '%'.request('search').'%');
+        }
+
+        if (request()->has(['field', 'direction'])) {
+            $query->orderBy(request('field'), request('direction'));
+        }
+
+        if (request('trashed')) {
+            if (request('trashed') === 'with') {
+                $query->withTrashed();
+            } elseif (request('trashed') === 'only') {
+                $query->onlyTrashed();
+            }
+        }
+
         return Inertia::render('Clients/Index', [
-            'filters' => Request::all('search', 'trashed'),
-            'clients' => Client::filter(Request::only('search', 'trashed'))
-                ->orderBy('id', 'desc')
-                ->paginate()
+            'filters' => Request::all('search', 'field', 'direction', 'trashed'),
+            'clients' => $query->orderBy('id', 'desc')->paginate(),
         ]);
     }
 
@@ -56,9 +84,73 @@ class ClientController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Client $client)
     {
-        //
+        $mD = $client->mindoroTransactionDetails()
+            ->latest()
+            ->paginate()
+            ->transform(function ($detail) {
+                return [
+                    'month' => $detail->mindoroTransaction->monthlyMindoroTransaction ? $detail->mindoroTransaction->monthlyMindoroTransaction->month : null,
+                    'year' => $detail->mindoroTransaction->monthlyMindoroTransaction ? $detail->mindoroTransaction->monthlyMindoroTransaction->year : null,
+                    'monthly_mindoro_transaction_id' => $detail->mindoroTransaction->monthlyMindoroTransaction ? $detail->mindoroTransaction->monthlyMindoroTransaction->id : null,
+                    'trip_no' => $detail->mindoroTransaction ? $detail->mindoroTransaction->trip_no : null,
+                    'id' => $detail->id,
+                    'date' => $detail->date,
+                    'dr_no' => $detail->dr_no,
+                    'mindoro_transaction_id' => $detail->mindoro_transaction_id,
+                    'quantity' => $detail->quantity,
+                    'unit_price' => $detail->unit_price,
+                    'client' => $detail->client ? $detail->client->only('id', 'name') : null,
+                    'remarks' => $detail->remarks,
+                    'product' => $detail->product ? $detail->product->only('id', 'name') : null,
+                ];
+            });
+
+        $bD = $client->batangasTransactionDetails()
+            ->latest()
+            ->paginate()
+            ->transform(function ($detail) {
+                return [
+                    'month' => $detail->batangasTransaction->monthlyBatangasTransaction ? $detail->batangasTransaction->monthlyBatangasTransaction->month : null,
+                    'year' => $detail->batangasTransaction->monthlyBatangasTransaction ? $detail->batangasTransaction->monthlyBatangasTransaction->year : null,
+                    'monthly_batangas_transaction_id' => $detail->batangasTransaction->monthlyBatangasTransaction ? $detail->batangasTransaction->monthlyBatangasTransaction->id : null,
+                    'trip_no' => $detail->batangasTransaction ? $detail->batangasTransaction->trip_no : null,
+                    'id' => $detail->id,
+                    'date' => $detail->date,
+                    'dr_no' => $detail->dr_no,
+                    'batangas_transaction_id' => $detail->batangas_transaction_id,
+                    'quantity' => $detail->quantity,
+                    'unit_price' => $detail->unit_price,
+                    'client' => $detail->client ? $detail->client->only('id', 'name') : null,
+                    'remarks' => $detail->remarks,
+                    'product' => $detail->product ? $detail->product->only('id', 'name') : null,
+                ];
+            });
+
+        $batangasDetails = $bD->groupBy(['year', 'month']);
+        $mindoroDetails = $mD->groupBy(['year', 'month']);
+
+       if (request()->wantsJson()) {
+         return [
+           'batangasDetails' => $bD,
+           'mindoroDetails' => $mD,
+         ];
+       }
+
+        return Inertia::render('Clients/Show', [
+            'client' => [
+                'id' => $client->id,
+                'name' => $client->name,
+                'office' => $client->office,
+                'contact_person' => $client->contact_person,
+                'contact_no' => $client->contact_no,
+                'email_address' => $client->email_address,
+                'deleted_at' => $client->deleted_at,
+            ],
+            'batangasDetails' => $batangasDetails,
+            'mindoroDetails' => $mindoroDetails,
+        ]);
     }
 
     /**
@@ -69,45 +161,6 @@ class ClientController extends Controller
      */
     public function edit(Client $client)
     {
-        $mD = $client->mindoroTransactionDetails()
-            ->latest()
-            ->paginate()
-            ->transform(function ($detail) {
-                return [
-                    'id' => $detail->id,
-                    'date' => $detail->date,
-                    'dr_no' => $detail->dr_no,
-                    'mindoro_transaction_id' => $detail->mindoro_transaction_id,
-                    'quantity' => $detail->quantity,
-                    'unit_price' => $detail->unit_price,
-                    'client' => $detail->client ? $detail->client->only('id', 'name') : null,
-                    'product' => $detail->product ? $detail->product->only('id', 'name') : null,
-                ];
-            });
-
-        $bD = $client->batangasTransactionDetails()
-            ->latest()
-            ->paginate()
-            ->transform(function ($detail) {
-                return [
-                    'id' => $detail->id,
-                    'date' => $detail->date,
-                    'dr_no' => $detail->dr_no,
-                    'batangas_transaction_id' => $detail->batangas_transaction_id,
-                    'quantity' => $detail->quantity,
-                    'unit_price' => $detail->unit_price,
-                    'client' => $detail->client ? $detail->client->only('id', 'name') : null,
-                    'product' => $detail->product ? $detail->product->only('id', 'name') : null,
-                ];
-            });
-
-       if (request()->wantsJson()) {
-         return [
-           'batangasDetails' => $bD,
-           'mindoroDetails' => $mD,
-         ];
-       }
-
         return Inertia::render('Clients/Edit', [
             'client' => [
                 'id' => $client->id,
@@ -118,8 +171,6 @@ class ClientController extends Controller
                 'email_address' => $client->email_address,
                 'deleted_at' => $client->deleted_at,
             ],
-            'batangasDetails' => $bD,
-            'mindoroDetails' => $mD,
         ]);
     }
 

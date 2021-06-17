@@ -5,9 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Supplier;
 use App\Models\PurchaseDetail;
+use App\Models\MonthlyMindoroTransaction;
 use App\Models\MindoroTransaction;
+use App\Models\MonthlyBatangasTransaction;
+use App\Models\BatangasTransaction;
 use App\Models\TankerLoad;
-use App\Models\Delivery;
 use Carbon\Carbon;
 
 class Purchase extends Model
@@ -15,12 +17,22 @@ class Purchase extends Model
     use HasFactory;
 
 	 protected $dates = ['date'];
-	 protected $fillable = ['date', 'supplier_id', 'purchase_no'];
+	 protected $fillable = ['date', 'supplier_id', 'purchase_no', 'monthly_mindoro_transaction_id', 'monthly_batangas_transaction_id'];
 
 	 public function supplier()
 	 {
 	 	return $this->belongsTo(Supplier::class);
 	 }
+
+     public function monthlyMindoroTransaction()
+     {
+        return $this->belongsTo(MonthlyMindoroTransaction::class);
+     }
+
+     public function monthlyBatangasTransaction()
+     {
+        return $this->belongsTo(MonthlyBatangasTransaction::class);
+     }
 
 	 public function purchaseDetails()
 	 {
@@ -32,6 +44,16 @@ class Purchase extends Model
 	 	return $this->hasMany(TankerLoad::class);
 	 }
 
+     public function batangasLoads()
+     {
+        return $this->hasMany(TankerLoad::class)->where('batangas_transaction_id', '>', 0);
+     }
+
+     public function mindoroLoads()
+     {
+        return $this->hasMany(TankerLoad::class)->where('mindoro_transaction_id', '>', 0);
+     }
+
      public function batangasTransactions()
      {
         return $this->belongsToMany(BatangasTransaction::class);
@@ -41,24 +63,6 @@ class Purchase extends Model
      {
         return $this->belongsToMany(MindoroTransaction::class);
      }
-
-     public function deliveries()
-     {
-        return $this->hasMany(Delivery::class);
-     }
-
-
-    public function scopeFilter($query, array $filters)
-    {
-        $query->when($filters['search'] ?? null, function ($query, $search) {
-            $query->where(function ($query) use ($search) {
-                $query->where('purchase_no', 'like', '%'.$search.'%')
-                		->orWhereHas('supplier', function ($query) use ($search) {
-	                        $query->where('name', 'like', '%'.$search.'%');
-	                    });
-            });
-        });
-    }
 
     // public function setDateAttribute($value)
     // {

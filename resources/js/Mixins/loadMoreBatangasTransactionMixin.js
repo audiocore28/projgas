@@ -5,8 +5,8 @@ export function loadMoreBatangasTransactionMixin (record) {
 		},
 		data() {
 			return {
-				localBatangasDetails: this.batangasDetails.data,
-				batangasPagination: this.batangasDetails,
+				localBatangasDetails: this.batangasDetails,
+				// batangasPagination: this.batangasDetails,
 			}
 		},
 		methods: {
@@ -18,7 +18,7 @@ export function loadMoreBatangasTransactionMixin (record) {
 
 		      // this.loadingMore = true;
 
-		      axios.get(`/${record}/${id[4]}/edit?page=${currentPage + 1}`)
+		      axios.get(`/${record}/${id[4]}?page=${currentPage + 1}`)
 			      .then(({ data }) => {
 		            // Prepending the old messages to the list.
 		            this.localBatangasDetails = [

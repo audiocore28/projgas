@@ -19,6 +19,7 @@ class CreateMindoroTransactionDetailsTable extends Migration
             $table->date('date');
             $table->string('dr_no')->nullable();
             $table->bigInteger('client_id');
+            $table->text('remarks')->nullable();
             $table->bigInteger('product_id');
             $table->decimal('quantity', 8, 0)->nullable();
             $table->decimal('unit_price', 10, 2)->nullable();

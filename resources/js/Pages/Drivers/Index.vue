@@ -2,7 +2,7 @@
   <div>
     <h1 class="mb-8 font-bold text-3xl">Drivers</h1>
     <div class="mb-6 flex justify-between items-center">
-      <search-filter v-model="form.search" class="w-full max-w-md mr-4" @reset="reset">
+      <search-filter v-model="form.search" class="w-full max-w-md mr-4" @reset="reset" :isVisible="$page.auth.user.can.driver.restore">
         <label class="block text-gray-700">Trashed:</label>
         <select v-model="form.trashed" class="mt-1 w-full form-select">
           <option :value="null" />
@@ -10,7 +10,7 @@
           <option value="only">Only Trashed</option>
         </select>
       </search-filter>
-      <inertia-link class="btn-indigo" :href="route('drivers.create')">
+      <inertia-link class="btn-indigo" :href="route('drivers.create')" v-if="$page.auth.user.can.driver.create">
         <span>Add</span>
         <span class="hidden md:inline">Driver</span>
       </inertia-link>
@@ -18,56 +18,45 @@
     <div class="bg-white rounded shadow overflow-x-auto">
       <table class="w-full whitespace-no-wrap">
         <tr class="text-left font-bold">
-          <th class="px-6 pt-6 pb-4">ID</th>
           <th class="px-6 pt-6 pb-4">Full Name</th>
           <th class="px-6 pt-6 pb-4">Nickname</th>
           <th class="px-6 pt-6 pb-4">License No</th>
           <th class="px-6 pt-6 pb-4">Contact No</th>
+          <th class="px-6 pt-6 pb-4"></th>
+          <th class="px-6 pt-6 pb-4"></th>
           <!-- <th class="px-6 pt-6 pb-4" colspan="2">Driver No.</th> -->
         </tr>
          <tr v-for="driver in drivers.data" :key="driver.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
           <!-- table columns -->
           <td class="border-t">
-            <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('drivers.edit', driver.id)">
-              {{ driver.id }}
-            </inertia-link>
-          </td>
-          <td class="border-t">
-            <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('drivers.edit', driver.id)">
+            <div class="px-6 py-4 flex items-center focus:text-indigo-500">
               {{ driver.name }}
               <icon v-if="driver.deleted_at" name="trash" class="flex-shrink-0 w-3 h-3 fill-gray-400 ml-2" />
-            </inertia-link>
+            </div>
           </td>
           <td class="border-t">
-            <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('drivers.edit', driver.id)">
+            <div class="px-6 py-4 flex items-center focus:text-indigo-500">
               {{ driver.nickname }}
-            </inertia-link>
-          </td>
-<!--           <td class="border-t">
-            <inertia-link class="px-6 py-4 flex items-center" :href="route('drivers.edit', driver.id)" tabindex="-1">
-              <div v-if="contact.organization">
-                {{ contact.organization.name }}
-              </div>
-            </inertia-link>
+            </div>
           </td>
           <td class="border-t">
-            <inertia-link class="px-6 py-4 flex items-center" :href="route('drivers.edit', driver.id)" tabindex="-1">
-              {{ driver.contact_no }}
-            </inertia-link>
-          </td>
- -->          <td class="border-t">
-            <inertia-link class="px-6 py-4 flex items-center" :href="route('drivers.edit', driver.id)" tabindex="-1">
+            <div class="px-6 py-4 flex items-center focus:text-indigo-500">
               {{ driver.license_no }}
-            </inertia-link>
+            </div>
           </td>
           <td class="border-t">
-            <inertia-link class="px-6 py-4 flex items-center" :href="route('drivers.edit', driver.id)" tabindex="-1">
+            <div class="px-6 py-4 flex items-center focus:text-indigo-500">
               {{ driver.contact_no }}
+            </div>
+          </td>
+          <td class="border-t w-px">
+            <inertia-link class="px-4 flex items-center focus:text-indigo-500" :href="route('drivers.show', driver.id)" tabindex="-1" v-if="$page.auth.user.can.driver.view">
+              <icon name="view" class="block w-6 h-6 fill-gray-400" />
             </inertia-link>
           </td>
           <td class="border-t w-px">
-            <inertia-link class="px-4 flex items-center" :href="route('drivers.edit', driver.id)" tabindex="-1">
-              <icon name="cheveron-right" class="block w-6 h-6 fill-gray-400" />
+            <inertia-link class="px-4 flex items-center focus:text-indigo-500" :href="route('drivers.edit', driver.id)" tabindex="-1" v-if="$page.auth.user.can.driver.update">
+              <icon name="edit" class="block w-6 h-6 fill-gray-400" />
             </inertia-link>
           </td>
         </tr>

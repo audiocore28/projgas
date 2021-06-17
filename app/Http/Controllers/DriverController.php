@@ -11,6 +11,11 @@ use Inertia\Inertia;
 
 class DriverController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Driver::class, 'driver');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -57,29 +62,14 @@ class DriverController extends Controller
      */
     public function show(Driver $driver)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Driver  $driver
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Driver $driver)
-    {
-        $trips = $driver->mindoroTransactions()
-            ->selectRaw('year(date) year, monthname(date) month, count(*) loaded')
-            ->groupBy('year', 'month')
-            ->orderByRaw('min(date)')
-            ->get()
-            ->toArray();
-
         $bD = $driver->batangasTransactions()
             ->latest()
             ->paginate()
             ->transform(function ($transaction) {
                 return [
+                    'monthly_batangas_transaction_id' => $transaction->monthlyBatangasTransaction->id,
+                    'month' => $transaction->monthlyBatangasTransaction->month,
+                    'year' => $transaction->monthlyBatangasTransaction->year,
                     'id' => $transaction->id,
                     'date' => $transaction->date,
                     'trip_no' => $transaction->trip_no,
@@ -100,6 +90,9 @@ class DriverController extends Controller
             ->paginate()
             ->transform(function ($transaction) {
                 return [
+                    'monthly_mindoro_transaction_id' => $transaction->monthlyMindoroTransaction->id,
+                    'month' => $transaction->monthlyMindoroTransaction->month,
+                    'year' => $transaction->monthlyMindoroTransaction->year,
                     'id' => $transaction->id,
                     'date' => $transaction->date,
                     'trip_no' => $transaction->trip_no,
@@ -115,15 +108,39 @@ class DriverController extends Controller
                 ];
             });
 
+        $batangasTrips = $bD->groupBy(['year', 'month']);
+        $mindoroTrips = $mD->groupBy(['year', 'month']);
 
        if (request()->wantsJson()) {
          return [
-           // 'loadDetails' => $lD,
            'batangasDetails' => $bD,
            'mindoroDetails' => $mD,
          ];
        }
 
+        return Inertia::render('Drivers/Show', [
+           'driver' => [
+                'id' => $driver->id,
+                'name' => $driver->name,
+                'nickname' => $driver->nickname,
+                'address' => $driver->address,
+                'license_no' => $driver->license_no,
+                'contact_no' => $driver->contact_no,
+                'deleted_at' => $driver->deleted_at,
+           ],
+           'mindoroTrips' => $mindoroTrips,
+           'batangasTrips' => $batangasTrips,
+        ]);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\Models\Driver  $driver
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Driver $driver)
+    {
         return Inertia::render('Drivers/Edit', [
            'driver' => [
                 'id' => $driver->id,
@@ -134,10 +151,6 @@ class DriverController extends Controller
                 'contact_no' => $driver->contact_no,
                 'deleted_at' => $driver->deleted_at,
            ],
-           // 'loadDetails' => $lD,
-           'batangasDetails' => $bD,
-           'mindoroDetails' => $mD,
-           'trips' => $trips,
         ]);
     }
 

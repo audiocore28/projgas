@@ -294,6 +294,13 @@ class MindoroTransactionController extends Controller
                 })
                 ->toArray();
 
+        if (request()->wantsJson()) {
+            $monthlyMindoroTransactionId = $mindoroTransaction->monthlyMindoroTransaction ? $mindoroTransaction->monthlyMindoroTransaction->only('id') : null;
+
+            return [
+                'monthly_mindoro_transaction' => $monthlyMindoroTransactionId,
+            ];
+        }
 
         return Inertia::render('MindoroTransactions/Edit', [
             'mindoro_transaction' => [
@@ -393,7 +400,8 @@ class MindoroTransactionController extends Controller
     {
         $mindoroTransaction->delete();
 
-        return redirect()->route('mindoro-transactions.index')->with('success', 'Mindoro Transaction deleted.');
+        // return redirect()->route('mindoro-transactions.index')->with('success', 'Mindoro Transaction deleted.');
+        return Redirect::back()->with('success', 'Mindoro Transaction deleted.');
     }
 
 }

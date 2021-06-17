@@ -294,6 +294,13 @@ class BatangasTransactionController extends Controller
                 })
                 ->toArray();
 
+        if (request()->wantsJson()) {
+            $monthlyBatangasTransactionId = $batangasTransaction->monthlyBatangasTransaction ? $batangasTransaction->monthlyBatangasTransaction->only('id') : null;
+
+            return [
+                'monthly_batangas_transaction' => $monthlyBatangasTransactionId,
+            ];
+        }
 
         return Inertia::render('BatangasTransactions/Edit', [
             'batangas_transaction' => [
@@ -375,7 +382,8 @@ class BatangasTransactionController extends Controller
     {
         $batangasTransaction->delete();
 
-        return redirect()->route('batangas-transactions.index')->with('success', 'Batangas Transaction deleted.');
+        // return redirect()->route('batangas-transactions.index')->with('success', 'Batangas Transaction deleted.');
+        return Redirect::back()->with('success', 'Batangas Transaction deleted.');
     }
 
 }

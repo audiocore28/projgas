@@ -1,6 +1,26 @@
 <template>
   <div>
-    <h1 class="mb-8 font-bold text-3xl">Purchases</h1>
+    <div class="mb-6 flex justify-between items-center">
+      <h1 class="font-bold text-3xl">Purchases</h1>
+      <div class="flex">
+        <date-picker
+          v-model="form.range"
+          type="date"
+          range
+          value-type="format"
+          :formatter="momentFormat"
+          placeholder="Select date range">
+        </date-picker>
+        <a v-if="form.range !== null" class="px-4 flex items-center" target="_blank" :href="route('purchases.prints', {
+            start: form.range[0],
+            end: form.range[1],
+            search: form.search,
+          })" tabindex="-1">
+          <icon name="printer" class="block w-6 h-6 fill-gray-400"/>
+        </a>
+      </div>
+    </div>
+
     <div class="mb-6 flex justify-between items-center">
       <search-filter v-model="form.search" class="w-full max-w-md mr-4" @reset="reset">
 <!--         <label class="block text-gray-700">Trashed:</label>
@@ -10,7 +30,7 @@
           <option value="only">Only Trashed</option>
         </select>
  -->      </search-filter>
-      <inertia-link class="btn-indigo" :href="route('purchases.create')">
+      <inertia-link class="btn-indigo" :href="route('purchases.create')" v-if="$page.auth.user.can.purchase.create">
         <span>Add</span>
         <span class="hidden md:inline">Purchase</span>
       </inertia-link>
@@ -23,44 +43,48 @@
           <th class="px-6 pt-6 pb-4">Purchase No.</th>
           <th class="px-6 pt-6 pb-4">Purchases</th>
         </tr>
-         <tr v-for="purchase in purchases.data" :key="purchase.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
-          <!-- table columns -->
+        <tr v-for="purchase in purchases.data" :key="purchase.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
           <td class="border-t">
-            <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('purchases.edit', purchase.id)">
+            <div class="px-6 py-4 flex items-center">
               {{ purchase.date }}
-            </inertia-link>
+            </div>
           </td>
           <td class="border-t">
-            <inertia-link class="px-6 py-4 flex items-center" :href="route('purchases.edit', purchase.id)" tabindex="-1">
+            <div class="px-6 py-4 flex items-center">
               <div v-if="purchase.supplier">
                 {{ purchase.supplier.name }}
               </div>
-            </inertia-link>
+            </div>
           </td>
           <td class="border-t">
-            <inertia-link class="px-6 py-4 flex items-center" :href="route('purchases.edit', purchase.id)" tabindex="-1">
+            <div class="px-6 py-4 flex items-center">
               {{ purchase.purchase_no }}
-            </inertia-link>
+            </div>
           </td>
           <td class="border-t">
-            <inertia-link class="px-6 py-4 flex items-center" :href="route('purchases.edit', purchase.id)" tabindex="-1">
-              <div v-if="purchase.products" v-for="product in purchase.products">
+            <div class="px-6 py-4 flex items-center">
+              <div v-if="purchase.purchase_details" v-for="detail in purchase.purchase_details">
                 <span class="px-2 py-2 text-sm leading-5 font-semibold rounded-full bg-grey-100 text-grey-800">
-                  {{ product.product.name }}
+                  {{ detail.product.name }}
                   <span class="p-1 rounded-full text-grey-800 text-sm bg-grey-400">
-                      {{ toFigure(product.quantity) }}
+                      {{ toFigure(detail.quantity) }}
                   </span>
                 </span>
               </div>
+            </div>
+          </td>
+          <td class="border-t w-px">
+            <inertia-link class="px-4 flex items-center" :href="route('purchases.edit', purchase.id)" tabindex="-1" v-if="$page.auth.user.can.purchase.update">
+              <icon name="edit" class="block w-6 h-6 fill-gray-400" />
             </inertia-link>
           </td>
           <td class="border-t w-px">
-            <inertia-link class="px-4 flex items-center" :href="route('purchases.edit', purchase.id)" tabindex="-1">
-              <icon name="cheveron-right" class="block w-6 h-6 fill-gray-400" />
-            </inertia-link>
+            <a class="px-4 flex items-center" target="_blank" :href="route('purchases.print', purchase.id)" tabindex="-1" v-if="$page.auth.user.can.purchase.print">
+              <icon name="printer" class="block w-6 h-6 fill-gray-400" />
+            </a>
           </td>
         </tr>
-         <tr v-if="purchases.data.length === 0">
+        <tr v-if="purchases.data.length === 0">
           <td class="border-t px-6 py-4" colspan="4">No purchases found.</td>
         </tr>
     </table>
@@ -74,9 +98,11 @@ import Icon from '@/Shared/Icon'
 import Layout from '@/Shared/Layout'
 import mapValues from 'lodash/mapValues'
 import Pagination from '@/Shared/Pagination'
-import pickBy from 'lodash/pickBy'
 import SearchFilter from '@/Shared/SearchFilter'
+import DatePicker from 'vue2-datepicker'
+import pickBy from 'lodash/pickBy'
 import throttle from 'lodash/throttle'
+import moment from 'moment'
 
 export default {
   metaInfo: { title: 'Purchases' },
@@ -92,8 +118,23 @@ export default {
   },
   data() {
     return {
+      momentFormat: {
+        //[optional] Date to String
+        stringify: (date) => {
+          return date ? moment(date).format('ll') : ''
+        },
+        //[optional]  String to Date
+        parse: (value) => {
+          return value ? moment(value, 'll').toDate() : null
+        },
+        // [optional] getWeekNumber
+        getWeek: (date) => {
+          return // a number
+        }
+      },
       form: {
         search: this.filters.search,
+        range: this.filters.range,
         // trashed: this.filters.trashed,
       },
     }
@@ -119,3 +160,5 @@ export default {
   },
 }
 </script>
+
+<style src="vue2-datepicker/index.css"></style>

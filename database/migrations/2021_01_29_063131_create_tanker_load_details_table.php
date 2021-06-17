@@ -15,7 +15,7 @@ class CreateTankerLoadDetailsTable extends Migration
     {
         Schema::create('tanker_load_details', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('tanker_load_id');
+            $table->unsignedBigInteger('tanker_load_id')->nullable();
             $table->bigInteger('product_id');
             $table->decimal('quantity', 8, 0)->nullable();
             $table->decimal('unit_price', 10, 2)->nullable();

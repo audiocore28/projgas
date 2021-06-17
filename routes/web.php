@@ -2,6 +2,7 @@
 
 // use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ClientController;
 // use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DriverController;
@@ -9,6 +10,8 @@ use App\Http\Controllers\BatangasTransactionController;
 use App\Http\Controllers\BatangasTransactionDetailController;
 use App\Http\Controllers\MindoroTransactionController;
 use App\Http\Controllers\MindoroTransactionDetailController;
+use App\Http\Controllers\MonthlyMindoroTransactionController;
+use App\Http\Controllers\MonthlyBatangasTransactionController;
 use App\Http\Controllers\HelperController;
 // use App\Http\Controllers\CashierController;
 // use App\Http\Controllers\PumpAttendantController;
@@ -32,6 +35,8 @@ use App\Http\Controllers\SupplierController;
 // use App\Http\Controllers\DiscountController;
 use App\Http\Controllers\TankerController;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\PermissionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -61,12 +66,28 @@ use App\Http\Controllers\UsersController;
 // Route::post('logout', [LoginController::class, 'logout'])
 //     ->name('logout');
 
+ // Auth
+ Route::get('login', [AuthenticatedSessionController::class, 'create'])
+     ->name('login');
+     // ->middleware('guest');
+
+ Route::post('login', [AuthenticatedSessionController::class, 'store'])
+     ->name('login.store');
+     // ->middleware('guest');
+
+ Route::delete('logout', [AuthenticatedSessionController::class, 'destroy'])
+     ->name('logout');
+
 
 Route::group(['middleware' => 'auth'], function() {
 	// Dashboard
 	// Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 	// Purchases
+	Route::get('purchases/prints', [PurchaseController::class, 'prints'])->name('purchases.prints');
+
+	Route::get('purchases/{purchase}/print', [PurchaseController::class, 'print'])->name('purchases.print')->middleware('can:print,purchase');
+
 	Route::resource('purchases', PurchaseController::class);
 
 	// Purchase Details
@@ -90,8 +111,18 @@ Route::group(['middleware' => 'auth'], function() {
 	// Mindoro Transaction Details
 	Route::resource('mindoro-transaction-details', MindoroTransactionDetailController::class)->only(['store', 'destroy']);
 
+	// Monthly Mindoro Transaction
+	Route::resource('monthly-mindoro-transactions', MonthlyMindoroTransactionController::class);
+
+	Route::get('monthly-mindoro-transactions/{monthlyMindoroTransaction}/print', [MonthlyMindoroTransactionController::class, 'print'])->name('monthly-mindoro-transactions.print')->middleware('can:print,monthlyMindoroTransaction');
+
+	// Monthly Batangas Transaction
+	Route::resource('monthly-batangas-transactions', MonthlyBatangasTransactionController::class);
+
+	Route::get('monthly-batangas-transactions/{monthlyBatangasTransaction}/print', [MonthlyBatangasTransactionController::class, 'print'])->name('monthly-batangas-transactions.print')->middleware('can:print,monthlyBatangasTransaction');
+
 	// Suppliers
-	Route::put('suppliers/{supplier}/restore', [SupplierController::class, 'restore'])->name('suppliers.restore');
+	Route::put('suppliers/{supplier}/restore', [SupplierController::class, 'restore'])->name('suppliers.restore')->middleware('can:restore,supplier');
 	Route::resource('suppliers', SupplierController::class);
 
 	// // Stations
@@ -107,31 +138,39 @@ Route::group(['middleware' => 'auth'], function() {
 	// Route::resource('companies', CompanyController::class);
 
 	// Clients
-	Route::put('clients/{client}/restore', [ClientController::class, 'restore'])->name('clients.restore');
+	Route::put('clients/{client}/restore', [ClientController::class, 'restore'])->name('clients.restore')->middleware('can:restore,client');
 	Route::resource('clients', ClientController::class);
 
 	// Statements
 	// Route::put('statements/{statement}/restore', [StatementController::class, 'restore'])->name('statements.restore');
 	// Route::resource('statements', StatementController::class);
 
-	// // Users
-	// Route::put('users/{user}/restore', [UsersController::class, 'restore'])->name('users.restore');
-	// Route::resource('users', UsersController::class);
+	// Users
+	Route::put('users/{user}/restore', [UsersController::class, 'restore'])->name('users.restore');
+	Route::resource('users', UsersController::class);
+
+	// Roles
+	Route::put('roles/{role}/restore', [RoleController::class, 'restore'])->name('roles.restore');
+	Route::resource('roles', RoleController::class);
+
+	// Permissions
+	Route::put('permissions/{permission}/restore', [PermissionController::class, 'restore'])->name('permissions.restore');
+	Route::resource('permissions', PermissionController::class);
 
 	// Products
-	Route::put('products/{product}/restore', [ProductController::class, 'restore'])->name('products.restore');
+	Route::put('products/{product}/restore', [ProductController::class, 'restore'])->name('products.restore')->middleware('can:restore,product');
 	Route::resource('products', ProductController::class);
 
 	// Tankers
-	Route::put('tankers/{tanker}/restore', [TankerController::class, 'restore'])->name('tankers.restore');
+	Route::put('tankers/{tanker}/restore', [TankerController::class, 'restore'])->name('tankers.restore')->middleware('can:restore,tanker');
 	Route::resource('tankers', TankerController::class);
 
 	// Drivers
-	Route::put('drivers/{driver}/restore', [DriverController::class, 'restore'])->name('drivers.restore');
+	Route::put('drivers/{driver}/restore', [DriverController::class, 'restore'])->name('drivers.restore')->middleware('can:restore,driver');
 	Route::resource('drivers', DriverController::class);
 
 	// Helpers
-	Route::put('helpers/{helper}/restore', [HelperController::class, 'restore'])->name('helpers.restore');
+	Route::put('helpers/{helper}/restore', [HelperController::class, 'restore'])->name('helpers.restore')->middleware('can:restore,helper');
 	Route::resource('helpers', HelperController::class);
 
 	// // Cashiers
