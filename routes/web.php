@@ -85,9 +85,10 @@ Route::group(['middleware' => 'auth'], function() {
 
 	// Purchases
 	Route::get('purchases/prints', [PurchaseController::class, 'prints'])->name('purchases.prints');
-	Route::resource('purchases', PurchaseController::class);
 
-	Route::get('purchases/{purchase}/print', [PurchaseController::class, 'print'])->name('purchases.print');
+	Route::get('purchases/{purchase}/print', [PurchaseController::class, 'print'])->name('purchases.print')->middleware('can:print,purchase');
+
+	Route::resource('purchases', PurchaseController::class);
 
 	// Purchase Details
 	Route::resource('purchase-details', PurchaseDetailController::class)->only(['store', 'destroy']);
@@ -113,12 +114,12 @@ Route::group(['middleware' => 'auth'], function() {
 	// Monthly Mindoro Transaction
 	Route::resource('monthly-mindoro-transactions', MonthlyMindoroTransactionController::class);
 
-	Route::get('monthly-mindoro-transactions/{monthlyMindoroTransaction}/print', [MonthlyMindoroTransactionController::class, 'print'])->name('monthly-mindoro-transactions.print');
+	Route::get('monthly-mindoro-transactions/{monthlyMindoroTransaction}/print', [MonthlyMindoroTransactionController::class, 'print'])->name('monthly-mindoro-transactions.print')->middleware('can:print,monthlyMindoroTransaction');
 
 	// Monthly Batangas Transaction
 	Route::resource('monthly-batangas-transactions', MonthlyBatangasTransactionController::class);
 
-	Route::get('monthly-batangas-transactions/{monthlyBatangasTransaction}/print', [MonthlyBatangasTransactionController::class, 'print'])->name('monthly-batangas-transactions.print');
+	Route::get('monthly-batangas-transactions/{monthlyBatangasTransaction}/print', [MonthlyBatangasTransactionController::class, 'print'])->name('monthly-batangas-transactions.print')->middleware('can:print,monthlyBatangasTransaction');
 
 	// Suppliers
 	Route::put('suppliers/{supplier}/restore', [SupplierController::class, 'restore'])->name('suppliers.restore')->middleware('can:restore,supplier');

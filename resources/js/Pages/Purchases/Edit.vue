@@ -479,7 +479,7 @@
       </div>
 
       <div class="px-8 py-4 bg-gray-100 border-t border-gray-200 flex justify-end items-center">
-        <button v-if="!purchase.deleted_at" class="text-red-600 hover:underline" tabindex="-1" type="button" @click="destroy">Delete Purchase</button>
+        <button v-if="!purchase.deleted_at && $page.auth.user.can.purchase.delete" class="text-red-600 hover:underline" tabindex="-1" type="button" @click="destroy">Delete Purchase</button>
 
         <loading-button :loading="sending" class="btn-indigo ml-auto" type="submit">Update Purchase</loading-button>
       </div>

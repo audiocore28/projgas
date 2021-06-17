@@ -348,7 +348,7 @@
             </div>
 
             <div class="px-8 py-4 bg-gray-100 border-t border-gray-200 flex justify-end items-center">
-              <button v-if="!monthly_mindoro_transaction.deleted_at" class="text-red-600 hover:underline" tabindex="-1" type="button" @click="destroy">Delete Transaction</button>
+              <button v-if="!monthly_mindoro_transaction.deleted_at && $page.auth.user.can.mindoroTransaction.delete" class="text-red-600 hover:underline" tabindex="-1" type="button" @click="destroy">Delete Transaction</button>
               <loading-button :loading="sending" class="btn-indigo ml-auto" type="submit">Update Transaction</loading-button>
             </div>
           </form>

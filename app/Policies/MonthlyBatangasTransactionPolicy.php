@@ -78,7 +78,7 @@ class MonthlyBatangasTransactionPolicy
         }
     }
 
-    public function print(User $user, Purchase $purchase)
+    public function print(User $user, MonthlyBatangasTransaction $monthlyBatangasTransaction)
     {
         if ($user->can('print batangas transaction')) {
             return true;

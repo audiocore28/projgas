@@ -78,7 +78,7 @@ class MonthlyMindoroTransactionPolicy
         }
     }
 
-    public function print(User $user, Purchase $purchase)
+    public function print(User $user, MonthlyMindoroTransaction $monthlyMindoroTransaction)
     {
         if ($user->can('print mindoro transaction')) {
             return true;
