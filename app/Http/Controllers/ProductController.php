@@ -114,12 +114,12 @@ class ProductController extends Controller
             return back()->withErrors(['error' => 'Cannot delete, load has product records']);
         }
 
-        if ($product->haulDetails()->count()) {
-            return back()->withErrors(['error' => 'Cannot delete, hauling has product records']);
+        if ($product->batangasTransactionDetails()->count()) {
+            return back()->withErrors(['error' => 'Cannot delete, Batangas Transaction has product records']);
         }
 
-        if ($product->deliveryDetails()->count()) {
-            return back()->withErrors(['error' => 'Cannot delete, delivery has product records']);
+        if ($product->mindoroTransactionDetails()->count()) {
+            return back()->withErrors(['error' => 'Cannot delete, Mindoro Transaction has product records']);
         }
 
         $product->delete();

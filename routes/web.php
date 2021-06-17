@@ -157,11 +157,11 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::resource('permissions', PermissionController::class);
 
 	// Products
-	Route::put('products/{product}/restore', [ProductController::class, 'restore'])->name('products.restore');
+	Route::put('products/{product}/restore', [ProductController::class, 'restore'])->name('products.restore')->middleware('can:restore,product');
 	Route::resource('products', ProductController::class);
 
 	// Tankers
-	Route::put('tankers/{tanker}/restore', [TankerController::class, 'restore'])->name('tankers.restore');
+	Route::put('tankers/{tanker}/restore', [TankerController::class, 'restore'])->name('tankers.restore')->middleware('can:restore,tanker');
 	Route::resource('tankers', TankerController::class);
 
 	// Drivers

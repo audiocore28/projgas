@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\PurchaseDetail;
 use App\Models\TankerLoadDetail;
-use App\Models\HaulDetail;
-use App\Models\DeliveryDetail;
+use App\Models\BatangasTransactionDetail;
+use App\Models\MindoroTransactionDetail;
 
 class Product extends Model
 {
@@ -43,13 +43,13 @@ class Product extends Model
         return $this->hasMany(TankerLoadDetail::class);
     }
 
-    public function haulDetails()
+    public function batangasTransactionDetails()
     {
-        return $this->hasMany(HaulDetail::class);
+        return $this->hasMany(BatangasTransactionDetail::class);
     }
 
-    public function deliveryDetails()
+    public function mindoroTransactionDetails()
     {
-        return $this->hasMany(DeliveryDetail::class);
+        return $this->hasMany(MindoroTransactionDetail::class);
     }
 }
