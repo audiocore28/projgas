@@ -10,12 +10,13 @@
  -->
           <text-input v-model="form.email" :error="errors.email" class="mt-10" label="Email" type="email" autofocus autocapitalize="off" />
           <text-input v-model="form.password" :error="errors.password" class="mt-6" label="Password" type="password" />
-          <label class="mt-6 select-none flex items-center" for="remember">
+<!--           <label class="mt-6 select-none flex items-center" for="remember">
             <input id="remember" v-model="form.remember" class="mr-1" type="checkbox" />
             <span class="text-sm">Remember Me</span>
           </label>
+ -->
         </div>
-        <div class="px-10 py-4 bg-gray-100 border-t border-gray-100 flex">
+        <div class="mt-6 px-10 py-4 bg-gray-100 border-t border-gray-100 flex">
           <loading-button :loading="form.processing" class="ml-auto btn-indigo" type="submit">Login</loading-button>
         </div>
       </form>
