@@ -7,7 +7,7 @@
     </div>
     <div v-show="truckingSelected == 0" class="py-4 text-sm">
       <div class="mb-4" v-for="link in truckingLinks">
-        <inertia-link class="flex items-center group py-3" :href="route(link.route)">
+        <inertia-link class="flex items-center group py-3" :href="route(link.route)" v-if="link.visible">
           <icon :name="link.icon" class="w-4 h-4 mr-2" :class="isUrl(link.isUrl) ? 'fill-white' : 'fill-blue-400 group-hover:fill-white'" />
           <div :class="isUrl(link.isUrl) ? 'text-white' : 'text-blue-300 group-hover:text-white'">{{ link.name }}</div>
         </inertia-link>
@@ -21,7 +21,7 @@
     </div>
     <div v-show="recordSelected == 1" class="py-4 text-sm">
       <div class="mb-4" v-for="link in recordLinks">
-        <inertia-link class="flex items-center group py-3" :href="route(link.route)">
+        <inertia-link class="flex items-center group py-3" :href="route(link.route)" v-if="link.visible">
           <icon :name="link.icon" class="w-4 h-4 mr-2" :class="isUrl(link.isUrl) ? 'fill-white' : 'fill-blue-400 group-hover:fill-white'" />
           <div :class="isUrl(link.isUrl) ? 'text-white' : 'text-blue-300 group-hover:text-white'">{{ link.name }}</div>
         </inertia-link>
@@ -49,7 +49,7 @@
     </div>
     <div v-show="employeeSelected == 3" class="py-4 text-sm">
       <div class="mb-4" v-for="link in employeeLinks">
-        <inertia-link class="flex items-center group py-3" :href="route(link.route)">
+        <inertia-link class="flex items-center group py-3" :href="route(link.route)" v-if="link.visible">
           <icon :name="link.icon" class="w-4 h-4 mr-2" :class="isUrl(link.isUrl) ? 'fill-white' : 'fill-blue-400 group-hover:fill-white'" />
           <div :class="isUrl(link.isUrl) ? 'text-white' : 'text-blue-300 group-hover:text-white'">{{ link.name }}</div>
         </inertia-link>
@@ -63,7 +63,7 @@
     </div>
     <div v-show="assetSelected == 4" class="py-4 text-sm">
       <div class="mb-4" v-for="link in assetLinks">
-        <inertia-link class="flex items-center group py-3" :href="route(link.route)">
+        <inertia-link class="flex items-center group py-3" :href="route(link.route)" v-if="link.visible">
           <icon :name="link.icon" class="w-4 h-4 mr-2" :class="isUrl(link.isUrl) ? 'fill-white' : 'fill-blue-400 group-hover:fill-white'" />
           <div :class="isUrl(link.isUrl) ? 'text-white' : 'text-blue-300 group-hover:text-white'">{{ link.name }}</div>
         </inertia-link>
@@ -115,38 +115,112 @@ export default {
     return {
       truckingLinks: [
         // { route: 'dashboard', icon: 'office', isUrl: 'dashboard', name: 'Dashboard'},
-        { route: 'purchases.index', icon: 'shopping-cart', isUrl: 'purchases', name: 'Purchases'},
-        { route: 'monthly-batangas-transactions.index', icon: 'location', isUrl: 'monthly-batangas-transactions', name: 'Batangas'},
-        { route: 'monthly-mindoro-transactions.index', icon: 'location', isUrl: 'monthly-mindoro-transactions', name: 'Mindoro'},
+        {
+          route: 'purchases.index',
+          icon: 'shopping-cart',
+          isUrl: 'purchases',
+          name: 'Purchases',
+          visible: this.$page.auth.user.can.purchase.viewAny,
+        },
+        {
+          route: 'monthly-batangas-transactions.index',
+          icon: 'location',
+          isUrl: 'monthly-batangas-transactions',
+          name: 'Batangas',
+          visible: this.$page.auth.user.can.batangasTransaction.viewAny,
+        },
+        {
+          route: 'monthly-mindoro-transactions.index',
+          icon: 'location',
+          isUrl: 'monthly-mindoro-transactions',
+          name: 'Mindoro',
+          visible: this.$page.auth.user.can.mindoroTransaction.viewAny,
+        },
       ],
       recordLinks: [
-        { route: 'suppliers.index', icon: 'office', isUrl: 'suppliers', name: 'Suppliers'},
-        { route: 'clients.index', icon: 'office', isUrl: 'clients', name: 'Clients'},
+        {
+          route: 'suppliers.index',
+          icon: 'office',
+          isUrl: 'suppliers',
+          name: 'Suppliers',
+          visible: this.$page.auth.user.can.supplier.viewAny,
+        },
+        {
+          route: 'clients.index',
+          icon: 'office',
+          isUrl: 'clients',
+          name: 'Clients',
+          visible: this.$page.auth.user.can.client.viewAny,
+        },
         // { route: 'statements.index', icon: 'book', isUrl: 'statements', name: 'SOA'},
       ],
       // reportLinks: [
       //   { route: 'station-transactions.index', icon: 'book', isUrl: 'station-transactions', name: 'DTR'},
       // ],
       employeeLinks: [
-        { route: 'drivers.index', icon: 'users', isUrl: 'drivers', name: 'Drivers'},
-        { route: 'helpers.index', icon: 'users', isUrl: 'helpers', name: 'Helpers'},
+        {
+          route: 'drivers.index',
+          icon: 'users',
+          isUrl: 'drivers',
+          name: 'Drivers',
+          visible: this.$page.auth.user.can.driver.viewAny,
+        },
+        {
+          route: 'helpers.index',
+          icon: 'users',
+          isUrl: 'helpers',
+          name: 'Helpers',
+          visible: this.$page.auth.user.can.helper.viewAny,
+        },
         // { route: 'cashiers.index', icon: 'users', isUrl: 'cashiers', name: 'Cashiers'},
         // { route: 'pump-attendants.index', icon: 'users', isUrl: 'pump-attendants', name: 'Pump Attnd'},
         // { route: 'office-staffs.index', icon: 'users', isUrl: 'office-staffs', name: 'Office Staffs'},
       ],
       assetLinks: [
-        { route: 'tankers.index', icon: 'dashboard', isUrl: 'tankers', name: 'Tankers'},
+        {
+          route: 'tankers.index',
+          icon: 'dashboard',
+          isUrl: 'tankers',
+          name: 'Tankers',
+          visible: this.$page.auth.user.can.tanker.viewAny,
+        },
         // { route: 'stations.index', icon: 'store-front', isUrl: 'stations', name: 'G. Stations'},
         // { route: 'companies.index', icon: 'office', isUrl: 'companies', name: 'B. Company'},
-        { route: 'products.index', icon: 'store-front', isUrl: 'products', name: 'Products'},
+        {
+          route: 'products.index',
+          icon: 'store-front',
+          isUrl: 'products',
+          name: 'Products',
+          visible: this.$page.auth.user.can.product.viewAny,
+        },
       ],
       userLinks: [
-        { route: 'users.index', icon: 'users', isUrl: 'users', name: 'Users'},
-        { route: 'roles.index', icon: 'users', isUrl: 'roles', name: 'Roles'},
-        { route: 'permissions.index', icon: 'users', isUrl: 'permissions', name: 'Permissions'},
+        {
+          route: 'users.index',
+          icon: 'users',
+          isUrl: 'users',
+          name: 'Users',
+        },
+        {
+          route: 'roles.index',
+          icon: 'users',
+          isUrl: 'roles',
+          name: 'Roles',
+        },
+        {
+          route: 'permissions.index',
+          icon: 'users',
+          isUrl: 'permissions',
+          name: 'Permissions',
+        },
       ],
       utilityLinks: [
-        { route: 'backup', icon: 'book', isUrl: 'backup', name: 'Backup DB'},
+        {
+          route: 'backup',
+          icon: 'book',
+          isUrl: 'backup',
+          name: 'Backup DB',
+        },
       ],
       truckingSelected: 0,
       recordSelected: 1,
