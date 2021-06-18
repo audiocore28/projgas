@@ -4,6 +4,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\ClientPaymentController;
 // use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DriverController;
 use App\Http\Controllers\BatangasTransactionController;
@@ -140,6 +141,10 @@ Route::group(['middleware' => 'auth'], function() {
 	// Clients
 	Route::put('clients/{client}/restore', [ClientController::class, 'restore'])->name('clients.restore')->middleware('can:restore,client');
 	Route::resource('clients', ClientController::class);
+
+	// Client Payments
+	Route::put('client-payments/{clientPayment}/restore', [ClientPaymentController::class, 'restore'])->name('client-payments.restore')->middleware('can:restore,clientPayment');
+	Route::resource('client-payments', ClientPaymentController::class);
 
 	// Statements
 	// Route::put('statements/{statement}/restore', [StatementController::class, 'restore'])->name('statements.restore');

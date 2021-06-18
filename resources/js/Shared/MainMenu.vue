@@ -152,6 +152,13 @@ export default {
           name: 'Clients',
           visible: this.$page.auth.user.can.client.viewAny,
         },
+        {
+          route: 'client-payments.index',
+          icon: 'office',
+          isUrl: 'client-payments',
+          name: 'Payments',
+          visible: this.$page.auth.user.can.clientPayment.viewAny,
+        },
         // { route: 'statements.index', icon: 'book', isUrl: 'statements', name: 'SOA'},
       ],
       // reportLinks: [

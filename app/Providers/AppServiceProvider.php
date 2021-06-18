@@ -90,6 +90,14 @@ class AppServiceProvider extends ServiceProvider
                         'delete' => auth()->user()->can('delete client'),
                         'restore' => auth()->user()->can('restore client'),
                     ],
+                    'clientPayment' => [
+                        'viewAny' => auth()->user()->can('view any client payment'),
+                        'view' => auth()->user()->can('view client payment'),
+                        'create' => auth()->user()->can('create client payment'),
+                        'update' => auth()->user()->can('update client payment'),
+                        'delete' => auth()->user()->can('delete client payment'),
+                        'restore' => auth()->user()->can('restore client payment'),
+                    ],
                     'driver' => [
                         'viewAny' => auth()->user()->can('view any driver'),
                         'view' => auth()->user()->can('view driver'),
