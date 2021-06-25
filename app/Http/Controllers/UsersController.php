@@ -15,6 +15,11 @@ use Inertia\Inertia;
 
 class UsersController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(User::class, 'user');
+    }
+
     public function index()
     {
         return Inertia::render('Users/Index', [

@@ -11,7 +11,7 @@
         </select>
       </search-filter>
  -->
-      <inertia-link class="btn-indigo" :href="route('roles.create')">
+      <inertia-link class="btn-indigo" :href="route('roles.create')" v-if="$page.auth.user.can.role.create">
         <span>Add</span>
         <span class="hidden md:inline">Role</span>
       </inertia-link>
@@ -24,23 +24,23 @@
         </tr>
          <tr v-for="role in roles.data" :key="role.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
           <td class="border-t">
-            <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('roles.edit', role.id)">
+            <div class="px-6 py-4 flex items-center focus:text-indigo-500">
               {{ role.name }}
               <icon v-if="role.deleted_at" name="trash" class="flex-shrink-0 w-3 h-3 fill-gray-400 ml-2" />
-            </inertia-link>
+            </div>
           </td>
           <td class="border-t">
-            <inertia-link class="px-6 py-4 flex items-center" :href="route('roles.edit', role.id)" tabindex="-1">
+            <div class="px-6 py-4 flex items-center focus:text-indigo-500">
               <div v-if="role.permissions" v-for="permission in role.permissions">
                 <span class="px-2 py-2 text-sm leading-5 font-semibold rounded-full bg-grey-100 text-grey-800">
                   {{ permission.name }}
                 </span>
               </div>
-            </inertia-link>
+            </div>
           </td>
-          <td class="border-t w-px">
+          <td class="border-t w-px" v-if="$page.auth.user.can.role.update">
             <inertia-link class="px-4 flex items-center" :href="route('roles.edit', role.id)" tabindex="-1">
-              <icon name="cheveron-right" class="block w-6 h-6 fill-gray-400" />
+              <icon name="edit" class="block w-6 h-6 fill-gray-400" />
             </inertia-link>
           </td>
         </tr>
