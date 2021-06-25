@@ -145,22 +145,20 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::resource('clients', ClientController::class);
 
 	// Client Payments
-	// Route::put('client-payments/{clientPayment}/restore', [ClientPaymentController::class, 'restore'])->name('client-payments.restore')->middleware('can:restore,clientPayment');
-	// Route::resource('client-payments', ClientPaymentController::class);
+	Route::put('client-payments/{clientPayment}/restore', [ClientPaymentController::class, 'restore'])->name('client-payments.restore')->middleware('can:restore,clientPayment');
+	Route::resource('client-payments', ClientPaymentController::class);
 
 	// Client Payment Details
 	// Route::put('client-payment-details/{clientPaymentDetail}/restore', [ClientPaymentDetailController::class, 'restore'])->name('client-payment-details.restore')->middleware('can:restore,clientPaymentDetail');
 	// Route::resource('client-payment-details', ClientPaymentDetailController::class);
 
 	// Batangas Payments
-	Route::get('clients/{client}/batangas-soa', [BatangasPaymentDetailController::class, 'edit'])->name('batangas-payment-details.edit');
-	Route::put('clients/{client}/batangas-soa', [BatangasPaymentDetailController::class, 'update'])->name('batangas-payment-details.update');
-	// ->middleware('can:update,clientPaymentDetail');
+	Route::get('clients/{client}/batangas-soa', [BatangasPaymentDetailController::class, 'edit'])->name('batangas-payment-details.edit')->middleware('can:viewPayment,client');
+	Route::put('clients/{client}/batangas-soa', [BatangasPaymentDetailController::class, 'update'])->name('batangas-payment-details.update')->middleware('can:updatePayment,client');
 
 	// Mindoro Payments
-	Route::get('clients/{client}/mindoro-soa', [MindoroPaymentDetailController::class, 'edit'])->name('mindoro-payment-details.edit');
-	Route::put('clients/{client}/mindoro-soa', [MindoroPaymentDetailController::class, 'update'])->name('mindoro-payment-details.update');
-		// ->middleware('can:update,mindoroPaymentDetail');
+	Route::get('clients/{client}/mindoro-soa', [MindoroPaymentDetailController::class, 'edit'])->name('mindoro-payment-details.edit')->middleware('can:viewPayment,client');
+	Route::put('clients/{client}/mindoro-soa', [MindoroPaymentDetailController::class, 'update'])->name('mindoro-payment-details.update')->middleware('can:updatePayment,client');
 
 
 	// Statements

@@ -19,6 +19,7 @@ class CreateMindoroPaymentDetailsTable extends Migration
             $table->string('mode')->nullable;
             $table->decimal('amount', 10, 2);
             $table->longText('remarks')->nullable();
+            $table->boolean('is_verified')->default(false);
             $table->bigInteger('mindoro_transaction_detail_id');
             $table->timestamps();
             $table->softDeletes();

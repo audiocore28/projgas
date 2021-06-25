@@ -13,11 +13,6 @@ use Inertia\Inertia;
 
 class MindoroPaymentDetailController extends Controller
 {
-    // public function __construct()
-    // {
-    //     $this->authorizeResource(MindoroPaymentDetail::class);
-    // }
-
     /**
      * Display a listing of the resource.
      *
@@ -93,6 +88,7 @@ class MindoroPaymentDetailController extends Controller
                             'mode' => $payment->mode,
                             'amount' => $payment->amount,
                             'remarks' => $payment->remarks,
+                            'is_verified' => $payment->is_verified,
                             'mindoro_transaction_detail_id' => $payment->mindoro_transaction_detail_id,
                         ];
                     }),

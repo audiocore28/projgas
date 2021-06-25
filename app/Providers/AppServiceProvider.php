@@ -89,6 +89,10 @@ class AppServiceProvider extends ServiceProvider
                         'update' => auth()->user()->can('update client'),
                         'delete' => auth()->user()->can('delete client'),
                         'restore' => auth()->user()->can('restore client'),
+                        // Payment
+                        'viewPayment' => auth()->user()->can('view client payment'),
+                        'updatePayment' => auth()->user()->can('update client payment'),
+                        'verifyPayment' => auth()->user()->can('verify client payment'),
                     ],
                     'clientPayment' => [
                         'viewAny' => auth()->user()->can('view any client payment'),

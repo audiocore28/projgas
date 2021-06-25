@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 class="mb-8 font-bold text-3xl">
+    <h1 class="mb-6 font-bold text-3xl">
       <inertia-link class="text-blue-600 hover:text-blue-800" :href="route('clients.index')">Clients</inertia-link>
       <span class="text-blue-600 font-medium">/</span> {{ client.name }}
     </h1>
@@ -11,6 +11,9 @@
 
     <div class="p-1">
       <form @submit.prevent="updateBatangasPayment">
+        <loading-button :loading="sending" class="btn-indigo mb-10" type="submit" v-if="$page.auth.user.can.client.updatePayment">
+          Update Payment
+        </loading-button>
         <div class="bg-white rounded shadow overflow-x-auto mb-8 -mt-4">
           <div class="rounded shadow overflow-x-auto mx-4 my-8" v-for="(months, year) in form.batangasDetails">
             <h1 class="font-semibold text-center">{{ year }}</h1>
@@ -111,44 +114,78 @@
                       </td>
                     </tr>
                     <!-- Payment Details -->
-                    <tr v-for="(payment, paymentIndex) in detail.payments" class="bg-blue-600 text-white">
-                     <td>
-                       <div class="text-sm font-medium text-gray-900">
-                         <date-picker style="width: 160px" v-model="payment.date" lang="en" value-type="format" :formatter="momentFormat"></date-picker>
-                       </div>
-                     </td>
-                     <td>
-                       <div class="text-sm font-medium text-gray-900">
-                         <select v-model="payment.mode" class="form-select">
-                           <option :value="null" />
-                           <option v-for="(mode, index) in modes" :key="index" :value="mode">{{ mode }}</option>
-                         </select>
-                       </div>
-                     </td>
-                     <td class="text-sm text-gray-500">
-                       <div class="text-sm font-medium text-gray-900">
-                         <text-input type="number" step="any" v-model="payment.amount" :error="errors.unit_price" />
-                       </div>
-                     </td>
-                     <td class="text-sm text-gray-500">
-                       <div class="text-sm font-medium text-gray-900">
-                         <text-input v-model="payment.remarks" placeholder="remarks" />
-                       </div>
-                     </td>
-                     <td class="text-sm text-gray-500">
-                       <div class=" px-5 text-sm font-medium text-gray-900">
-                         <button @click.prevent="deletePaymentForm(year, month, transactionDetailIndex, paymentIndex, payment.id)" type="button" class="bg-white py-1 px-1 flex-shrink-0 text-sm leading-none" tabindex="-1">
-                           <icon name="trash" class="w-4 h-4 mr-2 fill-red-600"/>
-                         </button>
-                       </div>
-                     </td>
+                    <tr>
+                      <td colspan="9" align="center" class="p-2">
+                        <table class="w-full lg:w-11/12">
+                          <colgroup>
+                            <col span="1" style="width: 20%;">
+                            <col span="1" style="width: 20%;">
+                            <col span="1" style="width: 20%;">
+                            <col span="1" style="width: 20%;">
+                            <col span="1" style="width: 10%;">
+                            <col span="1" style="width: 10%;">
+                          </colgroup>
+                          <tbody>
+                            <tr v-for="(payment, paymentIndex) in detail.payments" :class="[payment.is_verified ? 'bg-blue-600' : 'bg-yellow-500']">
+                              <td>
+                                <div class="text-sm font-medium text-white p-3" v-if="payment.is_verified">
+                                  {{ payment.date }}
+                                </div>
+                                <div class="text-sm font-medium text-gray-900" v-else>
+                                  <date-picker v-model="payment.date" lang="en" value-type="format" :formatter="momentFormat"></date-picker>
+                                </div>
+                              </td>
+                              <td>
+                                <div class="text-sm font-medium text-white p-3" v-if="payment.is_verified">
+                                  {{ payment.mode }}
+                                </div>
+                                <div class="text-sm font-medium text-gray-900" v-else>
+                                  <select v-model="payment.mode" class="form-select">
+                                    <option :value="null" />
+                                    <option v-for="(mode, index) in modes" :key="index" :value="mode">{{ mode }}</option>
+                                  </select>
+                                </div>
+                              </td>
+                              <td class="text-sm text-gray-500">
+                                <div class="text-sm font-medium text-white p-3" v-if="payment.is_verified">
+                                  {{ toPHP(payment.amount) }}
+                                </div>
+                                <div class="text-sm font-medium text-gray-900" v-else>
+                                  <text-input type="number" step="any" v-model="payment.amount" :error="errors.unit_price" />
+                                </div>
+                              </td>
+                              <td class="text-sm text-gray-500">
+                                <div class="text-sm font-medium text-white p-3" v-if="payment.is_verified">
+                                  {{ payment.remarks }}
+                                </div>
+                                <div class="text-sm font-medium text-gray-900" v-else>
+                                  <text-input v-model="payment.remarks" placeholder="remarks" />
+                                </div>
+                              </td>
+                              <td class="text-sm text-gray-500" align="center" v-if="$page.auth.user.can.client.verifyPayment">
+                                <div class="text-sm font-medium text-gray-900">
+                                  <input type="checkbox" class="w-5 h-5" v-model="payment.is_verified">
+                                </div>
+                              </td>
+                              <td class="text-sm text-gray-500" align="center">
+                                <div class="text-sm font-medium text-white p-3" v-if="payment.is_verified">
+                                  <span v-if="!$page.auth.user.can.client.verifyPayment">&#10004;</span> verified
+                                </div>
+                                <div class=" px-5 text-sm font-medium text-gray-900" v-else>
+                                  <button @click.prevent="deletePaymentForm(year, month, transactionDetailIndex, paymentIndex, payment.id)" type="button" class="py-1 px-1 flex-shrink-0 text-sm leading-none" tabindex="-1">
+                                    <icon name="trash" class="w-4 h-4 mr-2 fill-red-600"/>
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
                     </tr>
-
                   </tbody>
                 </table>
               </div>
             </div>
-            <loading-button :loading="sending" class="btn-indigo ml-auto" type="submit">Update Payment</loading-button>
           </div>
         </div>
       </form>

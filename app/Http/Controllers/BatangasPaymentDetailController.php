@@ -13,11 +13,6 @@ use Inertia\Inertia;
 
 class BatangasPaymentDetailController extends Controller
 {
-    // public function __construct()
-    // {
-    //     $this->authorizeResource(BatangasPaymentDetail::class);
-    // }
-
     /**
      * Display a listing of the resource.
      *
@@ -93,6 +88,7 @@ class BatangasPaymentDetailController extends Controller
                             'mode' => $payment->mode,
                             'amount' => $payment->amount,
                             'remarks' => $payment->remarks,
+                            'is_verified' => $payment->is_verified,
                             'batangas_transaction_detail_id' => $payment->batangas_transaction_detail_id,
                         ];
                     }),

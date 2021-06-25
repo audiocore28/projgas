@@ -28,6 +28,7 @@ export function loadMoreMindoroTransactionMixin (record) {
 		        mode: null,
 		        amount: 0,
 		        remarks: null,
+		        is_verified: false,
 		        mindoro_transaction_detail_id: mindoroTransactionDetailId,
 		   	});
 		   },

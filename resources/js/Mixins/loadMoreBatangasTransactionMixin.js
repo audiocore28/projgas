@@ -28,6 +28,7 @@ export function loadMoreBatangasTransactionMixin (record) {
 		        mode: null,
 		        amount: 0,
 		        remarks: null,
+		        is_verified: false,
 		        batangas_transaction_detail_id: batangasTransactionDetailId,
 		   	});
 		   },

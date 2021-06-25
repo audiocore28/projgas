@@ -46,11 +46,22 @@ class MindoroTransactionDetail extends Model
          foreach ($details as $detail) {
             $payment = $this->mindoroPaymentDetails()->findOrNew($detail['id']);
 
-            $payment->date = $detail['date'];
-            $payment->mode = $detail['mode'];
-            $payment->amount = $detail['amount'];
-            $payment->remarks = $detail['remarks'];
-            $payment->mindoro_transaction_detail_id = $detail['mindoro_transaction_detail_id'];
+            if (auth()->user()->can('verify client payment', $this->client)) {
+                $payment->date = $detail['date'];
+                $payment->mode = $detail['mode'];
+                $payment->amount = $detail['amount'];
+                $payment->remarks = $detail['remarks'];
+                $payment->mindoro_transaction_detail_id = $detail['mindoro_transaction_detail_id'];
+                $payment->is_verified = $detail['is_verified'];
+            } else {
+                if (!$payment->is_verified) {
+                    $payment->date = $detail['date'];
+                    $payment->mode = $detail['mode'];
+                    $payment->amount = $detail['amount'];
+                    $payment->remarks = $detail['remarks'];
+                    $payment->mindoro_transaction_detail_id = $detail['mindoro_transaction_detail_id'];
+                }
+            }
 
             $payment->save();
          }
