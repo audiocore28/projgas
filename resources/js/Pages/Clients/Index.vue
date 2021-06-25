@@ -30,11 +30,10 @@
               <icon v-if="form.field === 'name' && form.direction === 'desc'" name="sort-down" class="block w-6 h-6 fill-gray-400" />
             </span>
           </th>
-          <th class="px-6 pt-6 pb-4">Office</th>
           <th class="px-6 pt-6 pb-4">Contact No</th>
+          <th class="px-6 pt-6 pb-4" colspan="2" align="center">SOA</th>
           <th class="px-6 pt-6 pb-4"></th>
-          <th class="px-6 pt-6 pb-4"></th>
-          <!-- <th class="px-6 pt-6 pb-4" colspan="2">client No.</th> -->
+          <th class="px-6 pt-6 pb-4">Info</th>
         </tr>
          <tr v-for="client in clients.data" :key="client.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
           <!-- table columns -->
@@ -51,13 +50,20 @@
           </td>
           <td class="border-t">
             <div class="px-6 py-4 flex items-center focus:text-indigo-500">
-              {{ client.office }}
-            </div>
-          </td>
-          <td class="border-t">
-            <div class="px-6 py-4 flex items-center focus:text-indigo-500">
               {{ client.contact_no }}
             </div>
+          </td>
+          <td class="border-t w-px">
+            <inertia-link class="px-4 flex items-center focus:text-indigo-500" :href="route('batangas-payment-details.edit', client.id)" tabindex="-1" v-if="$page.auth.user.can.client.view">
+              <!-- <icon name="view" class="block w-6 h-6 fill-gray-400" /> -->
+              <span class="text-gray-400 font-extrabold">BAT</span>
+            </inertia-link>
+          </td>
+          <td class="border-t w-px">
+            <inertia-link class="px-4 flex items-center focus:text-indigo-500" :href="route('mindoro-payment-details.edit', client.id)" tabindex="-1" v-if="$page.auth.user.can.client.view">
+              <!-- <icon name="view" class="block w-6 h-6 fill-gray-400" /> -->
+              <span class="text-gray-400 font-extrabold">MDO</span>
+            </inertia-link>
           </td>
           <td class="border-t w-px">
             <inertia-link class="px-4 flex items-center focus:text-indigo-500" :href="route('clients.show', client.id)" tabindex="-1" v-if="$page.auth.user.can.client.view">

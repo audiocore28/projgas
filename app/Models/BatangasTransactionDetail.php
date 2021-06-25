@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\BatangasTransaction;
 use App\Models\Product;
 use App\Models\Client;
+use App\Models\BatangasPaymentDetail;
 use Carbon\Carbon;
 
 class BatangasTransactionDetail extends Model
@@ -30,11 +31,29 @@ class BatangasTransactionDetail extends Model
 	 	return $this->belongsTo(Client::class);
 	 }
 
+	 public function batangasPaymentDetails()
+	 {
+	 	return $this->hasMany(BatangasPaymentDetail::class);
+	 }
+
     public function getDateAttribute($value)
     {
         return Carbon::parse($value)->format('M d, Y');
     }
 
+    public function addPayments($details)
+    {
+         foreach ($details as $detail) {
+            $payment = $this->batangasPaymentDetails()->findOrNew($detail['id']);
 
+            $payment->date = $detail['date'];
+            $payment->mode = $detail['mode'];
+            $payment->amount = $detail['amount'];
+            $payment->remarks = $detail['remarks'];
+            $payment->batangas_transaction_detail_id = $detail['batangas_transaction_detail_id'];
+
+            $payment->save();
+         }
+    }
 
 }
