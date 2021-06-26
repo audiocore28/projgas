@@ -27,6 +27,8 @@ use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\PurchaseDetailController;
 // use App\Http\Controllers\StatementController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\DepotController;
+use App\Http\Controllers\AccountController;
 // use App\Http\Controllers\StationController;
 // use App\Http\Controllers\PumpController;
 // use App\Http\Controllers\CompanyController;
@@ -127,6 +129,14 @@ Route::group(['middleware' => 'auth'], function() {
 	// Suppliers
 	Route::put('suppliers/{supplier}/restore', [SupplierController::class, 'restore'])->name('suppliers.restore')->middleware('can:restore,supplier');
 	Route::resource('suppliers', SupplierController::class);
+
+	// Depots
+	Route::put('depots/{depot}/restore', [DepotController::class, 'restore'])->name('depots.restore')->middleware('can:restore,depot');
+	Route::resource('depots', DepotController::class);
+
+	// Accounts
+	Route::put('accounts/{account}/restore', [AccountController::class, 'restore'])->name('accounts.restore')->middleware('can:restore,account');
+	Route::resource('accounts', AccountController::class);
 
 	// // Stations
 	// Route::put('stations/{station}/restore', [StationController::class, 'restore'])->name('stations.restore');

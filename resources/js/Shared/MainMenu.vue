@@ -146,6 +146,20 @@ export default {
           visible: this.$page.auth.user.can.supplier.viewAny,
         },
         {
+          route: 'depots.index',
+          icon: 'office',
+          isUrl: 'depots',
+          name: 'Depots',
+          visible: this.$page.auth.user.can.depot.viewAny,
+        },
+        {
+          route: 'accounts.index',
+          icon: 'office',
+          isUrl: 'accounts',
+          name: 'Accounts',
+          visible: this.$page.auth.user.can.account.viewAny,
+        },
+        {
           route: 'clients.index',
           icon: 'office',
           isUrl: 'clients',

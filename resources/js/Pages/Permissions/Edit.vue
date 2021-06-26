@@ -55,7 +55,7 @@ export default {
   data() {
     return {
       sending: false,
-      groups: ['Purchases', 'Batangas Transactions', 'Mindoro Transactions', 'Suppliers', 'Clients', 'Client Payments', 'Drivers', 'Helpers', 'Tankers', 'Products', 'Users', 'Roles', 'Permissions'],
+      groups: ['Purchases', 'Batangas Transactions', 'Mindoro Transactions', 'Suppliers', 'Depots', 'Accounts', 'Clients', 'Client Payments', 'Drivers', 'Helpers', 'Tankers', 'Products', 'Users', 'Roles', 'Permissions'],
       form: {
         name: this.permission.name,
         group: this.permission.group,

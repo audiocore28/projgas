@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Supplier;
+use App\Models\Depot;
+use App\Models\Account;
 use App\Models\PurchaseDetail;
 use App\Models\MonthlyMindoroTransaction;
 use App\Models\MindoroTransaction;
@@ -23,6 +25,16 @@ class Purchase extends Model
 	 {
 	 	return $this->belongsTo(Supplier::class);
 	 }
+
+     public function depot()
+     {
+        return $this->belongsTo(Depot::class);
+     }
+
+     public function account()
+     {
+        return $this->belongsTo(Account::class);
+     }
 
      public function monthlyMindoroTransaction()
      {

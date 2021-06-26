@@ -17,6 +17,8 @@ class AuthServiceProvider extends ServiceProvider
         'App\Models\MonthlyBatangasTransaction' => 'App\Policies\MonthlyBatangasTransactionPolicy',
         'App\Models\MonthlyMindoroTransaction' => 'App\Policies\MonthlyMindoroTransactionPolicy',
         'App\Models\Supplier' => 'App\Policies\SupplierPolicy',
+        'App\Models\Depot' => 'App\Policies\DepotPolicy',
+        'App\Models\Account' => 'App\Policies\AccountPolicy',
         'App\Models\Client' => 'App\Policies\ClientPolicy',
         'App\Models\ClientPayment' => 'App\Policies\ClientPaymentPolicy',
         'App\Models\Driver' => 'App\Policies\DriverPolicy',

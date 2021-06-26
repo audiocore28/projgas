@@ -82,6 +82,22 @@ class AppServiceProvider extends ServiceProvider
                         'delete' => auth()->user()->can('delete supplier'),
                         'restore' => auth()->user()->can('restore supplier'),
                     ],
+                    'depot' => [
+                        'viewAny' => auth()->user()->can('view any depot'),
+                        'view' => auth()->user()->can('view depot'),
+                        'create' => auth()->user()->can('create depot'),
+                        'update' => auth()->user()->can('update depot'),
+                        'delete' => auth()->user()->can('delete depot'),
+                        'restore' => auth()->user()->can('restore depot'),
+                    ],
+                    'account' => [
+                        'viewAny' => auth()->user()->can('view any account'),
+                        'view' => auth()->user()->can('view account'),
+                        'create' => auth()->user()->can('create account'),
+                        'update' => auth()->user()->can('update account'),
+                        'delete' => auth()->user()->can('delete account'),
+                        'restore' => auth()->user()->can('restore account'),
+                    ],
                     'client' => [
                         'viewAny' => auth()->user()->can('view any client'),
                         'view' => auth()->user()->can('view client'),
