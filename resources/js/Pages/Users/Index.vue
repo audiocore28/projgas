@@ -2,7 +2,7 @@
   <div>
     <h1 class="mb-8 font-bold text-3xl">Users</h1>
     <div class="mb-6 flex justify-between items-center">
-      <search-filter v-model="form.search" class="w-full max-w-md mr-4" @reset="reset">
+      <search-filter v-model="form.search" class="w-full max-w-md mr-4" @reset="reset" :isVisible="$page.auth.user.can.user.restore">
 <!--         <label class="block text-gray-700">Role:</label>
         <select v-model="form.role" class="mt-1 w-full form-select">
           <option :value="null" />
