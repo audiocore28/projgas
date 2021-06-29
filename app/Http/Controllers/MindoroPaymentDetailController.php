@@ -129,7 +129,7 @@ class MindoroPaymentDetailController extends Controller
             }
         }
 
-        $this->deletePaymentDetails($request->removed_payment_details);
+        $this->deletePaymentDetails($request->removed_payment_details, $client);
 
         return Redirect::back()->with('success', 'Payment/s updated.');
     }
@@ -145,8 +145,12 @@ class MindoroPaymentDetailController extends Controller
         //
     }
 
-    public function deletePaymentDetails($paymentDetailIds)
+    public function deletePaymentDetails($paymentDetailIds, $client)
     {
-        MindoroPaymentDetail::whereIn('id', $paymentDetailIds)->delete();
+        if (auth()->user()->can('verify client payment', $client)) {
+            MindoroPaymentDetail::whereIn('id', $paymentDetailIds)->delete();
+        } else {
+            MindoroPaymentDetail::whereIn('id', $paymentDetailIds)->whereIn('is_verified', [false])->delete();
+        }
     }
 }
