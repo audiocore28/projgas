@@ -32,6 +32,8 @@ class StorePurchaseRequest extends FormRequest
                 'unique:purchases,purchase_no,'.$this->id
             ],
             'supplier_id' => ['required', 'max:50'],
+            'depot_id' => ['nullable', 'max:50'],
+            'account_id' => ['nullable', 'max:50'],
             'monthly_mindoro_transaction_id' => ['required', 'max:50'],
             'monthly_batangas_transaction_id' => ['required', 'max:50'],
 

@@ -18,8 +18,8 @@ class CreatePurchasesTable extends Migration
             $table->date('date');
             $table->string('purchase_no');
             $table->bigInteger('supplier_id');
-            $table->bigInteger('depot_id');
-            $table->bigInteger('account_id');
+            $table->bigInteger('depot_id')->nullable();
+            $table->bigInteger('account_id')->nullable();
             $table->bigInteger('monthly_mindoro_transaction_id');
             $table->bigInteger('monthly_batangas_transaction_id');
             $table->timestamps();

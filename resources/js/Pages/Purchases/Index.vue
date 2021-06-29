@@ -40,6 +40,8 @@
         <tr class="text-left font-bold">
           <th class="px-6 pt-6 pb-4">Date</th>
           <th class="px-6 pt-6 pb-4">Supplier</th>
+          <th class="px-6 pt-6 pb-4">Depot</th>
+          <th class="px-6 pt-6 pb-4">Account</th>
           <th class="px-6 pt-6 pb-4">Purchase No.</th>
           <th class="px-6 pt-6 pb-4">Purchases</th>
         </tr>
@@ -53,6 +55,20 @@
             <div class="px-6 py-4 flex items-center">
               <div v-if="purchase.supplier">
                 {{ purchase.supplier.name }}
+              </div>
+            </div>
+          </td>
+          <td class="border-t">
+            <div class="px-6 py-4 flex items-center">
+              <div v-if="purchase.depot">
+                {{ purchase.depot.name }}
+              </div>
+            </div>
+          </td>
+          <td class="border-t">
+            <div class="px-6 py-4 flex items-center">
+              <div v-if="purchase.account">
+                {{ purchase.account.name }}
               </div>
             </div>
           </td>

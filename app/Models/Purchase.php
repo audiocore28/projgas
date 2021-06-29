@@ -19,7 +19,7 @@ class Purchase extends Model
     use HasFactory;
 
 	 protected $dates = ['date'];
-	 protected $fillable = ['date', 'supplier_id', 'purchase_no', 'monthly_mindoro_transaction_id', 'monthly_batangas_transaction_id'];
+	 protected $fillable = ['date', 'supplier_id', 'depot_id', 'account_id', 'purchase_no', 'monthly_mindoro_transaction_id', 'monthly_batangas_transaction_id'];
 
 	 public function supplier()
 	 {

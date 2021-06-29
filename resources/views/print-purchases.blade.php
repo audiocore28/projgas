@@ -51,6 +51,8 @@
 				<tr style="background-color: red; color: #fff;">
 					<td align="left"><b><span>{{ $purchase->date }}</span></b></td>
 					<td align="center"><b><span>{{ $purchase->supplier->name }}</span></b></td>
+					<td align="center"><b><span>{{ $purchase->depot->name }}</span></b></td>
+					<td align="center"><b><span>{{ $purchase->account->name }}</span></b></td>
 					<td align="right"><b><span>{{ $purchase->purchase_no }}</span></b></td>
 				</tr>
 			</table>

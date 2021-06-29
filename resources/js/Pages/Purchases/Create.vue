@@ -11,19 +11,27 @@
           <div>
             <label class="form-label block mr-5">Date:<span class="text-red-500">*</span></label>
             <div class="pr-6 pb-4 mt-3">
-              <date-picker v-model="form.date" :error="errors.date" lang="en" value-type="format" :formatter="momentFormat"></date-picker>
+              <date-picker v-model="form.date" style="width: 150px" :error="errors.date" lang="en" value-type="format" :formatter="momentFormat"></date-picker>
               <div v-if="errors.date" class="form-error">{{ errors.date }}</div>
             </div>
           </div>
 
-          <div class="w-full lg:w-1/4">
-            <text-input v-model="form.purchase_no" :error="errors.purchase_no" class="pr-6 pb-4 w-full" label="Purchase No*" />
-          </div>
-
-          <select-input v-model="form.supplier_id" :error="errors.supplier_id" class="pr-6 pb-4 w-full lg:w-1/4" label="Supplier">
+          <select-input v-model="form.supplier_id" :error="errors.supplier_id" class="pr-6 pb-4 w-full lg:w-1/6" label="Supplier">
             <option :value="null" />
             <option v-for="supplier in suppliers" :key="supplier.id" :value="supplier.id">{{ supplier.name }}</option>
           </select-input>
+          <select-input v-model="form.depot_id" :error="errors.depot_id" class="pr-6 pb-4 w-full lg:w-1/6" label="Depot">
+            <option :value="null" />
+            <option v-for="depot in depots" :key="depot.id" :value="depot.id">{{ depot.name }}</option>
+          </select-input>
+          <select-input v-model="form.account_id" :error="errors.account_id" class="pr-6 pb-4 w-full lg:w-1/6" label="Account">
+            <option :value="null" />
+            <option v-for="account in accounts" :key="account.id" :value="account.id">{{ account.name }}</option>
+          </select-input>
+
+          <div class="w-full lg:w-2/6">
+            <text-input v-model="form.purchase_no" :error="errors.purchase_no" class="pr-6 pb-4 w-full" label="Purchase No*" />
+          </div>
         </div>
 
         <!-- PurchaseDetail table form -->
@@ -505,6 +513,8 @@ export default {
   props: {
     errors: Object,
     suppliers: Array,
+    depots: Array,
+    accounts: Array,
     products: Array,
     monthlyMindoroTransactions: Array,
     monthlyBatangasTransactions: Array,
@@ -531,6 +541,8 @@ export default {
   		  date: null,
         purchase_no: null,
         supplier_id: null,
+        depot_id: null,
+        account_id: null,
         monthly_mindoro_transaction_id: null,
         mindoro_transactions: [],
         monthly_batangas_transaction_id: null,

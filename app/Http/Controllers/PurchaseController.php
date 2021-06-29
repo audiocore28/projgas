@@ -6,6 +6,8 @@ use App\Http\Requests\StorePurchaseRequest;
 use App\Models\Purchase;
 use App\Models\PurchaseDetail;
 use App\Models\Supplier;
+use App\Models\Depot;
+use App\Models\Account;
 use App\Models\Product;
 use App\Models\TankerLoad;
 use App\Models\TankerLoadDetail;
@@ -53,7 +55,7 @@ class PurchaseController extends Controller
 
         return Inertia::render('Purchases/Index', [
             'filters' => Request::all('search', 'range', 'trashed'),
-            'purchases' => $query->with('supplier', 'purchaseDetails.product')->orderBy('id', 'desc')->paginate(),
+            'purchases' => $query->with('supplier', 'depot', 'account', 'purchaseDetails.product')->latest('date')->paginate(),
         ]);
     }
 
@@ -69,6 +71,16 @@ class PurchaseController extends Controller
             ->map
             ->only('id', 'name');
 
+        $depots = Depot::orderBy('name', 'asc')
+            ->get()
+            ->map
+            ->only('id', 'name');
+
+        $accounts = Account::orderBy('name', 'asc')
+            ->get()
+            ->map
+            ->only('id', 'name');
+
         $products = Product::orderBy('name', 'asc')
             ->get()
             ->map
@@ -79,6 +91,8 @@ class PurchaseController extends Controller
 
         return Inertia::render('Purchases/Create', [
             'suppliers' => $suppliers,
+            'depots' => $depots,
+            'accounts' => $accounts,
             'products' => $products,
             'monthlyMindoroTransactions' => $monthlyMindoroTransactions,
             'monthlyBatangasTransactions' => $monthlyBatangasTransactions,
@@ -97,6 +111,8 @@ class PurchaseController extends Controller
             'date' => $request->date,
             'purchase_no' => $request->purchase_no,
             'supplier_id' => $request->supplier_id,
+            'depot_id' => $request->depot_id,
+            'account_id' => $request->account_id,
             'monthly_mindoro_transaction_id' => $request->monthly_mindoro_transaction_id,
             'monthly_batangas_transaction_id' => $request->monthly_batangas_transaction_id,
         ])->id;
@@ -174,6 +190,16 @@ class PurchaseController extends Controller
     public function edit(Purchase $purchase)
     {
         $suppliers = Supplier::orderBy('name', 'asc')
+            ->get()
+            ->map
+            ->only('id', 'name');
+
+        $depots = Depot::orderBy('name', 'asc')
+            ->get()
+            ->map
+            ->only('id', 'name');
+
+        $accounts = Account::orderBy('name', 'asc')
             ->get()
             ->map
             ->only('id', 'name');
@@ -269,6 +295,8 @@ class PurchaseController extends Controller
                 'date' => $purchase->date,
                 'purchase_no' => $purchase->purchase_no,
                 'supplier_id' => $purchase->supplier_id,
+                'depot_id' => $purchase->depot_id,
+                'account_id' => $purchase->account_id,
                 'monthly_mindoro_transaction_id' => $purchase->monthly_mindoro_transaction_id,
                 'monthly_batangas_transaction_id' => $purchase->monthly_batangas_transaction_id,
                 'details' => $purchase->purchaseDetails
@@ -287,6 +315,8 @@ class PurchaseController extends Controller
             ],
             // 'tanker_loads' => $loads,
             'suppliers' => $suppliers,
+            'depots' => $depots,
+            'accounts' => $accounts,
             'products' => $products,
             'monthlyMindoroTransactions' => $monthlyMindoroTransactions,
             'monthlyBatangasTransactions' => $monthlyBatangasTransactions,
@@ -308,6 +338,8 @@ class PurchaseController extends Controller
             'date' => $request->date,
             'purchase_no' => $request->purchase_no,
             'supplier_id' => $request->supplier_id,
+            'depot_id' => $request->depot_id,
+            'account_id' => $request->account_id,
             'monthly_mindoro_transaction_id' => $request->monthly_mindoro_transaction_id,
             'monthly_batangas_transaction_id' => $request->monthly_batangas_transaction_id,
         ]);
@@ -477,7 +509,7 @@ class PurchaseController extends Controller
                     // });
         }
 
-        $purchases = $query->get();
+        $purchases = $query->orderBy('id', 'desc')->get();
 
         $pdf = PDF::loadView('print-purchases', compact('purchases'));
         $pdf->setPaper(array(0, 0, 612.00, 792.0));
