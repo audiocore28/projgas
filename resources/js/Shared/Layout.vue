@@ -38,6 +38,8 @@
           </div>
         </div>
         <div class="md:flex md:flex-grow md:overflow-hidden">
+          <!-- <main-menu :url="url()" class="hidden md:block bg-blue-800 flex-shrink-0 w-56 p-12 overflow-y-auto" v-show="menuOpened == 0"style="background-image: url('https://scontent.fmnl3-4.fna.fbcdn.net/v/t1.6435-9/131398252_102092041788305_7405303494385624544_n.jpg?_nc_cat=102&ccb=1-3&_nc_sid=e3f864&_nc_eui2=AeF1q30ptVHqM8qAu9MJLZazInvNVee4GdYie81V57gZ1sPoX8qVPKkLTuOI_tdtHFp47fzH6Z6_MfjjWpc4QCLt&_nc_ohc=b6YBjqfJT_MAX8XVImX&tn=Fj7KNgNQLv2SgPpM&_nc_ht=scontent.fmnl3-4.fna&oh=17002b1ec3e7cda15e7c975889e46c5a&oe=60DCC01C'); background-repeat: no-repeat; background-size: cover; background-blend-mode: multiply;"/> -->
+
           <main-menu :url="url()" class="hidden md:block bg-blue-800 flex-shrink-0 w-56 p-12 overflow-y-auto" v-show="menuOpened == 0"/>
           <div class="md:flex-1 px-4 py-8 md:px-2 py-12 md:overflow-y-auto" scroll-region>
             <flash-messages />
