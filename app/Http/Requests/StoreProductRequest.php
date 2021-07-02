@@ -24,7 +24,11 @@ class StoreProductRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required', 'max:50'],
+            'name' => [
+                'required',
+                'max:50',
+                'unique:products,name,'.$this->id
+            ],
             'description' => ['nullable', 'max:50'],
         ];
     }

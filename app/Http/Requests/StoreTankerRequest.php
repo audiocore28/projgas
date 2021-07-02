@@ -24,8 +24,12 @@ class StoreTankerRequest extends FormRequest
     public function rules()
     {
         return [
-                'plate_no' => ['required', 'max:40'],
-                'compartment' => ['nullable', 'max:40'],
+            'plate_no' => [
+                'required',
+                'max:40',
+                'unique:tankers,plate_no,'.$this->id
+            ],
+            'compartment' => ['nullable', 'max:40'],
         ];
     }
 }

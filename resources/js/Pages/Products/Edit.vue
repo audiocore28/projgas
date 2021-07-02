@@ -53,6 +53,7 @@ export default {
     return {
       sending: false,
       form: {
+        id: this.product.id,
         name: this.product.name,
         description: this.product.description,
       },
