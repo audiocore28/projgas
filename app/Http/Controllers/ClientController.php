@@ -31,6 +31,17 @@ class ClientController extends Controller
 
         $query = Client::query();
 
+        $query->withCount([
+            'batangasTransactionDetails',
+            'mindoroTransactionDetails',
+            'batangasPaymentDetails as unverified_batangas_payment_count' => function ($q) {
+                $q->where('is_verified', false);
+            },
+            'mindoroPaymentDetails as unverified_mindoro_payment_count' => function ($q) {
+                $q->where('is_verified', false);
+            },
+        ]);
+
         if (request('search')) {
             $query->where('name', 'like', '%'.request('search').'%')
                 ->orWhere('office', 'like', '%'.request('search').'%')

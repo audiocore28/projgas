@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\BatangasTransactionDetail;
 use App\Models\MindoroTransactionDetail;
+use App\Models\BatangasPaymentDetail;
+use App\Models\MindoroPaymentDetail;
 
 class Client extends Model
 {
@@ -24,6 +26,16 @@ class Client extends Model
      public function mindoroTransactionDetails()
      {
         return $this->hasMany(MindoroTransactionDetail::class);
+     }
+
+     public function batangasPaymentDetails()
+     {
+        return $this->hasManyThrough(BatangasPaymentDetail::class, BatangasTransactionDetail::class);
+     }
+
+     public function mindoroPaymentDetails()
+     {
+        return $this->hasManyThrough(MindoroPaymentDetail::class, MindoroTransactionDetail::class);
      }
 
     public function getDateAttribute($value)

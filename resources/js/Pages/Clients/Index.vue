@@ -52,18 +52,24 @@
             </div>
           </td>
           <td class="border-t w-px" v-if="$page.auth.user.can.client.viewPayment">
-            <inertia-link class="px-4 flex items-center focus:text-indigo-500" :href="route('batangas-payment-details.edit', client.id)" tabindex="-1">
+            <inertia-link class="px-4 flex items-center focus:text-indigo-500" :href="route('batangas-payment-details.edit', client.id)" tabindex="-1" v-if="client.batangas_transaction_details_count">
               <!-- <icon name="view" class="block w-6 h-6 fill-gray-400" /> -->
-              <span class="text-gray-400 font-extrabold">BAT</span>
+              <span class="relative inline-block">
+                <span class="text-gray-400 font-extrabold">BAT</span>
+                <span class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-yellow-500 rounded-full" v-if="client.unverified_batangas_payment_count">{{ client.unverified_batangas_payment_count }}</span>
+              </span>
             </inertia-link>
           </td>
           <td class="border-t w-px" v-if="$page.auth.user.can.client.viewPayment">
-            <inertia-link class="px-4 flex items-center focus:text-indigo-500" :href="route('mindoro-payment-details.edit', client.id)" tabindex="-1">
+            <inertia-link class="px-4 flex items-center focus:text-indigo-500" :href="route('mindoro-payment-details.edit', client.id)" tabindex="-1" v-if="client.mindoro_transaction_details_count">
               <!-- <icon name="view" class="block w-6 h-6 fill-gray-400" /> -->
-              <span class="text-gray-400 font-extrabold">MDO</span>
+              <span class="relative inline-block">
+                <span class="text-gray-400 font-extrabold">MDO</span>
+                <span class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-yellow-500 rounded-full" v-if="client.unverified_mindoro_payment_count">{{ client.unverified_mindoro_payment_count }}</span>
+              </span>
             </inertia-link>
           </td>
-<!--           <td class="border-t w-px">
+ <!--           <td class="border-t w-px">
             <inertia-link class="px-4 flex items-center focus:text-indigo-500" :href="route('clients.show', client.id)" tabindex="-1" v-if="$page.auth.user.can.client.view">
               <icon name="view" class="block w-6 h-6 fill-gray-400" />
             </inertia-link>
