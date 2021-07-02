@@ -14,7 +14,7 @@ class MonthlyBatangasTransaction extends Model
 
 	 public function batangasTransactions()
 	 {
-	 	return $this->hasMany(BatangasTransaction::class);
+	 	return $this->hasMany(BatangasTransaction::class)->orderBy('trip_no');
 	 }
 
      public function purchases()
