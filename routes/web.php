@@ -235,6 +235,7 @@ Route::group(['middleware' => 'auth'], function() {
 	// Route::resource('discounts', DiscountController::class)->only(['store', 'destroy']);
 });
 
+require_once __DIR__ . '/jetstream.php';
 
 
 // Spatie Laravel Backup Package
