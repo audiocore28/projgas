@@ -20,7 +20,7 @@
       <table class="w-full whitespace-no-wrap">
         <tr class="text-left font-bold">
           <th class="px-6 pt-6 pb-4">Name</th>
-          <th class="px-6 pt-6 pb-4">Permissions</th>
+          <th class="px-6 pt-6 pb-4">Users</th>
         </tr>
          <tr v-for="role in roles.data" :key="role.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
           <td class="border-t">
@@ -31,9 +31,9 @@
           </td>
           <td class="border-t">
             <div class="px-6 py-4 flex items-center focus:text-indigo-500">
-              <div v-if="role.permissions" v-for="permission in role.permissions">
+              <div v-if="role.users" v-for="user in role.users">
                 <span class="px-2 py-2 text-sm leading-5 font-semibold rounded-full bg-grey-100 text-grey-800">
-                  {{ permission.name }}
+                  {{ user.name }}
                 </span>
               </div>
             </div>
