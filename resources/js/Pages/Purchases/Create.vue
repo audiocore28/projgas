@@ -5,7 +5,7 @@
       <span class="text-blue-600 font-medium">/</span> Create
     </h1>
     <form @submit.prevent="submit">
-      <div class="bg-white rounded shadow overflow-hidden max-w-6xl">
+      <div class="bg-white rounded shadow overflow-hidden max-w-6xl mb-6">
         <!-- Purchase -->
         <div class="px-8 pt-4 -mr-6 -mb-8 flex flex-wrap bg-gradient-to-r from-yellow-500 to-blue-600 highlight-yellow">
           <div>
@@ -559,42 +559,42 @@ export default {
           }
         ],
         batangasLoads: [
-          {
-            monthly_batangas_transaction: {
-              id: null,
-            },
-            batangas_transaction_id: null,
-            remarks: null,
-            details: [
-              {
-                product: {
-                  id: null,
-                  name: null,
-                },
-                quantity: 0,
-                unit_price: 0,
-              }
-            ],
-          },
+          // {
+          //   monthly_batangas_transaction: {
+          //     id: null,
+          //   },
+          //   batangas_transaction_id: null,
+          //   remarks: null,
+          //   details: [
+          //     {
+          //       product: {
+          //         id: null,
+          //         name: null,
+          //       },
+          //       quantity: 0,
+          //       unit_price: 0,
+          //     }
+          //   ],
+          // },
         ],
         mindoroLoads: [
-          {
-            monthly_mindoro_transaction: {
-              id: null,
-            },
-            mindoro_transaction_id: null,
-            remarks: null,
-            details: [
-              {
-                product: {
-                  id: null,
-                  name: null,
-                },
-                quantity: 0,
-                unit_price: 0,
-              }
-            ],
-          },
+          // {
+          //   monthly_mindoro_transaction: {
+          //     id: null,
+          //   },
+          //   mindoro_transaction_id: null,
+          //   remarks: null,
+          //   details: [
+          //     {
+          //       product: {
+          //         id: null,
+          //         name: null,
+          //       },
+          //       quantity: 0,
+          //       unit_price: 0,
+          //     }
+          //   ],
+          // },
         ],
       },
       // Accordion

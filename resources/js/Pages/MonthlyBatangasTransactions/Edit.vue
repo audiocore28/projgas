@@ -229,7 +229,7 @@
                       <!-- TankerLoad -->
                       <div class="flex flex-wrap px-8">
                         <div class="grid grid-cols-1 gap-1 bg-white rounded overflow-x-auto">
-                          <div class="rounded overflow-x-auto mb-4" v-for="(load, loadIndex) in transaction.tanker_loads" :key="load.id" :value="load.id">
+                          <div class="rounded overflow-x-auto mb-4" v-for="(load, loadIndex) in transaction.batangas_loads" :key="load.id" :value="load.id">
                             <a :href="`/purchases/${load.purchase.id}/edit#load-${load.id}`" target="_blank">
                               <p class="text-sm bg-blue-600 font-bold pl-4 mb-2 rounded text-center py-2 text-white">{{ load.purchase.purchase_no }}</p>
                             </a>
@@ -261,7 +261,7 @@
                                     </tr>
                                   </thead>
                                   <tbody class="bg-white divide-y divide-gray-200">
-                                    <tr v-for="detail in load.tanker_load_details">
+                                    <tr v-for="detail in load.to_batangas_load_details">
                                       <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         <div class="text-sm text-gray-900">{{ detail.product.name }}</div>
                                       </td>
@@ -525,37 +525,36 @@ export default {
         driver_salary: 0,
         helper_salary: 0,
         details: [
-          {
-            id: null,
-            date: null,
-            dr_no: null,
-            quantity: 0,
-            unit_price: null,
-            batangas_transaction_id: null,
-            product_id: null,
-            selected_client: null,
-            client_id: null,
-            remarks: null,
-          }
+          // {
+          //   id: null,
+          //   date: null,
+          //   dr_no: null,
+          //   quantity: 0,
+          //   unit_price: 0,
+          //   batangas_transaction_id: null,
+          //   product_id: null,
+          //   selected_client: null,
+          //   client_id: null,
+          //   remarks: null,
+          // }
         ],
-        tanker_loads: [
+        batangas_loads: [
           {
             id: null,
-            mindoro_transaction_id: 0,
             batangas_transaction_id: null,
             remarks: null,
             purchase: {
               purchase_no: null,
             },
-            tanker_load_details: [
+            to_batangas_load_details: [
               {
                 id: null,
-                tanker_load_id: null,
+                to_batangas_load_id: null,
                 product: {
                   name: null,
                 },
-                quantity: null,
-                unit_price: null,
+                quantity: 0,
+                unit_price: 0,
               }
             ],
           }
@@ -578,7 +577,7 @@ export default {
         date: null,
         dr_no: null,
         quantity: 0,
-        unit_price: null,
+        unit_price: 0,
         batangas_transaction_id: null,
         product_id: null,
         client_id: null,
@@ -630,7 +629,7 @@ export default {
       for (var i = 0; i < this.updateForm.transactions.length; i++) {
         if (this.updateForm.transactions[i].id === transactionId) {
 
-          const detailsArray = this.updateForm.transactions[i].tanker_loads.map(load => load.tanker_load_details);
+          const detailsArray = this.updateForm.transactions[i].batangas_loads.map(load => load.to_batangas_load_details);
           const details = [].concat.apply([], detailsArray);
 
           var totalAmt = details.reduce(function (acc, detail) {
@@ -656,7 +655,7 @@ export default {
         }, 0);
 
         // TankerLoadDetail
-        const loadDetailsArray = this.updateForm.transactions[i].tanker_loads.map(load => load.tanker_load_details);
+        const loadDetailsArray = this.updateForm.transactions[i].batangas_loads.map(load => load.to_batangas_load_details);
         const loadDetails = [].concat.apply([], loadDetailsArray);
 
         var loadTotalAmt = loadDetails.reduce(function (loadDetailAcc, detail) {

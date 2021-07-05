@@ -11,7 +11,8 @@ use App\Models\MonthlyMindoroTransaction;
 use App\Models\MindoroTransaction;
 use App\Models\MonthlyBatangasTransaction;
 use App\Models\BatangasTransaction;
-use App\Models\TankerLoad;
+use App\Models\ToBatangasLoad;
+use App\Models\ToMindoroLoad;
 use Carbon\Carbon;
 
 class Purchase extends Model
@@ -51,19 +52,14 @@ class Purchase extends Model
 	 	return $this->hasMany(PurchaseDetail::class);
 	 }
 
-	 public function tankerLoads()
-	 {
-	 	return $this->hasMany(TankerLoad::class);
-	 }
-
-     public function batangasLoads()
+     public function toBatangasLoads()
      {
-        return $this->hasMany(TankerLoad::class)->where('batangas_transaction_id', '>', 0);
+        return $this->hasMany(ToBatangasLoad::class);
      }
 
-     public function mindoroLoads()
+     public function toMindoroLoads()
      {
-        return $this->hasMany(TankerLoad::class)->where('mindoro_transaction_id', '>', 0);
+        return $this->hasMany(ToMindoroLoad::class);
      }
 
      public function batangasTransactions()

@@ -19,8 +19,6 @@ use App\Http\Controllers\HelperController;
 // use App\Http\Controllers\CashierController;
 // use App\Http\Controllers\PumpAttendantController;
 // use App\Http\Controllers\OfficeStaffController;
-use App\Http\Controllers\TankerLoadController;
-use App\Http\Controllers\TankerLoadDetailController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PurchaseController;
@@ -97,12 +95,6 @@ Route::group(['middleware' => 'auth'], function() {
 
 	// Purchase Details
 	Route::resource('purchase-details', PurchaseDetailController::class)->only(['store', 'destroy']);
-
-	// Tanker Loads
-	Route::resource('tanker-loads', TankerLoadController::class);
-
-	// Tanker Load Details
-	Route::resource('tanker-load-details', TankerLoadDetailController::class)->only(['store', 'destroy']);
 
 	// Batangas Transaction
 	Route::resource('batangas-transactions', BatangasTransactionController::class);

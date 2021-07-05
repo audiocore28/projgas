@@ -50,9 +50,9 @@
 			<table width="85%" cellspacing="0" cellpadding="5">
 				<tr style="background-color: red; color: #fff;">
 					<td align="left"><b><span>{{ $purchase->date }}</span></b></td>
-					<td align="center"><b><span>{{ $purchase->supplier->name }}</span></b></td>
-					<td align="center"><b><span>{{ $purchase->depot->name }}</span></b></td>
-					<td align="center"><b><span>{{ $purchase->account->name }}</span></b></td>
+					<td align="center"><b><span>{{ $purchase->supplier ? $purchase->supplier->name : '' }}</span></b></td>
+					<td align="center"><b><span>{{ $purchase->depot ? $purchase->depot->name : '' }}</span></b></td>
+					<td align="center"><b><span>{{ $purchase->account ? $purchase->account->name : '' }}</span></b></td>
 					<td align="right"><b><span>{{ $purchase->purchase_no }}</span></b></td>
 				</tr>
 			</table>
@@ -104,14 +104,14 @@
 						$total_batangas_regular = 0;
 						$total_batangas_premium = 0;
 					?>
-					@foreach($purchase->batangasLoads as $load)
+					@foreach($purchase->toBatangasLoads as $load)
 					<tr>
 						<?php
 							$batangas_diesel = 0;
 							$batangas_regular = 0;
 							$batangas_premium = 0;
 						?>
-						@foreach($load->tankerLoadDetails as $detail)
+						@foreach($load->toBatangasLoadDetails as $detail)
 							@if($detail['product']['name'] === 'Diesel')
 								<?php
 									$batangas_diesel += $detail['quantity'];
@@ -134,7 +134,7 @@
 							@endif
 						@endforeach
 
-						<td align="left">{{  $load->batangasTransaction->trip_no }}- {{ $load->batangasTransaction->driver->name }}</td>
+						<td align="left">{{  \App\Models\BatangasTransaction::where('id', $load->batangas_transaction_id)->exists() ? $load->batangasTransaction->trip_no : null }}- {{ \App\Models\BatangasTransaction::where('id', $load->batangas_transaction_id)->exists() ? $load->batangasTransaction->driver->name : null }}</td>
 						<td align="center">{{ number_format($batangas_diesel / 1000) }}</td>
 						<td align="center">{{ number_format($batangas_regular / 1000) }}</td>
 						<td align="center">{{ number_format($batangas_premium / 1000) }}</td>
@@ -147,14 +147,14 @@
 						$total_mindoro_regular = 0;
 						$total_mindoro_premium = 0;
 					?>
-					@foreach($purchase->mindoroLoads as $load)
+					@foreach($purchase->toMindoroLoads as $load)
 					<tr>
 						<?php
 							$mindoro_diesel = 0;
 							$mindoro_regular = 0;
 							$mindoro_premium = 0;
 						?>
-						@foreach($load->tankerLoadDetails as $detail)
+						@foreach($load->toMindoroLoadDetails as $detail)
 							@if($detail['product']['name'] === 'Diesel')
 								<?php
 									$mindoro_diesel += $detail['quantity'];
@@ -177,7 +177,7 @@
 							@endif
 						@endforeach
 
-						<td align="left">{{  $load->mindoroTransaction->trip_no }}- {{ $load->mindoroTransaction->driver->name }}</td>
+						<td align="left">{{  \App\Models\MindoroTransaction::where('id', $load->mindoro_transaction_id)->exists() ? $load->mindoroTransaction->trip_no : null }}- {{ \App\Models\MindoroTransaction::where('id', $load->mindoro_transaction_id)->exists() ? $load->mindoroTransaction->driver->name : null }}</td>
 						<td align="center">{{ number_format($mindoro_diesel / 1000) }}</td>
 						<td align="center">{{ number_format($mindoro_regular / 1000) }}</td>
 						<td align="center">{{ number_format($mindoro_premium / 1000) }}</td>

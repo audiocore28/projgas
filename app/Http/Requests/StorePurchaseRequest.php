@@ -31,11 +31,11 @@ class StorePurchaseRequest extends FormRequest
                 'max:150',
                 'unique:purchases,purchase_no,'.$this->id
             ],
-            'supplier_id' => ['required', 'max:50'],
+            'supplier_id' => ['nullable', 'max:50'],
             'depot_id' => ['nullable', 'max:50'],
             'account_id' => ['nullable', 'max:50'],
-            'monthly_mindoro_transaction_id' => ['required', 'max:50'],
-            'monthly_batangas_transaction_id' => ['required', 'max:50'],
+            'monthly_mindoro_transaction_id' => ['nullable', 'max:50'],
+            'monthly_batangas_transaction_id' => ['nullable', 'max:50'],
 
             // PurchaseDetail
             'details.*.quantity' => ['nullable', 'max:50'],
@@ -44,7 +44,7 @@ class StorePurchaseRequest extends FormRequest
             'details.*.product.id' => ['required', 'max:50'],
 
             // TankerLoad - Batangas
-            'batangasLoads.*.batangas_transaction_id' => ['required', 'max:50'],
+            'batangasLoads.*.batangas_transaction_id' => ['nullable', 'max:50'],
             'batangasLoads.*.remarks' => ['nullable', 'max:200'],
 
             // TankerLoadDetail - Batangas
@@ -53,7 +53,7 @@ class StorePurchaseRequest extends FormRequest
             'batangasLoads.*.details.*.unit_price' => ['nullable', 'max:50'],
 
             // TankerLoad - Mindoro
-            'mindoroLoads.*.mindoro_transaction_id' => ['required', 'max:50'],
+            'mindoroLoads.*.mindoro_transaction_id' => ['nullable', 'max:50'],
             'mindoroLoads.*.remarks' => ['nullable', 'max:200'],
 
             // TankerLoadDetail - Mindoro
@@ -70,9 +70,6 @@ class StorePurchaseRequest extends FormRequest
             // Purchase
             'date.required' => 'Date is required',
             'purchase_no.required' => 'Purchase no. is required',
-            'supplier_id.required' => 'Supplier is required',
-            'monthly_mindoro_transaction_id.required' => 'Mindoro transaction month is required',
-            'monthly_batangas_transaction_id.required' => 'Batangas transaction month is required',
 
             //Purchase Detail
             'details.*.product_id.required' => 'Product is required',

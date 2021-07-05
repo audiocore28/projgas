@@ -6,8 +6,8 @@ use App\Http\Requests\StoreBatangasTransactionRequest;
 use App\Models\BatangasTransaction;
 use App\Models\BatangasTransactionDetail;
 use App\Models\Purchase;
-use App\Models\TankerLoad;
-use App\Models\TankerLoadDetail;
+use App\Models\ToBatangasLoad;
+use App\Models\ToBatangasLoadDetail;
 use App\Models\Client;
 use App\Models\Product;
 use App\Models\Tanker;
@@ -104,12 +104,12 @@ class BatangasTransactionController extends Controller
                             'date' => $purchase->date,
                             'purchase_no' => $purchase->purchase_no,
                             'supplier' => $purchase->supplier ? $purchase->supplier->only('name') : null,
-                            'loads' => $purchase->tankerLoads->each(function ($load) {
+                            'to_batangas_loads' => $purchase->toBatangasLoads->each(function ($load) {
                                     return [
                                         'trip_no' => $load->trip_no,
                                         'remarks' => $load->remarks,
                                         'purchase' => $load->purchase->purchase_no,
-                                        'details' => $load->tankerLoadDetails->each(function ($detail) {
+                                        'details' => $load->toBatangasLoadDetails->each(function ($detail) {
                                             return [
                                                 'quantity' => $detail->quantity,
                                                 'product' => $detail->product->name,
@@ -206,12 +206,12 @@ class BatangasTransactionController extends Controller
                     'date' => $purchase->date,
                     'purchase_no' => $purchase->purchase_no,
                     'supplier' => $purchase->supplier ? $purchase->supplier->only('name') : null,
-                    'tanker_loads' => $purchase->tankerLoads->each(function ($load) {
+                    'to_batangas_loads' => $purchase->toBatangasLoads->each(function ($load) {
                             return [
                                 'trip_no' => $load->trip_no,
                                 'remarks' => $load->remarks,
                                 'purchase' => $load->purchase->purchase_no,
-                                'tanker_load_details' => $load->tankerLoadDetails->each(function ($detail) {
+                                'to_batangas_load_details' => $load->toBatangasLoadDetails->each(function ($detail) {
                                     return [
                                         'quantity' => $detail->quantity,
                                         'product' => $detail->product->name,
@@ -259,13 +259,13 @@ class BatangasTransactionController extends Controller
                     'date' => $purchase->date,
                     'purchase_no' => $purchase->purchase_no,
                     'supplier' => $purchase->supplier ? $purchase->supplier->only('name') : null,
-                    'tanker_loads' => $purchase->tankerLoads->each(function ($load) {
+                    'to_batangas_loads' => $purchase->toBatangasLoads->each(function ($load) {
                             return [
                                 'date' => $load->date,
                                 'trip_no' => $load->trip_no,
                                 'remarks' => $load->remarks,
                                 'purchase' => $load->purchase->purchase_no,
-                                'tanker_load_details' => $load->tankerLoadDetails->each(function ($detail) {
+                                'to_batangas_load_details' => $load->toBatangasLoadDetails->each(function ($detail) {
                                     return [
                                         'quantity' => $detail->quantity,
                                         'product' => $detail->product->name,
@@ -295,10 +295,10 @@ class BatangasTransactionController extends Controller
                 ->toArray();
 
         if (request()->wantsJson()) {
-            $monthlyBatangasTransactionId = $batangasTransaction->monthlyBatangasTransaction ? $batangasTransaction->monthlyBatangasTransaction->only('id') : null;
+            $monthlyBatangasTransactionId = $batangasTransaction->monthlyBatangasTransaction ? $batangasTransaction->monthly_batangas_transaction_id : null;
 
             return [
-                'monthly_batangas_transaction' => $monthlyBatangasTransactionId,
+                'monthly_batangas_transaction_id' => $monthlyBatangasTransactionId,
             ];
         }
 

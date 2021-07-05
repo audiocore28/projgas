@@ -6,8 +6,8 @@ use App\Http\Requests\StoreMindoroTransactionRequest;
 use App\Models\MindoroTransaction;
 use App\Models\MindoroTransactionDetail;
 use App\Models\Purchase;
-use App\Models\TankerLoad;
-use App\Models\TankerLoadDetail;
+use App\Models\ToMindoroLoad;
+use App\Models\ToMindoroLoadDetail;
 use App\Models\Client;
 use App\Models\Product;
 use App\Models\Tanker;
@@ -104,12 +104,12 @@ class MindoroTransactionController extends Controller
                             'date' => $purchase->date,
                             'purchase_no' => $purchase->purchase_no,
                             'supplier' => $purchase->supplier ? $purchase->supplier->only('name') : null,
-                            'loads' => $purchase->tankerLoads->each(function ($load) {
+                            'to_mindoro_loads' => $purchase->toMindoroLoads->each(function ($load) {
                                     return [
                                         'trip_no' => $load->trip_no,
                                         'remarks' => $load->remarks,
                                         'purchase' => $load->purchase->purchase_no,
-                                        'details' => $load->tankerLoadDetails->each(function ($detail) {
+                                        'details' => $load->toMindoroLoadDetails->each(function ($detail) {
                                             return [
                                                 'quantity' => $detail->quantity,
                                                 'product' => $detail->product->name,
@@ -206,12 +206,12 @@ class MindoroTransactionController extends Controller
                     'date' => $purchase->date,
                     'purchase_no' => $purchase->purchase_no,
                     'supplier' => $purchase->supplier ? $purchase->supplier->only('name') : null,
-                    'tanker_loads' => $purchase->tankerLoads->each(function ($load) {
+                    'to_mindoro_loads' => $purchase->toMindoroLoads->each(function ($load) {
                             return [
                                 'trip_no' => $load->trip_no,
                                 'remarks' => $load->remarks,
                                 'purchase' => $load->purchase->purchase_no,
-                                'tanker_load_details' => $load->tankerLoadDetails->each(function ($detail) {
+                                'to_mindoro_load_details' => $load->toMindoroLoadDetails->each(function ($detail) {
                                     return [
                                         'quantity' => $detail->quantity,
                                         'product' => $detail->product->name,
@@ -259,13 +259,13 @@ class MindoroTransactionController extends Controller
                     'date' => $purchase->date,
                     'purchase_no' => $purchase->purchase_no,
                     'supplier' => $purchase->supplier ? $purchase->supplier->only('name') : null,
-                    'tanker_loads' => $purchase->tankerLoads->each(function ($load) {
+                    'to_mindoro_loads' => $purchase->toMindoroLoads->each(function ($load) {
                             return [
                                 'date' => $load->date,
                                 'trip_no' => $load->trip_no,
                                 'remarks' => $load->remarks,
                                 'purchase' => $load->purchase->purchase_no,
-                                'tanker_load_details' => $load->tankerLoadDetails->each(function ($detail) {
+                                'to_mindoro_load_details' => $load->toMindoroLoadDetails->each(function ($detail) {
                                     return [
                                         'quantity' => $detail->quantity,
                                         'product' => $detail->product->name,
@@ -295,10 +295,10 @@ class MindoroTransactionController extends Controller
                 ->toArray();
 
         if (request()->wantsJson()) {
-            $monthlyMindoroTransactionId = $mindoroTransaction->monthlyMindoroTransaction ? $mindoroTransaction->monthlyMindoroTransaction->only('id') : null;
+            $monthlyMindoroTransactionId = $mindoroTransaction->monthlyMindoroTransaction ? $mindoroTransaction->monthly_mindoro_transaction_id : null;
 
             return [
-                'monthly_mindoro_transaction' => $monthlyMindoroTransactionId,
+                'monthly_mindoro_transaction_id' => $monthlyMindoroTransactionId,
             ];
         }
 

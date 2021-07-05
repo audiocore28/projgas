@@ -8,8 +8,7 @@ use App\Models\MonthlyBatangasTransaction;
 use App\Models\BatangasTransaction;
 use App\Models\BatangasTransactionDetail;
 // use App\Models\Purchase;
-// use App\Models\TankerLoad;
-use App\Models\TankerLoadDetail;
+use App\Models\ToBatangasLoadDetail;
 use App\Models\Client;
 use App\Models\Product;
 use App\Models\Tanker;
@@ -185,12 +184,12 @@ class MonthlyBatangasTransactionController extends Controller
                                        'remarks' => $detail->remarks,
                                     ];
                         }),
-                        'tanker_loads' => $transaction->tankerLoads->each(function ($load) {
+                        'batangas_loads' => $transaction->toBatangasLoads->each(function ($load) {
                             return [
                                 'batangas_transaction_id' => $load->batangas_transaction_id,
                                 'remarks' => $load->remarks,
                                 'purchase' => $load->purchase->purchase_no,
-                                'tanker_load_details' => $load->tankerLoadDetails->each(function ($detail) {
+                                'batangas_load_details' => $load->toBatangasLoadDetails->each(function ($detail) {
                                     return [
                                         'quantity' => $detail->quantity,
                                         'product' => $detail->product->name,
@@ -301,12 +300,12 @@ class MonthlyBatangasTransactionController extends Controller
             }
 
             //
-            foreach ($transaction['tanker_loads'] as $load)
+            foreach ($transaction['batangas_loads'] as $load)
             {
                 if ($load['id'] !== null) {
-                    foreach ($load['tanker_load_details'] as $detail)
+                    foreach ($load['to_batangas_load_details'] as $detail)
                     {
-                        $loadDetail = TankerLoadDetail::findOrNew($detail['id']);
+                        $loadDetail = ToBatangasLoadDetail::findOrNew($detail['id']);
                         $loadDetail->unit_price = $detail['unit_price'];
                         $loadDetail->save();
                     }
@@ -372,13 +371,13 @@ class MonthlyBatangasTransactionController extends Controller
                                 'remarks' => $detail->remarks,
                             ];
                         }),
-                    'tanker_loads' => $transaction->tankerLoads
+                    'to_batangas_loads' => $transaction->toBatangasLoads
                         ->map(function ($load) {
                             return [
                                 'batangas_transaction_id' => $load->batangas_transaction_id,
                                 'remarks' => $load->remarks,
                                 'purchase' => $load->purchase->purchase_no,
-                                'tanker_load_details' => $load->tankerLoadDetails->each(function ($detail) {
+                                'to_batangas_load_details' => $load->toBatangasLoadDetails->each(function ($detail) {
                                     return [
                                         'quantity' => $detail->quantity,
                                         'product' => $detail->product->name,
