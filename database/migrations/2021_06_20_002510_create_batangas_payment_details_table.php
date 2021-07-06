@@ -15,14 +15,16 @@ class CreateBatangasPaymentDetailsTable extends Migration
     {
         Schema::create('batangas_payment_details', function (Blueprint $table) {
             $table->id();
-            $table->date('date');
-            $table->string('mode')->nullable;
-            $table->decimal('amount', 10, 2);
+            $table->date('date')->nullable();
+            $table->string('mode')->nullable();
+            $table->decimal('amount', 10, 2)->nullable();
             $table->longText('remarks')->nullable();
             $table->boolean('is_verified')->default(false);
-            $table->bigInteger('batangas_transaction_detail_id');
+            $table->unsignedBigInteger('batangas_transaction_detail_id');
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('batangas_transaction_detail_id')->references('id')->on('batangas_transaction_details')->onDelete('cascade');
         });
     }
 

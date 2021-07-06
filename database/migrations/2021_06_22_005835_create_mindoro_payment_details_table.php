@@ -15,14 +15,16 @@ class CreateMindoroPaymentDetailsTable extends Migration
     {
         Schema::create('mindoro_payment_details', function (Blueprint $table) {
             $table->id();
-            $table->date('date');
-            $table->string('mode')->nullable;
-            $table->decimal('amount', 10, 2);
+            $table->date('date')->nullable();
+            $table->string('mode')->nullable();
+            $table->decimal('amount', 10, 2)->nullable();
             $table->longText('remarks')->nullable();
             $table->boolean('is_verified')->default(false);
-            $table->bigInteger('mindoro_transaction_detail_id');
+            $table->unsignedBigInteger('mindoro_transaction_detail_id');
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('mindoro_transaction_detail_id')->references('id')->on('mindoro_transaction_details')->onDelete('cascade');
         });
     }
 
