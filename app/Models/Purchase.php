@@ -54,12 +54,12 @@ class Purchase extends Model
 
      public function toBatangasLoads()
      {
-        return $this->hasMany(ToBatangasLoad::class);
+        return $this->hasMany(ToBatangasLoad::class)->orderBy('batangas_transaction_id');
      }
 
      public function toMindoroLoads()
      {
-        return $this->hasMany(ToMindoroLoad::class);
+        return $this->hasMany(ToMindoroLoad::class)->orderBy('mindoro_transaction_id');
      }
 
      public function batangasTransactions()
