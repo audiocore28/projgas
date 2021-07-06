@@ -45,8 +45,9 @@
 <!--           id selected: {{statementForm.selected}}
           <h1 class="mt-12 mb-5 font-bold text-2xl">Delivered</h1>
  -->
+          <form @submit.prevent="updateBatangasPayment">
           <div class="bg-white rounded shadow overflow-x-auto mb-8 -mt-4">
-            <div class="rounded shadow overflow-x-auto mx-4 my-8" v-for="(months, year) in localBatangasDetails">
+            <div class="rounded shadow overflow-x-auto mx-4 my-8" v-for="(months, year) in form.batangasDetails">
               <h1 class="font-semibold text-center">{{ year }}</h1>
               <div class="mt-6 mb-1" v-for="(transactionDetails, month) in months">
                 <div class="text-sm font-bold bg-gradient-to-r from-yellow-500 to-blue-600 text-white px-4 py-1 flex justify-between">
@@ -90,10 +91,13 @@
                       <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Amount
                       </th>
+                      <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Payment
+                      </th>
                     </tr>
                   </thead>
-                  <tbody class="bg-white divide-y divide-gray-200">
-                    <tr v-for="(detail, transactionDetailIndex) in transactionDetails">
+                  <tbody class="bg-white divide-y divide-gray-200" v-for="(detail, transactionDetailIndex) in transactionDetails" :key="transactionDetailIndex">
+                    <tr>
     <!--                   <td class="px-6 py-4 whitespace-nowrap">
                         <div class="text-sm font-medium text-gray-900">
                           <input type="checkbox" :value="detail.id" v-model="statementForm.selected">
@@ -143,12 +147,56 @@
                           {{ totalCurrency(detail.quantity, detail.unit_price) }}
                         </div>
                       </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" align="center">
+                        <div class="text-sm font-medium text-gray-900">
+                         <button @click.prevent="addNewPaymentForm(year, month, transactionDetailIndex, detail.id)">
+                           <icon name="plus" class="w-4 h-4 mr-2 fill-green-600"/>
+                         </button>
+                        </div>
+                      </td>
+                    </tr>
+
+                    <!-- Payment Details -->
+                    <tr v-for="(payment, paymentIndex) in detail.payments" class="bg-blue-600 text-white">
+                     <td>
+                       <div class="text-sm font-medium text-gray-900">
+                         <date-picker style="width: 160px" v-model="payment.date" lang="en" value-type="format" :formatter="momentFormat"></date-picker>
+                       </div>
+                     </td>
+                     <td>
+                       <div class="text-sm font-medium text-gray-900">
+                         <select v-model="payment.mode" class="form-select">
+                           <option :value="null" />
+                           <option v-for="(mode, index) in modes" :key="index" :value="mode">{{ mode }}</option>
+                         </select>
+                       </div>
+                     </td>
+                     <td class="text-sm text-gray-500">
+                       <div class="text-sm font-medium text-gray-900">
+                         <text-input type="number" step="any" v-model="payment.amount" :error="errors.unit_price" />
+                       </div>
+                     </td>
+                     <td class="text-sm text-gray-500">
+                       <div class="text-sm font-medium text-gray-900">
+                         <text-input v-model="payment.remarks" placeholder="remarks" />
+                       </div>
+                     </td>
+                     <td class="text-sm text-gray-500">
+                       <div class=" px-5 text-sm font-medium text-gray-900">
+                         <button @click.prevent="deletePaymentForm(year, month, transactionDetailIndex, paymentIndex, payment.id)" type="button" class="bg-white py-1 px-1 flex-shrink-0 text-sm leading-none" tabindex="-1">
+                           <icon name="trash" class="w-4 h-4 mr-2 fill-red-600"/>
+                         </button>
+                       </div>
+                     </td>
+
                     </tr>
                   </tbody>
                 </table>
               </div>
+              <loading-button :loading="sending" class="btn-indigo ml-auto" type="submit">Update Payment</loading-button>
             </div>
           </div>
+          </form>
           <!-- <button @click="loadMoreBatangasTransaction">Load more...</button> -->
         </div>
 
@@ -176,8 +224,9 @@
 <!--           id selected: {{statementForm.selected}}
           <h1 class="mt-12 mb-5 font-bold text-2xl">Delivered</h1>
  -->
+          <form @submit.prevent="updateMindoroPayment">
           <div class="bg-white rounded shadow overflow-x-auto mb-8 -mt-4">
-            <div class="rounded shadow overflow-x-auto mx-4 my-8" v-for="(months, year) in localMindoroDetails">
+            <div class="rounded shadow overflow-x-auto mx-4 my-8" v-for="(months, year) in form.mindoroDetails">
               <h1 class="font-semibold text-center">{{ year }}</h1>
               <div class="mt-6 mb-1" v-for="(transactionDetails, month) in months">
                 <div class="text-sm font-bold bg-gradient-to-r from-yellow-500 to-blue-600 text-white px-4 py-1 flex justify-between">
@@ -225,10 +274,13 @@
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                           DR#
                         </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Payment
+                        </th>
                       </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                      <tr v-for="(detail, transactionDetailIndex) in transactionDetails">
+                      <tr v-for="(detail, transactionDetailIndex) in transactionDetails" :key="transactionDetailIndex">
       <!--                   <td class="px-6 py-4 whitespace-nowrap">
                           <div class="text-sm font-medium text-gray-900">
                             <input type="checkbox" :value="detail.id" v-model="statementForm.selected">
@@ -283,13 +335,56 @@
                             {{ detail.dr_no }}
                           </div>
                         </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" align="center">
+                          <div class="text-sm font-medium text-gray-900">
+                           <button @click.prevent="addNewPaymentForm(year, month, transactionDetailIndex, detail.id)">
+                             <icon name="plus" class="w-4 h-4 mr-2 fill-green-600"/>
+                           </button>
+                          </div>
+                        </td>
+                      </tr>
+                      <!-- Payment Details -->
+                      <tr v-for="(payment, paymentIndex) in detail.payments" class="bg-blue-600 text-white">
+                       <td>
+                         <div class="text-sm font-medium text-gray-900">
+                           <date-picker style="width: 160px" v-model="payment.date" lang="en" value-type="format" :formatter="momentFormat"></date-picker>
+                         </div>
+                       </td>
+                       <td>
+                         <div class="text-sm font-medium text-gray-900">
+                           <select v-model="payment.mode" class="form-select">
+                             <option :value="null" />
+                             <option v-for="(mode, index) in modes" :key="index" :value="mode">{{ mode }}</option>
+                           </select>
+                         </div>
+                       </td>
+                       <td class="text-sm text-gray-500">
+                         <div class="text-sm font-medium text-gray-900">
+                           <text-input type="number" step="any" v-model="payment.amount" :error="errors.unit_price" />
+                         </div>
+                       </td>
+                       <td class="text-sm text-gray-500">
+                         <div class="text-sm font-medium text-gray-900">
+                           <text-input v-model="payment.remarks" placeholder="remarks" />
+                         </div>
+                       </td>
+                       <td class="text-sm text-gray-500">
+                         <div class=" px-5 text-sm font-medium text-gray-900">
+                           <button @click.prevent="deletePaymentForm(year, month, transactionDetailIndex, paymentIndex, payment.id)" type="button" class="bg-white py-1 px-1 flex-shrink-0 text-sm leading-none" tabindex="-1">
+                             <icon name="trash" class="w-4 h-4 mr-2 fill-red-600"/>
+                           </button>
+                         </div>
+                       </td>
+
                       </tr>
                     </tbody>
                   </table>
                 </div>
               </div>
+              <loading-button :loading="sending" class="btn-indigo ml-auto" type="submit">Update Payment</loading-button>
             </div>
           </div>
+          </form>
           <!-- <button @click="loadMoreMindoroTransaction">Load more...</button> -->
         </div>
       </div>
@@ -336,6 +431,7 @@ export default {
   data() {
     return {
       sending: false,
+      modes: ['Cash', 'Cheque'],
       momentFormat: {
         //[optional] Date to String
         stringify: (date) => {
