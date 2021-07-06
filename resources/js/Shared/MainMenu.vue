@@ -70,14 +70,14 @@
       </div>
     </div>
 
-    <div class="-ml-6 flex justify-start items-center cursor-pointer" @click="userSelected !== 5 ? userSelected = 5 : userSelected = null">
+    <div class="-ml-6 flex justify-start items-center cursor-pointer" @click="userSelected !== 5 ? userSelected = 5 : userSelected = null" v-if="$page.auth.user.can.user.viewAny || $page.auth.user.can.role.viewAny || $page.auth.user.can.permission.viewAny">
       <icon name="cheveron-down" class="block w-4 h-4 fill-blue-400 mr-2" v-if="userSelected == 5"/>
       <icon name="cheveron-right" class="block w-4 h-4 fill-blue-400 mr-2" v-else/>
       <h4 class="text-blue-300 text-xs py-3 hover:text-white opacity-75 rounded-t">Manage Users</h4>
     </div>
     <div v-show="userSelected == 5" class="py-4 text-sm">
       <div class="mb-4" v-for="link in userLinks">
-        <inertia-link class="flex items-center group py-3" :href="route(link.route)">
+        <inertia-link class="flex items-center group py-3" :href="route(link.route)" v-if="link.visible">
           <icon :name="link.icon" class="w-4 h-4 mr-2" :class="isUrl(link.isUrl) ? 'fill-white' : 'fill-blue-400 group-hover:fill-white'" />
           <div :class="isUrl(link.isUrl) ? 'text-white' : 'text-blue-300 group-hover:text-white'">{{ link.name }}</div>
         </inertia-link>
@@ -146,11 +146,32 @@ export default {
           visible: this.$page.auth.user.can.supplier.viewAny,
         },
         {
+          route: 'depots.index',
+          icon: 'office',
+          isUrl: 'depots',
+          name: 'Depots',
+          visible: this.$page.auth.user.can.depot.viewAny,
+        },
+        {
+          route: 'accounts.index',
+          icon: 'office',
+          isUrl: 'accounts',
+          name: 'Accounts',
+          visible: this.$page.auth.user.can.account.viewAny,
+        },
+        {
           route: 'clients.index',
           icon: 'office',
           isUrl: 'clients',
           name: 'Clients',
           visible: this.$page.auth.user.can.client.viewAny,
+        },
+        {
+          route: 'client-payments.index',
+          icon: 'office',
+          isUrl: 'client-payments',
+          name: 'Payments',
+          visible: this.$page.auth.user.can.clientPayment.viewAny,
         },
         // { route: 'statements.index', icon: 'book', isUrl: 'statements', name: 'SOA'},
       ],
@@ -200,18 +221,21 @@ export default {
           icon: 'users',
           isUrl: 'users',
           name: 'Users',
+          visible: this.$page.auth.user.can.user.viewAny,
         },
         {
           route: 'roles.index',
           icon: 'users',
           isUrl: 'roles',
           name: 'Roles',
+          visible: this.$page.auth.user.can.role.viewAny,
         },
         {
           route: 'permissions.index',
           icon: 'users',
           isUrl: 'permissions',
           name: 'Permissions',
+          visible: this.$page.auth.user.can.permission.viewAny,
         },
       ],
       utilityLinks: [

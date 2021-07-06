@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div v-for="error in errors" class="form-error mb-4">{{ error }}</div>
     <h1 class="mb-8 font-bold text-3xl">
       <inertia-link class="text-blue-600 hover:text-blue-800" :href="route('monthly-batangas-transactions.index')">Batangas Transaction</inertia-link>
       <span class="text-blue-600 font-medium">/</span> {{ form.date }}

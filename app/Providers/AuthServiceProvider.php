@@ -17,11 +17,17 @@ class AuthServiceProvider extends ServiceProvider
         'App\Models\MonthlyBatangasTransaction' => 'App\Policies\MonthlyBatangasTransactionPolicy',
         'App\Models\MonthlyMindoroTransaction' => 'App\Policies\MonthlyMindoroTransactionPolicy',
         'App\Models\Supplier' => 'App\Policies\SupplierPolicy',
+        'App\Models\Depot' => 'App\Policies\DepotPolicy',
+        'App\Models\Account' => 'App\Policies\AccountPolicy',
         'App\Models\Client' => 'App\Policies\ClientPolicy',
+        'App\Models\ClientPayment' => 'App\Policies\ClientPaymentPolicy',
         'App\Models\Driver' => 'App\Policies\DriverPolicy',
         'App\Models\Helper' => 'App\Policies\HelperPolicy',
         'App\Models\Tanker' => 'App\Policies\TankerPolicy',
         'App\Models\Product' => 'App\Policies\ProductPolicy',
+        'App\Models\User' => 'App\Policies\UserPolicy',
+        'Spatie\Permission\Models\Role' => 'App\Policies\RolePolicy',
+        'Spatie\Permission\Models\Permission' => 'App\Policies\PermissionPolicy',
     ];
 
     /**

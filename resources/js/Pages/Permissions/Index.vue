@@ -11,7 +11,7 @@
         </select>
       </search-filter>
  -->
-      <inertia-link class="btn-indigo" :href="route('permissions.create')">
+      <inertia-link class="btn-indigo" :href="route('permissions.create')" v-if="$page.auth.user.can.permission.create">
         <span>Add</span>
         <span class="hidden md:inline">Permission</span>
       </inertia-link>
@@ -23,14 +23,14 @@
         </tr>
          <tr v-for="permission in permissions.data" :key="permission.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
           <td class="border-t">
-            <inertia-link class="px-6 py-4 flex items-center focus:text-indigo-500" :href="route('permissions.edit', permission.id)">
+            <div class="px-6 py-4 flex items-center focus:text-indigo-500">
               {{ permission.name }}
               <icon v-if="permission.deleted_at" name="trash" class="flex-shrink-0 w-3 h-3 fill-gray-400 ml-2" />
-            </inertia-link>
+            </div>
           </td>
-          <td class="border-t w-px">
+          <td class="border-t w-px" v-if="$page.auth.user.can.permission.update">
             <inertia-link class="px-4 flex items-center" :href="route('permissions.edit', permission.id)" tabindex="-1">
-              <icon name="cheveron-right" class="block w-6 h-6 fill-gray-400" />
+              <icon name="edit" class="block w-6 h-6 fill-gray-400" />
             </inertia-link>
           </td>
         </tr>

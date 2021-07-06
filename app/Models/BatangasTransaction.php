@@ -49,9 +49,9 @@ class BatangasTransaction extends Model
 	 	return $this->hasMany(BatangasTransactionDetail::class);
 	 }
 
-     public function tankerLoads()
+     public function toBatangasLoads()
      {
-        return $this->hasMany(TankerLoad::class);
+        return $this->hasMany(ToBatangasLoad::class);
      }
 
     public function scopeFilter($query, array $filters)

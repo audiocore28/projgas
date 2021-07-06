@@ -11,19 +11,27 @@
           <div>
             <label class="form-label block mr-5">Date:<span class="text-red-500">*</span></label>
             <div class="pr-6 pb-4 mt-3">
-              <date-picker v-model="form.date" :error="errors.date" lang="en" value-type="format" :formatter="momentFormat"></date-picker>
+              <date-picker v-model="form.date" style="width: 150px" :error="errors.date" lang="en" value-type="format" :formatter="momentFormat"></date-picker>
               <div v-if="errors.date" class="form-error">{{ errors.date }}</div>
             </div>
           </div>
 
-          <div class="w-full lg:w-1/4">
-            <text-input v-model="form.purchase_no" :error="errors.purchase_no" class="pr-6 pb-4 w-full" label="Purchase No*" />
-          </div>
-
-          <select-input v-model="form.supplier_id" :error="errors.supplier_id" class="pr-6 pb-4 w-full lg:w-1/4" label="Supplier">
+          <select-input v-model="form.supplier_id" :error="errors.supplier_id" class="pr-6 pb-4 w-full lg:w-1/6" label="Supplier">
             <option :value="null" />
             <option v-for="supplier in suppliers" :key="supplier.id" :value="supplier.id">{{ supplier.name }}</option>
           </select-input>
+          <select-input v-model="form.depot_id" :error="errors.depot_id" class="pr-6 pb-4 w-full lg:w-1/6" label="Depot">
+            <option :value="null" />
+            <option v-for="depot in depots" :key="depot.id" :value="depot.id">{{ depot.name }}</option>
+          </select-input>
+          <select-input v-model="form.account_id" :error="errors.account_id" class="pr-6 pb-4 w-full lg:w-1/6" label="Account">
+            <option :value="null" />
+            <option v-for="account in accounts" :key="account.id" :value="account.id">{{ account.name }}</option>
+          </select-input>
+
+          <div class="w-full lg:w-2/6">
+            <text-input v-model="form.purchase_no" :error="errors.purchase_no" class="pr-6 pb-4 w-full" label="Purchase No*" />
+          </div>
         </div>
 
         <!-- PurchaseDetail table form -->
@@ -201,7 +209,7 @@
                       <icon name="plus" class="w-4 h-4 loadIr-2 fill-white"/>
                     </button>
 
-                    <a v-if="form.monthly_batangas_transaction_id && load.batangas_transaction_id" target="_blank" :href="`/monthly-batangas-transactions/${load.monthly_batangas_transaction.id}/edit#transaction-${load.batangas_transaction_id}`" class="ml-2 inline-block">
+                    <a v-if="form.monthly_batangas_transaction_id && load.batangas_transaction_id" target="_blank" :href="`/monthly-batangas-transactions/${load.monthly_batangas_transaction_id}/edit#transaction-${load.batangas_transaction_id}`" class="ml-2 inline-block">
                       <icon name="open-link" class="w-4 h-4 loadIr-2 fill-white"/>
                     </a>
 
@@ -354,7 +362,7 @@
                        <icon name="plus" class="w-4 h-4 loadIr-2 fill-white"/>
                      </button>
 
-                     <a v-if="form.monthly_mindoro_transaction_id && load.mindoro_transaction_id" target="_blank" :href="`/monthly-mindoro-transactions/${load.monthly_mindoro_transaction.id}/edit#transaction-${load.mindoro_transaction_id}`" class="ml-2 inline-block">
+                     <a v-if="form.monthly_mindoro_transaction_id && load.mindoro_transaction_id" target="_blank" :href="`/monthly-mindoro-transactions/${load.monthly_mindoro_transaction_id}/edit#transaction-${load.mindoro_transaction_id}`" class="ml-2 inline-block">
                        <icon name="open-link" class="w-4 h-4 loadIr-2 fill-white"/>
                      </a>
 
@@ -517,6 +525,8 @@ export default {
     errors: Object,
     purchase: Object,
     suppliers: Array,
+    depots: Array,
+    accounts: Array,
     products: Array,
     // tanker_loads: Array,
     monthlyMindoroTransactions: Array,
@@ -545,14 +555,18 @@ export default {
         date: this.purchase.date,
         purchase_no: this.purchase.purchase_no,
         supplier_id: this.purchase.supplier_id,
+        depot_id: this.purchase.depot_id,
+        account_id: this.purchase.account_id,
         monthly_mindoro_transaction_id: this.purchase.monthly_mindoro_transaction_id,
         mindoro_transactions: [],
         monthly_batangas_transaction_id: this.purchase.monthly_batangas_transaction_id,
         batangas_transactions: [],
         details: this.purchase.details,
         removed_purchase_details: [],
-        removed_loads: [],
-        removed_load_details: [],
+        removed_batangas_loads: [],
+        removed_batangas_load_details: [],
+        removed_mindoro_loads: [],
+        removed_mindoro_load_details: [],
         batangasLoads: this.purchase.batangasLoads,
         mindoroLoads: this.purchase.mindoroLoads,
         // tankerLoads: this.tanker_loads,
@@ -622,16 +636,13 @@ export default {
       this.form.batangasLoads.push({
         id: null,
         purchase_id: this.purchase.id,
-        monthly_batangas_transaction: {
-          id: null,
-        },
+        monthly_batangas_transaction_id: null,
         batangas_transaction_id: null,
-        mindoro_transaction_id: 0,
         remarks: null,
         details: [
           {
             id: null,
-            tanker_load_id: null,
+            to_batangas_load_id: null,
             product: {
               id: null,
               name: null,
@@ -644,7 +655,7 @@ export default {
     },
     deleteBatangasLoadForm(loadIndex, loadId) {
       if (loadId) {
-        this.form.removed_loads.push(loadId);
+        this.form.removed_batangas_loads.push(loadId);
         this.form.batangasLoads.splice(loadIndex, 1);
       } else {
         this.form.batangasLoads.splice(loadIndex, 1);
@@ -655,7 +666,7 @@ export default {
     addNewBatangasLoadDetailForm(loadIndex) {
       this.form.batangasLoads[loadIndex].details.push({
         id: null,
-        tanker_load_id: null,
+        to_batangas_load_id: null,
         product: {
           id: null,
           name: null,
@@ -667,7 +678,7 @@ export default {
 
     deleteBatangasLoadDetailForm(loadIndex, detailsIndex, loadDetailId) {
       if (loadDetailId) {
-        this.form.removed_load_details.push(loadDetailId);
+        this.form.removed_batangas_load_details.push(loadDetailId);
         this.form.batangasLoads[loadIndex].details.splice(detailsIndex, 1);
       } else{
         this.form.batangasLoads[loadIndex].details.splice(detailsIndex, 1);
@@ -685,7 +696,7 @@ export default {
 
       axios.get(`/batangas-transactions/${transactionId}/edit`)
         .then(response => {
-          this.form.batangasLoads[loadIndex].monthly_batangas_transaction.id = response.data.monthly_batangas_transaction.id;
+          this.form.batangasLoads[loadIndex].monthly_batangas_transaction_id = response.data.monthly_batangas_transaction_id;
         });
     },
 
@@ -708,16 +719,13 @@ export default {
       this.form.mindoroLoads.push({
         id: null,
         purchase_id: this.purchase.id,
-        batangas_transaction_id: 0,
-        monthly_mindoro_transaction: {
-          id: null,
-        },
+        monthly_mindoro_transaction_id: null,
         mindoro_transaction_id: null,
         remarks: null,
         details: [
           {
             id: null,
-            tanker_load_id: null,
+            to_mindoro_load_id: null,
             product: {
               id: null,
               name: null,
@@ -730,7 +738,7 @@ export default {
     },
     deleteMindoroLoadForm(loadIndex, loadId) {
       if (loadId) {
-        this.form.removed_loads.push(loadId);
+        this.form.removed_mindoro_loads.push(loadId);
         this.form.mindoroLoads.splice(loadIndex, 1);
       } else {
         this.form.mindoroLoads.splice(loadIndex, 1);
@@ -741,7 +749,7 @@ export default {
     addNewMindoroLoadDetailForm(loadIndex) {
       this.form.mindoroLoads[loadIndex].details.push({
         id: null,
-        tanker_load_id: null,
+        to_mindoro_load_id: null,
         product: {
           id: null,
           name: null,
@@ -752,7 +760,7 @@ export default {
     },
     deleteMindoroLoadDetailForm(loadIndex, detailsIndex, loadDetailId) {
       if (loadDetailId) {
-        this.form.removed_load_details.push(loadDetailId);
+        this.form.removed_mindoro_load_details.push(loadDetailId);
         this.form.mindoroLoads[loadIndex].details.splice(detailsIndex, 1);
       } else{
         this.form.mindoroLoads[loadIndex].details.splice(detailsIndex, 1);
@@ -769,7 +777,7 @@ export default {
 
       axios.get(`/mindoro-transactions/${transactionId}/edit`)
         .then(response => {
-          this.form.mindoroLoads[loadIndex].monthly_mindoro_transaction.id = response.data.monthly_mindoro_transaction.id;
+          this.form.mindoroLoads[loadIndex].monthly_mindoro_transaction_id = response.data.monthly_mindoro_transaction_id;
         });
     },
 
@@ -796,15 +804,23 @@ export default {
     },
 
     getMindoroTransactions(value) {
-      axios.get(`/monthly-mindoro-transactions/${value}/edit`)
-        .then(response => this.form.mindoro_transactions = response.data.mindoroTransactions)
-        .catch(err => this.form.mindoro_transactions = []);
+      if(value !== null) {
+        axios.get(`/monthly-mindoro-transactions/${value}/edit`)
+          .then(response => this.form.mindoro_transactions = response.data.mindoroTransactions)
+          .catch(err => this.form.mindoro_transactions = []);
+      }
+
+      this.form.mindoro_transactions = [];
     },
 
     getBatangasTransactions(value) {
-      axios.get(`/monthly-batangas-transactions/${value}/edit`)
-        .then(response => this.form.batangas_transactions = response.data.batangasTransactions)
-        .catch(err => this.form.batangas_transactions = []);
+      if(value !== null) {
+        axios.get(`/monthly-batangas-transactions/${value}/edit`)
+          .then(response => this.form.batangas_transactions = response.data.batangasTransactions)
+          .catch(err => this.form.batangas_transactions = []);
+      }
+
+      this.form.batangas_transactions = [];
     },
 
     onPurchaseChange(event, purchaseIndex) {
@@ -837,7 +853,7 @@ export default {
 
       this.form.batangasLoads.forEach(load => {
         load.batangas_transaction_id = null;
-        load.monthly_batangas_transaction.id = null;
+        load.monthly_batangas_transaction_id = null;
       });
     },
 
@@ -846,14 +862,19 @@ export default {
 
       this.form.mindoroLoads.forEach(load => {
         load.mindoro_transaction_id = null;
-        load.monthly_mindoro_transaction.id = null;
+        load.monthly_mindoro_transaction_id = null;
       });
     },
 
   },
   mounted() {
-    this.getBatangasTransactions(this.form.monthly_batangas_transaction_id);
-    this.getMindoroTransactions(this.form.monthly_mindoro_transaction_id);
+    if(this.form.monthly_batangas_transaction_id !== null) {
+      this.getBatangasTransactions(this.form.monthly_batangas_transaction_id);
+    }
+
+    if(this.form.monthly_mindoro_transaction_id !== null) {
+      this.getMindoroTransactions(this.form.monthly_mindoro_transaction_id);
+    }
   }
 
 }

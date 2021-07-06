@@ -8,7 +8,7 @@
       </h1>
       <!-- <img v-if="user.photo" class="block w-8 h-8 rounded-full ml-4" :src="user.photo"> -->
     </div>
-    <trashed-message v-if="user.deleted_at" class="mb-6" @restore="restore">
+    <trashed-message v-if="user.deleted_at" class="mb-6" @restore="restore" :canRestore="$page.auth.user.can.user.restore">
       This user has been deleted.
     </trashed-message>
     <div class="bg-white rounded shadow overflow-hidden max-w-3xl">

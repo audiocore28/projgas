@@ -8,8 +8,7 @@ use App\Models\MonthlyMindoroTransaction;
 use App\Models\MindoroTransaction;
 use App\Models\MindoroTransactionDetail;
 // use App\Models\Purchase;
-// use App\Models\TankerLoad;
-use App\Models\TankerLoadDetail;
+use App\Models\ToMindoroLoadDetail;
 use App\Models\Client;
 use App\Models\Product;
 use App\Models\Tanker;
@@ -83,6 +82,18 @@ class MonthlyMindoroTransactionController extends Controller
      */
     public function store(StoreMonthlyMindoroTransactionRequest $request)
     {
+        // check trip no. if has duplicates
+        $tripNos = [];
+        foreach ($request->transactions as $transaction) {
+            array_push($tripNos, $transaction['trip_no']);
+        }
+
+        if(count($tripNos) !== count(array_unique($tripNos))) {
+            return Redirect::back()->withErrors('Trip no. has duplicates');
+        }
+
+        // else
+
         $dateMonthArray = explode(', ', $request->date);
         $month = $dateMonthArray[0];
         $year = $dateMonthArray[1];
@@ -185,12 +196,12 @@ class MonthlyMindoroTransactionController extends Controller
                                        'remarks' => $detail->remarks,
                                     ];
                         }),
-                        'tanker_loads' => $transaction->tankerLoads->each(function ($load) {
+                        'mindoro_loads' => $transaction->toMindoroLoads->each(function ($load) {
                             return [
                                 'mindoro_transaction_id' => $load->mindoro_transaction_id,
                                 'remarks' => $load->remarks,
                                 'purchase' => $load->purchase->purchase_no,
-                                'tanker_load_details' => $load->tankerLoadDetails->each(function ($detail) {
+                                'mindoro_load_details' => $load->toMindoroLoadDetails->each(function ($detail) {
                                     return [
                                         'quantity' => $detail->quantity,
                                         'product' => $detail->product->name,
@@ -263,6 +274,18 @@ class MonthlyMindoroTransactionController extends Controller
      */
     public function update(UpdateMonthlyMindoroTransactionRequest $request, MonthlyMindoroTransaction $monthlyMindoroTransaction)
     {
+        // check trip no. if has duplicates
+        $tripNos = [];
+        foreach ($request->transactions as $transaction) {
+            array_push($tripNos, $transaction['trip_no']);
+        }
+
+        if(count($tripNos) !== count(array_unique($tripNos))) {
+            return Redirect::back()->withErrors('Trip no. has duplicates');
+        }
+
+        // else
+
         $dateMonthArray = explode(', ', $request->date);
         $month = $dateMonthArray[0];
         $year = $dateMonthArray[1];
@@ -300,12 +323,12 @@ class MonthlyMindoroTransactionController extends Controller
                 $transactionDetail->save();
             }
 
-            foreach ($transaction['tanker_loads'] as $load)
+            foreach ($transaction['mindoro_loads'] as $load)
             {
                 if ($load['id'] !== null) {
-                    foreach ($load['tanker_load_details'] as $detail)
+                    foreach ($load['to_mindoro_load_details'] as $detail)
                     {
-                        $loadDetail = TankerLoadDetail::findOrNew($detail['id']);
+                        $loadDetail = ToMindoroLoadDetail::findOrNew($detail['id']);
                         $loadDetail->unit_price = $detail['unit_price'];
                         $loadDetail->save();
                     }
@@ -371,13 +394,13 @@ class MonthlyMindoroTransactionController extends Controller
                                        'remarks' => $detail->remarks,
                                     ];
                         }),
-                        'tanker_loads' => $transaction->tankerLoads
+                        'to_mindoro_loads' => $transaction->toMindoroLoads
                                 ->map(function ($load) {
                                     return [
                                         'mindoro_transaction_id' => $load->mindoro_transaction_id,
                                         'remarks' => $load->remarks,
                                         'purchase' => $load->purchase->purchase_no,
-                                        'tanker_load_details' => $load->tankerLoadDetails->each(function ($detail) {
+                                        'to_mindoro_load_details' => $load->toMindoroLoadDetails->each(function ($detail) {
                                             return [
                                                 'quantity' => $detail->quantity,
                                                 'product' => $detail->product->name,

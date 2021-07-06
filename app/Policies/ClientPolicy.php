@@ -93,4 +93,26 @@ class ClientPolicy
         }
     }
 
+    // SOA
+    public function viewPayment(User $user, Client $client)
+    {
+        if ($user->can('view client payment')) {
+            return true;
+        }
+    }
+
+    public function updatePayment(User $user, Client $client)
+    {
+        if ($user->can('update client payment')) {
+            return true;
+        }
+    }
+
+    public function verifyPayment(User $user, Client $client)
+    {
+        if ($user->can('verify client payment')) {
+            return true;
+        }
+    }
+
 }

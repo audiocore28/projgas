@@ -49,9 +49,9 @@ class MindoroTransaction extends Model
 	 	return $this->hasMany(MindoroTransactionDetail::class);
 	 }
 
-     public function tankerLoads()
+     public function toMindoroLoads()
      {
-        return $this->hasMany(TankerLoad::class);
+        return $this->hasMany(ToMindoroLoad::class);
      }
 
     public function scopeFilter($query, array $filters)

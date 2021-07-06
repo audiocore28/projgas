@@ -69,6 +69,7 @@ export default {
     return {
       sending: false,
       form: {
+        id: this.tanker.id,
         plate_no: this.tanker.plate_no,
         compartment: this.tanker.compartment,
       },

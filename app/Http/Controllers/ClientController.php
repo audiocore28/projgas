@@ -31,6 +31,17 @@ class ClientController extends Controller
 
         $query = Client::query();
 
+        $query->withCount([
+            'batangasTransactionDetails',
+            'mindoroTransactionDetails',
+            'batangasPaymentDetails as unverified_batangas_payment_count' => function ($q) {
+                $q->where('is_verified', false);
+            },
+            'mindoroPaymentDetails as unverified_mindoro_payment_count' => function ($q) {
+                $q->where('is_verified', false);
+            },
+        ]);
+
         if (request('search')) {
             $query->where('name', 'like', '%'.request('search').'%')
                 ->orWhere('office', 'like', '%'.request('search').'%')
@@ -104,6 +115,16 @@ class ClientController extends Controller
                     'client' => $detail->client ? $detail->client->only('id', 'name') : null,
                     'remarks' => $detail->remarks,
                     'product' => $detail->product ? $detail->product->only('id', 'name') : null,
+                    'payments' => $detail->mindoroPaymentDetails->map(function ($payment) {
+                        return [
+                            'id' => $payment->id,
+                            'date' => $payment->date,
+                            'mode' => $payment->mode,
+                            'amount' => $payment->amount,
+                            'remarks' => $payment->remarks,
+                            'mindoro_transaction_detail_id' => $payment->mindoro_transaction_detail_id,
+                        ];
+                    }),
                 ];
             });
 
@@ -125,6 +146,16 @@ class ClientController extends Controller
                     'client' => $detail->client ? $detail->client->only('id', 'name') : null,
                     'remarks' => $detail->remarks,
                     'product' => $detail->product ? $detail->product->only('id', 'name') : null,
+                    'payments' => $detail->batangasPaymentDetails->map(function ($payment) {
+                        return [
+                            'id' => $payment->id,
+                            'date' => $payment->date,
+                            'mode' => $payment->mode,
+                            'amount' => $payment->amount,
+                            'remarks' => $payment->remarks,
+                            'batangas_transaction_detail_id' => $payment->batangas_transaction_detail_id,
+                        ];
+                    }),
                 ];
             });
 
@@ -133,8 +164,10 @@ class ClientController extends Controller
 
        if (request()->wantsJson()) {
          return [
-           'batangasDetails' => $bD,
-           'mindoroDetails' => $mD,
+           // 'batangasDetails' => $bD,
+           // 'mindoroDetails' => $mD,
+           'batangasDetails' => $batangasDetails,
+           'mindoroDetails' => $mindoroDetails,
          ];
        }
 

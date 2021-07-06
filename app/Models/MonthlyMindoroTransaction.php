@@ -14,7 +14,7 @@ class MonthlyMindoroTransaction extends Model
 
 	 public function mindoroTransactions()
 	 {
-	 	return $this->hasMany(MindoroTransaction::class);
+	 	return $this->hasMany(MindoroTransaction::class)->orderBy('trip_no');
 	 }
 
      public function purchases()

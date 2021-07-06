@@ -4,6 +4,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\ClientPaymentController;
+use App\Http\Controllers\BatangasPaymentDetailController;
+use App\Http\Controllers\MindoroPaymentDetailController;
 // use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DriverController;
 use App\Http\Controllers\BatangasTransactionController;
@@ -16,14 +19,14 @@ use App\Http\Controllers\HelperController;
 // use App\Http\Controllers\CashierController;
 // use App\Http\Controllers\PumpAttendantController;
 // use App\Http\Controllers\OfficeStaffController;
-use App\Http\Controllers\TankerLoadController;
-use App\Http\Controllers\TankerLoadDetailController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\PurchaseDetailController;
 // use App\Http\Controllers\StatementController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\DepotController;
+use App\Http\Controllers\AccountController;
 // use App\Http\Controllers\StationController;
 // use App\Http\Controllers\PumpController;
 // use App\Http\Controllers\CompanyController;
@@ -68,12 +71,12 @@ use App\Http\Controllers\PermissionController;
 
  // Auth
  Route::get('login', [AuthenticatedSessionController::class, 'create'])
-     ->name('login');
-     // ->middleware('guest');
+     ->name('login')
+     ->middleware('guest');
 
  Route::post('login', [AuthenticatedSessionController::class, 'store'])
-     ->name('login.store');
-     // ->middleware('guest');
+     ->name('login.store')
+     ->middleware('guest');
 
  Route::delete('logout', [AuthenticatedSessionController::class, 'destroy'])
      ->name('logout');
@@ -92,12 +95,6 @@ Route::group(['middleware' => 'auth'], function() {
 
 	// Purchase Details
 	Route::resource('purchase-details', PurchaseDetailController::class)->only(['store', 'destroy']);
-
-	// Tanker Loads
-	Route::resource('tanker-loads', TankerLoadController::class);
-
-	// Tanker Load Details
-	Route::resource('tanker-load-details', TankerLoadDetailController::class)->only(['store', 'destroy']);
 
 	// Batangas Transaction
 	Route::resource('batangas-transactions', BatangasTransactionController::class);
@@ -125,6 +122,14 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::put('suppliers/{supplier}/restore', [SupplierController::class, 'restore'])->name('suppliers.restore')->middleware('can:restore,supplier');
 	Route::resource('suppliers', SupplierController::class);
 
+	// Depots
+	Route::put('depots/{depot}/restore', [DepotController::class, 'restore'])->name('depots.restore')->middleware('can:restore,depot');
+	Route::resource('depots', DepotController::class);
+
+	// Accounts
+	Route::put('accounts/{account}/restore', [AccountController::class, 'restore'])->name('accounts.restore')->middleware('can:restore,account');
+	Route::resource('accounts', AccountController::class);
+
 	// // Stations
 	// Route::put('stations/{station}/restore', [StationController::class, 'restore'])->name('stations.restore');
 	// Route::resource('stations', StationController::class);
@@ -140,6 +145,23 @@ Route::group(['middleware' => 'auth'], function() {
 	// Clients
 	Route::put('clients/{client}/restore', [ClientController::class, 'restore'])->name('clients.restore')->middleware('can:restore,client');
 	Route::resource('clients', ClientController::class);
+
+	// Client Payments
+	Route::put('client-payments/{clientPayment}/restore', [ClientPaymentController::class, 'restore'])->name('client-payments.restore')->middleware('can:restore,clientPayment');
+	Route::resource('client-payments', ClientPaymentController::class);
+
+	// Client Payment Details
+	// Route::put('client-payment-details/{clientPaymentDetail}/restore', [ClientPaymentDetailController::class, 'restore'])->name('client-payment-details.restore')->middleware('can:restore,clientPaymentDetail');
+	// Route::resource('client-payment-details', ClientPaymentDetailController::class);
+
+	// Batangas Payments
+	Route::get('clients/{client}/batangas-soa', [BatangasPaymentDetailController::class, 'edit'])->name('batangas-payment-details.edit')->middleware('can:viewPayment,client');
+	Route::put('clients/{client}/batangas-soa', [BatangasPaymentDetailController::class, 'update'])->name('batangas-payment-details.update')->middleware('can:updatePayment,client');
+
+	// Mindoro Payments
+	Route::get('clients/{client}/mindoro-soa', [MindoroPaymentDetailController::class, 'edit'])->name('mindoro-payment-details.edit')->middleware('can:viewPayment,client');
+	Route::put('clients/{client}/mindoro-soa', [MindoroPaymentDetailController::class, 'update'])->name('mindoro-payment-details.update')->middleware('can:updatePayment,client');
+
 
 	// Statements
 	// Route::put('statements/{statement}/restore', [StatementController::class, 'restore'])->name('statements.restore');
@@ -205,6 +227,7 @@ Route::group(['middleware' => 'auth'], function() {
 	// Route::resource('discounts', DiscountController::class)->only(['store', 'destroy']);
 });
 
+require_once __DIR__ . '/jetstream.php';
 
 
 // Spatie Laravel Backup Package

@@ -15,9 +15,14 @@
 			height: auto;
 		}
 
-		.column {
+		.column-l {
 		  float: left;
-		  width: 50%;
+		  width: 45%;
+		}
+
+		.column-r {
+		  float: left;
+		  width: 55%;
 		}
 
 		/* Clear floats after the columns */
@@ -46,7 +51,7 @@
 
 	{{-- Lists --}}
 	<div style="font: 9px sans-serif;" class="row">
-		<div class="column">
+		<div class="column-l">
 			<h2 style="font-size: 9px; line-height: .8; text-transform: uppercase;">Summary</h2>
 			<hr style="margin-right: 5px; margin-bottom: 25px;">
 			<?php $overall = 0; ?>
@@ -68,9 +73,9 @@
 
 		 		<?php $total_load_amount = 0; ?>
 
-				{{-- TankerLoad --}}
-	 			@foreach($transaction['tanker_loads'] as $load)
-	 				@foreach($load['tanker_load_details'] as $detail)
+				{{-- ToBatangasLoad --}}
+	 			@foreach($transaction['to_batangas_loads'] as $load)
+	 				@foreach($load['to_batangas_load_details'] as $detail)
 	 				<?php
 		 				$amount = $detail['quantity'] * $detail['unit_price'];
 		 				$total_load_amount += $amount;
@@ -82,7 +87,7 @@
 				<table class='table' width="60%" cellspacing='0' style="margin-top: 5px">
 					<tr>
 						<td style="background-color: #fff; color: #000;">
-							{{$transaction['trip_no']}}- {{$transaction['driver']['name']}}
+							{{$transaction['trip_no']}}- {{$transaction['driver']['name']}} & {{$transaction['helper']['name']}}
 						</td>
 						<td align="right">
 							{{ number_format($output) }}
@@ -105,7 +110,7 @@
 			</table>
 
 		</div>
-		<div class="column">
+		<div class="column-r">
 			<h2 style="font-size: 9px; line-height: .8; text-transform: uppercase;">Trips</h2>
 			<hr>
 			{{-- Drivers --}}
@@ -231,16 +236,16 @@
 
 			<div class="row" style="margin-top: 5px">
 	 			<?php $total_load_amount = 0; ?>
-				{{-- TankerLoad --}}
+				{{-- ToBatangasLoad --}}
 				<div class="column">
-		 			@foreach($transaction['tanker_loads'] as $load)
+		 			@foreach($transaction['to_batangas_loads'] as $load)
 		 			<div style="margin: 10px 0 5px 0; color: red;">
 						<b>{{ $load['purchase'] }}</b>
 		 			</div>
 
-		 			{{-- TankerLoadDetail --}}
+		 			{{-- ToBatangasLoadDetail --}}
 					<table class='table' width="50%" cellspacing='0' cellpadding='5'>
-		 				@foreach($load['tanker_load_details'] as $detail)
+		 				@foreach($load['to_batangas_load_details'] as $detail)
 		 				<?php
 			 				$amount = $detail['quantity'] * $detail['unit_price'];
 			 				$total_load_amount += $amount;

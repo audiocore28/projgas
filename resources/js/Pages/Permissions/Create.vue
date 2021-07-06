@@ -42,7 +42,7 @@ export default {
   data() {
     return {
       sending: false,
-      groups: ['Purchases', 'Batangas Transactions', 'Mindoro Transactions', 'Suppliers', 'Clients', 'Drivers', 'Helpers', 'Tankers', 'Products'],
+      groups: ['Purchases', 'Batangas Transactions', 'Mindoro Transactions', 'Suppliers', 'Depots', 'Accounts', 'Clients', 'Client Payments', 'Drivers', 'Helpers', 'Tankers', 'Products', 'Users', 'Roles', 'Permissions'],
       form: {
         name: null,
         group: null,

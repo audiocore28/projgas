@@ -15,6 +15,11 @@ use Inertia\Inertia;
 
 class UsersController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(User::class, 'user');
+    }
+
     public function index()
     {
         return Inertia::render('Users/Index', [
@@ -133,7 +138,7 @@ class UsersController extends Controller
 
         $user->delete();
 
-        return redirect()->route('users.index')->with('success', 'User deleted.');
+        return Redirect::back()->with('success', 'User deleted.');
     }
 
     public function restore(User $user)
