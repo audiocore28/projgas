@@ -82,6 +82,18 @@ class MonthlyMindoroTransactionController extends Controller
      */
     public function store(StoreMonthlyMindoroTransactionRequest $request)
     {
+        // check trip no. if has duplicates
+        $tripNos = [];
+        foreach ($request->transactions as $transaction) {
+            array_push($tripNos, $transaction['trip_no']);
+        }
+
+        if(count($tripNos) !== count(array_unique($tripNos))) {
+            return Redirect::back()->withErrors('Trip no. has duplicates');
+        }
+
+        // else
+
         $dateMonthArray = explode(', ', $request->date);
         $month = $dateMonthArray[0];
         $year = $dateMonthArray[1];
@@ -262,6 +274,18 @@ class MonthlyMindoroTransactionController extends Controller
      */
     public function update(UpdateMonthlyMindoroTransactionRequest $request, MonthlyMindoroTransaction $monthlyMindoroTransaction)
     {
+        // check trip no. if has duplicates
+        $tripNos = [];
+        foreach ($request->transactions as $transaction) {
+            array_push($tripNos, $transaction['trip_no']);
+        }
+
+        if(count($tripNos) !== count(array_unique($tripNos))) {
+            return Redirect::back()->withErrors('Trip no. has duplicates');
+        }
+
+        // else
+
         $dateMonthArray = explode(', ', $request->date);
         $month = $dateMonthArray[0];
         $year = $dateMonthArray[1];
