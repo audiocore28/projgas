@@ -15,9 +15,14 @@
 			height: auto;
 		}
 
-		.column {
+		.column-l {
 		  float: left;
-		  width: 50%;
+		  width: 45%;
+		}
+
+		.column-r {
+		  float: left;
+		  width: 55%;
 		}
 
 		/* Clear floats after the columns */
@@ -46,7 +51,7 @@
 
 	{{-- Lists --}}
 	<div style="font: 9px sans-serif;" class="row">
-		<div class="column">
+		<div class="column-l">
 			<h2 style="font-size: 9px; line-height: .8; text-transform: uppercase;">Summary</h2>
 			<hr style="margin-right: 5px; margin-bottom: 25px;">
 			<?php $overall = 0; ?>
@@ -105,7 +110,7 @@
 			</table>
 
 		</div>
-		<div class="column">
+		<div class="column-r">
 			<h2 style="font-size: 9px; line-height: .8; text-transform: uppercase;">Trips</h2>
 			<hr>
 			{{-- Drivers --}}
