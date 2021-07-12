@@ -4,11 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Models\TankerLoad;
 use App\Models\BatangasTransaction;
 use App\Models\MindoroTransaction;
-use App\Models\Driver;
-use App\Models\Helper;
 
 class Tanker extends Model
 {
@@ -34,11 +31,6 @@ class Tanker extends Model
         });
     }
 
-     public function tankerLoads()
-     {
-        return $this->hasMany(TankerLoad::class);
-     }
-
      public function batangasTransactions()
      {
         return $this->hasMany(BatangasTransaction::class);
@@ -49,13 +41,4 @@ class Tanker extends Model
         return $this->hasMany(MindoroTransaction::class);
      }
 
-    public function drivers()
-    {
-       return $this->belongsToMany(Driver::class);
-    }
-
-    public function helpers()
-    {
-       return $this->belongsToMany(Helper::class);
-    }
 }
