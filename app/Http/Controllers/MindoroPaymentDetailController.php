@@ -14,48 +14,6 @@ use Inertia\Inertia;
 class MindoroPaymentDetailController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\MindoroPaymentDetail  $mindoroPaymentDetail
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Client $client)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\MindoroPaymentDetail  $mindoroPaymentDetail
@@ -132,17 +90,6 @@ class MindoroPaymentDetailController extends Controller
         $this->deletePaymentDetails($request->removed_payment_details, $client);
 
         return Redirect::back()->with('success', 'Payment/s updated.');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\MindoroPaymentDetail  $mindoroPaymentDetail
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(MindoroPaymentDetail $mindoroPaymentDetail)
-    {
-        //
     }
 
     public function deletePaymentDetails($paymentDetailIds, $client)
