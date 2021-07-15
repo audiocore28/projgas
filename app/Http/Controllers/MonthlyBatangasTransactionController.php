@@ -26,7 +26,7 @@ class MonthlyBatangasTransactionController extends Controller
 {
     public function __construct()
     {
-        $this->authorizeResource(MonthlyBatangasTransaction::class);
+        $this->authorizeResource(MonthlyBatangasTransaction::class, 'monthly_batangas_transaction');
     }
     /**
      * Display a listing of the resource.

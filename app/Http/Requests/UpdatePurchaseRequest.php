@@ -1,10 +1,11 @@
 <?php
 
 namespace App\Http\Requests;
+use App\Models\Purchase;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StorePurchaseRequest extends FormRequest
+class UpdatePurchaseRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +14,7 @@ class StorePurchaseRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->can('create purchase');
+        return $this->user()->can('update purchase', Purchase::class, $this->purchase);
     }
 
     /**

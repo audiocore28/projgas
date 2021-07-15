@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreDepotRequest;
+use App\Http\Requests\UpdateDepotRequest;
 use App\Models\Depot;
 // use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -126,7 +127,7 @@ class DepotController extends Controller
      * @param  \App\Models\Depot  $depot
      * @return \Illuminate\Http\Response
      */
-    public function update(StoreDepotRequest $request, Depot $depot)
+    public function update(UpdateDepotRequest $request, Depot $depot)
     {
         $depot->update($request->all());
 

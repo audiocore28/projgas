@@ -18,10 +18,7 @@ class DepotPolicy
      */
     public function viewAny(User $user)
     {
-        //
-        if ($user->can('view any depot')) {
-            return true;
-        }
+        return $user->can('view any depot');
     }
 
     /**
@@ -33,9 +30,7 @@ class DepotPolicy
      */
     public function view(User $user, Depot $depot)
     {
-        if ($user->can('view depot')) {
-            return true;
-        }
+        return $user->can('view depot', $depot);
     }
 
     /**
@@ -46,9 +41,7 @@ class DepotPolicy
      */
     public function create(User $user)
     {
-        if ($user->can('create depot')) {
-            return true;
-        }
+        return $user->can('create depot');
     }
 
     /**
@@ -60,9 +53,7 @@ class DepotPolicy
      */
     public function update(User $user, Depot $depot)
     {
-        if ($user->can('update depot')) {
-            return true;
-        }
+        return $user->can('update depot', $depot);
     }
 
     /**
@@ -74,10 +65,7 @@ class DepotPolicy
      */
     public function delete(User $user, Depot $depot)
     {
-        //
-        if ($user->can('delete depot')) {
-            return true;
-        }
+        return $user->can('delete depot', $depot);
     }
 
     /**
@@ -89,9 +77,7 @@ class DepotPolicy
      */
     public function restore(User $user, Depot $depot)
     {
-        if ($user->can('restore depot')) {
-            return true;
-        }
+        return $user->can('restore depot', $depot);
     }
 
 }

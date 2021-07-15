@@ -26,7 +26,7 @@ class MonthlyMindoroTransactionController extends Controller
 {
     public function __construct()
     {
-        $this->authorizeResource(MonthlyMindoroTransaction::class);
+        $this->authorizeResource(MonthlyMindoroTransaction::class, 'monthly_mindoro_transaction');
     }
     /**
      * Display a listing of the resource.

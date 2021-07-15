@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Requests;
+use App\Models\MonthlyMindoroTransaction;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -13,7 +14,7 @@ class UpdateMonthlyMindoroTransactionRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return $this->user()->can('update mindoro transaction', MonthlyMindoroTransaction::class, $this->monthly_mindoro_transaction);
     }
 
     /**

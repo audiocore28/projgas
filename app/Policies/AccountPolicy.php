@@ -18,9 +18,7 @@ class AccountPolicy
      */
     public function viewAny(User $user)
     {
-        if ($user->can('view any account')) {
-            return true;
-        }
+        return $user->can('view any account');
     }
 
     /**
@@ -32,9 +30,7 @@ class AccountPolicy
      */
     public function view(User $user, Account $account)
     {
-        if ($user->can('view account')) {
-            return true;
-        }
+        return $user->can('view account', $account);
     }
 
     /**
@@ -45,9 +41,7 @@ class AccountPolicy
      */
     public function create(User $user)
     {
-        if ($user->can('create account')) {
-            return true;
-        }
+        return $user->can('create account');
     }
 
     /**
@@ -59,9 +53,7 @@ class AccountPolicy
      */
     public function update(User $user, Account $account)
     {
-        if ($user->can('update account')) {
-            return true;
-        }
+        return $user->can('update account', $account);
     }
 
     /**
@@ -73,9 +65,7 @@ class AccountPolicy
      */
     public function delete(User $user, Account $account)
     {
-        if ($user->can('delete account')) {
-            return true;
-        }
+        return $user->can('delete account', $account);
     }
 
     /**
@@ -87,9 +77,7 @@ class AccountPolicy
      */
     public function restore(User $user, Account $account)
     {
-        if ($user->can('restore account')) {
-            return true;
-        }
+        return $user->can('restore account', $account);
     }
 
 }

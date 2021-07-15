@@ -1,10 +1,11 @@
 <?php
 
 namespace App\Http\Requests;
+use App\Models\User;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreHelperRequest extends FormRequest
+class UpdateUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +14,7 @@ class StoreHelperRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->can('create helper');
+        return $this->user()->can('update user', User::class, $this->user);
     }
 
     /**
@@ -24,14 +25,16 @@ class StoreHelperRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => [
+            'first_name' => ['required', 'max:50'],
+            'last_name' => ['required', 'max:50'],
+            'email' => [
                 'required',
                 'max:100',
-                'unique:helpers,name,'.$this->id
+                'unique:users,email,'.$this->id
             ],
-            'nickname' => ['nullable', 'max:50'],
-            'address' => ['nullable', 'max:150'],
-            'contact_no' => ['nullable', 'max:25'],
+            'password' => ['nullable'],
+            // 'owner' => ['required', 'boolean'],
+            // 'photo' => ['nullable', 'image'],
         ];
     }
 }

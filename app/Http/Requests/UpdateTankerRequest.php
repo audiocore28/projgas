@@ -1,10 +1,11 @@
 <?php
 
 namespace App\Http\Requests;
+use App\Models\Tanker;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreHelperRequest extends FormRequest
+class UpdateTankerRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +14,7 @@ class StoreHelperRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->can('create helper');
+        return $this->user()->can('update tanker', Tanker::class, $this->tanker);
     }
 
     /**
@@ -24,14 +25,12 @@ class StoreHelperRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => [
+            'plate_no' => [
                 'required',
-                'max:100',
-                'unique:helpers,name,'.$this->id
+                'max:40',
+                'unique:tankers,plate_no,'.$this->id
             ],
-            'nickname' => ['nullable', 'max:50'],
-            'address' => ['nullable', 'max:150'],
-            'contact_no' => ['nullable', 'max:25'],
+            'compartment' => ['nullable', 'max:40'],
         ];
     }
 }

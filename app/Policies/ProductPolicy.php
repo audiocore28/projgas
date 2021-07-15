@@ -18,9 +18,7 @@ class ProductPolicy
      */
     public function viewAny(User $user)
     {
-        if ($user->can('view any product')) {
-            return true;
-        }
+        return $user->can('view any product');
     }
 
     /**
@@ -32,9 +30,7 @@ class ProductPolicy
      */
     public function view(User $user, Product $product)
     {
-        if ($user->can('view product')) {
-            return true;
-        }
+        return $user->can('view product', $product);
     }
 
     /**
@@ -45,9 +41,7 @@ class ProductPolicy
      */
     public function create(User $user)
     {
-        if ($user->can('create product')) {
-            return true;
-        }
+        return $user->can('create product');
     }
 
     /**
@@ -59,9 +53,7 @@ class ProductPolicy
      */
     public function update(User $user, Product $product)
     {
-        if ($user->can('update product')) {
-            return true;
-        }
+        return $user->can('update product', $product);
     }
 
     /**
@@ -73,9 +65,7 @@ class ProductPolicy
      */
     public function delete(User $user, Product $product)
     {
-        if ($user->can('delete product')) {
-            return true;
-        }
+        return $user->can('delete product', $product);
     }
 
     /**
@@ -87,9 +77,7 @@ class ProductPolicy
      */
     public function restore(User $user, Product $product)
     {
-        if ($user->can('restore product')) {
-            return true;
-        }
+        return $user->can('restore product', $product);
     }
 
 }

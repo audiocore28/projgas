@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreHelperRequest;
+use App\Http\Requests\UpdateHelperRequest;
 use App\Models\Helper;
 // use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -160,7 +161,7 @@ class HelperController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(StoreHelperRequest $request, Helper $helper)
+    public function update(UpdateHelperRequest $request, Helper $helper)
     {
         $helper->update($request->all());
 

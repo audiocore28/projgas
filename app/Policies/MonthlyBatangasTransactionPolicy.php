@@ -18,9 +18,7 @@ class MonthlyBatangasTransactionPolicy
      */
     public function viewAny(User $user)
     {
-        if ($user->can('view any batangas transaction')) {
-            return true;
-        }
+        return $user->can('view any batangas transaction');
     }
 
     /**
@@ -32,9 +30,7 @@ class MonthlyBatangasTransactionPolicy
      */
     public function view(User $user, MonthlyBatangasTransaction $monthlyBatangasTransaction)
     {
-        if ($user->can('view batangas transaction')) {
-            return true;
-        }
+        return $user->can('view batangas transaction', $monthlyBatangasTransaction);
     }
 
     /**
@@ -45,9 +41,7 @@ class MonthlyBatangasTransactionPolicy
      */
     public function create(User $user)
     {
-        if ($user->can('create batangas transaction')) {
-            return true;
-        }
+        return $user->can('create batangas transaction');
     }
 
     /**
@@ -59,9 +53,7 @@ class MonthlyBatangasTransactionPolicy
      */
     public function update(User $user, MonthlyBatangasTransaction $monthlyBatangasTransaction)
     {
-        if ($user->can('update batangas transaction')) {
-            return true;
-        }
+        return $user->can('update batangas transaction', $monthlyBatangasTransaction);
     }
 
     /**
@@ -73,16 +65,12 @@ class MonthlyBatangasTransactionPolicy
      */
     public function delete(User $user, MonthlyBatangasTransaction $monthlyBatangasTransaction)
     {
-        if ($user->can('delete batangas transaction')) {
-            return true;
-        }
+        return $user->can('delete batangas transaction', $monthlyBatangasTransaction);
     }
 
     public function print(User $user, MonthlyBatangasTransaction $monthlyBatangasTransaction)
     {
-        if ($user->can('print batangas transaction')) {
-            return true;
-        }
+        return $user->can('print batangas transaction', $monthlyBatangasTransaction);
     }
 
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTankerRequest;
+use App\Http\Requests\UpdateTankerRequest;
 use App\Models\Tanker;
 use App\Models\Driver;
 use App\Models\Helper;
@@ -101,7 +102,7 @@ class TankerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(StoreTankerRequest $request, Tanker $tanker)
+    public function update(UpdateTankerRequest $request, Tanker $tanker)
     {
         $tanker->update($request->all());
 

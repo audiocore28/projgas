@@ -1,10 +1,11 @@
 <?php
 
 namespace App\Http\Requests;
+use App\Models\Helper;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreHelperRequest extends FormRequest
+class UpdateHelperRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +14,7 @@ class StoreHelperRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->can('create helper');
+        return $this->user()->can('update helper', Helper::class, $this->helper);
     }
 
     /**

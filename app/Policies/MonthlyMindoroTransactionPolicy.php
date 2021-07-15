@@ -18,9 +18,7 @@ class MonthlyMindoroTransactionPolicy
      */
     public function viewAny(User $user)
     {
-        if ($user->can('view any mindoro transaction')) {
-            return true;
-        }
+        return $user->can('view any mindoro transaction');
     }
 
     /**
@@ -32,9 +30,7 @@ class MonthlyMindoroTransactionPolicy
      */
     public function view(User $user, MonthlyMindoroTransaction $monthlyMindoroTransaction)
     {
-        if ($user->can('view mindoro transaction')) {
-            return true;
-        }
+        return $user->can('view mindoro transaction', $monthlyMindoroTransaction);
     }
 
     /**
@@ -45,9 +41,7 @@ class MonthlyMindoroTransactionPolicy
      */
     public function create(User $user)
     {
-        if ($user->can('create mindoro transaction')) {
-            return true;
-        }
+        return $user->can('create mindoro transaction');
     }
 
     /**
@@ -59,9 +53,7 @@ class MonthlyMindoroTransactionPolicy
      */
     public function update(User $user, MonthlyMindoroTransaction $monthlyMindoroTransaction)
     {
-        if ($user->can('update mindoro transaction')) {
-            return true;
-        }
+        return $user->can('update mindoro transaction', $monthlyMindoroTransaction);
     }
 
     /**
@@ -73,16 +65,12 @@ class MonthlyMindoroTransactionPolicy
      */
     public function delete(User $user, MonthlyMindoroTransaction $monthlyMindoroTransaction)
     {
-        if ($user->can('delete mindoro transaction')) {
-            return true;
-        }
+        return $user->can('delete mindoro transaction', $monthlyMindoroTransaction);
     }
 
     public function print(User $user, MonthlyMindoroTransaction $monthlyMindoroTransaction)
     {
-        if ($user->can('print mindoro transaction')) {
-            return true;
-        }
+        return $user->can('print mindoro transaction', $monthlyMindoroTransaction);
     }
 
 }

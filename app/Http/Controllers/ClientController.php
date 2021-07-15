@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreClientRequest;
+use App\Http\Requests\UpdateClientRequest;
 use App\Models\Client;
 // use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -214,7 +215,7 @@ class ClientController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(StoreClientRequest $request, Client $client)
+    public function update(UpdateClientRequest $request, Client $client)
     {
         $client->update($request->all());
 
