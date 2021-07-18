@@ -84,7 +84,7 @@
 					@endforeach
 				@endforeach
 
-				<?php $output = $total_transactions_amount - $total_load_amount - $transaction['expense'] ?>
+				<?php $output = $total_transactions_amount - $total_load_amount - $transaction['expense'] - $transaction['driver_salary'] - $transaction['helper_salary'] ?>
 				<table class='table' width="60%" cellspacing='0' style="margin-top: 5px">
 					<tr>
 						<td style="background-color: #fff; color: #000;">
@@ -243,7 +243,7 @@
 		<div class="row" style="margin-top: 5px">
 			<?php $total_load_amount = 0; ?>
 			{{-- ToMindoroLoad --}}
-			<div class="column">
+			<div class="column-l">
 				@foreach($transaction['to_mindoro_loads'] as $load)
 				<div style="margin: 10px 0 5px 0; color: red;">
 					<b>{{ $load['purchase'] }}</b>
@@ -267,7 +267,7 @@
 				@endforeach
 			</div>
 
-			<div class="column" style="margin-top: 15px;">
+			<div class="column-r" style="margin-top: 15px;">
 				<table class='table' width="40%" cellspacing='0' cellpadding='5' style="margin-top: 5px">
 					<tr>
 						<td align="right"> {{ number_format($total_transactions_amount) }} </td>
@@ -279,7 +279,13 @@
 						<td align="right"> {{ number_format($transaction['expense']) }} </td>
 					</tr>
 					<tr>
-						<td align="right" style="font-weight: bold; background-color: #eee;"> {{ number_format($total_transactions_amount - $total_load_amount - $transaction['expense']) }} </td>
+						<td align="right"> {{ number_format($transaction['driver_salary']) }} </td>
+					</tr>
+					<tr>
+						<td align="right"> {{ number_format($transaction['helper_salary']) }} </td>
+					</tr>
+					<tr>
+						<td align="right" style="font-weight: bold; background-color: #eee;"> {{ number_format($total_transactions_amount - $total_load_amount - $transaction['expense'] - $transaction['driver_salary'] - $transaction['helper_salary']) }} </td>
 					</tr>
 				</table>
 			</div>

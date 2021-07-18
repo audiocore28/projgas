@@ -20,7 +20,9 @@ class CreateMindoroTransactionsTable extends Migration
             $table->bigInteger('tanker_id');
             $table->bigInteger('driver_id');
             $table->bigInteger('helper_id');
-            $table->decimal('expense', 10, 2)->nullable();
+            $table->decimal('expense', 10, 2)->default(30000);
+            $table->decimal('driver_salary', 8, 0)->nullable();
+            $table->decimal('helper_salary', 8, 0)->nullable();
             $table->timestamps();
 
             $table->foreign('monthly_mindoro_transaction_id')->references('id')->on('monthly_mindoro_transactions')->onDelete('cascade');

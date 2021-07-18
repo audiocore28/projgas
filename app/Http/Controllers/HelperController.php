@@ -81,6 +81,8 @@ class HelperController extends Controller
                     'tanker' => $transaction->tanker ? $transaction->tanker->only('plate_no') : null,
                     'driver' => $transaction->driver ? $transaction->driver->only('name') : null,
                     'helper' => $transaction->helper ? $transaction->helper->only('name') : null,
+                    'driver_salary' => $transaction->driver_salary,
+                    'helper_salary' => $transaction->helper_salary,
                     'details' => $transaction->batangasTransactionDetails->each(function ($detail) {
                             return ['p' => $detail->product->name, 'c' => $detail->client->name];
                         })
@@ -104,6 +106,9 @@ class HelperController extends Controller
                     'tanker' => $transaction->tanker ? $transaction->tanker->only('plate_no') : null,
                     'driver' => $transaction->driver ? $transaction->driver->only('name') : null,
                     'helper' => $transaction->helper ? $transaction->helper->only('name') : null,
+                    'expense' => $transaction->expense,
+                    'driver_salary' => $transaction->driver_salary,
+                    'helper_salary' => $transaction->helper_salary,
                     'details' => $transaction->mindoroTransactionDetails->each(function ($detail) {
                             return ['p' => $detail->product->name, 'c' => $detail->client->name];
                         })

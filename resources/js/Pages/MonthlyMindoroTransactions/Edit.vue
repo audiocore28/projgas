@@ -76,7 +76,7 @@
                       </select>
                     </td>
                     <td @click="toggleRow(transactionIndex)" class="border-t text-blue-100 font-semibold text-sm" align="center">
-                      {{ toPHP(transactionTotalAmt(transaction.id) - getLoadTotalAmt(transaction.id) - transaction.expense) }}
+                      {{ toPHP(transactionTotalAmt(transaction.id) - getLoadTotalAmt(transaction.id) - transaction.expense - transaction.driver_salary - transaction.helper_salary) }}
                     </td>
                     <td class="border-t" align="right">
                       <button @click.prevent="deleteTransactionForm(transactionIndex, transaction.id)" type="button" class="font-bold flex-shrink-0 leading-none" tabindex="-1">
@@ -317,12 +317,33 @@
                                 </td>
                               </tr>
                               <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                <td class="px-6 whitespace-nowrap text-sm text-gray-500">
                                   Expenses:
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 font-semibold">
+                                <td class="px-6 whitespace-nowrap text-sm text-gray-700 font-semibold">
                                   <div class="text-sm font-medium text-gray-900">
                                     <text-input type="number" step="any" v-model="transaction.expense" :error="errors.expense" />
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="px-6 whitespace-nowrap text-sm text-gray-500">
+                                  Driver Salary:
+                                </td>
+                                <td class="px-6 whitespace-nowrap text-sm text-gray-700 font-semibold">
+                                  <div class="text-sm font-medium text-gray-900">
+                                    <text-input type="number" step="any" v-model="transaction.driver_salary" :error="errors.driver_salary" />
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="px-6 whitespace-nowrap text-sm text-gray-500">
+                                  <!-- {{ transaction.helper.name }} Salary: -->
+                                  Helper Salary:
+                                </td>
+                                <td class="px-6 whitespace-nowrap text-sm text-gray-700 font-semibold">
+                                  <div class="text-sm font-medium text-gray-900">
+                                    <text-input type="number" step="any" v-model="transaction.helper_salary" :error="errors.helper_salary" />
                                   </div>
                                 </td>
                               </tr>
@@ -334,7 +355,7 @@
                                 </td>
                                 <td>
                                   <div class="px-6 py-4 whitespace-nowrap text-left text-sm font-semibold text-gray-500">
-                                    {{ toPHP(transactionTotalAmt(transaction.id) - getLoadTotalAmt(transaction.id) - transaction.expense) }}
+                                    {{ toPHP(transactionTotalAmt(transaction.id) - getLoadTotalAmt(transaction.id) - transaction.expense - transaction.driver_salary - transaction.helper_salary) }}
                                   </div>
                                 </td>
                               </tr>
@@ -522,7 +543,9 @@ export default {
           id: null,
           name: null,
         },
-        expense: 0,
+        expense: 30000,
+        driver_salary: 0,
+        helper_salary: 0,
         details: [
           // {
           //   id: null,
@@ -663,7 +686,7 @@ export default {
         }, 0);
 
         // Net
-        netTotal += transactionTotalAmt - loadTotalAmt - this.updateForm.transactions[i].expense;
+        netTotal += transactionTotalAmt - loadTotalAmt - this.updateForm.transactions[i].expense - this.updateForm.transactions[i].driver_salary - this.updateForm.transactions[i].helper_salary;
 
       }
       return netTotal;

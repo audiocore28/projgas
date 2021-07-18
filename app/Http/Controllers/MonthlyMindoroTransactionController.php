@@ -169,6 +169,8 @@ class MonthlyMindoroTransactionController extends Controller
                         'driver' => $transaction->driver ? $transaction->driver->only('id', 'name') : null,
                         'helper' => $transaction->helper ? $transaction->helper->only('id', 'name') : null,
                         'expense' => $transaction->expense,
+                        'driver_salary' => $transaction->driver_salary,
+                        'helper_salary' => $transaction->helper_salary,
                         // 'selected_purchases' => $selectedPurchases,
                         'details' => $transaction->mindoroTransactionDetails
                                 ->map(function ($detail) {
@@ -219,6 +221,7 @@ class MonthlyMindoroTransactionController extends Controller
                                 'tanker' => $transaction->tanker ? $transaction->tanker->only('id', 'plate_no') : null,
                                 'driver' => $transaction->driver ? $transaction->driver->only('id', 'name') : null,
                                 'helper' => $transaction->helper ? $transaction->helper->only('id', 'name') : null,
+                                'expense' => $transaction->expense,
                                 'driver_salary' => $transaction->driver_salary,
                                 'helper_salary' => $transaction->helper_salary,
                                 // 'selected_purchases' => $selectedPurchases,
@@ -294,6 +297,8 @@ class MonthlyMindoroTransactionController extends Controller
             $mindoroTransaction->driver_id = $transaction['driver']['id'];
             $mindoroTransaction->helper_id = $transaction['helper']['id'];
             $mindoroTransaction->expense = $transaction['expense'];
+            $mindoroTransaction->driver_salary = $transaction['driver_salary'];
+            $mindoroTransaction->helper_salary = $transaction['helper_salary'];
 
             $mindoroTransaction->save();
 
@@ -367,6 +372,8 @@ class MonthlyMindoroTransactionController extends Controller
                         'driver' => $transaction->driver ? $transaction->driver->only('id', 'name') : null,
                         'helper' => $transaction->helper ? $transaction->helper->only('id', 'name') : null,
                         'expense' => $transaction->expense,
+                        'driver_salary' => $transaction->driver_salary,
+                        'helper_salary' => $transaction->helper_salary,
                         // 'selected_purchases' => $selectedPurchases,
                         'details' => $transaction->mindoroTransactionDetails
                                 ->map(function ($detail) {

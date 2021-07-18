@@ -8,21 +8,28 @@
             <h2>{{ month }}</h2>
             <span class="text-xs px-3 bg-white text-blue-600 rounded-full">{{ transactions.length }}</span>
           </div>
-          <div class="ml-4 mt-6 mb-1" v-for="(transaction, transactionIndex) in transactions">
-            <a target="_blank" :href="`/monthly-batangas-transactions/${transaction.monthly_batangas_transaction_id}/edit#transaction-${transaction.id}`" tabindex="-1" v-if="$page.auth.user.can.batangasTransaction.update">
-              <p class="text-sm font-bold text-blue-700 mb-2">{{ transaction.trip_no }}. {{ transaction.driver.name }} & {{ transaction.helper.name }} ({{ transaction.tanker.plate_no }})</p>
+          <div class="mx-6 mt-6 mb-1" v-for="(transaction, transactionIndex) in transactions">
+            <div class="flex justify-between">
+              <a target="_blank" :href="`/monthly-batangas-transactions/${transaction.monthly_batangas_transaction_id}/edit#transaction-${transaction.id}`" tabindex="-1" v-if="$page.auth.user.can.batangasTransaction.update">
+                <p class="text-sm font-bold text-blue-700 mb-2">{{ transaction.trip_no }}. {{ transaction.driver.name }} & {{ transaction.helper.name }} ({{ transaction.tanker.plate_no }})</p>
 
-<!--                 <div class="text-xs font-medium text-gray-600">
-                <span class="mb-4">{{ transaction.date }}</span> -
-                <span class="-ml-2 px-2 rounded-full" v-if="transaction.purchases" v-for="purchase in transaction.purchases">
-                  {{ purchase.purchase_no }}
-                </span>
-              </div>
--->
-            </a>
-            <span v-else>
-              <p class="text-sm font-bold mb-2">{{ transaction.trip_no }}. {{ transaction.driver.name }} & {{ transaction.helper.name }} ({{ transaction.tanker.plate_no }})</p>
-            </span>
+  <!--                 <div class="text-xs font-medium text-gray-600">
+                  <span class="mb-4">{{ transaction.date }}</span> -
+                  <span class="-ml-2 px-2 rounded-full" v-if="transaction.purchases" v-for="purchase in transaction.purchases">
+                    {{ purchase.purchase_no }}
+                  </span>
+                </div>
+  -->
+              </a>
+              <span v-else>
+                <p class="text-sm font-bold mb-2">{{ transaction.trip_no }}. {{ transaction.driver.name }} & {{ transaction.helper.name }} ({{ transaction.tanker.plate_no }})</p>
+              </span>
+
+              <span class="text-gray-600">
+                <p class="text-sm font-bold mb-2" v-if="record === 'drivers'">{{ transaction.driver.name }}: {{ toPHP(transaction.driver_salary) }}</p>
+                <p class="text-sm font-bold mb-2" v-else>{{ transaction.helper.name }}: {{ toPHP(transaction.helper_salary) }}</p>
+              </span>
+            </div>
 
             <table class="min-w-full divide-y divide-gray-200 mt-4">
               <thead class="bg-gray-50">
