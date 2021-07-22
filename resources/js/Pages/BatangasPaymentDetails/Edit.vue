@@ -68,11 +68,11 @@
                         </div>
                       </td>
                       <td class="px-6 py-4 whitespace-nowrap">
-                        <a class="text-sm font-medium text-blue-600" target="_blank" :href="`/monthly-batangas-transactions/${detail.monthly_batangas_transaction_id}/edit#transaction-${detail.batangas_transaction_id}`" v-if="$page.auth.user.can.batangasTransaction.update">
-                            {{ detail.trip_no }}
+                        <a class="text-sm font-medium text-blue-600" target="_blank" :href="`/monthly-batangas-transactions/${detail.batangas_transaction.monthly_batangas_transaction_id}/edit#transaction-${detail.batangas_transaction_id}`" v-if="$page.auth.user.can.batangasTransaction.update">
+                            {{ detail.batangas_transaction.trip_no }}
                         </a>
                         <span class="text-sm font-medium text-gray-900" v-else>
-                            {{ detail.trip_no }}
+                            {{ detail.batangas_transaction.trip_no }}
                         </span>
                       </td>
                       <td class="px-6 py-4 whitespace-nowrap">
@@ -126,7 +126,7 @@
                             <col span="1" style="width: 10%;">
                           </colgroup>
                           <tbody>
-                            <tr v-for="(payment, paymentIndex) in detail.payments" :class="[payment.is_verified ? 'bg-blue-600' : 'bg-yellow-500']">
+                            <tr v-for="(payment, paymentIndex) in detail.batangas_payment_details" :class="[payment.is_verified ? 'bg-blue-600' : 'bg-yellow-500']">
                               <td>
                                 <div class="text-sm font-medium text-white p-3" v-if="payment.is_verified">
                                   {{ payment.date }}

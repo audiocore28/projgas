@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 // use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 
 class MindoroPaymentDetailController extends Controller
@@ -21,39 +22,19 @@ class MindoroPaymentDetailController extends Controller
      */
     public function edit(Client $client)
     {
-        $mD = $client->mindoroTransactionDetails()
-            ->latest()
-            ->paginate()
-            ->transform(function ($detail) {
-                return [
-                    'month' => $detail->mindoroTransaction->monthlyMindoroTransaction ? $detail->mindoroTransaction->monthlyMindoroTransaction->month : null,
-                    'year' => $detail->mindoroTransaction->monthlyMindoroTransaction ? $detail->mindoroTransaction->monthlyMindoroTransaction->year : null,
-                    'monthly_mindoro_transaction_id' => $detail->mindoroTransaction->monthlyMindoroTransaction ? $detail->mindoroTransaction->monthlyMindoroTransaction->id : null,
-                    'trip_no' => $detail->mindoroTransaction ? $detail->mindoroTransaction->trip_no : null,
-                    'id' => $detail->id,
-                    'date' => $detail->date,
-                    'dr_no' => $detail->dr_no,
-                    'mindoro_transaction_id' => $detail->mindoro_transaction_id,
-                    'quantity' => $detail->quantity,
-                    'unit_price' => $detail->unit_price,
-                    'client' => $detail->client ? $detail->client->only('id', 'name') : null,
-                    'remarks' => $detail->remarks,
-                    'product' => $detail->product ? $detail->product->only('id', 'name') : null,
-                    'payments' => $detail->mindoroPaymentDetails->map(function ($payment) {
-                        return [
-                            'id' => $payment->id,
-                            'date' => $payment->date,
-                            'mode' => $payment->mode,
-                            'amount' => $payment->amount,
-                            'remarks' => $payment->remarks,
-                            'is_verified' => $payment->is_verified,
-                            'mindoro_transaction_detail_id' => $payment->mindoro_transaction_detail_id,
-                        ];
-                    }),
-                ];
-            });
+        $query = $client->load([
+            'mindoroTransactionDetails.mindoroTransaction.monthlyMindoroTransaction',
+            'mindoroTransactionDetails.client:id,name',
+            'mindoroTransactionDetails.product:id,name',
+            'mindoroTransactionDetails.mindoroPaymentDetails',
+        ]);
 
-        $mindoroDetails = $mD->groupBy(['year', 'month']);
+        $mindoroDetails = collect($query->mindoroTransactionDetails)
+                                ->groupBy([
+                                    'mindoroTransaction.monthlyMindoroTransaction.year',
+                                    'mindoroTransaction.monthlyMindoroTransaction.month'
+                                ]);
+
 
         return Inertia::render('MindoroPaymentDetails/Edit', [
             'client' => [
@@ -80,9 +61,33 @@ class MindoroPaymentDetailController extends Controller
     {
         foreach ($request->mindoroDetails as $year => $months) {
             foreach ($months as $month => $details) {
+                // initialize vars
+                $errorCount = 0;
+
+                // check if all date was filled up
+                foreach ($details as $detail) {
+                    $validator = Validator::make($detail, ['mindoro_payment_details.*.date' => 'required']);
+
+                    if ($validator->fails()) {
+                        $errorCount++;
+                    }
+                }
+
+                // if there's a blank date then don't save any changes, & display error msg
+                if ($errorCount > 0) {
+                    return redirect::back()->withErrors('Date is required');
+                }
+
+                // else save changes
                 foreach ($details as $detail) {
                     $transactionDetail = $client->mindoroTransactionDetails()->findOrFail($detail['id']);
-                    $transactionDetail->addPayments($detail['payments']);
+
+                    if (auth()->user()->can('verify client payment', $client)) {
+                        $transactionDetail->si_no = $detail['si_no'];
+                        $transactionDetail->save();
+                    }
+
+                    $transactionDetail->addPayments($detail['mindoro_payment_details']);
                 }
             }
         }

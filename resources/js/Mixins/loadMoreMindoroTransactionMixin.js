@@ -22,7 +22,7 @@ export function loadMoreMindoroTransactionMixin (record) {
 		   },
 
 		   addNewPaymentForm(year, month, transactionDetailIndex, mindoroTransactionDetailId) {
-		   	this.form.mindoroDetails[year][month][transactionDetailIndex].payments.push({
+		   	this.form.mindoroDetails[year][month][transactionDetailIndex].mindoro_payment_details.push({
 		        id: null,
 		        date: null,
 		        mode: null,
@@ -35,32 +35,32 @@ export function loadMoreMindoroTransactionMixin (record) {
 		   deletePaymentForm(year, month, transactionDetailIndex, paymentIndex, paymentId) {
 		      if (paymentId) {
 		        	this.form.removed_payment_details.push(paymentId);
-		   		this.form.mindoroDetails[year][month][transactionDetailIndex].payments.splice(paymentIndex, 1);
+		   		this.form.mindoroDetails[year][month][transactionDetailIndex].mindoro_payment_details.splice(paymentIndex, 1);
 		      } else {
-		   		this.form.mindoroDetails[year][month][transactionDetailIndex].payments.splice(paymentIndex, 1);
+		   		this.form.mindoroDetails[year][month][transactionDetailIndex].mindoro_payment_details.splice(paymentIndex, 1);
 		      }
 		   },
-			loadMoreMindoroTransaction() {
-				var currentPage = this.mindoroPagination.links[0].current_page;
-				var id = window.location.href.split('/');
+			// loadMoreMindoroTransaction() {
+			// 	var currentPage = this.mindoroPagination.links[0].current_page;
+			// 	var id = window.location.href.split('/');
 
-		      // if (this.loadingMore) return;
+		 //      // if (this.loadingMore) return;
 
-		      // this.loadingMore = true;
+		 //      // this.loadingMore = true;
 
-		      axios.get(`/${record}/${id[4]}?page=${currentPage + 1}`)
-		      	.then(({ data }) => {
-		            // Prepending the old messages to the list.
-		            this.localMindoroDetails = [
-		            ...this.localMindoroDetails,
-		            ...data.mindoroDetails.data,
-		            ];
+		 //      axios.get(`/${record}/${id[4]}?page=${currentPage + 1}`)
+		 //      	.then(({ data }) => {
+		 //            // Prepending the old messages to the list.
+		 //            this.localMindoroDetails = [
+		 //            ...this.localMindoroDetails,
+		 //            ...data.mindoroDetails.data,
+		 //            ];
 
-		            // Update our pagination meta information.
-		            this.mindoroPagination = data.mindoroDetails;
-		         });
-		          // .finally(() => this.loadingMore = false);
-       	},
+		 //            // Update our pagination meta information.
+		 //            this.mindoroPagination = data.mindoroDetails;
+		 //         });
+		 //          // .finally(() => this.loadingMore = false);
+   //     	},
     	},
  	}
 };

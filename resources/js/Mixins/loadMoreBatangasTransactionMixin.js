@@ -22,7 +22,7 @@ export function loadMoreBatangasTransactionMixin (record) {
 		   },
 
 		   addNewPaymentForm(year, month, transactionDetailIndex, batangasTransactionDetailId) {
-		   	this.form.batangasDetails[year][month][transactionDetailIndex].payments.push({
+		   	this.form.batangasDetails[year][month][transactionDetailIndex].batangas_payment_details.push({
 		        id: null,
 		        date: null,
 		        mode: null,
@@ -35,32 +35,32 @@ export function loadMoreBatangasTransactionMixin (record) {
 		   deletePaymentForm(year, month, transactionDetailIndex, paymentIndex, paymentId) {
 		      if (paymentId) {
 		        	this.form.removed_payment_details.push(paymentId);
-		   		this.form.batangasDetails[year][month][transactionDetailIndex].payments.splice(paymentIndex, 1);
+		   		this.form.batangasDetails[year][month][transactionDetailIndex].batangas_payment_details.splice(paymentIndex, 1);
 		      } else {
-		   		this.form.batangasDetails[year][month][transactionDetailIndex].payments.splice(paymentIndex, 1);
+		   		this.form.batangasDetails[year][month][transactionDetailIndex].batangas_payment_details.splice(paymentIndex, 1);
 		      }
 		   },
-	      loadMoreBatangasTransaction() {
-	       	var currentPage = this.batangasPagination.links[0].current_page;
-	       	var id = window.location.href.split('/');
+	      // loadMoreBatangasTransaction() {
+	      //  	var currentPage = this.batangasPagination.links[0].current_page;
+	      //  	var id = window.location.href.split('/');
 
-		      // if (this.loadingMore) return;
+		     //  // if (this.loadingMore) return;
 
-		      // this.loadingMore = true;
+		     //  // this.loadingMore = true;
 
-		      axios.get(`/${record}/${id[4]}?page=${currentPage + 1}`)
-			      .then(({ data }) => {
-		            // Prepending the old messages to the list.
-		            this.localBatangasDetails = [
-		            ...this.localBatangasDetails,
-		            ...data.batangasDetails.data,
-		            ];
+		     //  axios.get(`/${record}/${id[4]}?page=${currentPage + 1}`)
+			    //   .then(({ data }) => {
+		     //        // Prepending the old messages to the list.
+		     //        this.localBatangasDetails = [
+		     //        ...this.localBatangasDetails,
+		     //        ...data.batangasDetails.data,
+		     //        ];
 
-		            // Update our pagination meta information.
-		            this.batangasPagination = data.batangasDetails;
-		         });
-		          // .finally(() => this.loadingMore = false);
-	      },
+		     //        // Update our pagination meta information.
+		     //        this.batangasPagination = data.batangasDetails;
+		     //     });
+		     //      // .finally(() => this.loadingMore = false);
+	      // },
     	},
  	}
 };
