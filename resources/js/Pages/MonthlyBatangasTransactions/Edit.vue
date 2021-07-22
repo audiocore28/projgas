@@ -129,7 +129,7 @@
                              </tr>
                            </thead>
                            <tbody class="bg-white divide-y divide-gray-200">
-                             <tr v-for="(detail, detailIndex) in transaction.details" :key="detailIndex">
+                             <tr v-for="(detail, detailIndex) in transaction.batangas_transaction_details" :key="detailIndex">
                                <td>
                                  <div class="text-sm font-medium text-gray-900">
                                    <date-picker style="width: 160px" v-model="detail.date" lang="en" value-type="format" :formatter="momentFormatDate"></date-picker>
@@ -230,7 +230,7 @@
                       <!-- TankerLoad -->
                       <div class="flex flex-wrap px-8">
                         <div class="grid grid-cols-1 gap-1 bg-white rounded overflow-x-auto">
-                          <div class="rounded overflow-x-auto mb-4" v-for="(load, loadIndex) in transaction.batangas_loads" :key="load.id" :value="load.id">
+                          <div class="rounded overflow-x-auto mb-4" v-for="(load, loadIndex) in transaction.to_batangas_loads" :key="load.id" :value="load.id">
                             <a :href="`/purchases/${load.purchase.id}/edit#load-${load.id}`" target="_blank">
                               <p class="text-sm bg-blue-600 font-bold pl-4 mb-2 rounded text-center py-2 text-white">{{ load.purchase.purchase_no }}</p>
                             </a>
@@ -503,7 +503,7 @@ export default {
       })
     }, 300),
     onSelectedClient(client, id) {
-      this.updateForm.transactions[id[0]].details[id[1]].client_id = client.id;
+      this.updateForm.transactions[id[0]].batangas_transaction_details[id[1]].client_id = client.id;
     },
 
     // BatangasTransaction
@@ -525,7 +525,7 @@ export default {
         },
         driver_salary: 0,
         helper_salary: 0,
-        details: [
+        batangas_transaction_details: [
           // {
           //   id: null,
           //   date: null,
@@ -539,7 +539,7 @@ export default {
           //   remarks: null,
           // }
         ],
-        batangas_loads: [
+        to_batangas_loads: [
           {
             id: null,
             batangas_transaction_id: null,
@@ -573,7 +573,7 @@ export default {
 
     // BatangasTransactionDetail
     addNewDetailForm(transactionIndex) {
-      this.updateForm.transactions[transactionIndex].details.push({
+      this.updateForm.transactions[transactionIndex].batangas_transaction_details.push({
         id: null,
         date: null,
         dr_no: null,
@@ -589,9 +589,9 @@ export default {
     deleteTransactionDetailForm(transactionIndex, detailIndex, transactionDetailId) {
       if (transactionDetailId) {
         this.updateForm.removed_transaction_details.push(transactionDetailId);
-        this.updateForm.transactions[transactionIndex].details.splice(detailIndex, 1);
+        this.updateForm.transactions[transactionIndex].batangas_transaction_details.splice(detailIndex, 1);
       } else {
-        this.updateForm.transactions[transactionIndex].details.splice(detailIndex, 1);
+        this.updateForm.transactions[transactionIndex].batangas_transaction_details.splice(detailIndex, 1);
       }
     },
 
@@ -600,7 +600,7 @@ export default {
       for (var i = 0; i < this.updateForm.transactions.length; i++) {
         if (this.updateForm.transactions[i].id === transactionId) {
 
-          var totalAmt = this.updateForm.transactions[i].details.reduce(function (acc, detail) {
+          var totalAmt = this.updateForm.transactions[i].batangas_transaction_details.reduce(function (acc, detail) {
             acc += parseFloat(detail.quantity) * parseFloat(detail.unit_price);
             return acc;
           }, 0);
@@ -615,7 +615,7 @@ export default {
       for (var i = 0; i < this.updateForm.transactions.length; i++) {
         if (this.updateForm.transactions[i].id === transactionId) {
 
-          var totalQty = this.updateForm.transactions[i].details.reduce(function (acc, detail) {
+          var totalQty = this.updateForm.transactions[i].batangas_transaction_details.reduce(function (acc, detail) {
             acc += parseFloat(detail.quantity);
             return acc;
           }, 0);
@@ -630,7 +630,7 @@ export default {
       for (var i = 0; i < this.updateForm.transactions.length; i++) {
         if (this.updateForm.transactions[i].id === transactionId) {
 
-          const detailsArray = this.updateForm.transactions[i].batangas_loads.map(load => load.to_batangas_load_details);
+          const detailsArray = this.updateForm.transactions[i].to_batangas_loads.map(load => load.to_batangas_load_details);
           const details = [].concat.apply([], detailsArray);
 
           var totalAmt = details.reduce(function (acc, detail) {
@@ -650,13 +650,13 @@ export default {
       for (var i = 0; i < this.updateForm.transactions.length; i++) {
 
         // TransactionDetail
-        var transactionTotalAmt = this.updateForm.transactions[i].details.reduce((transactionDetailAcc, detail) => {
+        var transactionTotalAmt = this.updateForm.transactions[i].batangas_transaction_details.reduce((transactionDetailAcc, detail) => {
           transactionDetailAcc += parseFloat(detail.quantity) * parseFloat(detail.unit_price);
           return transactionDetailAcc;
         }, 0);
 
         // TankerLoadDetail
-        const loadDetailsArray = this.updateForm.transactions[i].batangas_loads.map(load => load.to_batangas_load_details);
+        const loadDetailsArray = this.updateForm.transactions[i].to_batangas_loads.map(load => load.to_batangas_load_details);
         const loadDetails = [].concat.apply([], loadDetailsArray);
 
         var loadTotalAmt = loadDetails.reduce(function (loadDetailAcc, detail) {
@@ -695,7 +695,7 @@ export default {
     this.toggleAllRow();
 
     this.updateForm.transactions.forEach(transaction => {
-      transaction.details.forEach(detail => {
+      transaction.batangas_transaction_details.forEach(detail => {
         detail.selected_client = this.clients.find(client => client.id === detail.client_id);
       });
     });

@@ -198,7 +198,7 @@
                       <div class="text-sm font-medium text-gray-900">
                         <select :id="`batangas-${loadIndex}`" class="form-select" v-model="form.batangasLoads[loadIndex].batangas_transaction_id" @change="onBatangasTransactionChange($event, loadIndex)" :class="{ error: errors[`batangasLoads.${loadIndex}.batangas_transaction_id`] }">
                           <option :value="null" />
-                          <option v-for="transaction in form.batangas_transactions" :key="transaction.id" :value="transaction.id">{{ `${transaction.trip_no} - ${transaction.driver.name} (${transaction.month} ${transaction.year})` }}</option>
+                          <option v-for="transaction in form.batangas_transactions" :key="transaction.id" :value="transaction.id">{{ `${transaction.trip_no} - ${transaction.driver.name} (${transaction.monthly_batangas_transaction.month} ${transaction.monthly_batangas_transaction.year})` }}</option>
                         </select>
                       </div>
 
@@ -338,7 +338,7 @@
                       <div class="text-sm font-medium text-gray-900">
                         <select :id="`mindoro-${loadIndex}`" class="form-select" v-model="form.mindoroLoads[loadIndex].mindoro_transaction_id" @change="onMindoroTransactionChange($event, loadIndex)" :class="{ error: errors[`mindoroLoads.${loadIndex}.mindoro_transaction_id`] }">
                           <option :value="null" />
-                          <option v-for="transaction in form.mindoro_transactions" :key="transaction.id" :value="transaction.id">{{ `${transaction.trip_no} - ${transaction.driver.name} (${transaction.month} ${transaction.year})` }}</option>
+                          <option v-for="transaction in form.mindoro_transactions" :key="transaction.id" :value="transaction.id">{{ `${transaction.trip_no} - ${transaction.driver.name} (${transaction.monthly_mindoro_transaction.month} ${transaction.monthly_mindoro_transaction.year})` }}</option>
                         </select>
                       </div>
 

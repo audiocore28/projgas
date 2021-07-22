@@ -9,7 +9,9 @@ use App\Http\Controllers\BatangasPaymentDetailController;
 use App\Http\Controllers\MindoroPaymentDetailController;
 // use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DriverController;
+use App\Http\Controllers\MindoroTransactionController;
 use App\Http\Controllers\MonthlyMindoroTransactionController;
+use App\Http\Controllers\BatangasTransactionController;
 use App\Http\Controllers\MonthlyBatangasTransactionController;
 use App\Http\Controllers\HelperController;
 // use App\Http\Controllers\CashierController;
@@ -90,12 +92,18 @@ Route::group(['middleware' => 'auth'], function() {
 		'index', 'create', 'store', 'edit', 'update', 'destroy'
 	]);
 
+	// Mindoro Transaction
+	Route::resource('mindoro-transactions', MindoroTransactionController::class)->only('edit');
+
 	// Monthly Mindoro Transaction
 	Route::resource('monthly-mindoro-transactions', MonthlyMindoroTransactionController::class)->only([
 		'index', 'create', 'store', 'edit', 'update', 'destroy'
 	]);
 
 	Route::get('monthly-mindoro-transactions/{monthlyMindoroTransaction}/print', [MonthlyMindoroTransactionController::class, 'print'])->name('monthly-mindoro-transactions.print')->middleware('can:print,monthlyMindoroTransaction');
+
+	// Batangas Transaction
+	Route::resource('batangas-transactions', BatangasTransactionController::class)->only('edit');
 
 	// Monthly Batangas Transaction
 	Route::resource('monthly-batangas-transactions', MonthlyBatangasTransactionController::class)->only([

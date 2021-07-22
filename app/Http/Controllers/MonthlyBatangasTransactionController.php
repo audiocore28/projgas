@@ -158,84 +158,44 @@ class MonthlyBatangasTransactionController extends Controller
 
 
         // BatangasTransaction
-        $transactions = $monthlyBatangasTransaction->batangasTransactions
-                ->map(function ($transaction) {
-                    return [
-                        'year' => $transaction->monthlyBatangasTransaction->year,
-                        'month' => $transaction->monthlyBatangasTransaction->month,
-                        'id' => $transaction->id,
-                        'trip_no' => $transaction->trip_no,
-                        'tanker' => $transaction->tanker ? $transaction->tanker->only('id', 'plate_no') : null,
-                        'driver' => $transaction->driver ? $transaction->driver->only('id', 'name') : null,
-                        'helper' => $transaction->helper ? $transaction->helper->only('id', 'name') : null,
-                        'driver_salary' => $transaction->driver_salary,
-                        'helper_salary' => $transaction->helper_salary,
-                        // 'selected_purchases' => $selectedPurchases,
-                        'details' => $transaction->batangasTransactionDetails
-                                ->map(function ($detail) {
-                                    return [
-                                       'id' => $detail->id,
-                                       'date' => $detail->date,
-                                       'quantity' => $detail->quantity,
-                                       'unit_price' => $detail->unit_price,
-                                       'batangas_transaction_id' => $detail->batangas_transaction_id,
-                                       'product_id' => $detail->product_id,
-                                       'client_id' => $detail->client_id,
-                                       'selected_client' => $detail->client_id,
-                                       'remarks' => $detail->remarks,
-                                    ];
-                        }),
-                        'batangas_loads' => $transaction->toBatangasLoads->each(function ($load) {
-                            return [
-                                'batangas_transaction_id' => $load->batangas_transaction_id,
-                                'remarks' => $load->remarks,
-                                'purchase' => $load->purchase->purchase_no,
-                                'batangas_load_details' => $load->toBatangasLoadDetails->each(function ($detail) {
-                                    return [
-                                        'quantity' => $detail->quantity,
-                                        'product' => $detail->product->name,
-                                        'unit_price' => $detail->unit_price,
-                                    ];
-                                }),
-                            ];
-                        }),
-                    ];
-                })
-                ->toArray();
+        $query = $monthlyBatangasTransaction->load([
+            'batangasTransactions.monthlyBatangasTransaction',
+            'batangasTransactions.tanker:id,plate_no',
+            'batangasTransactions.driver:id,name',
+            'batangasTransactions.helper:id,name',
+            'batangasTransactions.batangasTransactionDetails.product:id,name',
+            'batangasTransactions.batangasTransactionDetails.client:id,name',
+            'batangasTransactions.toBatangasLoads.purchase:id,purchase_no',
+            'batangasTransactions.toBatangasLoads.toBatangasLoadDetails.product:id,name',
+        ]);
 
+        $transactions = collect($query->batangasTransactions)->toArray();
 
         if (request()->wantsJson()) {
+            $transactionsArray = [...$transactions];
+
             // include existing transactions next month to selected transaction month
-            $nextTransactionId = $monthlyBatangasTransaction->where('id', '>', $monthlyBatangasTransaction->id)->min('id');
+            $nextMonthlyTransactionId = $monthlyBatangasTransaction->where('id', '>', $monthlyBatangasTransaction->id)->min('id');
+            $nextMonthlyTransaction = $monthlyBatangasTransaction->find($nextMonthlyTransactionId);
 
-            if ($nextTransactionId) {
-                $nextTransactions = $monthlyBatangasTransaction->find($nextTransactionId)->batangasTransactions
-                        ->map(function ($transaction) {
-                            return [
-                                'year' => $transaction->monthlyBatangasTransaction->year,
-                                'month' => $transaction->monthlyBatangasTransaction->month,
-                                'id' => $transaction->id,
-                                'trip_no' => $transaction->trip_no,
-                                'tanker' => $transaction->tanker ? $transaction->tanker->only('id', 'plate_no') : null,
-                                'driver' => $transaction->driver ? $transaction->driver->only('id', 'name') : null,
-                                'helper' => $transaction->helper ? $transaction->helper->only('id', 'name') : null,
-                                'driver_salary' => $transaction->driver_salary,
-                                'helper_salary' => $transaction->helper_salary,
-                                // 'selected_purchases' => $selectedPurchases,
-                            ];
-                        })
-                        ->toArray();
+            if ($nextMonthlyTransactionId) {
+                $nextTransactionsQuery = $nextMonthlyTransaction->load([
+                    'batangasTransactions.monthlyBatangasTransaction',
+                    'batangasTransactions.tanker:id,plate_no',
+                    'batangasTransactions.driver:id,name',
+                    'batangasTransactions.helper:id,name',
+                ]);
 
-                array_push($transactions, ...$nextTransactions);
+                $nextTransactions = collect($nextTransactionsQuery->batangasTransactions)->toArray();
+
+                array_push($transactionsArray, ...$nextTransactions);
             }
 
-
             return [
-               // 'loadDetails' => $lD,
-               // 'batangasDetails' => $bD,
-               'batangasTransactions' => $transactions,
+               'batangasTransactions' => $transactionsArray,
             ];
         }
+
 
         return Inertia::render('MonthlyBatangasTransactions/Edit', [
             'monthly_batangas_transaction' => [
@@ -244,11 +204,9 @@ class MonthlyBatangasTransactionController extends Controller
                 'month' => $monthlyBatangasTransaction->month,
                 'transactions' => $transactions,
             ],
-
             'tankers' => $tankers,
             'drivers' => $drivers,
             'helpers' => $helpers,
-            // 'purchases' => $purchases,
             'clients' => $clients,
             'products' => $products,
         ]);
@@ -298,7 +256,7 @@ class MonthlyBatangasTransactionController extends Controller
 
             $batangasTransaction->save();
 
-            foreach($transaction['details'] as $detail)
+            foreach($transaction['batangas_transaction_details'] as $detail)
             {
                 $transactionDetail = $batangasTransaction->batangasTransactionDetails()->findOrNew($detail['id']);
 
@@ -313,7 +271,7 @@ class MonthlyBatangasTransactionController extends Controller
             }
 
             //
-            foreach ($transaction['batangas_loads'] as $load)
+            foreach ($transaction['to_batangas_loads'] as $load)
             {
                 if ($load['id'] !== null) {
                     foreach ($load['to_batangas_load_details'] as $detail)

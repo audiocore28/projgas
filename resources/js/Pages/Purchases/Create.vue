@@ -200,7 +200,7 @@
                       <div class="text-sm font-medium text-gray-900">
                         <select :id="`batangas-${loadIndex}`" class="form-select" v-model="form.batangasLoads[loadIndex].batangas_transaction_id" @change="onBatangasTransactionChange($event, loadIndex)" :class="{ error: errors[`batangasLoads.${loadIndex}.batangas_transaction_id`] }">
                           <option :value="null" />
-                          <option v-for="transaction in form.batangas_transactions" :key="transaction.id" :value="transaction.id">{{ `${transaction.trip_no} - ${transaction.driver.name} (${transaction.month} ${transaction.year})` }}</option>
+                          <option v-for="transaction in form.batangas_transactions" :key="transaction.id" :value="transaction.id">{{ `${transaction.trip_no} - ${transaction.driver.name} (${transaction.monthly_batangas_transaction.month} ${transaction.monthly_batangas_transaction.year})` }}</option>
                         </select>
                       </div>
 
@@ -341,7 +341,7 @@
                       <div class="text-sm font-medium text-gray-900">
                         <select :id="`mindoro-${loadIndex}`" class="form-select" v-model="form.mindoroLoads[loadIndex].mindoro_transaction_id" @change="onMindoroTransactionChange($event, loadIndex)" :class="{ error: errors[`mindoroLoads.${loadIndex}.mindoro_transaction_id`] }">
                           <option :value="null" />
-                          <option v-for="transaction in form.mindoro_transactions" :key="transaction.id" :value="transaction.id">{{ `${transaction.trip_no} - ${transaction.driver.name} (${transaction.month} ${transaction.year})` }}</option>
+                          <option v-for="transaction in form.mindoro_transactions" :key="transaction.id" :value="transaction.id">{{ `${transaction.trip_no} - ${transaction.driver.name} (${transaction.monthly_mindoro_transaction.month} ${transaction.monthly_mindoro_transaction.year})` }}</option>
                         </select>
                       </div>
 
@@ -697,7 +697,7 @@ export default {
 
       axios.get(`/batangas-transactions/${transactionId}/edit`)
         .then(response => {
-          this.form.batangasLoads[loadIndex].monthly_batangas_transaction.id = response.data.monthly_batangas_transaction.id;
+          this.form.batangasLoads[loadIndex].monthly_batangas_transaction.id = response.data.monthly_batangas_transaction_id;
         });
     },
 
@@ -765,7 +765,7 @@ export default {
 
       axios.get(`/mindoro-transactions/${transactionId}/edit`)
         .then(response => {
-          this.form.mindoroLoads[loadIndex].monthly_mindoro_transaction.id = response.data.monthly_mindoro_transaction.id;
+          this.form.mindoroLoads[loadIndex].monthly_mindoro_transaction.id = response.data.monthly_mindoro_transaction_id;
         });
     },
 
@@ -789,6 +789,26 @@ export default {
       var totalLoad = batangasLoadQty + mindoroLoadQty;
 
       return totalLoad;
+    },
+
+    getMindoroTransactions(value) {
+      if(value !== null) {
+        axios.get(`/monthly-mindoro-transactions/${value}/edit`)
+          .then(response => this.form.mindoro_transactions = response.data.mindoroTransactions)
+          .catch(err => this.form.mindoro_transactions = []);
+      }
+
+      this.form.mindoro_transactions = [];
+    },
+
+    getBatangasTransactions(value) {
+      if(value !== null) {
+        axios.get(`/monthly-batangas-transactions/${value}/edit`)
+          .then(response => this.form.batangas_transactions = response.data.batangasTransactions)
+          .catch(err => this.form.batangas_transactions = []);
+      }
+
+      this.form.batangas_transactions = [];
     },
 
     onPurchaseChange(event, purchaseIndex) {
@@ -817,9 +837,7 @@ export default {
   },
   watch: {
     'form.monthly_mindoro_transaction_id': function (value) {
-      axios.get(`/monthly-mindoro-transactions/${value}/edit`)
-        .then(response => this.form.mindoro_transactions = response.data.mindoroTransactions)
-        .catch(err => this.form.mindoro_transactions = []);
+      this.getMindoroTransactions(value);
 
       this.form.mindoroLoads.forEach(load => {
         load.mindoro_transaction_id = null;
@@ -828,9 +846,7 @@ export default {
     },
 
     'form.monthly_batangas_transaction_id': function (value) {
-      axios.get(`/monthly-batangas-transactions/${value}/edit`)
-        .then(response => this.form.batangas_transactions = response.data.batangasTransactions)
-        .catch(err => this.form.batangas_transactions = []);
+      this.getBatangasTransactions(value);
 
       this.form.batangasLoads.forEach(load => {
         load.batangas_transaction_id = null;

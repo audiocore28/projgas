@@ -33,19 +33,21 @@ class UpdateMonthlyMindoroTransactionRequest extends FormRequest
             'transactions.*.tanker.id' => ['required', 'max:50'],
             'transactions.*.driver.id' => ['required', 'max:50'],
             'transactions.*.helper.id' => ['required', 'max:50'],
+            'transactions.*.expense' => ['required', 'max:50'],
             'transactions.*.driver_salary' => ['nullable', 'max:50'],
             'transactions.*.helper_salary' => ['nullable', 'max:50'],
 
             // MindoroTransactionDetail
-            'transactions.*.details.*.date' => ['required', 'max:50'],
-            'transactions.*.details.*.client_id' => ['required', 'max:50'],
-            'transactions.*.details.*.remarks' => ['nullable', 'max:50'],
-            'transactions.*.details.*.product_id' => ['required', 'max:50'],
-            'transactions.*.details.*.quantity' => ['nullable', 'max:50'],
-            'transactions.*.details.*.unit_price' => ['nullable', 'max:50'],
+            'transactions.*.mindoro_transaction_details.*.date' => ['required', 'max:50'],
+            'transactions.*.mindoro_transaction_details.*.client_id' => ['required', 'max:50'],
+            'transactions.*.mindoro_transaction_details.*.remarks' => ['nullable', 'max:50'],
+            'transactions.*.mindoro_transaction_details.*.product_id' => ['required', 'max:50'],
+            'transactions.*.mindoro_transaction_details.*.quantity' => ['nullable', 'max:50'],
+            'transactions.*.mindoro_transaction_details.*.unit_price' => ['nullable', 'max:50'],
+            'transactions.*.mindoro_transaction_details.*.dr_no' => ['nullable', 'max:80'],
 
             // TankerLoadDetail
-            'transactions.*.tanker_loads.*.tanker_load_details.*.unit_price' => ['nullable', 'max:50'],
+            'transactions.*.to_mindoro_loads.*.to_mindoro_load_details.*.unit_price' => ['nullable', 'max:50'],
 
         ];
     }
@@ -63,9 +65,9 @@ class UpdateMonthlyMindoroTransactionRequest extends FormRequest
             'transactions.*.helper_id.required' => 'Helper is required',
 
             // MindoroTransactionDetail
-            'transactions.*.details.*.date.required' => 'Date is required',
-            'transactions.*.details.*.client_id.required' => 'Client is required',
-            'transactions.*.details.*.product_id.required' => 'Product is required',
+            'transactions.*.mindoro_transaction_details.*.date.required' => 'Date is required',
+            'transactions.*.mindoro_transaction_details.*.client_id.required' => 'Client is required',
+            'transactions.*.mindoro_transaction_details.*.product_id.required' => 'Product is required',
         ];
     }
 }

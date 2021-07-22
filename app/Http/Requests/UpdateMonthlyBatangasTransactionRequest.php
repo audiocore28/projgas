@@ -37,15 +37,15 @@ class UpdateMonthlyBatangasTransactionRequest extends FormRequest
             'transactions.*.helper_salary' => ['nullable', 'max:50'],
 
             // BatangasTransactionDetail
-            'transactions.*.details.*.date' => ['required', 'max:50'],
-            'transactions.*.details.*.client_id' => ['required', 'max:50'],
-            'transactions.*.details.*.remarks' => ['nullable', 'max:50'],
-            'transactions.*.details.*.product_id' => ['required', 'max:50'],
-            'transactions.*.details.*.quantity' => ['nullable', 'max:50'],
-            'transactions.*.details.*.unit_price' => ['nullable', 'max:50'],
+            'transactions.*.batangas_transaction_details.*.date' => ['required', 'max:50'],
+            'transactions.*.batangas_transaction_details.*.client_id' => ['required', 'max:50'],
+            'transactions.*.batangas_transaction_details.*.remarks' => ['nullable', 'max:50'],
+            'transactions.*.batangas_transaction_details.*.product_id' => ['required', 'max:50'],
+            'transactions.*.batangas_transaction_details.*.quantity' => ['nullable', 'max:50'],
+            'transactions.*.batangas_transaction_details.*.unit_price' => ['nullable', 'max:50'],
 
             // TankerLoadDetail
-            'transactions.*.tanker_loads.*.tanker_load_details.*.unit_price' => ['nullable', 'max:50'],
+            'transactions.*.to_batangas_loads.*.to_batangas_load_details.*.unit_price' => ['nullable', 'max:50'],
 
         ];
     }
@@ -63,9 +63,9 @@ class UpdateMonthlyBatangasTransactionRequest extends FormRequest
             'transactions.*.helper_id.required' => 'Helper is required',
 
             // BatangasTransactionDetail
-            'transactions.*.details.*.date.required' => 'Date is required',
-            'transactions.*.details.*.client_id.required' => 'Client is required',
-            'transactions.*.details.*.product_id.required' => 'Product is required',
+            'transactions.*.batangas_transaction_details.*.date.required' => 'Date is required',
+            'transactions.*.batangas_transaction_details.*.client_id.required' => 'Client is required',
+            'transactions.*.batangas_transaction_details.*.product_id.required' => 'Product is required',
         ];
     }
 }
