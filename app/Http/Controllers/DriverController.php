@@ -63,66 +63,43 @@ class DriverController extends Controller
      */
     public function show(Driver $driver)
     {
-        $bD = $driver->batangasTransactions()
-            ->latest()
-            ->paginate()
-            ->transform(function ($transaction) {
-                return [
-                    'monthly_batangas_transaction_id' => $transaction->monthlyBatangasTransaction->id,
-                    'month' => $transaction->monthlyBatangasTransaction->month,
-                    'year' => $transaction->monthlyBatangasTransaction->year,
-                    'id' => $transaction->id,
-                    'date' => $transaction->date,
-                    'trip_no' => $transaction->trip_no,
-                    'purchases' => $transaction->purchases->each(function ($purchase) {
-                            return ['purchase_no' => $purchase->purchase_no, ];
-                        }),
-                    'tanker' => $transaction->tanker ? $transaction->tanker->only('plate_no') : null,
-                    'driver' => $transaction->driver ? $transaction->driver->only('name') : null,
-                    'helper' => $transaction->helper ? $transaction->helper->only('name') : null,
-                    'driver_salary' => $transaction->driver_salary,
-                    'helper_salary' => $transaction->helper_salary,
-                    'details' => $transaction->batangasTransactionDetails->each(function ($detail) {
-                            return ['p' => $detail->product->name, 'c' => $detail->client->name];
-                        })
-                ];
-            });
+        $query = $driver->load([
+            // Batangas
+            'batangasTransactions.monthlyBatangasTransaction',
+            'batangasTransactions.tanker:id,plate_no',
+            'batangasTransactions.driver:id,name',
+            'batangasTransactions.helper:id,name',
+            'batangasTransactions.purchases:id,purchase_no',
+            'batangasTransactions.batangasTransactionDetails.product:id,name',
+            'batangasTransactions.batangasTransactionDetails.client:id,name',
+            // Mindoro
+            'mindoroTransactions.monthlyMindoroTransaction',
+            'mindoroTransactions.tanker:id,plate_no',
+            'mindoroTransactions.driver:id,name',
+            'mindoroTransactions.helper:id,name',
+            'mindoroTransactions.purchases:id,purchase_no',
+            'mindoroTransactions.mindoroTransactionDetails.product:id,name',
+            'mindoroTransactions.mindoroTransactionDetails.client:id,name',
+        ]);
 
-        $mD = $driver->mindoroTransactions()
-            ->latest()
-            ->paginate()
-            ->transform(function ($transaction) {
-                return [
-                    'monthly_mindoro_transaction_id' => $transaction->monthlyMindoroTransaction->id,
-                    'month' => $transaction->monthlyMindoroTransaction->month,
-                    'year' => $transaction->monthlyMindoroTransaction->year,
-                    'id' => $transaction->id,
-                    'date' => $transaction->date,
-                    'trip_no' => $transaction->trip_no,
-                    'purchases' => $transaction->purchases->each(function ($purchase) {
-                            return ['purchase_no' => $purchase->purchase_no, ];
-                        }),
-                    'tanker' => $transaction->tanker ? $transaction->tanker->only('plate_no') : null,
-                    'driver' => $transaction->driver ? $transaction->driver->only('name') : null,
-                    'helper' => $transaction->helper ? $transaction->helper->only('name') : null,
-                    'expense' => $transaction->expense,
-                    'driver_salary' => $transaction->driver_salary,
-                    'helper_salary' => $transaction->helper_salary,
-                    'details' => $transaction->mindoroTransactionDetails->each(function ($detail) {
-                            return ['p' => $detail->product->name, 'c' => $detail->client->name];
-                        })
-                ];
-            });
+        $batangasTrips = collect($query->batangasTransactions)
+                    ->groupBy([
+                        'monthlyBatangasTransaction.year',
+                        'monthlyBatangasTransaction.month'
+                    ]);
 
-        $batangasTrips = $bD->groupBy(['year', 'month']);
-        $mindoroTrips = $mD->groupBy(['year', 'month']);
+        $mindoroTrips = collect($query->mindoroTransactions)
+                    ->groupBy([
+                        'monthlyMindoroTransaction.year',
+                        'monthlyMindoroTransaction.month'
+                    ]);
 
-       if (request()->wantsJson()) {
-         return [
-           'batangasDetails' => $bD,
-           'mindoroDetails' => $mD,
-         ];
-       }
+       // if (request()->wantsJson()) {
+       //   return [
+       //     'batangasDetails' => $bD,
+       //     'mindoroDetails' => $mD,
+       //   ];
+       // }
 
         return Inertia::render('Drivers/Show', [
            'driver' => [

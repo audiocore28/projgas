@@ -58,7 +58,7 @@
                 </tr>
               </thead>
               <tbody class="bg-white divide-y divide-gray-200">
-                <tr v-for="detail in transaction.details" :key="detail.id" :value="detail.id">
+                <tr v-for="detail in transaction.mindoro_transaction_details" :key="detail.id" :value="detail.id">
                   <td class="px-6 py-4 whitespace-nowrap">
                     <div class="text-sm font-medium text-gray-900">
                       {{ detail.date }}
@@ -154,7 +154,7 @@ export default {
             if(month === mo) {
               transactions.map(transaction => {
                 if(transaction.id === transactionId) {
-                  transaction.details.forEach(detail => {
+                  transaction.mindoro_transaction_details.forEach(detail => {
                     acc += parseFloat(detail.quantity) * parseFloat(detail.unit_price);
                   });
                 }
@@ -175,7 +175,7 @@ export default {
             if(month === mo) {
               transactions.map(transaction => {
                 if(transaction.id === transactionId) {
-                  transaction.details.forEach(detail => {
+                  transaction.mindoro_transaction_details.forEach(detail => {
                     acc += parseFloat(detail.quantity);
                   });
                 }
