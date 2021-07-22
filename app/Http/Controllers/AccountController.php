@@ -64,33 +64,23 @@ class AccountController extends Controller
      */
     public function show(Account $account)
     {
-        $pD = $account->purchases()
-            ->latest()
-            ->paginate()
-            ->transform(function ($purchase) {
-                return [
-                    'id' => $purchase->id,
-                    'date' => $purchase->date,
-                    'purchase_no' => $purchase->purchase_no,
-                    'purchases' => $purchase->purchaseDetails->each(function ($detail) {
-                            return ['product' => $detail->product->name, 'purchase_no' => $detail->purchase->purchase_no];
-                        })
-                ];
-            });
+        $query = $account->load([
+            'purchases' => function ($query) {
+                $query->select(['id', 'account_id', 'date', 'purchase_no']);
+            },
+            'purchases.purchaseDetails.product:id,name'
+        ]);
 
-       if (request()->wantsJson()) {
-         return [
-            'purchaseDetails' => $pD,
-         ];
-       }
+        $account = collect($query)->toArray();
+
+       // if (request()->wantsJson()) {
+       //   return [
+       //      'purchaseDetails' => $account,
+       //   ];
+       // }
 
         return Inertia::render('Accounts/Show', [
-            'account' => [
-                'id' => $account->id,
-                'name' => $account->name,
-                'deleted_at' => $account->deleted_at,
-            ],
-            'purchaseDetails' => $pD,
+            'account' => $account,
         ]);
     }
 

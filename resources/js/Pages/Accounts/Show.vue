@@ -11,14 +11,14 @@
 
     <div class="p-1">
       <ul class="flex border-b">
-        <li @click="openTab = 2" :class="{ '-mb-px': openTab === 2 }" class="mr-1" v-show="purchaseDetails.data.length">
+        <li @click="openTab = 2" :class="{ '-mb-px': openTab === 2 }" class="mr-1" v-show="account.purchases.length">
           <a :class="openTab === 2 ? activeClasses : inactiveClasses" class="bg-white inline-block py-2 px-4 font-semibold">Purchases</a>
         </li>
       </ul>
 
       <div class="w-full pt-4">
         <div v-show="openTab === 2">
-          <purchases :purchaseDetails="purchaseDetails" record="accounts"></purchases>
+          <purchases :purchaseDetails="account.purchases" record="accounts"></purchases>
         </div>
 
       </div>
@@ -51,7 +51,6 @@ export default {
   props: {
     errors: Object,
     account: Object,
-    purchaseDetails: Object,
   },
   remember: 'form',
   data() {

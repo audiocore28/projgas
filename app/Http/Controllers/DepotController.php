@@ -65,37 +65,23 @@ class DepotController extends Controller
      */
     public function show(Depot $depot)
     {
-        $pD = $depot->purchases()
-            ->latest()
-            ->paginate()
-            ->transform(function ($purchase) {
-                return [
-                    'id' => $purchase->id,
-                    'date' => $purchase->date,
-                    'purchase_no' => $purchase->purchase_no,
-                    'purchases' => $purchase->purchaseDetails->each(function ($detail) {
-                            return ['product' => $detail->product->name, 'purchase_no' => $detail->purchase->purchase_no];
-                        })
-                ];
-            });
+        $query = $depot->load([
+            'purchases' => function ($query) {
+                $query->select(['id', 'depot_id', 'date', 'purchase_no']);
+            },
+            'purchases.purchaseDetails.product:id,name'
+        ]);
 
-       if (request()->wantsJson()) {
-         return [
-            'purchaseDetails' => $pD,
-         ];
-       }
+        $depot = collect($query)->toArray();
+
+       // if (request()->wantsjson()) {
+       //   return [
+       //      'purchasedetails' => $depot,
+       //   ];
+       // }
 
         return Inertia::render('Depots/Show', [
-            'depot' => [
-                'id' => $depot->id,
-                'name' => $depot->name,
-                'address' => $depot->address,
-                'email_address' => $depot->email_address,
-                'contact_person' => $depot->contact_person,
-                'contact_no' => $depot->contact_no,
-                'deleted_at' => $depot->deleted_at,
-            ],
-            'purchaseDetails' => $pD,
+            'depot' => $depot,
         ]);
     }
 
