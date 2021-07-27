@@ -316,66 +316,22 @@ class MonthlyBatangasTransactionController extends Controller
     // DOMPDF - print
     public function print(MonthlyBatangasTransaction $monthlyBatangasTransaction)
     {
-        // BatangasTransaction
-        $transactions = $monthlyBatangasTransaction->batangasTransactions
-            ->map(function ($transaction) {
-                return [
-                    'id' => $transaction->id,
-                    'trip_no' => $transaction->trip_no,
-                    'tanker' => $transaction->tanker ? $transaction->tanker->only('id', 'plate_no') : null,
-                    'driver' => $transaction->driver ? $transaction->driver->only('id', 'name') : null,
-                    'helper' => $transaction->helper ? $transaction->helper->only('id', 'name') : null,
-                    'driver_salary' => $transaction->driver_salary,
-                    'helper_salary' => $transaction->helper_salary,
-                    // 'selected_purchases' => $selectedPurchases,
-                    'details' => $transaction->batangasTransactionDetails
-                        ->map(function ($detail) {
-                            return [
-                                'id' => $detail->id,
-                                'date' => $detail->date,
-                                'quantity' => $detail->quantity,
-                                'unit_price' => $detail->unit_price,
-                                'batangas_transaction_id' => $detail->batangas_transaction_id,
-                                'product' => $detail->product ? $detail->product->only('id', 'name') : null,
-                                'client' => $detail->client ? $detail->client->only('id', 'name') : null,
-                                'selected_client' => $detail->client_id,
-                                'remarks' => $detail->remarks,
-                            ];
-                        }),
-                    'to_batangas_loads' => $transaction->toBatangasLoads
-                        ->map(function ($load) {
-                            return [
-                                'batangas_transaction_id' => $load->batangas_transaction_id,
-                                'remarks' => $load->remarks,
-                                'purchase' => $load->purchase->purchase_no,
-                                'to_batangas_load_details' => $load->toBatangasLoadDetails->each(function ($detail) {
-                                    return [
-                                        'quantity' => $detail->quantity,
-                                        'product' => $detail->product->name,
-                                        'unit_price' => $detail->unit_price,
-                                    ];
-                                }),
-                            ];
-                        }),
-                ];
-            })
-            ->toArray();
+        $query = $monthlyBatangasTransaction->load([
+            'batangasTransactions.tanker:id,plate_no',
+            'batangasTransactions.driver:id,name',
+            'batangasTransactions.helper:id,name',
+            'batangasTransactions.batangasTransactionDetails.product:id,name',
+            'batangasTransactions.batangasTransactionDetails.client:id,name',
+            'batangasTransactions.toBatangasLoads.purchase:id,purchase_no',
+            'batangasTransactions.toBatangasLoads.toBatangasLoadDetails.product:id,name',
+        ]);
 
-        $queryTrips = $monthlyBatangasTransaction->batangasTransactions
-                    ->map(function ($transaction) {
-                        return [
-                            'id' => $transaction->id,
-                            'trip_no' => $transaction->trip_no,
-                            'tanker' => $transaction->tanker ? $transaction->tanker->only('id', 'plate_no') : null,
-                            'driver' => $transaction->driver ? $transaction->driver->only('id', 'name') : null,
-                            'helper' => $transaction->helper ? $transaction->helper->only('id', 'name') : null,
-                        ];
-                    });
+        $monthlyTransactions = collect($query)->toArray();
+        $driverTrips = collect($query->batangasTransactions)->groupBy('driver.name');
+        $helperTrips = collect($query->batangasTransactions)->groupBy('helper.name');
 
-        $driverTrips = $queryTrips->groupBy('driver.name');
-        $helperTrips = $queryTrips->groupBy('helper.name');
 
-        $pdf = PDF::loadView('print-batangas-transactions', compact('monthlyBatangasTransaction', 'transactions', 'driverTrips', 'helperTrips'));
+        $pdf = PDF::loadView('print-batangas-transactions', compact('monthlyTransactions', 'driverTrips', 'helperTrips'));
         $pdf->setPaper(array(0, 0, 612.00, 792.0));
 
         $fileName = "Batangas - ".$monthlyBatangasTransaction->month." ".$monthlyBatangasTransaction->year.".pdf";

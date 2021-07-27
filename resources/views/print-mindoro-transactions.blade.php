@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>{{ $monthlyMindoroTransaction->month }} {{ $monthlyMindoroTransaction->year }} - Mindoro Transactions</title>
+	<title>{{ $monthlyTransactions['month'] }} {{ $monthlyTransactions['year'] }} - Mindoro Transactions</title>
 	{{-- <link href="{{ asset('css/app.css') }}" rel="stylesheet"> --}}
 
 	<style>
@@ -47,7 +47,7 @@
 		</div>
 	</div>
 
-	<h2 style="font: 13px sans-serif; margin-bottom: 20px; color: red; text-transform: uppercase;" align="center">Mindoro - {{ $monthlyMindoroTransaction->month }} {{ $monthlyMindoroTransaction->year }}</h2>
+	<h2 style="font: 13px sans-serif; margin-bottom: 20px; color: red; text-transform: uppercase;" align="center">Mindoro - {{ $monthlyTransactions['month'] }} {{ $monthlyTransactions['year'] }}</h2>
 
 	{{-- Lists --}}
 	<div style="font: 9px sans-serif;" class="row">
@@ -58,13 +58,13 @@
 			<?php $overall = 0; ?>
 
 			{{-- Transactions  --}}
-			@foreach ($transactions as $transaction)
+			@foreach ($monthlyTransactions['mindoro_transactions'] as $transaction)
 				<?php
 					$total_transactions_quantity = 0;
 					$total_transactions_amount = 0;
 				?>
 
-				@foreach($transaction['details'] as $detail)
+				@foreach($transaction['mindoro_transaction_details'] as $detail)
 					<?php
 						$amount = $detail['quantity'] * $detail['unit_price'];
 						$total_transactions_amount += $amount;
@@ -190,7 +190,7 @@
 
 {{-- Tables --}}
 <div style="font: 9px sans-serif;">
-	@foreach ($transactions as $transaction)
+	@foreach ($monthlyTransactions['mindoro_transactions'] as $transaction)
 	<div style="margin-bottom: 25px;">
 		{{-- Transaction --}}
 		<table width="40%" cellspacing="0" cellpadding="5">
@@ -211,7 +211,7 @@
 		$total_transactions_amount = 0;
 		?>
 		<table class='table' width="100%" cellspacing='0' cellpadding='5' style="margin-top: 10px">
-			@foreach($transaction['details'] as $detail)
+			@foreach($transaction['mindoro_transaction_details'] as $detail)
 			<?php
 			$amount = $detail['quantity'] * $detail['unit_price'];
 			$total_transactions_amount += $amount;
@@ -246,7 +246,7 @@
 			<div class="column-l">
 				@foreach($transaction['to_mindoro_loads'] as $load)
 				<div style="margin: 10px 0 5px 0; color: red;">
-					<b>{{ $load['purchase'] }}</b>
+					<b>{{ $load['purchase']['purchase_no'] }}</b>
 				</div>
 
 				{{-- ToMindoroLoadDetail --}}
