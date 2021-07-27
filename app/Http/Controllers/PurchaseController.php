@@ -362,53 +362,25 @@ class PurchaseController extends Controller
 
     public function print(Purchase $purchase)
     {
-        $batangasLoads = $purchase->toBatangasLoads
-            ->map(function ($load) {
-                return [
-                   'id' => $load->id,
-                   'purchase' => $load->purchase ? $load->purchase->only('id', 'purchase_no') : null,
-                   'trip_no' => BatangasTransaction::where('id', $load->batangas_transaction_id)->exists() ? $load->batangasTransaction->trip_no : null,
-                   'driver' => BatangasTransaction::where('id', $load->batangas_transaction_id)->exists() ? $load->batangasTransaction->driver->name : null,
-                   'remarks' => $load->remarks,
-                   'details' => $load->toBatangasLoadDetails->map(function ($detail) {
-                        return [
-                            'id' => $detail->id,
-                            'to_batangas_load_id' => $detail->to_batangas_load_id,
-                            'product' => $detail->product ? $detail->product->only('id', 'name') : null,
-                            'quantity' => $detail->quantity,
-                            'unit_price' => $detail->unit_price,
-                        ];
-                   }),
-                ];
-            })
-            ->toArray();
+        $query = $purchase->load([
+            'supplier:id,name',
+            'depot:id,name',
+            'account:id,name',
+            'purchaseDetails.product:id,name',
+            'toBatangasLoads.purchase:id,purchase_no',
+            'toBatangasLoads.batangasTransaction.driver:id,name',
+            'toBatangasLoads.toBatangasLoadDetails.product:id,name',
+            'toMindoroLoads.purchase:id,purchase_no',
+            'toMindoroLoads.mindoroTransaction.driver:id,name',
+            'toMindoroLoads.toMindoroLoadDetails.product:id,name',
+        ]);
 
-        $mindoroLoads = $purchase->toMindoroLoads
-            ->map(function ($load) {
-                return [
-                   'id' => $load->id,
-                   'purchase_id' => $load->purchase_id,
-                   'trip_no' => MindoroTransaction::where('id', $load->mindoro_transaction_id)->exists() ? $load->mindoroTransaction->trip_no : null,
-                   'driver' => MindoroTransaction::where('id', $load->mindoro_transaction_id)->exists() ? $load->mindoroTransaction->driver->name : null,
-                   'remarks' => $load->remarks,
-                   'details' => $load->toMindoroLoadDetails->map(function ($detail) {
-                        return [
-                            'id' => $detail->id,
-                            'to_mindoro_load_id' => $detail->to_mindoro_load_id,
-                            'product' => $detail->product ? $detail->product->only('id', 'name') : null,
-                            'quantity' => $detail->quantity,
-                            'unit_price' => $detail->unit_price,
-                        ];
-                   }),
-                ];
-            })
-            ->toArray();
+        $purchase = collect($query)->toArray();
 
-
-        $pdf = PDF::loadView('print-purchase', compact('purchase', 'batangasLoads', 'mindoroLoads'));
+        $pdf = PDF::loadView('print-purchase', compact('purchase'));
         $pdf->setPaper(array(0, 0, 612.00, 792.0));
 
-        $fileName = "Purchase - ".$purchase->purchase_no.".pdf";
+        $fileName = "Purchase - ".$purchase['purchase_no'].".pdf";
         return $pdf->stream($fileName);
     }
 
@@ -430,7 +402,19 @@ class PurchaseController extends Controller
                     // });
         }
 
-        $purchases = $query->orderBy('id', 'desc')->get();
+        $purchases = $query->with([
+            'supplier:id,name',
+            'depot:id,name',
+            'account:id,name',
+            'purchaseDetails.product:id,name',
+            'toBatangasLoads.purchase:id,purchase_no',
+            'toBatangasLoads.batangasTransaction.driver:id,name',
+            'toBatangasLoads.toBatangasLoadDetails.product:id,name',
+            'toMindoroLoads.purchase:id,purchase_no',
+            'toMindoroLoads.mindoroTransaction.driver:id,name',
+            'toMindoroLoads.toMindoroLoadDetails.product:id,name',
+        ])
+        ->get();
 
         $pdf = PDF::loadView('print-purchases', compact('purchases'));
         $pdf->setPaper(array(0, 0, 612.00, 792.0));

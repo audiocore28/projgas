@@ -134,7 +134,9 @@
 							@endif
 						@endforeach
 
-						<td align="left">{{  \App\Models\BatangasTransaction::where('id', $load->batangas_transaction_id)->exists() ? $load->batangasTransaction->trip_no : null }}- {{ \App\Models\BatangasTransaction::where('id', $load->batangas_transaction_id)->exists() ? $load->batangasTransaction->driver->name : null }}</td>
+						<td align="left">
+							{{ \App\Models\BatangasTransaction::where('id', $load->batangas_transaction_id)->exists() ? $load->batangasTransaction->trip_no .'- '. $load->batangasTransaction->driver->name : null }}
+						</td>
 						<td align="center">{{ number_format($batangas_diesel / 1000) }}</td>
 						<td align="center">{{ number_format($batangas_regular / 1000) }}</td>
 						<td align="center">{{ number_format($batangas_premium / 1000) }}</td>
@@ -177,7 +179,9 @@
 							@endif
 						@endforeach
 
-						<td align="left">{{  \App\Models\MindoroTransaction::where('id', $load->mindoro_transaction_id)->exists() ? $load->mindoroTransaction->trip_no : null }}- {{ \App\Models\MindoroTransaction::where('id', $load->mindoro_transaction_id)->exists() ? $load->mindoroTransaction->driver->name : null }}</td>
+						<td align="left">
+							{{ \App\Models\MindoroTransaction::where('id', $load->mindoro_transaction_id)->exists() ? $load->mindoroTransaction->trip_no .'- '. $load->mindoroTransaction->driver->name : null }}
+						</td>
 						<td align="center">{{ number_format($mindoro_diesel / 1000) }}</td>
 						<td align="center">{{ number_format($mindoro_regular / 1000) }}</td>
 						<td align="center">{{ number_format($mindoro_premium / 1000) }}</td>
