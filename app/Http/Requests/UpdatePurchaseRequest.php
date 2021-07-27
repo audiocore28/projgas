@@ -49,18 +49,18 @@ class UpdatePurchaseRequest extends FormRequest
             'batangasLoads.*.remarks' => ['nullable', 'max:200'],
 
             // TankerLoadDetail - Batangas
-            'batangasLoads.*.details.*.product.id' => ['required', 'max:50'],
-            'batangasLoads.*.details.*.quantity' => ['nullable', 'max:50'],
-            'batangasLoads.*.details.*.unit_price' => ['nullable', 'max:50'],
+            'batangasLoads.*.to_batangas_load_details.*.product.id' => ['required', 'max:50'],
+            'batangasLoads.*.to_batangas_load_details.*.quantity' => ['nullable', 'max:50'],
+            'batangasLoads.*.to_batangas_load_details.*.unit_price' => ['nullable', 'max:50'],
 
             // TankerLoad - Mindoro
             'mindoroLoads.*.mindoro_transaction_id' => ['nullable', 'max:50'],
             'mindoroLoads.*.remarks' => ['nullable', 'max:200'],
 
             // TankerLoadDetail - Mindoro
-            'mindoroLoads.*.details.*.product.id' => ['required', 'max:50'],
-            'mindoroLoads.*.details.*.quantity' => ['nullable', 'max:50'],
-            'mindoroLoads.*.details.*.unit_price' => ['nullable', 'max:50'],
+            'mindoroLoads.*.to_mindoro_load_details.*.product.id' => ['required', 'max:50'],
+            'mindoroLoads.*.to_mindoro_load_details.*.quantity' => ['nullable', 'max:50'],
+            'mindoroLoads.*.to_mindoro_load_details.*.unit_price' => ['nullable', 'max:50'],
 
         ];
     }
@@ -78,12 +78,12 @@ class UpdatePurchaseRequest extends FormRequest
             // TankerLoad - Batangas
             'batangasLoads.*.batangas_transaction_id.required' => 'Batangas trip no. is required',
             // TankerLoadDetail - Batangas
-            'batangasLoads.*.details.*.product.id.required' => 'Product is required',
+            'batangasLoads.*.to_batangas_load_details.*.product.id.required' => 'Product is required',
 
             // TankerLoad - Mindoro
             'mindoroLoads.*.mindoro_transaction_id.required' => 'Mindoro trip no. is required',
             // TankerLoadDetail - Mindoro
-            'mindoroLoads.*.details.*.product.id.required' => 'Product is required',
+            'mindoroLoads.*.to_mindoro_load_details.*.product.id.required' => 'Product is required',
         ];
     }
 }

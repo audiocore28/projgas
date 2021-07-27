@@ -59,7 +59,12 @@ class PurchaseController extends Controller
 
         return Inertia::render('Purchases/Index', [
             'filters' => Request::all('search', 'range', 'trashed'),
-            'purchases' => $query->with('supplier', 'depot', 'account', 'purchaseDetails.product')->latest('date')->paginate(),
+            'purchases' => $query->with([
+                'supplier:id,name',
+                'depot:id,name',
+                'account:id,name',
+                'purchaseDetails.product:id,name'
+            ])->latest('date')->paginate(),
         ]);
     }
 
@@ -203,106 +208,20 @@ class PurchaseController extends Controller
         $monthlyMindoroTransactions = MonthlyMindoroTransaction::orderBy('id', 'desc')->get();
         $monthlyBatangasTransactions = MonthlyBatangasTransaction::orderBy('id', 'desc')->get();
 
-        // $loads = $purchase->tankerLoads
-        //     ->map(function ($load) {
-        //         return [
-        //            'id' => $load->id,
-        //            'purchase_id' => $load->purchase_id,
-        //            'mindoro_transaction_id' => $load->mindoro_transaction_id,
-        //            'batangas_transaction_id' => $load->batangas_transaction_id,
-        //            'remarks' => $load->remarks,
-        //            'details' => $load->tankerLoadDetails->map(function ($detail) {
-        //                 return [
-        //                     'id' => $detail->id,
-        //                     'tanker_load_id' => $detail->tanker_load_id,
-        //                     'product' => $detail->product ? $detail->product->only('id', 'name') : null,
-        //                     'quantity' => $detail->quantity,
-        //                     'unit_price' => $detail->unit_price,
-        //                 ];
-        //            }),
-        //            'batangas_transaction' => $load->purchase->batangasTransactions->map(function ($transaction) {
-        //                 return [
-        //                     'trip_no' => $transaction->trip_no,
-        //                     'driver' => $transaction->driver->only('name'),
-        //                 ];
-        //            }),
-        //            'mindoro_transaction' => $load->purchase->mindoroTransactions->map(function ($transaction) {
-        //                 return [
-        //                     'trip_no' => $transaction->trip_no,
-        //                     'driver' => $transaction->driver->only('name'),
-        //                 ];
-        //            }),
-        //         ];
-        //     })
-        //     ->toArray();
+        $query = $purchase->load([
+            'purchaseDetails.product:id,name',
+            //
+            'toBatangasLoads.batangasTransaction.monthlyBatangasTransaction',
+            'toBatangasLoads.toBatangasLoadDetails.product:id,name',
+            //
+            'toMindoroLoads.mindoroTransaction.monthlyMindoroTransaction',
+            'toMindoroLoads.toMindoroLoadDetails.product:id,name',
+        ]);
 
-        $batangasLoads = $purchase->toBatangasLoads
-            ->map(function ($load) {
-                return [
-                   'id' => $load->id,
-                   'purchase_id' => $load->purchase_id,
-                   'monthly_batangas_transaction_id' => $load->batangasTransaction ? $load->batangasTransaction->monthlyBatangasTransaction->id : null,
-                   'batangas_transaction_id' => BatangasTransaction::where('id', $load->batangas_transaction_id)->exists() ? $load->batangas_transaction_id : null,
-                   'remarks' => $load->remarks,
-                   'details' => $load->toBatangasLoadDetails->map(function ($detail) {
-                        return [
-                            'id' => $detail->id,
-                            'to_batangas_load_id' => $detail->to_batangas_load_id,
-                            'product' => $detail->product ? $detail->product->only('id', 'name') : null,
-                            'quantity' => $detail->quantity,
-                            'unit_price' => $detail->unit_price,
-                        ];
-                   }),
-                ];
-            })
-            ->toArray();
-
-        $mindoroLoads = $purchase->toMindoroLoads
-            ->map(function ($load) {
-                return [
-                   'id' => $load->id,
-                   'purchase_id' => $load->purchase_id,
-                   'monthly_mindoro_transaction_id' => $load->mindoroTransaction ? $load->mindoroTransaction->monthlyMindoroTransaction->id : null,
-                   'mindoro_transaction_id' => MindoroTransaction::where('id', $load->mindoro_transaction_id)->exists() ? $load->mindoro_transaction_id : null,
-                   'remarks' => $load->remarks,
-                   'details' => $load->toMindoroLoadDetails->map(function ($detail) {
-                        return [
-                            'id' => $detail->id,
-                            'to_mindoro_load_id' => $detail->to_mindoro_load_id,
-                            'product' => $detail->product ? $detail->product->only('id', 'name') : null,
-                            'quantity' => $detail->quantity,
-                            'unit_price' => $detail->unit_price,
-                        ];
-                   }),
-                ];
-            })
-            ->toArray();
+        $purchaseQuery = collect($query)->toArray();
 
         return Inertia::render('Purchases/Edit', [
-            'purchase' => [
-                'id' => $purchase->id,
-                'date' => $purchase->date,
-                'purchase_no' => $purchase->purchase_no,
-                'supplier_id' => $purchase->supplier_id,
-                'depot_id' => $purchase->depot_id,
-                'account_id' => $purchase->account_id,
-                'monthly_mindoro_transaction_id' => $purchase->monthly_mindoro_transaction_id,
-                'monthly_batangas_transaction_id' => $purchase->monthly_batangas_transaction_id,
-                'details' => $purchase->purchaseDetails
-                        ->map(function ($detail) {
-                            return [
-                                'id' => $detail->id,
-                                'quantity' => $detail->quantity,
-                                'unit_price' => $detail->unit_price,
-                                'remarks' => $detail->remarks,
-                                'purchase_id' => $detail->purchase_id,
-                                'product' => $detail->product ? $detail->product->only('id', 'name') : null,
-                            ];
-                        }),
-                'batangasLoads' => $batangasLoads,
-                'mindoroLoads' => $mindoroLoads,
-            ],
-            // 'tanker_loads' => $loads,
+            'purchase' => $purchaseQuery,
             'suppliers' => $suppliers,
             'depots' => $depots,
             'accounts' => $accounts,
@@ -357,7 +276,7 @@ class PurchaseController extends Controller
             $batangasLoad->save();
 
             // ToBatangasLoadDetail
-            foreach ($load['details'] as $detail)
+            foreach ($load['to_batangas_load_details'] as $detail)
             {
                 $loadDetail = $batangasLoad->toBatangasLoadDetails()->findOrNew($detail['id']);
 
@@ -380,7 +299,7 @@ class PurchaseController extends Controller
             $mindoroLoad->save();
 
             // ToMindoroLoadDetail
-            foreach ($load['details'] as $detail)
+            foreach ($load['to_mindoro_load_details'] as $detail)
             {
                 $loadDetail = $mindoroLoad->toMindoroLoadDetails()->findOrNew($detail['id']);
 

@@ -209,7 +209,7 @@
                       <icon name="plus" class="w-4 h-4 loadIr-2 fill-white"/>
                     </button>
 
-                    <a v-if="form.monthly_batangas_transaction_id && load.batangas_transaction_id" target="_blank" :href="`/monthly-batangas-transactions/${load.monthly_batangas_transaction_id}/edit#transaction-${load.batangas_transaction_id}`" class="ml-2 inline-block">
+                    <a v-if="form.monthly_batangas_transaction_id && load.batangas_transaction_id" target="_blank" :href="`/monthly-batangas-transactions/${load.batangas_transaction.monthly_batangas_transaction_id}/edit#transaction-${load.batangas_transaction_id}`" class="ml-2 inline-block">
                       <icon name="open-link" class="w-4 h-4 loadIr-2 fill-white"/>
                     </a>
 
@@ -238,10 +238,10 @@
                   <col span="1" style="width: 6%;">
                 </colgroup>
                 <tbody class="bg-white divide-y divide-gray-200">
-                  <tr v-for="(details, detailsIndex) in load.details" :key="detailsIndex">
+                  <tr v-for="(details, detailsIndex) in load.to_batangas_load_details" :key="detailsIndex">
                     <td>
                       <div class="text-sm font-medium text-gray-900">
-                        <select :id="`product-${detailsIndex}`" v-model="details.product.id" class="form-select" @change="onBatangasChange($event, loadIndex, detailsIndex)" :class="{ error: errors[`batangasLoads.${loadIndex}.details.${detailsIndex}.product.id`] }">
+                        <select :id="`product-${detailsIndex}`" v-model="details.product.id" class="form-select" @change="onBatangasChange($event, loadIndex, detailsIndex)" :class="{ error: errors[`batangasLoads.${loadIndex}.to_batangas_load_details.${detailsIndex}.product.id`] }">
                           <option :value="null" />
                           <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
                         </select>
@@ -362,7 +362,7 @@
                        <icon name="plus" class="w-4 h-4 loadIr-2 fill-white"/>
                      </button>
 
-                     <a v-if="form.monthly_mindoro_transaction_id && load.mindoro_transaction_id" target="_blank" :href="`/monthly-mindoro-transactions/${load.monthly_mindoro_transaction_id}/edit#transaction-${load.mindoro_transaction_id}`" class="ml-2 inline-block">
+                     <a v-if="form.monthly_mindoro_transaction_id && load.mindoro_transaction_id" target="_blank" :href="`/monthly-mindoro-transactions/${load.mindoro_transaction.monthly_mindoro_transaction_id}/edit#transaction-${load.mindoro_transaction_id}`" class="ml-2 inline-block">
                        <icon name="open-link" class="w-4 h-4 loadIr-2 fill-white"/>
                      </a>
 
@@ -389,10 +389,10 @@
                   <col span="1" style="width: 6%;">
                 </colgroup>
                 <tbody class="bg-white divide-y divide-gray-200">
-                  <tr v-for="(details, detailsIndex) in load.details" :key="detailsIndex">
+                  <tr v-for="(details, detailsIndex) in load.to_mindoro_load_details" :key="detailsIndex">
                     <td>
                       <div class="text-sm font-medium text-gray-900">
-                        <select :id="`product-${detailsIndex}`" v-model="details.product.id" class="form-select" @change="onMindoroChange($event, loadIndex, detailsIndex)" :class="{ error: errors[`mindoroLoads.${loadIndex}.details.${detailsIndex}.product.id`] }">
+                        <select :id="`product-${detailsIndex}`" v-model="details.product.id" class="form-select" @change="onMindoroChange($event, loadIndex, detailsIndex)" :class="{ error: errors[`mindoroLoads.${loadIndex}.to_mindoro_load_details.${detailsIndex}.product.id`] }">
                           <option :value="null" />
                           <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
                         </select>
@@ -528,7 +528,6 @@ export default {
     depots: Array,
     accounts: Array,
     products: Array,
-    // tanker_loads: Array,
     monthlyMindoroTransactions: Array,
     monthlyBatangasTransactions: Array,
   },
@@ -561,15 +560,14 @@ export default {
         mindoro_transactions: [],
         monthly_batangas_transaction_id: this.purchase.monthly_batangas_transaction_id,
         batangas_transactions: [],
-        details: this.purchase.details,
+        details: this.purchase.purchase_details,
         removed_purchase_details: [],
         removed_batangas_loads: [],
         removed_batangas_load_details: [],
         removed_mindoro_loads: [],
         removed_mindoro_load_details: [],
-        batangasLoads: this.purchase.batangasLoads,
-        mindoroLoads: this.purchase.mindoroLoads,
-        // tankerLoads: this.tanker_loads,
+        batangasLoads: this.purchase.to_batangas_loads,
+        mindoroLoads: this.purchase.to_mindoro_loads,
       },
       // Accordion
       batangasSelected: 0,
@@ -636,10 +634,12 @@ export default {
       this.form.batangasLoads.push({
         id: null,
         purchase_id: this.purchase.id,
-        monthly_batangas_transaction_id: null,
+        batangas_transaction: {
+          monthly_batangas_transaction_id: null
+        },
         batangas_transaction_id: null,
         remarks: null,
-        details: [
+        to_batangas_load_details: [
           {
             id: null,
             to_batangas_load_id: null,
@@ -664,7 +664,7 @@ export default {
 
     // Batangas - TankerLoadDetail
     addNewBatangasLoadDetailForm(loadIndex) {
-      this.form.batangasLoads[loadIndex].details.push({
+      this.form.batangasLoads[loadIndex].to_batangas_load_details.push({
         id: null,
         to_batangas_load_id: null,
         product: {
@@ -679,16 +679,16 @@ export default {
     deleteBatangasLoadDetailForm(loadIndex, detailsIndex, loadDetailId) {
       if (loadDetailId) {
         this.form.removed_batangas_load_details.push(loadDetailId);
-        this.form.batangasLoads[loadIndex].details.splice(detailsIndex, 1);
+        this.form.batangasLoads[loadIndex].to_batangas_load_details.splice(detailsIndex, 1);
       } else{
-        this.form.batangasLoads[loadIndex].details.splice(detailsIndex, 1);
+        this.form.batangasLoads[loadIndex].to_batangas_load_details.splice(detailsIndex, 1);
       }
     },
 
     //
     onBatangasChange(event, loadIndex, detailsIndex) {
       const product = event.target.options[event.target.options.selectedIndex].text;
-      this.form.batangasLoads[loadIndex].details[detailsIndex].product.name = product;
+      this.form.batangasLoads[loadIndex].to_batangas_load_details[detailsIndex].product.name = product;
     },
 
     onBatangasTransactionChange(event, loadIndex) {
@@ -696,14 +696,14 @@ export default {
 
       axios.get(`/batangas-transactions/${transactionId}/edit`)
         .then(response => {
-          this.form.batangasLoads[loadIndex].monthly_batangas_transaction_id = response.data.monthly_batangas_transaction_id;
+          this.form.batangasLoads[loadIndex].batangas_transaction.monthly_batangas_transaction_id = response.data.monthly_batangas_transaction_id;
         });
     },
 
     // Batangas - TankerLoad Totals
     totalBatangasLoadQty(product) {
       var totalQty = this.form.batangasLoads.reduce(function (acc, load) {
-        load.details.forEach(detail => {
+        load.to_batangas_load_details.forEach(detail => {
           if(detail.product.name === product) {
             acc += parseFloat(detail.quantity);
           }
@@ -719,10 +719,12 @@ export default {
       this.form.mindoroLoads.push({
         id: null,
         purchase_id: this.purchase.id,
-        monthly_mindoro_transaction_id: null,
+        mindoro_transaction: {
+          monthly_mindoro_transaction_id: null
+        },
         mindoro_transaction_id: null,
         remarks: null,
-        details: [
+        to_mindoro_load_details: [
           {
             id: null,
             to_mindoro_load_id: null,
@@ -747,7 +749,7 @@ export default {
 
     // Mindoro - TankerLoadDetail
     addNewMindoroLoadDetailForm(loadIndex) {
-      this.form.mindoroLoads[loadIndex].details.push({
+      this.form.mindoroLoads[loadIndex].to_mindoro_load_details.push({
         id: null,
         to_mindoro_load_id: null,
         product: {
@@ -761,15 +763,15 @@ export default {
     deleteMindoroLoadDetailForm(loadIndex, detailsIndex, loadDetailId) {
       if (loadDetailId) {
         this.form.removed_mindoro_load_details.push(loadDetailId);
-        this.form.mindoroLoads[loadIndex].details.splice(detailsIndex, 1);
+        this.form.mindoroLoads[loadIndex].to_mindoro_load_details.splice(detailsIndex, 1);
       } else{
-        this.form.mindoroLoads[loadIndex].details.splice(detailsIndex, 1);
+        this.form.mindoroLoads[loadIndex].to_mindoro_load_details.splice(detailsIndex, 1);
       }
     },
 
     onMindoroChange(event, loadIndex, detailsIndex) {
       const product = event.target.options[event.target.options.selectedIndex].text;
-      this.form.mindoroLoads[loadIndex].details[detailsIndex].product.name = product;
+      this.form.mindoroLoads[loadIndex].to_mindoro_load_details[detailsIndex].product.name = product;
     },
 
     onMindoroTransactionChange(event, loadIndex) {
@@ -777,14 +779,14 @@ export default {
 
       axios.get(`/mindoro-transactions/${transactionId}/edit`)
         .then(response => {
-          this.form.mindoroLoads[loadIndex].monthly_mindoro_transaction_id = response.data.monthly_mindoro_transaction_id;
+          this.form.mindoroLoads[loadIndex].mindoro_transaction.monthly_mindoro_transaction_id = response.data.monthly_mindoro_transaction_id;
         });
     },
 
     // Mindoro - TankerLoad Totals
     totalMindoroLoadQty(product) {
       var totalQty = this.form.mindoroLoads.reduce(function (acc, load) {
-        load.details.forEach(detail => {
+        load.to_mindoro_load_details.forEach(detail => {
           if(detail.product.name === product) {
             acc += parseFloat(detail.quantity);
           }
@@ -853,7 +855,7 @@ export default {
 
       this.form.batangasLoads.forEach(load => {
         load.batangas_transaction_id = null;
-        load.monthly_batangas_transaction_id = null;
+        load.batangas_transaction.monthly_batangas_transaction_id = null;
       });
     },
 
@@ -862,7 +864,7 @@ export default {
 
       this.form.mindoroLoads.forEach(load => {
         load.mindoro_transaction_id = null;
-        load.monthly_mindoro_transaction_id = null;
+        load.mindoro_transaction.monthly_mindoro_transaction_id = null;
       });
     },
 
