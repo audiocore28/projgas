@@ -52,7 +52,7 @@
                     <th align="right" colspan="2" class="text-green-600 px-6 pt-6 pb-4">Total: {{ toPHP(getNetTotal()) }}</th>
                   </tr>
                 </thead>
-                <tbody v-for="(transaction, transactionIndex) in updateForm.transactions" :key="transactionIndex" class="bg-white rounded shadow mb-8 hover:bg-gray-100 focus-within:bg-gray-100" :id="`transaction-${transaction.id}`">
+                <tbody v-for="(transaction, transactionIndex) in updateForm.transactions" :key="transactionIndex" class="bg-white rounded shadow mb-8" :id="`transaction-${transaction.id}`">
                   <tr class="bg-gradient-to-r from-yellow-500 to-blue-600">
                     <td class="border-t">
                       <text-input v-model="transaction.trip_no" :error="errors[`transactions.${transactionIndex}.trip_no`]"/>
@@ -75,7 +75,7 @@
                         <option v-for="tanker in tankers" :key="tanker.id" :value="tanker.id">{{ tanker.plate_no }}</option>
                       </select>
                     </td>
-                    <td @click="toggleRow(transactionIndex)" class="border-t text-blue-100 font-semibold text-sm" align="center">
+                    <td @click="toggleRow(transactionIndex)" class="border-t text-blue-100 font-semibold text-sm cursor-pointer" align="center">
                       {{ toPHP(transactionTotalAmt(transaction.id) - getLoadTotalAmt(transaction.id) - transaction.expense - transaction.driver_salary - transaction.helper_salary) }}
                     </td>
                     <td class="border-t" align="right">
@@ -136,7 +136,7 @@
                            </thead>
                            <tbody class="bg-white divide-y divide-gray-200">
                              <tr v-for="(detail, detailIndex) in transaction.mindoro_transaction_details" :key="detailIndex">
-                               <td>
+                               <td align="center">
                                  <div class="text-sm font-medium text-gray-900">
                                    <date-picker style="width: 160px" v-model="detail.date" lang="en" value-type="format" :formatter="momentFormatDate"></date-picker>
                                  </div>
@@ -561,25 +561,25 @@ export default {
           // }
         ],
         to_mindoro_loads: [
-          {
-            id: null,
-            mindoro_transaction_id: null,
-            remarks: null,
-            purchase: {
-              purchase_no: null,
-            },
-            to_mindoro_load_details: [
-              {
-                id: null,
-                to_mindoro_load_id: null,
-                product: {
-                  name: null,
-                },
-                quantity: 0,
-                unit_price: 0,
-              }
-            ],
-          }
+          // {
+          //   id: null,
+          //   mindoro_transaction_id: null,
+          //   remarks: null,
+          //   purchase: {
+          //     purchase_no: null,
+          //   },
+          //   to_mindoro_load_details: [
+          //     {
+          //       id: null,
+          //       to_mindoro_load_id: null,
+          //       product: {
+          //         name: null,
+          //       },
+          //       quantity: 0,
+          //       unit_price: 0,
+          //     }
+          //   ],
+          // }
         ],
       });
     },

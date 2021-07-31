@@ -16,6 +16,8 @@ class MindoroTransactionDetail extends Model
 	 protected $dates = ['date'];
 	 protected $fillable = ['date', 'dr_no', 'si_no', 'quantity', 'unit_price', 'remarks', 'mindoro_transaction_id', 'product_id', 'client_id'];
 
+     protected $appends = ['selected_client'];
+
 	 public function mindoroTransaction()
 	 {
 	 	return $this->belongsTo(MindoroTransaction::class);
@@ -39,6 +41,11 @@ class MindoroTransactionDetail extends Model
     public function getDateAttribute($value)
     {
         return Carbon::parse($value)->format('M d, Y');
+    }
+
+    public function getSelectedClientAttribute()
+    {
+        return $this->attributes['client_id'];
     }
 
     public function addPayments($details)
