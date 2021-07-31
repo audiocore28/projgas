@@ -23,6 +23,9 @@ class BatangasPaymentDetailController extends Controller
     public function edit(Client $client)
     {
         $query = $client->load([
+            'batangasTransactionDetails' => function ($q) {
+                $q->orderBy('date', 'DESC');
+            },
             'batangasTransactionDetails.batangasTransaction.monthlyBatangasTransaction',
             'batangasTransactionDetails.client:id,name',
             'batangasTransactionDetails.product:id,name',

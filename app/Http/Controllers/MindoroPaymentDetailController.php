@@ -23,6 +23,9 @@ class MindoroPaymentDetailController extends Controller
     public function edit(Client $client)
     {
         $query = $client->load([
+            'mindoroTransactionDetails' => function ($q) {
+                $q->orderBy('date', 'DESC');
+            },
             'mindoroTransactionDetails.mindoroTransaction.monthlyMindoroTransaction',
             'mindoroTransactionDetails.client:id,name',
             'mindoroTransactionDetails.product:id,name',

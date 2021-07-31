@@ -146,9 +146,9 @@
                       </td>
                     </tr>
                     <!-- Payment Details -->
-                    <tr>
-                      <td colspan="9" align="center" class="p-2">
-                        <table class="w-full lg:w-11/12">
+                    <tr v-if="detail.mindoro_payment_details.length !== 0">
+                      <td colspan="11" align="center" class="p-2">
+                        <table class="w-full lg:w-3/4">
                           <colgroup>
                             <col span="1" style="width: 20%;">
                             <col span="1" style="width: 20%;">

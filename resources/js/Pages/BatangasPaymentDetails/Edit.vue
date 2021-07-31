@@ -114,9 +114,9 @@
                       </td>
                     </tr>
                     <!-- Payment Details -->
-                    <tr>
+                    <tr v-if="detail.batangas_payment_details.length !== 0">
                       <td colspan="9" align="center" class="p-2">
-                        <table class="w-full lg:w-11/12">
+                        <table class="w-full lg:w-3/4">
                           <colgroup>
                             <col span="1" style="width: 20%;">
                             <col span="1" style="width: 20%;">
