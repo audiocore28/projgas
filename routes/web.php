@@ -144,7 +144,9 @@ Route::group(['middleware' => 'auth'], function() {
 
 	// Clients
 	Route::put('clients/{client}/restore', [ClientController::class, 'restore'])->name('clients.restore')->middleware('can:restore,client');
-	Route::resource('clients', ClientController::class);
+	Route::resource('clients', ClientController::class)->only([
+		'index', 'create', 'store', 'edit', 'update', 'destroy'
+	]);
 
 	// // Client Payments
 	// Route::put('client-payments/{clientPayment}/restore', [ClientPaymentController::class, 'restore'])->name('client-payments.restore')->middleware('can:restore,clientPayment');
