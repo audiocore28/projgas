@@ -69,9 +69,6 @@ class TankerController extends Controller
     {
         $tanker = Tanker::create($request->all());
 
-        $tanker->drivers()->sync($request->driver_id);
-        $tanker->helpers()->sync($request->helper_id);
-
         return redirect()->route('tankers.index')->with('success', 'Tanker was successfully added.');
     }
 
