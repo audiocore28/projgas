@@ -70,8 +70,8 @@ export default {
   props: {
     errors: Object,
     helper: Object,
-    batangasTrips: Object,
-    mindoroTrips: Object,
+    batangasTrips: [Object, Array],
+    mindoroTrips: [Object, Array],
   },
   remember: 'form',
   data() {

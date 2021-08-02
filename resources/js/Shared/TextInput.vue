@@ -22,7 +22,7 @@ export default {
     },
     value: null,
     label: String,
-    error: String,
+    error: [String, Array],
   },
   methods: {
     focus() {

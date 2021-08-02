@@ -71,8 +71,8 @@ export default {
   props: {
     errors: Object,
     driver: Object,
-    batangasTrips: Object,
-    mindoroTrips: Object,
+    batangasTrips: [Object, Array],
+    mindoroTrips: [Object, Array],
   },
   remember: 'form',
   data() {
