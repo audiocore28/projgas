@@ -18,9 +18,7 @@ class DriverPolicy
      */
     public function viewAny(User $user)
     {
-        if ($user->can('view any driver')) {
-            return true;
-        }
+        return $user->can('view any driver');
     }
 
     /**
@@ -32,9 +30,7 @@ class DriverPolicy
      */
     public function view(User $user, Driver $driver)
     {
-        if ($user->can('view driver')) {
-            return true;
-        }
+        return $user->can('view driver', $driver);
     }
 
     /**
@@ -45,9 +41,7 @@ class DriverPolicy
      */
     public function create(User $user)
     {
-        if ($user->can('create driver')) {
-            return true;
-        }
+        return $user->can('create driver');
     }
 
     /**
@@ -59,9 +53,7 @@ class DriverPolicy
      */
     public function update(User $user, Driver $driver)
     {
-        if ($user->can('update driver')) {
-            return true;
-        }
+        return $user->can('update driver', $driver);
     }
 
     /**
@@ -73,9 +65,7 @@ class DriverPolicy
      */
     public function delete(User $user, Driver $driver)
     {
-        if ($user->can('delete driver')) {
-            return true;
-        }
+        return $user->can('delete driver', $driver);
     }
 
     /**
@@ -87,9 +77,7 @@ class DriverPolicy
      */
     public function restore(User $user, Driver $driver)
     {
-        if ($user->can('restore driver')) {
-            return true;
-        }
+        return $user->can('restore driver', $driver);
     }
 
 }

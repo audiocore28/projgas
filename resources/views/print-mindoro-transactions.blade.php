@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>{{ $monthlyMindoroTransaction->month }} {{ $monthlyMindoroTransaction->year }} - Mindoro Transactions</title>
+	<title>{{ $monthlyTransactions['month'] }} {{ $monthlyTransactions['year'] }} - Mindoro Transactions</title>
 	{{-- <link href="{{ asset('css/app.css') }}" rel="stylesheet"> --}}
 
 	<style>
@@ -47,7 +47,7 @@
 		</div>
 	</div>
 
-	<h2 style="font: 13px sans-serif; margin-bottom: 20px; color: red; text-transform: uppercase;" align="center">Mindoro - {{ $monthlyMindoroTransaction->month }} {{ $monthlyMindoroTransaction->year }}</h2>
+	<h2 style="font: 13px sans-serif; margin-bottom: 20px; color: red; text-transform: uppercase;" align="center">Mindoro - {{ $monthlyTransactions['month'] }} {{ $monthlyTransactions['year'] }}</h2>
 
 	{{-- Lists --}}
 	<div style="font: 9px sans-serif;" class="row">
@@ -58,13 +58,13 @@
 			<?php $overall = 0; ?>
 
 			{{-- Transactions  --}}
-			@foreach ($transactions as $transaction)
+			@foreach ($monthlyTransactions['mindoro_transactions'] as $transaction)
 				<?php
 					$total_transactions_quantity = 0;
 					$total_transactions_amount = 0;
 				?>
 
-				@foreach($transaction['details'] as $detail)
+				@foreach($transaction['mindoro_transaction_details'] as $detail)
 					<?php
 						$amount = $detail['quantity'] * $detail['unit_price'];
 						$total_transactions_amount += $amount;
@@ -84,11 +84,11 @@
 					@endforeach
 				@endforeach
 
-				<?php $output = $total_transactions_amount - $total_load_amount - $transaction['expense'] ?>
+				<?php $output = $total_transactions_amount - $total_load_amount - $transaction['expense'] - $transaction['driver_salary'] - $transaction['helper_salary'] ?>
 				<table class='table' width="60%" cellspacing='0' style="margin-top: 5px">
 					<tr>
 						<td style="background-color: #fff; color: #000;">
-							{{$transaction['trip_no']}}- {{$transaction['driver']['name']}} & {{$transaction['helper']['name']}}
+							{{$transaction['trip_no']}}- {{$transaction['driver']['name']}} {{$transaction['helper_id'] !== null ? '& ' . $transaction['helper']['name'] : ''}}
 						</td>
 						<td align="right">
 							{{ number_format($output) }}
@@ -169,7 +169,7 @@
 						$total_trips += count($trip);
 					?>
 					<tr>
-						<td>{{ $helper }}</td>
+						<td>{{ $helper !== "" ? $helper : 'None' }}</td>
 						<td>
 							{{ collect($trip)->implode('trip_no', '-') }}
 						</td>
@@ -190,7 +190,7 @@
 
 {{-- Tables --}}
 <div style="font: 9px sans-serif;">
-	@foreach ($transactions as $transaction)
+	@foreach ($monthlyTransactions['mindoro_transactions'] as $transaction)
 	<div style="margin-bottom: 25px;">
 		{{-- Transaction --}}
 		<table width="40%" cellspacing="0" cellpadding="5">
@@ -198,8 +198,12 @@
 				<td>
 					<b>
 						<span style="padding: 5px;">{{$transaction['tanker']['plate_no']}}</span>
-						<span style="background-color: #fff; color: #000; padding: 5px;">{{$transaction['trip_no']}} - {{$transaction['driver']['name']}}</span>
-						<span style="padding: 5px;">{{$transaction['helper']['name']}}</span>
+						<span style="background-color: #fff; color: #000; padding: 5px;">
+							{{$transaction['trip_no']}} - {{$transaction['driver']['name']}}
+						</span>
+						<span style="padding: 5px;">
+							{{$transaction['helper_id'] !== null ? $transaction['helper']['name'] : ''}}
+						</span>
 					</b>
 				</td>
 			</tr>
@@ -211,7 +215,7 @@
 		$total_transactions_amount = 0;
 		?>
 		<table class='table' width="100%" cellspacing='0' cellpadding='5' style="margin-top: 10px">
-			@foreach($transaction['details'] as $detail)
+			@foreach($transaction['mindoro_transaction_details'] as $detail)
 			<?php
 			$amount = $detail['quantity'] * $detail['unit_price'];
 			$total_transactions_amount += $amount;
@@ -243,10 +247,10 @@
 		<div class="row" style="margin-top: 5px">
 			<?php $total_load_amount = 0; ?>
 			{{-- ToMindoroLoad --}}
-			<div class="column">
+			<div class="column-l">
 				@foreach($transaction['to_mindoro_loads'] as $load)
 				<div style="margin: 10px 0 5px 0; color: red;">
-					<b>{{ $load['purchase'] }}</b>
+					<b>{{ $load['purchase']['purchase_no'] }}</b>
 				</div>
 
 				{{-- ToMindoroLoadDetail --}}
@@ -267,7 +271,7 @@
 				@endforeach
 			</div>
 
-			<div class="column" style="margin-top: 15px;">
+			<div class="column-r" style="margin-top: 15px;">
 				<table class='table' width="40%" cellspacing='0' cellpadding='5' style="margin-top: 5px">
 					<tr>
 						<td align="right"> {{ number_format($total_transactions_amount) }} </td>
@@ -279,7 +283,13 @@
 						<td align="right"> {{ number_format($transaction['expense']) }} </td>
 					</tr>
 					<tr>
-						<td align="right" style="font-weight: bold; background-color: #eee;"> {{ number_format($total_transactions_amount - $total_load_amount - $transaction['expense']) }} </td>
+						<td align="right"> {{ number_format($transaction['driver_salary']) }} </td>
+					</tr>
+					<tr>
+						<td align="right"> {{ number_format($transaction['helper_salary']) }} </td>
+					</tr>
+					<tr>
+						<td align="right" style="font-weight: bold; background-color: #eee;"> {{ number_format($total_transactions_amount - $total_load_amount - $transaction['expense'] - $transaction['driver_salary'] - $transaction['helper_salary']) }} </td>
 					</tr>
 				</table>
 			</div>

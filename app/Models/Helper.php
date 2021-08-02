@@ -4,9 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Models\Tanker;
-use App\Models\Driver;
-// use App\Models\TankerLoad;
 use App\Models\BatangasTransaction;
 use App\Models\MindoroTransaction;
 
@@ -35,11 +32,6 @@ class Helper extends Model
         });
     }
 
-     // public function tankerLoads()
-     // {
-     //    return $this->hasMany(TankerLoad::class);
-     // }
-
      public function batangasTransactions()
      {
         return $this->hasMany(BatangasTransaction::class);
@@ -49,16 +41,6 @@ class Helper extends Model
      {
         return $this->hasMany(MindoroTransaction::class);
      }
-
-    public function drivers()
-    {
-       return $this->belongsToMany(Driver::class);
-    }
-
-    public function tankers()
-    {
-       return $this->belongsToMany(Tanker::class);
-    }
 
     public function getDateAttribute($value)
     {

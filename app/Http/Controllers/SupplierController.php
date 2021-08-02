@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreSupplierRequest;
+use App\Http\Requests\UpdateSupplierRequest;
 use App\Models\Supplier;
 // use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -63,37 +64,26 @@ class SupplierController extends Controller
      */
     public function show(Supplier $supplier)
     {
-        $pD = $supplier->purchases()
-            ->latest()
-            ->paginate()
-            ->transform(function ($purchase) {
-                return [
-                    'id' => $purchase->id,
-                    'date' => $purchase->date,
-                    'purchase_no' => $purchase->purchase_no,
-                    'purchases' => $purchase->purchaseDetails->each(function ($detail) {
-                            return ['product' => $detail->product->name, 'purchase_no' => $detail->purchase->purchase_no];
-                        })
-                ];
-            });
+        $query = $supplier->load([
+            'purchases' => function ($query) {
+                $query->select(['id', 'supplier_id', 'date', 'purchase_no']); // fields from purchases table
+                // supplier_id is needed so eloquent can match the purchase with its parent supplier
+            },
+            'purchases.purchaseDetails.product:id,name'
+        ]);
+        // ->get(['id', 'name']) // fields from suppliers table
+        // ->toArray();
 
-       if (request()->wantsJson()) {
-         return [
-            'purchaseDetails' => $pD,
-         ];
-       }
+        $supplier = collect($query)->toArray();
+
+       // if (request()->wantsJson()) {
+       //   return [
+       //      'purchaseDetails' => $supplier,
+       //   ];
+       // }
 
         return Inertia::render('Suppliers/Show', [
-            'supplier' => [
-                'id' => $supplier->id,
-                'name' => $supplier->name,
-                'office' => $supplier->office,
-                'email_address' => $supplier->email_address,
-                'contact_person' => $supplier->contact_person,
-                'contact_no' => $supplier->contact_no,
-                'deleted_at' => $supplier->deleted_at,
-            ],
-            'purchaseDetails' => $pD,
+            'supplier' => $supplier,
         ]);
     }
 
@@ -125,7 +115,7 @@ class SupplierController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(StoreSupplierRequest $request, Supplier $supplier)
+    public function update(UpdateSupplierRequest $request, Supplier $supplier)
     {
         $supplier->update($request->all());
 

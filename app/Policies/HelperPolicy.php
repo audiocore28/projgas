@@ -18,9 +18,7 @@ class HelperPolicy
      */
     public function viewAny(User $user)
     {
-        if ($user->can('view any helper')) {
-            return true;
-        }
+        return $user->can('view any helper');
     }
 
     /**
@@ -32,9 +30,7 @@ class HelperPolicy
      */
     public function view(User $user, Helper $helper)
     {
-        if ($user->can('view helper')) {
-            return true;
-        }
+        return $user->can('view helper', $helper);
     }
 
     /**
@@ -45,9 +41,7 @@ class HelperPolicy
      */
     public function create(User $user)
     {
-        if ($user->can('create helper')) {
-            return true;
-        }
+        return $user->can('create helper');
     }
 
     /**
@@ -59,9 +53,7 @@ class HelperPolicy
      */
     public function update(User $user, Helper $helper)
     {
-        if ($user->can('update helper')) {
-            return true;
-        }
+        return $user->can('update helper', $helper);
     }
 
     /**
@@ -73,9 +65,7 @@ class HelperPolicy
      */
     public function delete(User $user, Helper $helper)
     {
-        if ($user->can('delete helper')) {
-            return true;
-        }
+        return $user->can('delete helper', $helper);
     }
 
     /**
@@ -87,9 +77,7 @@ class HelperPolicy
      */
     public function restore(User $user, Helper $helper)
     {
-        if ($user->can('restore helper')) {
-            return true;
-        }
+        return $user->can('restore helper', $helper);
     }
 
 }

@@ -38,11 +38,6 @@ class Product extends Model
         return $this->hasMany(PurchaseDetail::class);
     }
 
-    public function tankerLoadDetails()
-    {
-        return $this->hasMany(TankerLoadDetail::class);
-    }
-
     public function batangasTransactionDetails()
     {
         return $this->hasMany(BatangasTransactionDetail::class);

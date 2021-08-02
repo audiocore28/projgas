@@ -18,9 +18,7 @@ class PurchasePolicy
      */
     public function viewAny(User $user)
     {
-        if ($user->can('view any purchase')) {
-            return true;
-        }
+        return $user->can('view any purchase');
     }
 
     /**
@@ -32,9 +30,7 @@ class PurchasePolicy
      */
     public function view(User $user, Purchase $purchase)
     {
-        if ($user->can('view purchase')) {
-            return true;
-        }
+        return $user->can('view purchase', $purchase);
     }
 
     /**
@@ -45,9 +41,7 @@ class PurchasePolicy
      */
     public function create(User $user)
     {
-        if ($user->can('create purchase')) {
-            return true;
-        }
+        return $user->can('create purchase');
     }
 
     /**
@@ -59,9 +53,7 @@ class PurchasePolicy
      */
     public function update(User $user, Purchase $purchase)
     {
-        if ($user->can('update purchase')) {
-            return true;
-        }
+        return $user->can('update purchase', $purchase);
     }
 
     /**
@@ -73,16 +65,12 @@ class PurchasePolicy
      */
     public function delete(User $user, Purchase $purchase)
     {
-        if ($user->can('delete purchase')) {
-            return true;
-        }
+        return $user->can('delete purchase', $purchase);
     }
 
     public function print(User $user, Purchase $purchase)
     {
-        if ($user->can('print purchase')) {
-            return true;
-        }
+        return $user->can('print purchase', $purchase);
     }
 
 }

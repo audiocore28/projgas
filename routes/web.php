@@ -4,16 +4,14 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ClientController;
-use App\Http\Controllers\ClientPaymentController;
+// use App\Http\Controllers\ClientPaymentController;
 use App\Http\Controllers\BatangasPaymentDetailController;
 use App\Http\Controllers\MindoroPaymentDetailController;
 // use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DriverController;
-use App\Http\Controllers\BatangasTransactionController;
-use App\Http\Controllers\BatangasTransactionDetailController;
 use App\Http\Controllers\MindoroTransactionController;
-use App\Http\Controllers\MindoroTransactionDetailController;
 use App\Http\Controllers\MonthlyMindoroTransactionController;
+use App\Http\Controllers\BatangasTransactionController;
 use App\Http\Controllers\MonthlyBatangasTransactionController;
 use App\Http\Controllers\HelperController;
 // use App\Http\Controllers\CashierController;
@@ -22,7 +20,6 @@ use App\Http\Controllers\HelperController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PurchaseController;
-use App\Http\Controllers\PurchaseDetailController;
 // use App\Http\Controllers\StatementController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\DepotController;
@@ -91,44 +88,47 @@ Route::group(['middleware' => 'auth'], function() {
 
 	Route::get('purchases/{purchase}/print', [PurchaseController::class, 'print'])->name('purchases.print')->middleware('can:print,purchase');
 
-	Route::resource('purchases', PurchaseController::class);
-
-	// Purchase Details
-	Route::resource('purchase-details', PurchaseDetailController::class)->only(['store', 'destroy']);
-
-	// Batangas Transaction
-	Route::resource('batangas-transactions', BatangasTransactionController::class);
-
-	// Batangas Transaction Details
-	Route::resource('batangas-transaction-details', BatangasTransactionDetailController::class)->only(['store', 'destroy']);
+	Route::resource('purchases', PurchaseController::class)->only([
+		'index', 'create', 'store', 'edit', 'update', 'destroy'
+	]);
 
 	// Mindoro Transaction
-	Route::resource('mindoro-transactions', MindoroTransactionController::class);
-
-	// Mindoro Transaction Details
-	Route::resource('mindoro-transaction-details', MindoroTransactionDetailController::class)->only(['store', 'destroy']);
+	Route::resource('mindoro-transactions', MindoroTransactionController::class)->only('edit');
 
 	// Monthly Mindoro Transaction
-	Route::resource('monthly-mindoro-transactions', MonthlyMindoroTransactionController::class);
+	Route::resource('monthly-mindoro-transactions', MonthlyMindoroTransactionController::class)->only([
+		'index', 'create', 'store', 'edit', 'update', 'destroy'
+	]);
 
 	Route::get('monthly-mindoro-transactions/{monthlyMindoroTransaction}/print', [MonthlyMindoroTransactionController::class, 'print'])->name('monthly-mindoro-transactions.print')->middleware('can:print,monthlyMindoroTransaction');
 
+	// Batangas Transaction
+	Route::resource('batangas-transactions', BatangasTransactionController::class)->only('edit');
+
 	// Monthly Batangas Transaction
-	Route::resource('monthly-batangas-transactions', MonthlyBatangasTransactionController::class);
+	Route::resource('monthly-batangas-transactions', MonthlyBatangasTransactionController::class)->only([
+		'index', 'create', 'store', 'edit', 'update', 'destroy'
+	]);
 
 	Route::get('monthly-batangas-transactions/{monthlyBatangasTransaction}/print', [MonthlyBatangasTransactionController::class, 'print'])->name('monthly-batangas-transactions.print')->middleware('can:print,monthlyBatangasTransaction');
 
 	// Suppliers
 	Route::put('suppliers/{supplier}/restore', [SupplierController::class, 'restore'])->name('suppliers.restore')->middleware('can:restore,supplier');
-	Route::resource('suppliers', SupplierController::class);
+	Route::resource('suppliers', SupplierController::class)->only([
+		'index', 'create', 'store', 'show', 'edit', 'update', 'destroy'
+	]);
 
 	// Depots
 	Route::put('depots/{depot}/restore', [DepotController::class, 'restore'])->name('depots.restore')->middleware('can:restore,depot');
-	Route::resource('depots', DepotController::class);
+	Route::resource('depots', DepotController::class)->only([
+		'index', 'create', 'store', 'show', 'edit', 'update', 'destroy'
+	]);
 
 	// Accounts
 	Route::put('accounts/{account}/restore', [AccountController::class, 'restore'])->name('accounts.restore')->middleware('can:restore,account');
-	Route::resource('accounts', AccountController::class);
+	Route::resource('accounts', AccountController::class)->only([
+		'index', 'create', 'store', 'show', 'edit', 'update', 'destroy'
+	]);
 
 	// // Stations
 	// Route::put('stations/{station}/restore', [StationController::class, 'restore'])->name('stations.restore');
@@ -144,21 +144,23 @@ Route::group(['middleware' => 'auth'], function() {
 
 	// Clients
 	Route::put('clients/{client}/restore', [ClientController::class, 'restore'])->name('clients.restore')->middleware('can:restore,client');
-	Route::resource('clients', ClientController::class);
+	Route::resource('clients', ClientController::class)->only([
+		'index', 'create', 'store', 'edit', 'update', 'destroy'
+	]);
 
-	// Client Payments
-	Route::put('client-payments/{clientPayment}/restore', [ClientPaymentController::class, 'restore'])->name('client-payments.restore')->middleware('can:restore,clientPayment');
-	Route::resource('client-payments', ClientPaymentController::class);
+	// // Client Payments
+	// Route::put('client-payments/{clientPayment}/restore', [ClientPaymentController::class, 'restore'])->name('client-payments.restore')->middleware('can:restore,clientPayment');
+	// Route::resource('client-payments', ClientPaymentController::class);
 
 	// Client Payment Details
 	// Route::put('client-payment-details/{clientPaymentDetail}/restore', [ClientPaymentDetailController::class, 'restore'])->name('client-payment-details.restore')->middleware('can:restore,clientPaymentDetail');
 	// Route::resource('client-payment-details', ClientPaymentDetailController::class);
 
-	// Batangas Payments
+	// Batangas Payment Details
 	Route::get('clients/{client}/batangas-soa', [BatangasPaymentDetailController::class, 'edit'])->name('batangas-payment-details.edit')->middleware('can:viewPayment,client');
 	Route::put('clients/{client}/batangas-soa', [BatangasPaymentDetailController::class, 'update'])->name('batangas-payment-details.update')->middleware('can:updatePayment,client');
 
-	// Mindoro Payments
+	// Mindoro Payment Details
 	Route::get('clients/{client}/mindoro-soa', [MindoroPaymentDetailController::class, 'edit'])->name('mindoro-payment-details.edit')->middleware('can:viewPayment,client');
 	Route::put('clients/{client}/mindoro-soa', [MindoroPaymentDetailController::class, 'update'])->name('mindoro-payment-details.update')->middleware('can:updatePayment,client');
 
@@ -169,31 +171,45 @@ Route::group(['middleware' => 'auth'], function() {
 
 	// Users
 	Route::put('users/{user}/restore', [UsersController::class, 'restore'])->name('users.restore');
-	Route::resource('users', UsersController::class);
+	Route::resource('users', UsersController::class)->only([
+		'index', 'create', 'store', 'edit', 'update', 'destroy'
+	]);
 
 	// Roles
 	Route::put('roles/{role}/restore', [RoleController::class, 'restore'])->name('roles.restore');
-	Route::resource('roles', RoleController::class);
+	Route::resource('roles', RoleController::class)->only([
+		'index', 'create', 'store', 'edit', 'update', 'destroy'
+	]);
 
 	// Permissions
 	Route::put('permissions/{permission}/restore', [PermissionController::class, 'restore'])->name('permissions.restore');
-	Route::resource('permissions', PermissionController::class);
+	Route::resource('permissions', PermissionController::class)->only([
+		'index', 'create', 'store', 'edit', 'update', 'destroy'
+	]);
 
 	// Products
 	Route::put('products/{product}/restore', [ProductController::class, 'restore'])->name('products.restore')->middleware('can:restore,product');
-	Route::resource('products', ProductController::class);
+	Route::resource('products', ProductController::class)->only([
+		'index', 'create', 'store', 'edit', 'update', 'destroy'
+	]);
 
 	// Tankers
 	Route::put('tankers/{tanker}/restore', [TankerController::class, 'restore'])->name('tankers.restore')->middleware('can:restore,tanker');
-	Route::resource('tankers', TankerController::class);
+	Route::resource('tankers', TankerController::class)->only([
+		'index', 'create', 'store', 'edit', 'update', 'destroy'
+	]);
 
 	// Drivers
 	Route::put('drivers/{driver}/restore', [DriverController::class, 'restore'])->name('drivers.restore')->middleware('can:restore,driver');
-	Route::resource('drivers', DriverController::class);
+	Route::resource('drivers', DriverController::class)->only([
+		'index', 'create', 'store', 'show', 'edit', 'update', 'destroy'
+	]);
 
 	// Helpers
 	Route::put('helpers/{helper}/restore', [HelperController::class, 'restore'])->name('helpers.restore')->middleware('can:restore,helper');
-	Route::resource('helpers', HelperController::class);
+	Route::resource('helpers', HelperController::class)->only([
+		'index', 'create', 'store', 'show', 'edit', 'update', 'destroy'
+	]);
 
 	// // Cashiers
 	// Route::put('cashiers/{cashier}/restore', [CashierController::class, 'restore'])->name('cashiers.restore');

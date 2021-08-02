@@ -19,7 +19,7 @@ class CreateBatangasTransactionsTable extends Migration
             $table->string('trip_no');
             $table->bigInteger('tanker_id');
             $table->bigInteger('driver_id');
-            $table->bigInteger('helper_id');
+            $table->bigInteger('helper_id')->nullable();
             $table->decimal('driver_salary', 8, 0)->nullable();
             $table->decimal('helper_salary', 8, 0)->nullable();
             $table->timestamps();

@@ -26,7 +26,7 @@ class MonthlyMindoroTransactionController extends Controller
 {
     public function __construct()
     {
-        $this->authorizeResource(MonthlyMindoroTransaction::class);
+        $this->authorizeResource(MonthlyMindoroTransaction::class, 'monthly_mindoro_transaction');
     }
     /**
      * Display a listing of the resource.
@@ -118,17 +118,6 @@ class MonthlyMindoroTransactionController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
@@ -169,82 +158,40 @@ class MonthlyMindoroTransactionController extends Controller
 
 
         // MindoroTransaction
-        $transactions = $monthlyMindoroTransaction->mindoroTransactions
-                ->map(function ($transaction) {
-                    return [
-                        'year' => $transaction->monthlyMindoroTransaction->year,
-                        'month' => $transaction->monthlyMindoroTransaction->month,
-                        'id' => $transaction->id,
-                        'trip_no' => $transaction->trip_no,
-                        'tanker' => $transaction->tanker ? $transaction->tanker->only('id', 'plate_no') : null,
-                        'driver' => $transaction->driver ? $transaction->driver->only('id', 'name') : null,
-                        'helper' => $transaction->helper ? $transaction->helper->only('id', 'name') : null,
-                        'expense' => $transaction->expense,
-                        // 'selected_purchases' => $selectedPurchases,
-                        'details' => $transaction->mindoroTransactionDetails
-                                ->map(function ($detail) {
-                                    return [
-                                       'id' => $detail->id,
-                                       'date' => $detail->date,
-                                       'dr_no' => $detail->dr_no,
-                                       'quantity' => $detail->quantity,
-                                       'unit_price' => $detail->unit_price,
-                                       'mindoro_transaction_id' => $detail->mindoro_transaction_id,
-                                       'product_id' => $detail->product_id,
-                                       'client_id' => $detail->client_id,
-                                       'selected_client' => $detail->client_id,
-                                       'remarks' => $detail->remarks,
-                                    ];
-                        }),
-                        'mindoro_loads' => $transaction->toMindoroLoads->each(function ($load) {
-                            return [
-                                'mindoro_transaction_id' => $load->mindoro_transaction_id,
-                                'remarks' => $load->remarks,
-                                'purchase' => $load->purchase->purchase_no,
-                                'mindoro_load_details' => $load->toMindoroLoadDetails->each(function ($detail) {
-                                    return [
-                                        'quantity' => $detail->quantity,
-                                        'product' => $detail->product->name,
-                                        'unit_price' => $detail->unit_price,
-                                    ];
-                                }),
-                            ];
-                        }),
-                    ];
-                })
-                ->toArray();
+        $query = $monthlyMindoroTransaction->load([
+            'mindoroTransactions.monthlyMindoroTransaction',
+            'mindoroTransactions.tanker:id,plate_no',
+            'mindoroTransactions.driver:id,name',
+            'mindoroTransactions.mindoroTransactionDetails.product:id,name',
+            'mindoroTransactions.mindoroTransactionDetails.client:id,name',
+            'mindoroTransactions.toMindoroLoads.purchase:id,purchase_no',
+            'mindoroTransactions.toMindoroLoads.toMindoroLoadDetails.product:id,name',
+        ]);
 
+        $transactions = collect($query->mindoroTransactions)->toArray();
 
         if (request()->wantsJson()) {
+            $transactionsArray = [...$transactions];
+
             // include existing transactions next month to selected transaction month
-            $nextTransactionId = $monthlyMindoroTransaction->where('id', '>', $monthlyMindoroTransaction->id)->min('id');
+            $nextMonthlyTransactionId = $monthlyMindoroTransaction->where('id', '>', $monthlyMindoroTransaction->id)->min('id');
+            $nextMonthlyTransaction = $monthlyMindoroTransaction->find($nextMonthlyTransactionId);
 
-            if ($nextTransactionId) {
-                $nextTransactions = $monthlyMindoroTransaction->find($nextTransactionId)->mindoroTransactions
-                        ->map(function ($transaction) {
-                            return [
-                                'year' => $transaction->monthlyMindoroTransaction->year,
-                                'month' => $transaction->monthlyMindoroTransaction->month,
-                                'id' => $transaction->id,
-                                'trip_no' => $transaction->trip_no,
-                                'tanker' => $transaction->tanker ? $transaction->tanker->only('id', 'plate_no') : null,
-                                'driver' => $transaction->driver ? $transaction->driver->only('id', 'name') : null,
-                                'helper' => $transaction->helper ? $transaction->helper->only('id', 'name') : null,
-                                'driver_salary' => $transaction->driver_salary,
-                                'helper_salary' => $transaction->helper_salary,
-                                // 'selected_purchases' => $selectedPurchases,
-                            ];
-                        })
-                        ->toArray();
+            if ($nextMonthlyTransactionId) {
+                $nextTransactionsQuery = $nextMonthlyTransaction->load([
+                    'mindoroTransactions.monthlyMindoroTransaction',
+                    'mindoroTransactions.tanker:id,plate_no',
+                    'mindoroTransactions.driver:id,name',
+                    'mindoroTransactions.helper:id,name',
+                ]);
 
-                array_push($transactions, ...$nextTransactions);
+                $nextTransactions = collect($nextTransactionsQuery->mindoroTransactions)->toArray();
+
+                array_push($transactionsArray, ...$nextTransactions);
             }
 
-
             return [
-               // 'loadDetails' => $lD,
-               // 'MindoroDetails' => $bD,
-               'mindoroTransactions' => $transactions,
+               'mindoroTransactions' => $transactionsArray,
             ];
         }
 
@@ -255,11 +202,9 @@ class MonthlyMindoroTransactionController extends Controller
                 'month' => $monthlyMindoroTransaction->month,
                 'transactions' => $transactions,
             ],
-
             'tankers' => $tankers,
             'drivers' => $drivers,
             'helpers' => $helpers,
-            // 'purchases' => $purchases,
             'clients' => $clients,
             'products' => $products,
         ]);
@@ -303,12 +248,14 @@ class MonthlyMindoroTransactionController extends Controller
             $mindoroTransaction->trip_no = $transaction['trip_no'];
             $mindoroTransaction->tanker_id = $transaction['tanker']['id'];
             $mindoroTransaction->driver_id = $transaction['driver']['id'];
-            $mindoroTransaction->helper_id = $transaction['helper']['id'];
+            $mindoroTransaction->helper_id = $transaction['helper_id'];
             $mindoroTransaction->expense = $transaction['expense'];
+            $mindoroTransaction->driver_salary = $transaction['driver_salary'];
+            $mindoroTransaction->helper_salary = $transaction['helper_salary'];
 
             $mindoroTransaction->save();
 
-            foreach($transaction['details'] as $detail)
+            foreach($transaction['mindoro_transaction_details'] as $detail)
             {
                 $transactionDetail = $mindoroTransaction->mindoroTransactionDetails()->findOrNew($detail['id']);
 
@@ -323,7 +270,7 @@ class MonthlyMindoroTransactionController extends Controller
                 $transactionDetail->save();
             }
 
-            foreach ($transaction['mindoro_loads'] as $load)
+            foreach ($transaction['to_mindoro_loads'] as $load)
             {
                 if ($load['id'] !== null) {
                     foreach ($load['to_mindoro_load_details'] as $detail)
@@ -368,66 +315,22 @@ class MonthlyMindoroTransactionController extends Controller
     // DOMPDF - print
     public function print(MonthlyMindoroTransaction $monthlyMindoroTransaction)
     {
-        // MindoroTransaction
-        $transactions = $monthlyMindoroTransaction->mindoroTransactions
-                ->map(function ($transaction) {
-                    return [
-                        'id' => $transaction->id,
-                        'trip_no' => $transaction->trip_no,
-                        'tanker' => $transaction->tanker ? $transaction->tanker->only('id', 'plate_no') : null,
-                        'driver' => $transaction->driver ? $transaction->driver->only('id', 'name') : null,
-                        'helper' => $transaction->helper ? $transaction->helper->only('id', 'name') : null,
-                        'expense' => $transaction->expense,
-                        // 'selected_purchases' => $selectedPurchases,
-                        'details' => $transaction->mindoroTransactionDetails
-                                ->map(function ($detail) {
-                                    return [
-                                       'id' => $detail->id,
-                                       'date' => $detail->date,
-                                       'dr_no' => $detail->dr_no,
-                                       'quantity' => $detail->quantity,
-                                       'unit_price' => $detail->unit_price,
-                                       'mindoro_transaction_id' => $detail->mindoro_transaction_id,
-                                       'product' => $detail->product ? $detail->product->only('id', 'name') : null,
-                                       'client' => $detail->client ? $detail->client->only('id', 'name') : null,
-                                       'selected_client' => $detail->client_id,
-                                       'remarks' => $detail->remarks,
-                                    ];
-                        }),
-                        'to_mindoro_loads' => $transaction->toMindoroLoads
-                                ->map(function ($load) {
-                                    return [
-                                        'mindoro_transaction_id' => $load->mindoro_transaction_id,
-                                        'remarks' => $load->remarks,
-                                        'purchase' => $load->purchase->purchase_no,
-                                        'to_mindoro_load_details' => $load->toMindoroLoadDetails->each(function ($detail) {
-                                            return [
-                                                'quantity' => $detail->quantity,
-                                                'product' => $detail->product->name,
-                                                'unit_price' => $detail->unit_price,
-                                            ];
-                                        }),
-                                    ];
-                        }),
-                    ];
-                })
-                ->toArray();
+        $query = $monthlyMindoroTransaction->load([
+            'mindoroTransactions.tanker:id,plate_no',
+            'mindoroTransactions.driver:id,name',
+            'mindoroTransactions.helper:id,name',
+            'mindoroTransactions.mindoroTransactionDetails.product:id,name',
+            'mindoroTransactions.mindoroTransactionDetails.client:id,name',
+            'mindoroTransactions.toMindoroLoads.purchase:id,purchase_no',
+            'mindoroTransactions.toMindoroLoads.toMindoroLoadDetails.product:id,name',
+        ]);
 
-        $queryTrips = $monthlyMindoroTransaction->mindoroTransactions
-                    ->map(function ($transaction) {
-                        return [
-                            'id' => $transaction->id,
-                            'trip_no' => $transaction->trip_no,
-                            'tanker' => $transaction->tanker ? $transaction->tanker->only('id', 'plate_no') : null,
-                            'driver' => $transaction->driver ? $transaction->driver->only('id', 'name') : null,
-                            'helper' => $transaction->helper ? $transaction->helper->only('id', 'name') : null,
-                        ];
-                    });
+        $monthlyTransactions = collect($query)->toArray();
+        $driverTrips = collect($query->mindoroTransactions)->groupBy('driver.name');
+        $helperTrips = collect($query->mindoroTransactions)->groupBy('helper.name');
 
-        $driverTrips = $queryTrips->groupBy('driver.name');
-        $helperTrips = $queryTrips->groupBy('helper.name');
 
-        $pdf = PDF::loadView('print-mindoro-transactions', compact('monthlyMindoroTransaction', 'transactions', 'driverTrips', 'helperTrips'));
+        $pdf = PDF::loadView('print-mindoro-transactions', compact('monthlyTransactions', 'driverTrips', 'helperTrips'));
         $pdf->setPaper(array(0, 0, 612.00, 792.0));
 
         $fileName = "Mindoro - ".$monthlyMindoroTransaction->month." ".$monthlyMindoroTransaction->year.".pdf";

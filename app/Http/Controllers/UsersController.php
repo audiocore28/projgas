@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -103,7 +104,7 @@ class UsersController extends Controller
         ]);
     }
 
-    public function update(StoreUserRequest $request, User $user)
+    public function update(UpdateUserRequest $request, User $user)
     {
         // if (App::environment('demo') && $user->isDemoUser()) {
         //     return Redirect::back()->with('error', 'Updating the demo user is not allowed.');

@@ -31,7 +31,7 @@
             </tr>
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
-            <tr v-for="detail in purchase.purchases" :key="detail.id" :value="detail.id">
+            <tr v-for="detail in purchase.purchase_details" :key="detail.id" :value="detail.id">
               <td class="px-6 py-4 whitespace-nowrap">
                 <div class="text-sm font-medium text-gray-900">
                   {{ detail.product.name }}
@@ -83,14 +83,14 @@ import { numberFormatsMixin } from '@/Mixins/numberFormatsMixin'
 export default {
   mixins: [numberFormatsMixin],
   props: {
-    purchaseDetails: Object,
+    purchaseDetails: Array,
     record: String,
   },
   remember: 'form',
   data() {
     return {
-      localPurchaseDetails: this.purchaseDetails.data,
-      purchasePagination: this.purchaseDetails,
+      localPurchaseDetails: this.purchaseDetails,
+      // purchasePagination: this.links,
     }
   },
   methods: {
@@ -98,7 +98,7 @@ export default {
       for (var i = 0; i < this.localPurchaseDetails.length; i++) {
         if (this.localPurchaseDetails[i].id === purchaseId) {
 
-          var totalAmt = this.localPurchaseDetails[i].purchases.reduce(function (acc, purchase) {
+          var totalAmt = this.localPurchaseDetails[i].purchase_details.reduce(function (acc, purchase) {
             acc += parseFloat(purchase.quantity) * parseFloat(purchase.unit_price);
             return acc;
           }, 0);
@@ -112,7 +112,7 @@ export default {
       for (var i = 0; i < this.localPurchaseDetails.length; i++) {
         if (this.localPurchaseDetails[i].id === purchaseId) {
 
-          var totalQty = this.localPurchaseDetails[i].purchases.reduce(function (acc, purchase) {
+          var totalQty = this.localPurchaseDetails[i].purchase_details.reduce(function (acc, purchase) {
             acc += parseFloat(purchase.quantity);
             return acc;
           }, 0);
@@ -123,7 +123,8 @@ export default {
     },
 
     // loadMorePurchase() {
-    //   var currentPage = this.purchasePagination.links[0].current_page;
+    //   var currentPage = this.purchasePagination[0].current_page;
+
     //   var id = window.location.href.split('/');
 
     //   // if (this.loadingMore) return;
@@ -135,11 +136,11 @@ export default {
     //       // Prepending the old messages to the list.
     //       this.localPurchaseDetails = [
     //         ...this.localPurchaseDetails,
-    //         ...data.purchaseDetails.data,
+    //         ...data.purchaseDetails.data[0].purchases,
     //       ];
 
     //       // Update our pagination meta information.
-    //       this.purchasePagination = data.purchaseDetails;
+    //       // this.purchasePagination = data.purchaseDetails.data[0].purchases;
     //     });
     //     // .finally(() => this.loadingMore = false);
     // },

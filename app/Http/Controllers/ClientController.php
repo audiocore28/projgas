@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreClientRequest;
+use App\Http\Requests\UpdateClientRequest;
 use App\Models\Client;
 // use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -97,93 +98,93 @@ class ClientController extends Controller
      */
     public function show(Client $client)
     {
-        $mD = $client->mindoroTransactionDetails()
-            ->latest()
-            ->paginate()
-            ->transform(function ($detail) {
-                return [
-                    'month' => $detail->mindoroTransaction->monthlyMindoroTransaction ? $detail->mindoroTransaction->monthlyMindoroTransaction->month : null,
-                    'year' => $detail->mindoroTransaction->monthlyMindoroTransaction ? $detail->mindoroTransaction->monthlyMindoroTransaction->year : null,
-                    'monthly_mindoro_transaction_id' => $detail->mindoroTransaction->monthlyMindoroTransaction ? $detail->mindoroTransaction->monthlyMindoroTransaction->id : null,
-                    'trip_no' => $detail->mindoroTransaction ? $detail->mindoroTransaction->trip_no : null,
-                    'id' => $detail->id,
-                    'date' => $detail->date,
-                    'dr_no' => $detail->dr_no,
-                    'mindoro_transaction_id' => $detail->mindoro_transaction_id,
-                    'quantity' => $detail->quantity,
-                    'unit_price' => $detail->unit_price,
-                    'client' => $detail->client ? $detail->client->only('id', 'name') : null,
-                    'remarks' => $detail->remarks,
-                    'product' => $detail->product ? $detail->product->only('id', 'name') : null,
-                    'payments' => $detail->mindoroPaymentDetails->map(function ($payment) {
-                        return [
-                            'id' => $payment->id,
-                            'date' => $payment->date,
-                            'mode' => $payment->mode,
-                            'amount' => $payment->amount,
-                            'remarks' => $payment->remarks,
-                            'mindoro_transaction_detail_id' => $payment->mindoro_transaction_detail_id,
-                        ];
-                    }),
-                ];
-            });
+       //  $mD = $client->mindoroTransactionDetails()
+       //      ->latest()
+       //      ->paginate()
+       //      ->transform(function ($detail) {
+       //          return [
+       //              'month' => $detail->mindoroTransaction->monthlyMindoroTransaction ? $detail->mindoroTransaction->monthlyMindoroTransaction->month : null,
+       //              'year' => $detail->mindoroTransaction->monthlyMindoroTransaction ? $detail->mindoroTransaction->monthlyMindoroTransaction->year : null,
+       //              'monthly_mindoro_transaction_id' => $detail->mindoroTransaction->monthlyMindoroTransaction ? $detail->mindoroTransaction->monthlyMindoroTransaction->id : null,
+       //              'trip_no' => $detail->mindoroTransaction ? $detail->mindoroTransaction->trip_no : null,
+       //              'id' => $detail->id,
+       //              'date' => $detail->date,
+       //              'dr_no' => $detail->dr_no,
+       //              'mindoro_transaction_id' => $detail->mindoro_transaction_id,
+       //              'quantity' => $detail->quantity,
+       //              'unit_price' => $detail->unit_price,
+       //              'client' => $detail->client ? $detail->client->only('id', 'name') : null,
+       //              'remarks' => $detail->remarks,
+       //              'product' => $detail->product ? $detail->product->only('id', 'name') : null,
+       //              'payments' => $detail->mindoroPaymentDetails->map(function ($payment) {
+       //                  return [
+       //                      'id' => $payment->id,
+       //                      'date' => $payment->date,
+       //                      'mode' => $payment->mode,
+       //                      'amount' => $payment->amount,
+       //                      'remarks' => $payment->remarks,
+       //                      'mindoro_transaction_detail_id' => $payment->mindoro_transaction_detail_id,
+       //                  ];
+       //              }),
+       //          ];
+       //      });
 
-        $bD = $client->batangasTransactionDetails()
-            ->latest()
-            ->paginate()
-            ->transform(function ($detail) {
-                return [
-                    'month' => $detail->batangasTransaction->monthlyBatangasTransaction ? $detail->batangasTransaction->monthlyBatangasTransaction->month : null,
-                    'year' => $detail->batangasTransaction->monthlyBatangasTransaction ? $detail->batangasTransaction->monthlyBatangasTransaction->year : null,
-                    'monthly_batangas_transaction_id' => $detail->batangasTransaction->monthlyBatangasTransaction ? $detail->batangasTransaction->monthlyBatangasTransaction->id : null,
-                    'trip_no' => $detail->batangasTransaction ? $detail->batangasTransaction->trip_no : null,
-                    'id' => $detail->id,
-                    'date' => $detail->date,
-                    'dr_no' => $detail->dr_no,
-                    'batangas_transaction_id' => $detail->batangas_transaction_id,
-                    'quantity' => $detail->quantity,
-                    'unit_price' => $detail->unit_price,
-                    'client' => $detail->client ? $detail->client->only('id', 'name') : null,
-                    'remarks' => $detail->remarks,
-                    'product' => $detail->product ? $detail->product->only('id', 'name') : null,
-                    'payments' => $detail->batangasPaymentDetails->map(function ($payment) {
-                        return [
-                            'id' => $payment->id,
-                            'date' => $payment->date,
-                            'mode' => $payment->mode,
-                            'amount' => $payment->amount,
-                            'remarks' => $payment->remarks,
-                            'batangas_transaction_detail_id' => $payment->batangas_transaction_detail_id,
-                        ];
-                    }),
-                ];
-            });
+       //  $bD = $client->batangasTransactionDetails()
+       //      ->latest()
+       //      ->paginate()
+       //      ->transform(function ($detail) {
+       //          return [
+       //              'month' => $detail->batangasTransaction->monthlyBatangasTransaction ? $detail->batangasTransaction->monthlyBatangasTransaction->month : null,
+       //              'year' => $detail->batangasTransaction->monthlyBatangasTransaction ? $detail->batangasTransaction->monthlyBatangasTransaction->year : null,
+       //              'monthly_batangas_transaction_id' => $detail->batangasTransaction->monthlyBatangasTransaction ? $detail->batangasTransaction->monthlyBatangasTransaction->id : null,
+       //              'trip_no' => $detail->batangasTransaction ? $detail->batangasTransaction->trip_no : null,
+       //              'id' => $detail->id,
+       //              'date' => $detail->date,
+       //              'dr_no' => $detail->dr_no,
+       //              'batangas_transaction_id' => $detail->batangas_transaction_id,
+       //              'quantity' => $detail->quantity,
+       //              'unit_price' => $detail->unit_price,
+       //              'client' => $detail->client ? $detail->client->only('id', 'name') : null,
+       //              'remarks' => $detail->remarks,
+       //              'product' => $detail->product ? $detail->product->only('id', 'name') : null,
+       //              'payments' => $detail->batangasPaymentDetails->map(function ($payment) {
+       //                  return [
+       //                      'id' => $payment->id,
+       //                      'date' => $payment->date,
+       //                      'mode' => $payment->mode,
+       //                      'amount' => $payment->amount,
+       //                      'remarks' => $payment->remarks,
+       //                      'batangas_transaction_detail_id' => $payment->batangas_transaction_detail_id,
+       //                  ];
+       //              }),
+       //          ];
+       //      });
 
-        $batangasDetails = $bD->groupBy(['year', 'month']);
-        $mindoroDetails = $mD->groupBy(['year', 'month']);
+       //  $batangasDetails = $bD->groupBy(['year', 'month']);
+       //  $mindoroDetails = $mD->groupBy(['year', 'month']);
 
-       if (request()->wantsJson()) {
-         return [
-           // 'batangasDetails' => $bD,
-           // 'mindoroDetails' => $mD,
-           'batangasDetails' => $batangasDetails,
-           'mindoroDetails' => $mindoroDetails,
-         ];
-       }
+       // if (request()->wantsJson()) {
+       //   return [
+       //     // 'batangasDetails' => $bD,
+       //     // 'mindoroDetails' => $mD,
+       //     'batangasDetails' => $batangasDetails,
+       //     'mindoroDetails' => $mindoroDetails,
+       //   ];
+       // }
 
-        return Inertia::render('Clients/Show', [
-            'client' => [
-                'id' => $client->id,
-                'name' => $client->name,
-                'office' => $client->office,
-                'contact_person' => $client->contact_person,
-                'contact_no' => $client->contact_no,
-                'email_address' => $client->email_address,
-                'deleted_at' => $client->deleted_at,
-            ],
-            'batangasDetails' => $batangasDetails,
-            'mindoroDetails' => $mindoroDetails,
-        ]);
+       //  return Inertia::render('Clients/Show', [
+       //      'client' => [
+       //          'id' => $client->id,
+       //          'name' => $client->name,
+       //          'office' => $client->office,
+       //          'contact_person' => $client->contact_person,
+       //          'contact_no' => $client->contact_no,
+       //          'email_address' => $client->email_address,
+       //          'deleted_at' => $client->deleted_at,
+       //      ],
+       //      'batangasDetails' => $batangasDetails,
+       //      'mindoroDetails' => $mindoroDetails,
+       //  ]);
     }
 
     /**
@@ -214,7 +215,7 @@ class ClientController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(StoreClientRequest $request, Client $client)
+    public function update(UpdateClientRequest $request, Client $client)
     {
         $client->update($request->all());
 

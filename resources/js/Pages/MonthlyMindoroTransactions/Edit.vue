@@ -52,7 +52,7 @@
                     <th align="right" colspan="2" class="text-green-600 px-6 pt-6 pb-4">Total: {{ toPHP(getNetTotal()) }}</th>
                   </tr>
                 </thead>
-                <tbody v-for="(transaction, transactionIndex) in updateForm.transactions" :key="transactionIndex" class="bg-white rounded shadow mb-8 hover:bg-gray-100 focus-within:bg-gray-100" :id="`transaction-${transaction.id}`">
+                <tbody v-for="(transaction, transactionIndex) in updateForm.transactions" :key="transactionIndex" class="bg-white rounded shadow mb-8" :id="`transaction-${transaction.id}`">
                   <tr class="bg-gradient-to-r from-yellow-500 to-blue-600">
                     <td class="border-t">
                       <text-input v-model="transaction.trip_no" :error="errors[`transactions.${transactionIndex}.trip_no`]"/>
@@ -64,7 +64,7 @@
                       </select>
                     </td>
                     <td class="border-t">
-                      <select :id="`helper-${transactionIndex}`" v-model="transaction.helper.id" class="form-select" :class="{ error: errors[`transactions.${transactionIndex}.helper.id`] }">
+                      <select :id="`helper-${transactionIndex}`" v-model="transaction.helper_id" class="form-select" :class="{ error: errors[`transactions.${transactionIndex}.helper_id`] }">
                         <option :value="null" />
                         <option v-for="helper in helpers" :key="helper.id" :value="helper.id">{{ helper.name }}</option>
                       </select>
@@ -75,8 +75,8 @@
                         <option v-for="tanker in tankers" :key="tanker.id" :value="tanker.id">{{ tanker.plate_no }}</option>
                       </select>
                     </td>
-                    <td @click="toggleRow(transactionIndex)" class="border-t text-blue-100 font-semibold text-sm" align="center">
-                      {{ toPHP(transactionTotalAmt(transaction.id) - getLoadTotalAmt(transaction.id) - transaction.expense) }}
+                    <td @click="toggleRow(transactionIndex)" class="border-t text-blue-100 font-semibold text-sm cursor-pointer" align="center">
+                      {{ toPHP(transactionTotalAmt(transaction.id) - getLoadTotalAmt(transaction.id) - transaction.expense - transaction.driver_salary - transaction.helper_salary) }}
                     </td>
                     <td class="border-t" align="right">
                       <button @click.prevent="deleteTransactionForm(transactionIndex, transaction.id)" type="button" class="font-bold flex-shrink-0 leading-none" tabindex="-1">
@@ -135,8 +135,8 @@
                              </tr>
                            </thead>
                            <tbody class="bg-white divide-y divide-gray-200">
-                             <tr v-for="(detail, detailIndex) in transaction.details" :key="detailIndex">
-                               <td>
+                             <tr v-for="(detail, detailIndex) in transaction.mindoro_transaction_details" :key="detailIndex">
+                               <td align="center">
                                  <div class="text-sm font-medium text-gray-900">
                                    <date-picker style="width: 160px" v-model="detail.date" lang="en" value-type="format" :formatter="momentFormatDate"></date-picker>
                                  </div>
@@ -241,7 +241,7 @@
                       <!-- TankerLoad -->
                       <div class="flex flex-wrap px-8">
                         <div class="grid grid-cols-1 gap-1 bg-white rounded overflow-x-auto">
-                          <div class="rounded overflow-x-auto mb-4" v-for="(load, loadIndex) in transaction.mindoro_loads" :key="load.id" :value="load.id">
+                          <div class="rounded overflow-x-auto mb-4" v-for="(load, loadIndex) in transaction.to_mindoro_loads" :key="load.id" :value="load.id">
                             <a :href="`/purchases/${load.purchase.id}/edit#load-${load.id}`" target="_blank">
                               <p class="text-sm bg-blue-600 font-bold pl-4 mb-2 rounded text-center py-2 text-white">{{ load.purchase.purchase_no }}</p>
                             </a>
@@ -317,12 +317,33 @@
                                 </td>
                               </tr>
                               <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                <td class="px-6 whitespace-nowrap text-sm text-gray-500">
                                   Expenses:
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 font-semibold">
+                                <td class="px-6 whitespace-nowrap text-sm text-gray-700 font-semibold">
                                   <div class="text-sm font-medium text-gray-900">
                                     <text-input type="number" step="any" v-model="transaction.expense" :error="errors.expense" />
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="px-6 whitespace-nowrap text-sm text-gray-500">
+                                  Driver Salary:
+                                </td>
+                                <td class="px-6 whitespace-nowrap text-sm text-gray-700 font-semibold">
+                                  <div class="text-sm font-medium text-gray-900">
+                                    <text-input type="number" step="any" v-model="transaction.driver_salary" :error="errors.driver_salary" />
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="px-6 whitespace-nowrap text-sm text-gray-500">
+                                  <!-- {{ transaction.helper.name }} Salary: -->
+                                  Helper Salary:
+                                </td>
+                                <td class="px-6 whitespace-nowrap text-sm text-gray-700 font-semibold">
+                                  <div class="text-sm font-medium text-gray-900">
+                                    <text-input type="number" step="any" v-model="transaction.helper_salary" :error="errors.helper_salary" />
                                   </div>
                                 </td>
                               </tr>
@@ -334,7 +355,7 @@
                                 </td>
                                 <td>
                                   <div class="px-6 py-4 whitespace-nowrap text-left text-sm font-semibold text-gray-500">
-                                    {{ toPHP(transactionTotalAmt(transaction.id) - getLoadTotalAmt(transaction.id) - transaction.expense) }}
+                                    {{ toPHP(transactionTotalAmt(transaction.id) - getLoadTotalAmt(transaction.id) - transaction.expense - transaction.driver_salary - transaction.helper_salary) }}
                                   </div>
                                 </td>
                               </tr>
@@ -502,7 +523,7 @@ export default {
       })
     }, 300),
     onSelectedClient(client, id) {
-      this.updateForm.transactions[id[0]].details[id[1]].client_id = client.id;
+      this.updateForm.transactions[id[0]].mindoro_transaction_details[id[1]].client_id = client.id;
     },
 
     // MindoroTransaction
@@ -518,12 +539,11 @@ export default {
           id: null,
           name: null,
         },
-        helper: {
-          id: null,
-          name: null,
-        },
-        expense: 0,
-        details: [
+        helper_id: null,
+        expense: 30000,
+        driver_salary: 0,
+        helper_salary: 0,
+        mindoro_transaction_details: [
           // {
           //   id: null,
           //   date: null,
@@ -537,26 +557,26 @@ export default {
           //   remarks: null,
           // }
         ],
-        mindoro_loads: [
-          {
-            id: null,
-            mindoro_transaction_id: null,
-            remarks: null,
-            purchase: {
-              purchase_no: null,
-            },
-            to_mindoro_load_details: [
-              {
-                id: null,
-                to_mindoro_load_id: null,
-                product: {
-                  name: null,
-                },
-                quantity: 0,
-                unit_price: 0,
-              }
-            ],
-          }
+        to_mindoro_loads: [
+          // {
+          //   id: null,
+          //   mindoro_transaction_id: null,
+          //   remarks: null,
+          //   purchase: {
+          //     purchase_no: null,
+          //   },
+          //   to_mindoro_load_details: [
+          //     {
+          //       id: null,
+          //       to_mindoro_load_id: null,
+          //       product: {
+          //         name: null,
+          //       },
+          //       quantity: 0,
+          //       unit_price: 0,
+          //     }
+          //   ],
+          // }
         ],
       });
     },
@@ -571,7 +591,7 @@ export default {
 
     // MindoroTransactionDetail
     addNewDetailForm(transactionIndex) {
-      this.updateForm.transactions[transactionIndex].details.push({
+      this.updateForm.transactions[transactionIndex].mindoro_transaction_details.push({
         id: null,
         date: null,
         dr_no: null,
@@ -587,9 +607,9 @@ export default {
     deleteTransactionDetailForm(transactionIndex, detailIndex, transactionDetailId) {
       if (transactionDetailId) {
         this.updateForm.removed_transaction_details.push(transactionDetailId);
-        this.updateForm.transactions[transactionIndex].details.splice(detailIndex, 1);
+        this.updateForm.transactions[transactionIndex].mindoro_transaction_details.splice(detailIndex, 1);
       } else{
-        this.updateForm.transactions[transactionIndex].details.splice(detailIndex, 1);
+        this.updateForm.transactions[transactionIndex].mindoro_transaction_details.splice(detailIndex, 1);
       }
     },
 
@@ -598,7 +618,7 @@ export default {
       for (var i = 0; i < this.updateForm.transactions.length; i++) {
         if (this.updateForm.transactions[i].id === transactionId) {
 
-          var totalAmt = this.updateForm.transactions[i].details.reduce(function (acc, detail) {
+          var totalAmt = this.updateForm.transactions[i].mindoro_transaction_details.reduce(function (acc, detail) {
             acc += parseFloat(detail.quantity) * parseFloat(detail.unit_price);
             return acc;
           }, 0);
@@ -613,7 +633,7 @@ export default {
       for (var i = 0; i < this.updateForm.transactions.length; i++) {
         if (this.updateForm.transactions[i].id === transactionId) {
 
-          var totalQty = this.updateForm.transactions[i].details.reduce(function (acc, detail) {
+          var totalQty = this.updateForm.transactions[i].mindoro_transaction_details.reduce(function (acc, detail) {
             acc += parseFloat(detail.quantity);
             return acc;
           }, 0);
@@ -628,7 +648,7 @@ export default {
       for (var i = 0; i < this.updateForm.transactions.length; i++) {
         if (this.updateForm.transactions[i].id === transactionId) {
 
-          const detailsArray = this.updateForm.transactions[i].mindoro_loads.map(load => load.to_mindoro_load_details);
+          const detailsArray = this.updateForm.transactions[i].to_mindoro_loads.map(load => load.to_mindoro_load_details);
           const details = [].concat.apply([], detailsArray);
 
           var totalAmt = details.reduce(function (acc, detail) {
@@ -648,13 +668,13 @@ export default {
       for (var i = 0; i < this.updateForm.transactions.length; i++) {
 
         // TransactionDetail
-        var transactionTotalAmt = this.updateForm.transactions[i].details.reduce((transactionDetailAcc, detail) => {
+        var transactionTotalAmt = this.updateForm.transactions[i].mindoro_transaction_details.reduce((transactionDetailAcc, detail) => {
           transactionDetailAcc += parseFloat(detail.quantity) * parseFloat(detail.unit_price);
           return transactionDetailAcc;
         }, 0);
 
         // TankerLoadDetail
-        const loadDetailsArray = this.updateForm.transactions[i].mindoro_loads.map(load => load.to_mindoro_load_details);
+        const loadDetailsArray = this.updateForm.transactions[i].to_mindoro_loads.map(load => load.to_mindoro_load_details);
         const loadDetails = [].concat.apply([], loadDetailsArray);
 
         var loadTotalAmt = loadDetails.reduce(function (loadDetailAcc, detail) {
@@ -663,7 +683,7 @@ export default {
         }, 0);
 
         // Net
-        netTotal += transactionTotalAmt - loadTotalAmt - this.updateForm.transactions[i].expense;
+        netTotal += transactionTotalAmt - loadTotalAmt - this.updateForm.transactions[i].expense - this.updateForm.transactions[i].driver_salary - this.updateForm.transactions[i].helper_salary;
 
       }
       return netTotal;
@@ -692,7 +712,7 @@ export default {
     this.toggleAllRow();
 
     this.updateForm.transactions.forEach(transaction => {
-      transaction.details.forEach(detail => {
+      transaction.mindoro_transaction_details.forEach(detail => {
         detail.selected_client = this.clients.find(client => client.id === detail.client_id);
       });
     });

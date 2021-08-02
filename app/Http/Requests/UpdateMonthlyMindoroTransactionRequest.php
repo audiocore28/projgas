@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Requests;
+use App\Models\MonthlyMindoroTransaction;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -13,7 +14,7 @@ class UpdateMonthlyMindoroTransactionRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return $this->user()->can('update mindoro transaction', MonthlyMindoroTransaction::class, $this->monthly_mindoro_transaction);
     }
 
     /**
@@ -31,20 +32,22 @@ class UpdateMonthlyMindoroTransactionRequest extends FormRequest
             'transactions.*.trip_no' => ['required', 'max:50'],
             'transactions.*.tanker.id' => ['required', 'max:50'],
             'transactions.*.driver.id' => ['required', 'max:50'],
-            'transactions.*.helper.id' => ['required', 'max:50'],
+            'transactions.*.helper_id' => ['nullable', 'max:50'],
+            'transactions.*.expense' => ['required', 'max:50'],
             'transactions.*.driver_salary' => ['nullable', 'max:50'],
             'transactions.*.helper_salary' => ['nullable', 'max:50'],
 
             // MindoroTransactionDetail
-            'transactions.*.details.*.date' => ['required', 'max:50'],
-            'transactions.*.details.*.client_id' => ['required', 'max:50'],
-            'transactions.*.details.*.remarks' => ['nullable', 'max:50'],
-            'transactions.*.details.*.product_id' => ['required', 'max:50'],
-            'transactions.*.details.*.quantity' => ['nullable', 'max:50'],
-            'transactions.*.details.*.unit_price' => ['nullable', 'max:50'],
+            'transactions.*.mindoro_transaction_details.*.date' => ['required', 'max:50'],
+            'transactions.*.mindoro_transaction_details.*.client_id' => ['required', 'max:50'],
+            'transactions.*.mindoro_transaction_details.*.remarks' => ['nullable', 'max:50'],
+            'transactions.*.mindoro_transaction_details.*.product_id' => ['required', 'max:50'],
+            'transactions.*.mindoro_transaction_details.*.quantity' => ['nullable', 'max:50'],
+            'transactions.*.mindoro_transaction_details.*.unit_price' => ['nullable', 'max:50'],
+            'transactions.*.mindoro_transaction_details.*.dr_no' => ['nullable', 'max:80'],
 
             // TankerLoadDetail
-            'transactions.*.tanker_loads.*.tanker_load_details.*.unit_price' => ['nullable', 'max:50'],
+            'transactions.*.to_mindoro_loads.*.to_mindoro_load_details.*.unit_price' => ['nullable', 'max:50'],
 
         ];
     }
@@ -57,14 +60,13 @@ class UpdateMonthlyMindoroTransactionRequest extends FormRequest
 
             // MindoroTransaction
             'transactions.*.trip_no.required' => 'Trip no. is required',
-            'transactions.*.tanker_id.required' => 'Tanker is required',
-            'transactions.*.driver_id.required' => 'Driver is required',
-            'transactions.*.helper_id.required' => 'Helper is required',
+            'transactions.*.tanker.id.required' => 'Tanker is required',
+            'transactions.*.driver.id.required' => 'Driver is required',
 
             // MindoroTransactionDetail
-            'transactions.*.details.*.date.required' => 'Date is required',
-            'transactions.*.details.*.client_id.required' => 'Client is required',
-            'transactions.*.details.*.product_id.required' => 'Product is required',
+            'transactions.*.mindoro_transaction_details.*.date.required' => 'Date is required',
+            'transactions.*.mindoro_transaction_details.*.client_id.required' => 'Client is required',
+            'transactions.*.mindoro_transaction_details.*.product_id.required' => 'Product is required',
         ];
     }
 }

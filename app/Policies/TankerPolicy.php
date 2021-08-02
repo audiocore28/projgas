@@ -18,9 +18,7 @@ class TankerPolicy
      */
     public function viewAny(User $user)
     {
-        if ($user->can('view any tanker')) {
-            return true;
-        }
+        return $user->can('view any tanker');
     }
 
     /**
@@ -32,9 +30,7 @@ class TankerPolicy
      */
     public function view(User $user, Tanker $tanker)
     {
-        if ($user->can('view tanker')) {
-            return true;
-        }
+        return $user->can('view tanker', $tanker);
     }
 
     /**
@@ -45,9 +41,7 @@ class TankerPolicy
      */
     public function create(User $user)
     {
-        if ($user->can('create tanker')) {
-            return true;
-        }
+        return $user->can('create tanker');
     }
 
     /**
@@ -59,9 +53,7 @@ class TankerPolicy
      */
     public function update(User $user, Tanker $tanker)
     {
-        if ($user->can('update tanker')) {
-            return true;
-        }
+        return $user->can('update tanker', $tanker);
     }
 
     /**
@@ -73,9 +65,7 @@ class TankerPolicy
      */
     public function delete(User $user, Tanker $tanker)
     {
-        if ($user->can('delete tanker')) {
-            return true;
-        }
+        return $user->can('delete tanker', $tanker);
     }
 
     /**
@@ -87,9 +77,7 @@ class TankerPolicy
      */
     public function restore(User $user, Tanker $tanker)
     {
-        if ($user->can('restore tanker')) {
-            return true;
-        }
+        return $user->can('restore tanker', $tanker);
     }
 
 }

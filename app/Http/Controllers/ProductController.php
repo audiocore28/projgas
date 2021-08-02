@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreProductRequest;
+use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
 // use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -56,17 +57,6 @@ class ProductController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
@@ -91,7 +81,7 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(StoreProductRequest $request, Product $product)
+    public function update(UpdateProductRequest $request, Product $product)
     {
         $product->update($request->all());
 
@@ -108,10 +98,6 @@ class ProductController extends Controller
     {
         if ($product->purchaseDetails()->count()) {
             return back()->withErrors(['error' => 'Cannot delete, purchase has product records']);
-        }
-
-        if ($product->tankerLoadDetails()->count()) {
-            return back()->withErrors(['error' => 'Cannot delete, load has product records']);
         }
 
         if ($product->batangasTransactionDetails()->count()) {

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Requests;
+use App\Models\MonthlyBatangasTransaction;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -13,7 +14,7 @@ class UpdateMonthlyBatangasTransactionRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return $this->user()->can('update batangas transaction', MonthlyBatangasTransaction::class, $this->monthly_batangas_transaction);
     }
 
     /**
@@ -31,20 +32,20 @@ class UpdateMonthlyBatangasTransactionRequest extends FormRequest
             'transactions.*.trip_no' => ['required', 'max:50'],
             'transactions.*.tanker.id' => ['required', 'max:50'],
             'transactions.*.driver.id' => ['required', 'max:50'],
-            'transactions.*.helper.id' => ['required', 'max:50'],
+            'transactions.*.helper_id' => ['nullable', 'max:50'],
             'transactions.*.driver_salary' => ['nullable', 'max:50'],
             'transactions.*.helper_salary' => ['nullable', 'max:50'],
 
             // BatangasTransactionDetail
-            'transactions.*.details.*.date' => ['required', 'max:50'],
-            'transactions.*.details.*.client_id' => ['required', 'max:50'],
-            'transactions.*.details.*.remarks' => ['nullable', 'max:50'],
-            'transactions.*.details.*.product_id' => ['required', 'max:50'],
-            'transactions.*.details.*.quantity' => ['nullable', 'max:50'],
-            'transactions.*.details.*.unit_price' => ['nullable', 'max:50'],
+            'transactions.*.batangas_transaction_details.*.date' => ['required', 'max:50'],
+            'transactions.*.batangas_transaction_details.*.client_id' => ['required', 'max:50'],
+            'transactions.*.batangas_transaction_details.*.remarks' => ['nullable', 'max:50'],
+            'transactions.*.batangas_transaction_details.*.product_id' => ['required', 'max:50'],
+            'transactions.*.batangas_transaction_details.*.quantity' => ['nullable', 'max:50'],
+            'transactions.*.batangas_transaction_details.*.unit_price' => ['nullable', 'max:50'],
 
             // TankerLoadDetail
-            'transactions.*.tanker_loads.*.tanker_load_details.*.unit_price' => ['nullable', 'max:50'],
+            'transactions.*.to_batangas_loads.*.to_batangas_load_details.*.unit_price' => ['nullable', 'max:50'],
 
         ];
     }
@@ -57,14 +58,13 @@ class UpdateMonthlyBatangasTransactionRequest extends FormRequest
 
             // BatangasTransaction
             'transactions.*.trip_no.required' => 'Trip no. is required',
-            'transactions.*.tanker_id.required' => 'Tanker is required',
-            'transactions.*.driver_id.required' => 'Driver is required',
-            'transactions.*.helper_id.required' => 'Helper is required',
+            'transactions.*.tanker.id.required' => 'Tanker is required',
+            'transactions.*.driver.id.required' => 'Driver is required',
 
             // BatangasTransactionDetail
-            'transactions.*.details.*.date.required' => 'Date is required',
-            'transactions.*.details.*.client_id.required' => 'Client is required',
-            'transactions.*.details.*.product_id.required' => 'Product is required',
+            'transactions.*.batangas_transaction_details.*.date.required' => 'Date is required',
+            'transactions.*.batangas_transaction_details.*.client_id.required' => 'Client is required',
+            'transactions.*.batangas_transaction_details.*.product_id.required' => 'Product is required',
         ];
     }
 }

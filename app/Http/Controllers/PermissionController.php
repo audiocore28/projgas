@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePermissionRequest;
+use App\Http\Requests\UpdatePermissionRequest;
 // use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
@@ -54,17 +55,6 @@ class PermissionController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
@@ -88,7 +78,7 @@ class PermissionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(StorePermissionRequest $request, Permission $permission)
+    public function update(UpdatePermissionRequest $request, Permission $permission)
     {
         $permission->update($request->all());
 

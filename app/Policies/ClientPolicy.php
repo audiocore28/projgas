@@ -18,9 +18,7 @@ class ClientPolicy
      */
     public function viewAny(User $user)
     {
-        if ($user->can('view any client')) {
-            return true;
-        }
+        return $user->can('view any client');
     }
 
     /**
@@ -32,9 +30,7 @@ class ClientPolicy
      */
     public function view(User $user, Client $client)
     {
-        if ($user->can('view client')) {
-            return true;
-        }
+        return $user->can('view client', $client);
     }
 
     /**
@@ -45,9 +41,7 @@ class ClientPolicy
      */
     public function create(User $user)
     {
-        if ($user->can('create client')) {
-            return true;
-        }
+        return $user->can('create client');
     }
 
     /**
@@ -59,9 +53,7 @@ class ClientPolicy
      */
     public function update(User $user, Client $client)
     {
-        if ($user->can('update client')) {
-            return true;
-        }
+        return $user->can('update client', $client);
     }
 
     /**
@@ -73,9 +65,7 @@ class ClientPolicy
      */
     public function delete(User $user, Client $client)
     {
-        if ($user->can('delete client')) {
-            return true;
-        }
+        return $user->can('delete client', $client);
     }
 
     /**
@@ -87,32 +77,23 @@ class ClientPolicy
      */
     public function restore(User $user, Client $client)
     {
-        //
-        if ($user->can('restore client')) {
-            return true;
-        }
+        return $user->can('restore client', $client);
     }
 
     // SOA
     public function viewPayment(User $user, Client $client)
     {
-        if ($user->can('view client payment')) {
-            return true;
-        }
+        return $user->can('view client payment', $client);
     }
 
     public function updatePayment(User $user, Client $client)
     {
-        if ($user->can('update client payment')) {
-            return true;
-        }
+        return $user->can('update client payment', $client);
     }
 
     public function verifyPayment(User $user, Client $client)
     {
-        if ($user->can('verify client payment')) {
-            return true;
-        }
+        return $user->can('verify client payment', $client);
     }
 
 }

@@ -59,8 +59,11 @@
 
 			{{-- PurchaseDetail --}}
 			<?php
-				$total_purchase_quantity = 0;
 				$total_purchase_amount = 0;
+				$total_purchase_quantity = 0;
+				$total_diesel_purchase_quantity = 0;
+				$total_regular_purchase_quantity = 0;
+				$total_premium_purchase_quantity = 0;
 			?>
 			<table class="table" width="85%" cellspacing="0" cellpadding="5" style="margin-top: 10px; font-size: 11px;">
 				@foreach($purchase->purchaseDetails as $detail)
@@ -69,6 +72,20 @@
 					$total_purchase_amount += $amount;
 					$total_purchase_quantity += $detail->quantity;
 				?>
+
+					@switch($detail->product->name)
+					   @case('Diesel')
+							<?php $total_diesel_purchase_quantity += $detail->quantity; ?>
+					      @break
+
+					   @case('Premium')
+							<?php $total_premium_purchase_quantity += $detail->quantity; ?>
+					      @break
+
+					   @default
+							<?php $total_regular_purchase_quantity += $detail->quantity; ?>
+					@endswitch
+
 				<tr>
 					<td align="left">{{ $detail->product->name }}</td>
 					<td align="right">{{ number_format($detail->quantity) }}</td>
@@ -134,7 +151,9 @@
 							@endif
 						@endforeach
 
-						<td align="left">{{  \App\Models\BatangasTransaction::where('id', $load->batangas_transaction_id)->exists() ? $load->batangasTransaction->trip_no : null }}- {{ \App\Models\BatangasTransaction::where('id', $load->batangas_transaction_id)->exists() ? $load->batangasTransaction->driver->name : null }}</td>
+						<td align="left">
+							{{ \App\Models\BatangasTransaction::where('id', $load->batangas_transaction_id)->exists() ? $load->batangasTransaction->trip_no .'- '. $load->batangasTransaction->driver->name : null }}
+						</td>
 						<td align="center">{{ number_format($batangas_diesel / 1000) }}</td>
 						<td align="center">{{ number_format($batangas_regular / 1000) }}</td>
 						<td align="center">{{ number_format($batangas_premium / 1000) }}</td>
@@ -177,24 +196,54 @@
 							@endif
 						@endforeach
 
-						<td align="left">{{  \App\Models\MindoroTransaction::where('id', $load->mindoro_transaction_id)->exists() ? $load->mindoroTransaction->trip_no : null }}- {{ \App\Models\MindoroTransaction::where('id', $load->mindoro_transaction_id)->exists() ? $load->mindoroTransaction->driver->name : null }}</td>
+						<td align="left">
+							{{ \App\Models\MindoroTransaction::where('id', $load->mindoro_transaction_id)->exists() ? $load->mindoroTransaction->trip_no .'- '. $load->mindoroTransaction->driver->name : null }}
+						</td>
 						<td align="center">{{ number_format($mindoro_diesel / 1000) }}</td>
 						<td align="center">{{ number_format($mindoro_regular / 1000) }}</td>
 						<td align="center">{{ number_format($mindoro_premium / 1000) }}</td>
 					</tr>
 					@endforeach
+
+					<?php
+						$total_load_diesel = $total_batangas_diesel + $total_mindoro_diesel;
+						$total_load_regular = $total_batangas_regular + $total_mindoro_regular;
+						$total_load_premium = $total_batangas_premium + $total_mindoro_premium;
+					?>
+
 					<tr style="background-color: #eee; font-weight: bold;">
-						<td></td>
+						<td>Total Load:</td>
 						<td align="center" style="border-top: 1px solid #000; border-bottom: 1px double #000;">
-							{{ number_format(($total_batangas_diesel + $total_mindoro_diesel) / 1000) }}
+							{{ number_format($total_load_diesel / 1000) }}
 						</td>
 						<td align="center" style="border-top: 1px solid #000; border-bottom: 1px double #000;">
-							{{ number_format(($total_batangas_regular + $total_mindoro_regular) / 1000) }}
+							{{ number_format($total_load_regular / 1000) }}
 						</td>
 						<td align="center" style="border-top: 1px solid #000; border-bottom: 1px double #000;">
-							{{ number_format(($total_batangas_premium + $total_mindoro_premium) / 1000) }}
+							{{ number_format($total_load_premium / 1000) }}
 						</td>
 					</tr>
+
+					<?php
+						$unlifted_diesel = $total_diesel_purchase_quantity - $total_load_diesel;
+						$unlifted_regular = $total_regular_purchase_quantity - $total_load_regular;
+						$unlifted_premium = $total_premium_purchase_quantity - $total_load_premium;
+					?>
+
+					@if ($unlifted_diesel !== 0 || $unlifted_regular !== 0 || $unlifted_premium !== 0)
+						<tr style="color: red; font-style: italic;">
+							<td>Unlifted:</td>
+							<td align="center">
+								{{ number_format($unlifted_diesel / 1000) }}
+							</td>
+							<td align="center">
+								{{ number_format($unlifted_regular / 1000) }}
+							</td>
+							<td align="center">
+								{{ number_format($unlifted_premium / 1000) }}
+							</td>
+						</tr>
+					@endif
 				</tbody>
 			</table>
 

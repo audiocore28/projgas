@@ -16,6 +16,8 @@ class BatangasTransactionDetail extends Model
 	 protected $dates = ['date'];
 	 protected $fillable = ['date', 'quantity', 'unit_price', 'remarks', 'batangas_transaction_id', 'product_id', 'client_id'];
 
+     protected $appends = ['selected_client'];
+
 	 public function batangasTransaction()
 	 {
 	 	return $this->belongsTo(BatangasTransaction::class);
@@ -39,6 +41,11 @@ class BatangasTransactionDetail extends Model
     public function getDateAttribute($value)
     {
         return Carbon::parse($value)->format('M d, Y');
+    }
+
+    public function getSelectedClientAttribute()
+    {
+        return $this->attributes['client_id'];
     }
 
     public function addPayments($details)

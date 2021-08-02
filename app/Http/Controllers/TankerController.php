@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTankerRequest;
+use App\Http\Requests\UpdateTankerRequest;
 use App\Models\Tanker;
 use App\Models\Driver;
 use App\Models\Helper;
@@ -68,21 +69,7 @@ class TankerController extends Controller
     {
         $tanker = Tanker::create($request->all());
 
-        $tanker->drivers()->sync($request->driver_id);
-        $tanker->helpers()->sync($request->helper_id);
-
         return redirect()->route('tankers.index')->with('success', 'Tanker was successfully added.');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
     }
 
     /**
@@ -112,7 +99,7 @@ class TankerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(StoreTankerRequest $request, Tanker $tanker)
+    public function update(UpdateTankerRequest $request, Tanker $tanker)
     {
         $tanker->update($request->all());
 

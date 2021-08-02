@@ -29,91 +29,115 @@
               </div>
               <div>
                 <table class="min-w-full divide-y divide-gray-200">
+                  <colgroup>
+                    <col span="1" style="width: 10%;">
+                    <col span="1" style="width: 5%;">
+                    <col span="1" style="width: 10%;">
+                    <col span="1" style="width: 10%;">
+                    <col span="1" style="width: 10%;">
+                    <col span="1" style="width: 10%;">
+                    <col span="1" style="width: 10%;">
+                    <col span="1" style="width: 10%;">
+                    <col span="1" style="width: 10%;">
+                    <col span="1" style="width: 10%;">
+                    <col span="1" style="width: 5%;">
+                  </colgroup>
                   <thead class="bg-gray-50">
                     <tr>
-                      <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th align="center" scope="col" class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Date
                       </th>
-                      <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th align="center" scope="col" class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Code
                       </th>
-                      <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th align="center" scope="col" class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Client
                       </th>
-                      <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th align="center" scope="col" class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Remarks
                       </th>
-                      <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th align="center" scope="col" class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Product
                       </th>
-                      <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th align="center" scope="col" class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Quantity
                       </th>
-                      <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th align="center" scope="col" class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Unit Price
                       </th>
-                      <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th align="center" scope="col" class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Amount
                       </th>
-                      <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th align="center" scope="col" class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
                         DR#
                       </th>
-                      <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th align="center" scope="col" class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        SI#
+                      </th>
+                      <th align="center" scope="col" class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Payment
                       </th>
                     </tr>
                   </thead>
                   <tbody class="bg-white divide-y divide-gray-200" v-for="(detail, transactionDetailIndex) in transactionDetails" :key="transactionDetailIndex">
                     <tr>
-                      <td class="px-6 py-4 whitespace-nowrap">
+                      <td class="py-2 whitespace-nowrap" align="center">
                         <div class="text-sm font-medium text-gray-900">
                           {{ detail.date }}
                         </div>
                       </td>
-                      <td class="px-6 py-4 whitespace-nowrap">
-                        <a class="text-sm font-medium text-blue-600" target="_blank" :href="`/monthly-mindoro-transactions/${detail.monthly_mindoro_transaction_id}/edit#transaction-${detail.mindoro_transaction_id}`" v-if="$page.auth.user.can.mindoroTransaction.update">
-                            {{ detail.trip_no }}
+                      <td align="center" class="py-2 whitespace-nowrap">
+                        <a class="text-sm font-medium text-blue-600" target="_blank" :href="`/monthly-mindoro-transactions/${detail.mindoro_transaction.monthly_mindoro_transaction_id}/edit#transaction-${detail.mindoro_transaction_id}`" v-if="$page.auth.user.can.mindoroTransaction.update">
+                            {{ detail.mindoro_transaction.trip_no }}
                         </a>
                         <span class="text-sm font-medium text-gray-900" v-else>
-                            {{ detail.trip_no }}
+                            {{ detail.mindoro_transaction.trip_no }}
                         </span>
                       </td>
-                      <td class="px-6 py-4 whitespace-nowrap">
+                      <td align="center" class="py-2 whitespace-nowrap">
                         <div class="text-sm font-medium text-gray-900">
                           {{ detail.client.name }}
                         </div>
                       </td>
-                      <td class="px-6 py-4 whitespace-nowrap">
+                      <td align="center" class="py-2 whitespace-nowrap">
                         <div class="text-sm font-medium text-gray-900">
                           {{ detail.remarks }}
                         </div>
                       </td>
-                      <td class="px-6 py-4 whitespace-nowrap">
+                      <td align="center" class="py-2 whitespace-nowrap">
                         <div class="text-sm font-medium text-gray-900">
                           {{ detail.product.name }}
                         </div>
                       </td>
-                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td align="center" class="py-2 whitespace-nowrap text-sm text-gray-500">
                         <div class="text-sm font-medium text-gray-900">
                           {{ quantityFormat(detail.quantity) }}
                         </div>
                       </td>
-                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td align="center" class="py-2 whitespace-nowrap text-sm text-gray-500">
                         <div class="text-sm font-medium text-gray-900">
                           {{ toPHP(detail.unit_price) }}
                         </div>
                       </td>
-                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td align="center" class="py-2 whitespace-nowrap text-sm text-gray-500">
                         <div class="text-sm font-medium text-gray-900">
                           {{ totalCurrency(detail.quantity, detail.unit_price) }}
                         </div>
                       </td>
-                      <td class="px-6 py-4 whitespace-nowrap">
+                      <td align="center" class="py-2 whitespace-nowrap">
                         <div class="text-sm font-medium text-gray-900">
                           {{ detail.dr_no }}
                         </div>
                       </td>
-                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" align="center">
+                      <td align="center" class="py-2 whitespace-nowrap">
+                        <div class="text-sm font-medium text-gray-900" v-if="$page.auth.user.can.client.verifyPayment">
+                          <text-input v-model="detail.si_no" />
+                        </div>
+                        <div class="text-sm font-medium text-gray-900" v-else>
+                          {{ detail.si_no }}
+                        </div>
+                      </td>
+                      <td class="py-2 whitespace-nowrap text-sm text-gray-500" align="center">
                         <div class="text-sm font-medium text-gray-900">
                          <button @click.prevent="addNewPaymentForm(year, month, transactionDetailIndex, detail.id)">
                            <icon name="plus" class="w-4 h-4 mr-2 fill-green-600"/>
@@ -122,9 +146,9 @@
                       </td>
                     </tr>
                     <!-- Payment Details -->
-                    <tr>
-                      <td colspan="9" align="center" class="p-2">
-                        <table class="w-full lg:w-11/12">
+                    <tr v-if="detail.mindoro_payment_details.length !== 0">
+                      <td colspan="11" align="center" class="p-2">
+                        <table class="w-full lg:w-3/4">
                           <colgroup>
                             <col span="1" style="width: 20%;">
                             <col span="1" style="width: 20%;">
@@ -134,7 +158,7 @@
                             <col span="1" style="width: 10%;">
                           </colgroup>
                           <tbody>
-                            <tr v-for="(payment, paymentIndex) in detail.payments" :class="[payment.is_verified ? 'bg-blue-600' : 'bg-yellow-500']">
+                            <tr v-for="(payment, paymentIndex) in detail.mindoro_payment_details" :class="[payment.is_verified ? 'bg-blue-600' : 'bg-yellow-500']">
                               <td>
                                 <div class="text-sm font-medium text-white p-3" v-if="payment.is_verified">
                                   {{ payment.date }}

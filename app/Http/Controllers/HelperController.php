@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreHelperRequest;
+use App\Http\Requests\UpdateHelperRequest;
 use App\Models\Helper;
 // use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -63,61 +64,51 @@ class HelperController extends Controller
      */
     public function show(Helper $helper)
     {
-        $bD = $helper->batangasTransactions()
-            ->latest()
-            ->paginate()
-            ->transform(function ($transaction) {
-                return [
-                    'monthly_batangas_transaction_id' => $transaction->monthlyBatangasTransaction->id,
-                    'month' => $transaction->monthlyBatangasTransaction->month,
-                    'year' => $transaction->monthlyBatangasTransaction->year,
-                    'id' => $transaction->id,
-                    'date' => $transaction->date,
-                    'trip_no' => $transaction->trip_no,
-                    'purchases' => $transaction->purchases->each(function ($purchase) {
-                            return ['purchase_no' => $purchase->purchase_no, ];
-                        }),
-                    'tanker' => $transaction->tanker ? $transaction->tanker->only('plate_no') : null,
-                    'driver' => $transaction->driver ? $transaction->driver->only('name') : null,
-                    'helper' => $transaction->helper ? $transaction->helper->only('name') : null,
-                    'details' => $transaction->batangasTransactionDetails->each(function ($detail) {
-                            return ['p' => $detail->product->name, 'c' => $detail->client->name];
-                        })
-                ];
-            });
+        $batangasQuery = $helper->load([
+            'batangasTransactions' => function ($q) {
+                $q->orderByRaw('LENGTH(trip_no)', 'ASC')->orderBy('trip_no', 'ASC');
+            },
+            'batangasTransactions.monthlyBatangasTransaction',
+            'batangasTransactions.tanker:id,plate_no',
+            'batangasTransactions.driver:id,name',
+            'batangasTransactions.helper:id,name',
+            'batangasTransactions.purchases:id,purchase_no',
+            'batangasTransactions.batangasTransactionDetails.product:id,name',
+            'batangasTransactions.batangasTransactionDetails.client:id,name',
+        ]);
 
-        $mD = $helper->mindoroTransactions()
-            ->latest()
-            ->paginate()
-            ->transform(function ($transaction) {
-                return [
-                    'monthly_mindoro_transaction_id' => $transaction->monthlyMindoroTransaction->id,
-                    'month' => $transaction->monthlyMindoroTransaction->month,
-                    'year' => $transaction->monthlyMindoroTransaction->year,
-                    'id' => $transaction->id,
-                    'date' => $transaction->date,
-                    'trip_no' => $transaction->trip_no,
-                    'purchases' => $transaction->purchases->each(function ($purchase) {
-                            return ['purchase_no' => $purchase->purchase_no, ];
-                        }),
-                    'tanker' => $transaction->tanker ? $transaction->tanker->only('plate_no') : null,
-                    'driver' => $transaction->driver ? $transaction->driver->only('name') : null,
-                    'helper' => $transaction->helper ? $transaction->helper->only('name') : null,
-                    'details' => $transaction->mindoroTransactionDetails->each(function ($detail) {
-                            return ['p' => $detail->product->name, 'c' => $detail->client->name];
-                        })
-                ];
-            });
+        $mindoroQuery = $helper->load([
+            'mindoroTransactions' => function ($q) {
+                $q->orderByRaw('LENGTH(trip_no)', 'ASC')->orderBy('trip_no', 'ASC');
+            },
+            'mindoroTransactions.monthlyMindoroTransaction',
+            'mindoroTransactions.tanker:id,plate_no',
+            'mindoroTransactions.driver:id,name',
+            'mindoroTransactions.helper:id,name',
+            'mindoroTransactions.purchases:id,purchase_no',
+            'mindoroTransactions.mindoroTransactionDetails.product:id,name',
+            'mindoroTransactions.mindoroTransactionDetails.client:id,name',
+        ]);
 
-        $batangasTrips = $bD->groupBy(['year', 'month']);
-        $mindoroTrips = $mD->groupBy(['year', 'month']);
+        $batangasTrips = collect($batangasQuery->batangasTransactions)
+                    ->groupBy([
+                        'monthlyBatangasTransaction.year',
+                        'monthlyBatangasTransaction.month'
+                    ]);
 
-       if (request()->wantsJson()) {
-         return [
-           'batangasDetails' => $bD,
-           'mindoroDetails' => $mD,
-         ];
-       }
+        $mindoroTrips = collect($mindoroQuery->mindoroTransactions)
+                    ->groupBy([
+                        'monthlyMindoroTransaction.year',
+                        'monthlyMindoroTransaction.month'
+                    ]);
+
+
+       // if (request()->wantsJson()) {
+       //   return [
+       //     'batangasDetails' => $bD,
+       //     'mindoroDetails' => $mD,
+       //   ];
+       // }
 
         return Inertia::render('Helpers/Show', [
             'helper' => [
@@ -160,7 +151,7 @@ class HelperController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(StoreHelperRequest $request, Helper $helper)
+    public function update(UpdateHelperRequest $request, Helper $helper)
     {
         $helper->update($request->all());
 
