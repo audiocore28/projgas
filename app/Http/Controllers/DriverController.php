@@ -63,8 +63,10 @@ class DriverController extends Controller
      */
     public function show(Driver $driver)
     {
-        $query = $driver->load([
-            // Batangas
+        $batangasQuery = $driver->load([
+            'batangasTransactions' => function ($q) {
+                $q->orderByRaw('LENGTH(trip_no)', 'ASC')->orderBy('trip_no', 'ASC');
+            },
             'batangasTransactions.monthlyBatangasTransaction',
             'batangasTransactions.tanker:id,plate_no',
             'batangasTransactions.driver:id,name',
@@ -72,7 +74,12 @@ class DriverController extends Controller
             'batangasTransactions.purchases:id,purchase_no',
             'batangasTransactions.batangasTransactionDetails.product:id,name',
             'batangasTransactions.batangasTransactionDetails.client:id,name',
-            // Mindoro
+        ]);
+
+        $mindoroQuery = $driver->load([
+            'mindoroTransactions' => function ($q) {
+                $q->orderByRaw('LENGTH(trip_no)', 'ASC')->orderBy('trip_no', 'ASC');
+            },
             'mindoroTransactions.monthlyMindoroTransaction',
             'mindoroTransactions.tanker:id,plate_no',
             'mindoroTransactions.driver:id,name',
@@ -82,13 +89,13 @@ class DriverController extends Controller
             'mindoroTransactions.mindoroTransactionDetails.client:id,name',
         ]);
 
-        $batangasTrips = collect($query->batangasTransactions)
+        $batangasTrips = collect($batangasQuery->batangasTransactions)
                     ->groupBy([
                         'monthlyBatangasTransaction.year',
                         'monthlyBatangasTransaction.month'
                     ]);
 
-        $mindoroTrips = collect($query->mindoroTransactions)
+        $mindoroTrips = collect($mindoroQuery->mindoroTransactions)
                     ->groupBy([
                         'monthlyMindoroTransaction.year',
                         'monthlyMindoroTransaction.month'
