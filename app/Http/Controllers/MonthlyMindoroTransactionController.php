@@ -162,7 +162,6 @@ class MonthlyMindoroTransactionController extends Controller
             'mindoroTransactions.monthlyMindoroTransaction',
             'mindoroTransactions.tanker:id,plate_no',
             'mindoroTransactions.driver:id,name',
-            'mindoroTransactions.helper:id,name',
             'mindoroTransactions.mindoroTransactionDetails.product:id,name',
             'mindoroTransactions.mindoroTransactionDetails.client:id,name',
             'mindoroTransactions.toMindoroLoads.purchase:id,purchase_no',
@@ -249,7 +248,7 @@ class MonthlyMindoroTransactionController extends Controller
             $mindoroTransaction->trip_no = $transaction['trip_no'];
             $mindoroTransaction->tanker_id = $transaction['tanker']['id'];
             $mindoroTransaction->driver_id = $transaction['driver']['id'];
-            $mindoroTransaction->helper_id = $transaction['helper']['id'];
+            $mindoroTransaction->helper_id = $transaction['helper_id'];
             $mindoroTransaction->expense = $transaction['expense'];
             $mindoroTransaction->driver_salary = $transaction['driver_salary'];
             $mindoroTransaction->helper_salary = $transaction['helper_salary'];

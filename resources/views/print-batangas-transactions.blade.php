@@ -87,7 +87,7 @@
 				<table class='table' width="60%" cellspacing='0' style="margin-top: 5px">
 					<tr>
 						<td style="background-color: #fff; color: #000;">
-							{{$transaction['trip_no']}}- {{$transaction['driver']['name']}} & {{$transaction['helper']['name']}}
+							{{$transaction['trip_no']}}- {{$transaction['driver']['name']}} {{$transaction['helper_id'] !== null ? '& ' . $transaction['helper']['name'] : ''}}
 						</td>
 						<td align="right">
 							{{ number_format($output) }}
@@ -164,7 +164,7 @@
 						$total_trips += count($trip);
 					?>
 					<tr>
-						<td>{{ $helper }}</td>
+						<td>{{ $helper !== "" ? $helper : 'None' }}</td>
 						<td>
 							{{ collect($trip)->implode('trip_no', '-') }}
 						</td>
@@ -193,8 +193,12 @@
 					<td>
 						<b>
 							<span style="padding: 5px;">{{$transaction['tanker']['plate_no']}}</span>
-							<span style="background-color: #fff; color: #000; padding: 5px;">{{$transaction['trip_no']}} - {{$transaction['driver']['name']}}</span>
-							<span style="padding: 5px;">{{$transaction['helper']['name']}}</span>
+							<span style="background-color: #fff; color: #000; padding: 5px;">
+								{{$transaction['trip_no']}} - {{$transaction['driver']['name']}}
+							</span>
+							<span style="padding: 5px;">
+								{{$transaction['helper_id'] !== null ? $transaction['helper']['name'] : ''}}
+							</span>
 						</b>
 					</td>
 				</tr>

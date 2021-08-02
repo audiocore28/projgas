@@ -31,7 +31,7 @@ class StoreMonthlyMindoroTransactionRequest extends FormRequest
             'transactions.*.trip_no' => ['required', 'max:50'],
             'transactions.*.tanker_id' => ['required', 'max:50'],
             'transactions.*.driver_id' => ['required', 'max:50'],
-            'transactions.*.helper_id' => ['required', 'max:50'],
+            'transactions.*.helper_id' => ['nullable', 'max:50'],
         ];
     }
 
@@ -45,7 +45,6 @@ class StoreMonthlyMindoroTransactionRequest extends FormRequest
             'transactions.*.trip_no.required' => 'Trip no. is required',
             'transactions.*.tanker_id.required' => 'Tanker is required',
             'transactions.*.driver_id.required' => 'Driver is required',
-            'transactions.*.helper_id.required' => 'Helper is required',
         ];
     }
 }

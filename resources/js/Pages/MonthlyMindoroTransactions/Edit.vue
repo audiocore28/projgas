@@ -64,7 +64,7 @@
                       </select>
                     </td>
                     <td class="border-t">
-                      <select :id="`helper-${transactionIndex}`" v-model="transaction.helper.id" class="form-select" :class="{ error: errors[`transactions.${transactionIndex}.helper.id`] }">
+                      <select :id="`helper-${transactionIndex}`" v-model="transaction.helper_id" class="form-select" :class="{ error: errors[`transactions.${transactionIndex}.helper_id`] }">
                         <option :value="null" />
                         <option v-for="helper in helpers" :key="helper.id" :value="helper.id">{{ helper.name }}</option>
                       </select>
@@ -539,10 +539,7 @@ export default {
           id: null,
           name: null,
         },
-        helper: {
-          id: null,
-          name: null,
-        },
+        helper_id: null,
         expense: 30000,
         driver_salary: 0,
         helper_salary: 0,

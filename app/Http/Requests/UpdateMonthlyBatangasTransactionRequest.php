@@ -32,7 +32,7 @@ class UpdateMonthlyBatangasTransactionRequest extends FormRequest
             'transactions.*.trip_no' => ['required', 'max:50'],
             'transactions.*.tanker.id' => ['required', 'max:50'],
             'transactions.*.driver.id' => ['required', 'max:50'],
-            'transactions.*.helper.id' => ['required', 'max:50'],
+            'transactions.*.helper_id' => ['nullable', 'max:50'],
             'transactions.*.driver_salary' => ['nullable', 'max:50'],
             'transactions.*.helper_salary' => ['nullable', 'max:50'],
 
@@ -58,9 +58,8 @@ class UpdateMonthlyBatangasTransactionRequest extends FormRequest
 
             // BatangasTransaction
             'transactions.*.trip_no.required' => 'Trip no. is required',
-            'transactions.*.tanker_id.required' => 'Tanker is required',
-            'transactions.*.driver_id.required' => 'Driver is required',
-            'transactions.*.helper_id.required' => 'Helper is required',
+            'transactions.*.tanker.id.required' => 'Tanker is required',
+            'transactions.*.driver.id.required' => 'Driver is required',
 
             // BatangasTransactionDetail
             'transactions.*.batangas_transaction_details.*.date.required' => 'Date is required',

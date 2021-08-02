@@ -162,7 +162,6 @@ class MonthlyBatangasTransactionController extends Controller
             'batangasTransactions.monthlyBatangasTransaction',
             'batangasTransactions.tanker:id,plate_no',
             'batangasTransactions.driver:id,name',
-            'batangasTransactions.helper:id,name',
             'batangasTransactions.batangasTransactionDetails.product:id,name',
             'batangasTransactions.batangasTransactionDetails.client:id,name',
             'batangasTransactions.toBatangasLoads.purchase:id,purchase_no',
@@ -250,7 +249,7 @@ class MonthlyBatangasTransactionController extends Controller
             $batangasTransaction->trip_no = $transaction['trip_no'];
             $batangasTransaction->tanker_id = $transaction['tanker']['id'];
             $batangasTransaction->driver_id = $transaction['driver']['id'];
-            $batangasTransaction->helper_id = $transaction['helper']['id'];
+            $batangasTransaction->helper_id = $transaction['helper_id'];
             $batangasTransaction->driver_salary = $transaction['driver_salary'];
             $batangasTransaction->helper_salary = $transaction['helper_salary'];
 
