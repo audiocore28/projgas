@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="mb-6 flex justify-between items-center">
+    <div class="mb-6 inline-flex items-center flex-wrap gap-y-6 gap-x-4 sm:flex sm:justify-between">
       <h1 class="font-bold text-3xl">Purchases</h1>
       <div class="flex">
         <date-picker

@@ -139,7 +139,7 @@
 
       <!-- TankerLoad Form -->
       <!-- Batangas -->
-      <div class="mb-8 flex justify-between items-center">
+      <div class="mb-8 inline-flex items-center flex-wrap gap-y-6 lg:flex lg:justify-between">
         <div class="-mb-8 flex justify-start items-center">
           <icon name="cheveron-down" class="block w-6 h-6 fill-blue-600 mr-2" v-if="batangasSelected == 0"/>
           <icon name="cheveron-right" class="block w-6 h-6 fill-blue-600 mr-2" v-else/>
@@ -178,7 +178,7 @@
         </div>
       </div>
 
-      <div class="grid grid-cols-1 gap-3 xl:grid-cols-3" v-show="batangasSelected == 0">
+      <div class="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3 rounded overflow-x-auto my-8" v-show="batangasSelected == 0">
         <div class="rounded overflow-hidden max-w-6xl" v-for="(load, loadIndex) in form.batangasLoads" :key="loadIndex" :id="`load-${load.id}`">
           <div class="bg-white rounded shadow overflow-hidden max-w-6xl">
             <!-- TankerLoad -->
@@ -280,7 +280,7 @@
       </div>
 
       <!-- Mindoro -->
-      <div class="mt-8 mb-8 flex justify-between items-center border-t-2 border-gray-600">
+      <div class="mt-8 mb-8 inline-flex items-center flex-wrap gap-y-6 lg:flex lg:justify-between border-t-2 border-gray-600">
         <div class="-mb-8 flex justify-start items-center">
           <icon name="cheveron-down" class="block w-6 h-6 fill-yellow-600 mr-2" v-if="mindoroSelected == 1"/>
           <icon name="cheveron-right" class="block w-6 h-6 fill-yellow-600 mr-2" v-else/>
@@ -431,7 +431,7 @@
       </div>
 
       <!-- Total Load-->
-      <div class="mt-6 pb-8 flex justify-between items-center border-t-2 border-gray-600 bg-gray-600">
+      <div class="mt-6 pb-8 inline-flex items-center flex-wrap gap-6 sm:flex sm:justify-between border-t-2 border-gray-600 bg-gray-600">
         <div class="pl-10 -mb-8 flex justify-start items-center">
           <!-- <icon name="cheveron-right" class="block w-6 h-6 fill-gray-600 mr-2"/> -->
           <h1 class="text-white my-8 font-bold text-xl mr-4 pointer">Total Load</h1>
@@ -459,7 +459,7 @@
       </div>
 
       <!-- Unlifted -->
-      <div class="pb-8 flex justify-between items-center border-t-2 border-gray-600 bg-white">
+      <div class="pb-8 inline-flex items-center flex-wrap gap-y-6 gap-x-12 sm:flex sm:justify-between bg-white">
         <div class="pl-10 -mb-8 flex justify-start items-center">
           <!-- <icon name="cheveron-right" class="block w-6 h-6 fill-gray-600 mr-2"/> -->
           <h1 class="text-red-600 my-8 font-bold text-xl mr-4 pointer">Unlifted</h1>
