@@ -14,7 +14,7 @@ class MonthlyMindoroTransaction extends Model
 
 	 public function mindoroTransactions()
 	 {
-	 	return $this->hasMany(MindoroTransaction::class)->orderByRaw('LENGTH(trip_no)', 'ASC')->orderBy('trip_no', 'ASC');
+	 	return $this->hasMany(MindoroTransaction::class)->orderByRaw('LENGTH(trip_no) ASC')->orderBy('trip_no', 'ASC');
 	 }
 
      public function purchases()

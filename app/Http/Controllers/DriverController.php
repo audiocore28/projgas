@@ -65,7 +65,7 @@ class DriverController extends Controller
     {
         $batangasQuery = $driver->load([
             'batangasTransactions' => function ($q) {
-                $q->orderByRaw('LENGTH(trip_no)', 'ASC')->orderBy('trip_no', 'ASC');
+                $q->orderByRaw('LENGTH(trip_no) ASC')->orderBy('trip_no', 'ASC');
             },
             'batangasTransactions.monthlyBatangasTransaction',
             'batangasTransactions.tanker:id,plate_no',
@@ -78,7 +78,7 @@ class DriverController extends Controller
 
         $mindoroQuery = $driver->load([
             'mindoroTransactions' => function ($q) {
-                $q->orderByRaw('LENGTH(trip_no)', 'ASC')->orderBy('trip_no', 'ASC');
+                $q->orderByRaw('LENGTH(trip_no) ASC')->orderBy('trip_no', 'ASC');
             },
             'mindoroTransactions.monthlyMindoroTransaction',
             'mindoroTransactions.tanker:id,plate_no',

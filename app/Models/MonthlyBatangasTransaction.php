@@ -14,7 +14,7 @@ class MonthlyBatangasTransaction extends Model
 
 	 public function batangasTransactions()
 	 {
-	 	return $this->hasMany(BatangasTransaction::class)->orderByRaw('LENGTH(trip_no)', 'ASC')->orderBy('trip_no', 'ASC');
+	 	return $this->hasMany(BatangasTransaction::class)->orderByRaw('LENGTH(trip_no) ASC')->orderBy('trip_no', 'ASC');
 	 }
 
      public function purchases()
