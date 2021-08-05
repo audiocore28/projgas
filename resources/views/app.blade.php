@@ -13,6 +13,10 @@
         <!-- Styles -->
         <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 
+        <!-- Favicon -->
+        <link rel="icon" href="{{ URL::asset('img/favicon-16x16.png') }}" type="image/x-icon"/>
+        <link rel="manifest" href="/site.webmanifest">
+
         <!-- Scripts -->
         @routes
         <script src="{{ mix('js/app.js') }}" defer></script>

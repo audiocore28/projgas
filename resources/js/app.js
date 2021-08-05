@@ -26,7 +26,7 @@ const app = document.getElementById('app');
 
 new Vue({
 	metaInfo: {
-		titleTemplate: (title) => title ? `${title} - IBB` : 'IBB'
+		titleTemplate: (title) => title ? `${title}` : 'IBB Trading'
 	},
 	render: (h) =>
         h(InertiaApp, {
