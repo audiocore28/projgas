@@ -66,7 +66,7 @@ class AccountController extends Controller
     {
         $query = $account->load([
             'purchases' => function ($query) {
-                $query->select(['id', 'account_id', 'date', 'purchase_no']);
+                $query->select(['id', 'account_id', 'date', 'purchase_no'])->orderBy('date', 'DESC');
             },
             'purchases.purchaseDetails.product:id,name'
         ]);

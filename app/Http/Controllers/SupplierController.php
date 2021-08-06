@@ -66,7 +66,7 @@ class SupplierController extends Controller
     {
         $query = $supplier->load([
             'purchases' => function ($query) {
-                $query->select(['id', 'supplier_id', 'date', 'purchase_no']); // fields from purchases table
+                $query->select(['id', 'supplier_id', 'date', 'purchase_no'])->orderBy('date', 'DESC'); // fields from purchases table
                 // supplier_id is needed so eloquent can match the purchase with its parent supplier
             },
             'purchases.purchaseDetails.product:id,name'

@@ -67,7 +67,7 @@ class DepotController extends Controller
     {
         $query = $depot->load([
             'purchases' => function ($query) {
-                $query->select(['id', 'depot_id', 'date', 'purchase_no']);
+                $query->select(['id', 'depot_id', 'date', 'purchase_no'])->orderBy('date', 'DESC');
             },
             'purchases.purchaseDetails.product:id,name'
         ]);
