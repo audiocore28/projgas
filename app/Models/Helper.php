@@ -44,6 +44,6 @@ class Helper extends Model
 
     public function getDateAttribute($value)
     {
-        return Carbon::parse($value)->format('M d, Y');
+        return Carbon::parse($value)->timezone(config('app.timezone', 'Asia/Manila'))->format('M d, Y');
     }
 }
