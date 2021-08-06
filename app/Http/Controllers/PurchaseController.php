@@ -414,6 +414,7 @@ class PurchaseController extends Controller
             'toMindoroLoads.mindoroTransaction.driver:id,name',
             'toMindoroLoads.toMindoroLoadDetails.product:id,name',
         ])
+        ->orderBy('date', 'ASC')
         ->get();
 
         $pdf = PDF::loadView('print-purchases', compact('purchases'));
