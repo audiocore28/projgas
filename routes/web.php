@@ -75,8 +75,8 @@ use App\Http\Controllers\PermissionController;
      ->name('login.store')
      ->middleware('guest');
 
- Route::delete('logout', [AuthenticatedSessionController::class, 'destroy'])
-     ->name('logout');
+ // Route::delete('logout', [AuthenticatedSessionController::class, 'destroy'])
+ //     ->name('logout');
 
 
 Route::group(['middleware' => 'auth'], function() {
