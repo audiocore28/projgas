@@ -17,7 +17,7 @@ class MindoroTransaction extends Model
     use HasFactory;
 
      protected $dates = ['date'];
-	 protected $fillable = ['date', 'trip_no', 'driver_id', 'helper_id', 'tanker_id', 'expense', 'driver_salary', 'helper_salary', 'monthly_mindoro_transaction_id'];
+	 protected $fillable = ['date', 'trip_no', 'driver_id', 'helper_id', 'tanker_id', 'expense', 'driver_salary', 'helper_salary', 'commission', 'monthly_mindoro_transaction_id'];
 
      public function monthlyMindoroTransaction()
      {

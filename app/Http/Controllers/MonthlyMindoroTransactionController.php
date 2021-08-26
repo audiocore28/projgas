@@ -252,6 +252,7 @@ class MonthlyMindoroTransactionController extends Controller
             $mindoroTransaction->expense = $transaction['expense'];
             $mindoroTransaction->driver_salary = $transaction['driver_salary'];
             $mindoroTransaction->helper_salary = $transaction['helper_salary'];
+            $mindoroTransaction->commission = $transaction['commission'];
 
             $mindoroTransaction->save();
 

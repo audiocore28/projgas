@@ -83,7 +83,7 @@
 					@endforeach
 				@endforeach
 
-				<?php $output = $total_transactions_amount - $total_load_amount - $transaction['driver_salary'] - $transaction['helper_salary'] ?>
+				<?php $output = $total_transactions_amount - $total_load_amount - $transaction['driver_salary'] - $transaction['helper_salary'] - $transaction['commission'] ?>
 				<table class='table' width="60%" cellspacing='0' style="margin-top: 5px">
 					<tr>
 						<td style="background-color: #fff; color: #000;">
@@ -280,7 +280,10 @@
 							<td align="right"> {{ number_format($transaction['helper_salary']) }} </td>
 						</tr>
 						<tr>
-							<td align="right" style="font-weight: bold; background-color: #eee;"> {{ number_format($total_transactions_amount - $total_load_amount - $transaction['driver_salary'] - $transaction['helper_salary']) }} </td>
+							<td align="right"> {{ number_format($transaction['commission']) }} </td>
+						</tr>
+						<tr>
+							<td align="right" style="font-weight: bold; background-color: #eee;"> {{ number_format($total_transactions_amount - $total_load_amount - $transaction['driver_salary'] - $transaction['helper_salary'] - $transaction['commission']) }} </td>
 						</tr>
 					</table>
 				</div>

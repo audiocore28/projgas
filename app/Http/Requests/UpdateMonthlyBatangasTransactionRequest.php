@@ -35,6 +35,7 @@ class UpdateMonthlyBatangasTransactionRequest extends FormRequest
             'transactions.*.helper_id' => ['nullable', 'max:50'],
             'transactions.*.driver_salary' => ['nullable', 'max:50'],
             'transactions.*.helper_salary' => ['nullable', 'max:50'],
+            'transactions.*.commission' => ['nullable', 'max:50'],
 
             // BatangasTransactionDetail
             'transactions.*.batangas_transaction_details.*.date' => ['required', 'max:50'],

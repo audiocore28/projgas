@@ -252,6 +252,7 @@ class MonthlyBatangasTransactionController extends Controller
             $batangasTransaction->helper_id = $transaction['helper_id'];
             $batangasTransaction->driver_salary = $transaction['driver_salary'];
             $batangasTransaction->helper_salary = $transaction['helper_salary'];
+            $batangasTransaction->commission = $transaction['commission'];
 
             $batangasTransaction->save();
 

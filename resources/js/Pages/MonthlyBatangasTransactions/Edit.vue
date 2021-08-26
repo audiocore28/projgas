@@ -73,7 +73,7 @@
                       </select>
                     </td>
                     <td @click="toggleRow(transactionIndex)" class="border-t text-blue-100 font-semibold text-sm cursor-pointer" align="center">
-                      {{ toPHP(transactionTotalAmt(transaction.id) - getLoadTotalAmt(transaction.id) - transaction.driver_salary - transaction.helper_salary) }}
+                      {{ toPHP(transactionTotalAmt(transaction.id) - getLoadTotalAmt(transaction.id) - transaction.driver_salary - transaction.helper_salary - transaction.commission) }}
                     </td>
                     <td class="border-t" align="right">
                       <button @click.prevent="deleteTransactionForm(transactionIndex, transaction.id)" type="button" class="font-bold flex-shrink-0 leading-none" tabindex="-1">
@@ -327,6 +327,16 @@
                                   </div>
                                 </td>
                               </tr>
+                              <tr>
+                                <td class="px-6 whitespace-nowrap text-sm text-gray-500">
+                                  Commission:
+                                </td>
+                                <td class="px-6 whitespace-nowrap text-sm text-gray-700 font-semibold">
+                                  <div class="text-sm font-medium text-gray-900">
+                                    <text-input type="number" step="any" v-model="transaction.commission" :error="errors.commission" />
+                                  </div>
+                                </td>
+                              </tr>
                               <tr class="bg-gray-200">
                                 <td>
                                   <div class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium text-gray-500 uppercase">
@@ -335,7 +345,7 @@
                                 </td>
                                 <td>
                                   <div class="px-6 py-4 whitespace-nowrap text-left text-sm font-semibold text-gray-500">
-                                    {{ toPHP(transactionTotalAmt(transaction.id) - getLoadTotalAmt(transaction.id) - transaction.driver_salary - transaction.helper_salary) }}
+                                    {{ toPHP(transactionTotalAmt(transaction.id) - getLoadTotalAmt(transaction.id) - transaction.driver_salary - transaction.helper_salary - transaction.commission) }}
                                   </div>
                                 </td>
                               </tr>
@@ -522,6 +532,7 @@ export default {
         helper_id: null,
         driver_salary: 0,
         helper_salary: 0,
+        commission: 0,
         batangas_transaction_details: [
           // {
           //   id: null,
@@ -662,7 +673,7 @@ export default {
         }, 0);
 
         // Net
-        netTotal += transactionTotalAmt - loadTotalAmt - this.updateForm.transactions[i].driver_salary - this.updateForm.transactions[i].helper_salary;
+        netTotal += transactionTotalAmt - loadTotalAmt - this.updateForm.transactions[i].driver_salary - this.updateForm.transactions[i].helper_salary - this.updateForm.transactions[i].commission;
 
       }
       return netTotal;
