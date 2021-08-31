@@ -484,7 +484,16 @@ export default {
     updateBatangasTransaction() {
       this.$inertia.put(this.route('monthly-batangas-transactions.update', this.monthly_batangas_transaction.id), this.updateForm, {
         onStart: () => this.sending = true,
-        onFinish: () => this.sending = false,
+        onFinish: () => {
+          // refresh / reload data after records was updated.
+          axios.get(`/monthly-batangas-transactions/${this.monthly_batangas_transaction.id}/edit`)
+            .then(response => {
+              this.updateForm.transactions = response.data.transactions;
+              this.setSelectedClient();
+            });
+
+          this.sending = false;
+        },
       });
     },
     destroy() {
@@ -514,6 +523,13 @@ export default {
     }, 300),
     onSelectedClient(client, id) {
       this.updateForm.transactions[id[0]].batangas_transaction_details[id[1]].client_id = client.id;
+    },
+    setSelectedClient() {
+      this.updateForm.transactions.forEach(transaction => {
+        transaction.batangas_transaction_details.forEach(detail => {
+          detail.selected_client = this.clients.find(client => client.id === detail.client_id);
+        });
+      });
     },
 
     // BatangasTransaction
@@ -701,12 +717,7 @@ export default {
     // });
 
     this.toggleAllRow();
-
-    this.updateForm.transactions.forEach(transaction => {
-      transaction.batangas_transaction_details.forEach(detail => {
-        detail.selected_client = this.clients.find(client => client.id === detail.client_id);
-      });
-    });
+    this.setSelectedClient();
 
     // this.getLoadTotalAmt(this.updateForm.transactions);
   }

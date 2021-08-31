@@ -191,7 +191,8 @@ class MonthlyMindoroTransactionController extends Controller
             }
 
             return [
-               'mindoroTransactions' => $transactionsArray,
+                'mindoroTransactions' => $transactionsArray,
+                'transactions' => $transactions,
             ];
         }
 

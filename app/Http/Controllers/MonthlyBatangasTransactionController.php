@@ -191,7 +191,8 @@ class MonthlyBatangasTransactionController extends Controller
             }
 
             return [
-               'batangasTransactions' => $transactionsArray,
+                'batangasTransactions' => $transactionsArray,
+                'transactions' => $transactions,
             ];
         }
 
