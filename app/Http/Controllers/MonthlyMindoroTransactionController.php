@@ -270,18 +270,6 @@ class MonthlyMindoroTransactionController extends Controller
 
                 $transactionDetail->save();
             }
-
-            foreach ($transaction['to_mindoro_loads'] as $load)
-            {
-                if ($load['id'] !== null) {
-                    foreach ($load['to_mindoro_load_details'] as $detail)
-                    {
-                        $loadDetail = ToMindoroLoadDetail::findOrNew($detail['id']);
-                        $loadDetail->unit_price = $detail['unit_price'];
-                        $loadDetail->save();
-                    }
-                }
-            }
         }
 
         $this->deleteMindoroTransaction($request->removed_transactions);

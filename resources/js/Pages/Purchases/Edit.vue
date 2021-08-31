@@ -100,7 +100,7 @@
                 </td>
                 <td class="text-sm text-gray-500">
                   <div class=" px-5 text-sm font-medium text-gray-900">
-                    <button @click.prevent="deletePurchaseDetailForm(purchaseIndex, details.id)" type="button" class="bg-white py-1 px-1 flex-shrink-0 text-sm leading-none" tabindex="-1">
+                    <button @click.prevent="deletePurchaseDetailForm(purchaseIndex, details.id, details.product.id)" type="button" class="bg-white py-1 px-1 flex-shrink-0 text-sm leading-none" tabindex="-1">
                       <icon name="trash" class="w-4 h-4 mr-2 fill-red-600"/>
                     </button>
                   </div>
@@ -562,6 +562,7 @@ export default {
         batangas_transactions: [],
         details: this.purchase.purchase_details,
         removed_purchase_details: [],
+        removed_purchased_product: [],
         removed_batangas_loads: [],
         removed_batangas_load_details: [],
         removed_mindoro_loads: [],
@@ -579,7 +580,19 @@ export default {
     update() {
       this.$inertia.put(this.route('purchases.update', this.purchase.id), this.form, {
         onStart: () => this.sending = true,
-        onFinish: () => this.sending = false,
+        onFinish: () => {
+          this.form.removed_purchased_product = [];
+
+          // refresh / reload data after records was updated.
+          axios.get(`/purchases/${this.purchase.id}/edit`)
+            .then(response => {
+              this.form.details = response.data.purchase.purchase_details;
+              this.form.batangasLoads = response.data.purchase.to_batangas_loads;
+              this.form.mindoroLoads = response.data.purchase.to_mindoro_loads;
+            });
+
+          this.sending = false;
+        },
       });
     },
     destroy() {
@@ -602,7 +615,9 @@ export default {
         remarks: null,
       });
     },
-    deletePurchaseDetailForm(purchaseIndex, purchaseDetailId) {
+    deletePurchaseDetailForm(purchaseIndex, purchaseDetailId, productId) {
+      this.form.removed_purchased_product.push(productId);
+
       if (purchaseDetailId) {
         this.form.removed_purchase_details.push(purchaseDetailId);
         this.form.details.splice(purchaseIndex, 1);

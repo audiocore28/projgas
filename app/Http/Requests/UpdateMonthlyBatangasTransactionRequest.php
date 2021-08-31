@@ -45,9 +45,6 @@ class UpdateMonthlyBatangasTransactionRequest extends FormRequest
             'transactions.*.batangas_transaction_details.*.quantity' => ['nullable', 'max:50'],
             'transactions.*.batangas_transaction_details.*.unit_price' => ['nullable', 'max:50'],
 
-            // TankerLoadDetail
-            'transactions.*.to_batangas_loads.*.to_batangas_load_details.*.unit_price' => ['nullable', 'max:50'],
-
         ];
     }
 

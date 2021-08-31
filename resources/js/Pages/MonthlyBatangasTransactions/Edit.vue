@@ -271,7 +271,7 @@
                                       </td>
                                       <td class="text-sm text-gray-500 text-center">
                                         <div class="text-sm font-medium text-gray-900">
-                                          <text-input type="number" step="any" v-model="detail.unit_price" :error="errors.unit_price" />
+                                          <div class="text-sm text-gray-900">{{ detail.unit_price }}</div>
                                         </div>
                                       </td>
                                       <td class="text-center px-6 py-4 whitespace-nowrap text-sm text-gray-500">

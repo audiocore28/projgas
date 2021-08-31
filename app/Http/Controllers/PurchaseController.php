@@ -147,12 +147,20 @@ class PurchaseController extends Controller
             ])->id;
 
             foreach ($load['details'] as $detail) {
-                $batangasLoadDetail = ToBatangasLoadDetail::create([
-                    'to_batangas_load_id' => $batangasLoadId,
-                    'product_id' => $detail['product']['id'],
-                    'quantity' => $detail['quantity'],
-                    'unit_price' => $detail['unit_price'],
-                ]);
+                $loadDetail = new ToBatangasLoadDetail();
+
+                $loadDetail->to_batangas_load_id = $batangasLoadId;
+                $loadDetail->quantity = $detail['quantity'];
+                $loadDetail->product_id = $detail['product']['id'];
+
+                foreach($request->details as $purchaseDetail)
+                {
+                    if ($purchaseDetail['product']['id'] === $detail['product']['id']) {
+                        $loadDetail->unit_price = $purchaseDetail['unit_price'];
+                    }
+                }
+
+                $loadDetail->save();
             }
         }
 
@@ -165,12 +173,20 @@ class PurchaseController extends Controller
             ])->id;
 
             foreach ($load['details'] as $detail) {
-                $mindoroLoadDetail = ToMindoroLoadDetail::create([
-                    'to_mindoro_load_id' => $mindoroLoadId,
-                    'product_id' => $detail['product']['id'],
-                    'quantity' => $detail['quantity'],
-                    'unit_price' => $detail['unit_price'],
-                ]);
+                $loadDetail = new ToMindoroLoadDetail();
+
+                $loadDetail->to_mindoro_load_id = $mindoroLoadId;
+                $loadDetail->quantity = $detail['quantity'];
+                $loadDetail->product_id = $detail['product']['id'];
+
+                foreach($request->details as $purchaseDetail)
+                {
+                    if ($purchaseDetail['product']['id'] === $detail['product']['id']) {
+                        $loadDetail->unit_price = $purchaseDetail['unit_price'];
+                    }
+                }
+
+                $loadDetail->save();
             }
         }
 
@@ -219,6 +235,12 @@ class PurchaseController extends Controller
         ]);
 
         $purchaseQuery = collect($query)->toArray();
+
+        if (request()->wantsJson()) {
+            return [
+                'purchase' => $purchaseQuery,
+            ];
+        }
 
         return Inertia::render('Purchases/Edit', [
             'purchase' => $purchaseQuery,
@@ -282,7 +304,21 @@ class PurchaseController extends Controller
 
                 $loadDetail->quantity = $detail['quantity'];
                 $loadDetail->product_id = $detail['product']['id'];
-                $loadDetail->unit_price = $detail['unit_price'];
+
+                foreach($request->removed_purchased_product as $key => $product_id)
+                {
+                    if ($product_id === $detail['product']['id']) {
+                        $loadDetail->unit_price = 0;
+                    }
+                }
+
+                foreach($request->details as $purchaseDetail)
+                {
+                    if ($purchaseDetail['product']['id'] === $detail['product']['id']) {
+                        $loadDetail->unit_price = $purchaseDetail['unit_price'];
+                    }
+                }
+
                 $loadDetail->save();
             }
         }
@@ -305,7 +341,21 @@ class PurchaseController extends Controller
 
                 $loadDetail->quantity = $detail['quantity'];
                 $loadDetail->product_id = $detail['product']['id'];
-                $loadDetail->unit_price = $detail['unit_price'];
+
+                foreach($request->removed_purchased_product as $key => $product_id)
+                {
+                    if ($product_id === $detail['product']['id']) {
+                        $loadDetail->unit_price = 0;
+                    }
+                }
+
+                foreach($request->details as $purchaseDetail)
+                {
+                    if ($purchaseDetail['product']['id'] === $detail['product']['id']) {
+                        $loadDetail->unit_price = $purchaseDetail['unit_price'];
+                    }
+                }
+
                 $loadDetail->save();
             }
         }

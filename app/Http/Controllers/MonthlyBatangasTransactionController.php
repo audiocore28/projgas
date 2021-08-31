@@ -269,19 +269,6 @@ class MonthlyBatangasTransactionController extends Controller
 
                 $transactionDetail->save();
             }
-
-            //
-            foreach ($transaction['to_batangas_loads'] as $load)
-            {
-                if ($load['id'] !== null) {
-                    foreach ($load['to_batangas_load_details'] as $detail)
-                    {
-                        $loadDetail = ToBatangasLoadDetail::findOrNew($detail['id']);
-                        $loadDetail->unit_price = $detail['unit_price'];
-                        $loadDetail->save();
-                    }
-                }
-            }
         }
 
         $this->deleteBatangasTransaction($request->removed_transactions);

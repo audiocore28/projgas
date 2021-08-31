@@ -47,9 +47,6 @@ class UpdateMonthlyMindoroTransactionRequest extends FormRequest
             'transactions.*.mindoro_transaction_details.*.unit_price' => ['nullable', 'max:50'],
             'transactions.*.mindoro_transaction_details.*.dr_no' => ['nullable', 'max:80'],
 
-            // TankerLoadDetail
-            'transactions.*.to_mindoro_loads.*.to_mindoro_load_details.*.unit_price' => ['nullable', 'max:50'],
-
         ];
     }
 
